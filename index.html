@@ -547,7 +547,7 @@
     /* Setiap kolom akan memiliki lebar minimum 250px dan akan mengisi ruang yang tersedia. */
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 5px; /* Jarak antar item game */
-    margin-top: 30px;
+    margin-top: 0px;
     padding-top: 20px;
     border-top: 1px solid rgba(255,255,255,0.2);
     justify-content: center; /* Pusatkan grid jika tidak memenuhi lebar penuh */
@@ -569,8 +569,8 @@
     /* Mengatur rasio aspek untuk item game (misal: rasio 4:3) */
     /* Lebar item akan 100% dari kolom grid, dan tinggi akan 75% dari lebarnya. */
     width: 50%;
-    padding-bottom: 0%; /* Membuat tinggi 75% dari lebar (rasio 4:3). Ubah ke 100% untuk kotak. */
-    height: 0; /* Penting! Set tinggi ke 0 agar padding-bottom bisa bekerja sebagai pengatur tinggi */
+    padding-bottom: 50%; /* Membuat tinggi 75% dari lebar (rasio 4:3). Ubah ke 100% untuk kotak. */
+    height: 0%; /* Penting! Set tinggi ke 0 agar padding-bottom bisa bekerja sebagai pengatur tinggi */
 }
 
 .game-item:hover {
@@ -645,14 +645,14 @@
 }
 
 /* Pada ukuran layar 480px ke bawah (kebanyakan ponsel) */
-@media (max-width: 100px) {
+@media (max-width: 480px) {
     .game-display-grid {
         /* Pastikan tetap 2 kolom di ponsel agar tidak terlalu besar */
         grid-template-columns: repeat(2, 1fr);
         gap: 5px; /* Kurangi jarak lebih lanjut untuk layar yang lebih kecil */
     }
     .game-item {
-        padding-bottom: 5%; /* Pertahankan rasio 4:3 */
+        padding-bottom: 55%; /* Pertahankan rasio 4:3 */
     }
 }
 
