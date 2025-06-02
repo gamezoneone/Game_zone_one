@@ -545,8 +545,8 @@
     display: grid;
     /* Default: 2 kolom untuk layar yang lebih lebar (desktop). */
     /* Setiap kolom akan memiliki lebar minimum 250px dan akan mengisi ruang yang tersedia. */
-    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-    gap: 25px; /* Jarak antar item game */
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 5px; /* Jarak antar item game */
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid rgba(255,255,255,0.2);
@@ -569,13 +569,13 @@
     /* Mengatur rasio aspek untuk item game (misal: rasio 4:3) */
     /* Lebar item akan 100% dari kolom grid, dan tinggi akan 75% dari lebarnya. */
     width: 50%;
-    padding-bottom: 50%; /* Membuat tinggi 75% dari lebar (rasio 4:3). Ubah ke 100% untuk kotak. */
+    padding-bottom: 0%; /* Membuat tinggi 75% dari lebar (rasio 4:3). Ubah ke 100% untuk kotak. */
     height: 0; /* Penting! Set tinggi ke 0 agar padding-bottom bisa bekerja sebagai pengatur tinggi */
 }
 
 .game-item:hover {
     transform: translateY(-8px) scale(1.03); /* Item sedikit melayang dan membesar saat dihover */
-    box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3); /* Efek glow oranye */
+    /*box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3); /* Efek glow oranye */
 }
 
 /* Gambar thumbnail di dalam item game */
@@ -583,8 +583,8 @@
     position: absolute; /* Posisikan gambar secara absolut di dalam item game */
     top: 0;
     left: 0;
-    width: 100%; /* Gambar akan mengisi seluruh lebar item game */
-    height: 100%; /* Gambar akan mengisi seluruh tinggi item game */
+    width: 50%; /* Gambar akan mengisi seluruh lebar item game */
+    height: 50%; /* Gambar akan mengisi seluruh tinggi item game */
     object-fit: cover; /* **INI PENTING:** Pastikan gambar mengisi seluruh area yang tersedia. Jika rasio gambar tidak sama dengan rasio item (4:3), gambar akan dipotong (crop) agar pas tanpa distorsi. */
     border-radius: 12px; /* Agar gambar juga memiliki sudut membulat seperti itemnya */
     transition: transform 0.3s ease; /* Transisi zoom halus saat hover */
@@ -596,14 +596,14 @@
 
 /* --- Judul Game (PILIH SALAH SATU OPSI DI BAWAH INI) --- */
 
-/* OPSI 1: Judul game hilang sepenuhnya (default) */
+/* OPSI 1: Judul game hilang sepenuhnya (default) 
 .game-item h3 {
     display: none; /* Menyembunyikan elemen judul game */
 }
 
 /* OPSI 2: Judul game muncul sebagai overlay transparan saat hover */
 /* Jika Anda memilih opsi ini, HAPUS atau KOMENTARI OPSI 1 di atas */
-/*
+
 .game-item h3 {
     position: absolute;
     bottom: 0;
@@ -627,7 +627,7 @@
 .game-item:hover h3 {
     opacity: 1;
 }
-*/
+
 
 /* --- Media Queries untuk Responsivitas (Hanya untuk Game Grid) --- */
 
@@ -637,7 +637,7 @@
         /* Tetapkan 2 kolom. Jika minmax(100px, 1fr) menghasilkan 2 kolom di desktop,
            maka repeat(2, 1fr) akan memaksa 2 kolom di tablet/mobile. */
         grid-template-columns: repeat(2, 1fr);
-        gap: 15px; /* Sedikit kurangi jarak antar item */
+        gap: 5px; /* Sedikit kurangi jarak antar item */
     }
     .game-item {
         padding-bottom: 25%; /* Pertahankan rasio 4:3 */
@@ -649,10 +649,10 @@
     .game-display-grid {
         /* Pastikan tetap 2 kolom di ponsel agar tidak terlalu besar */
         grid-template-columns: repeat(2, 1fr);
-        gap: 10px; /* Kurangi jarak lebih lanjut untuk layar yang lebih kecil */
+        gap: 5px; /* Kurangi jarak lebih lanjut untuk layar yang lebih kecil */
     }
     .game-item {
-        padding-bottom: 25%; /* Pertahankan rasio 4:3 */
+        padding-bottom: 50%; /* Pertahankan rasio 4:3 */
     }
 }
 
