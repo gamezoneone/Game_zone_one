@@ -14,6 +14,11 @@
             font-size: 16px; /* Base font size for rem units */
         }
 
+        /* Global box-sizing for consistent layout */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -167,9 +172,9 @@
             justify-content: space-around;
             gap: 0.6rem;
             margin-bottom: 1rem;
-            /* Pastikan height ini cukup untuk 1 simbol + sedikit padding visual */
-            height: 100px; /* **Tinggi view area untuk satu emoji penuh (Mobile)** */
-            overflow: hidden; /* Sangat penting: menyembunyikan simbol di luar view */
+            /* Tinggi view area yang pasti menampilkan satu simbol */
+            height: 100px; /* Default for mobile/small screens */
+            overflow: hidden; /* Penting: menyembunyikan simbol di luar view */
             border: 0.15rem solid #fff;
             border-radius: 0.6rem;
             background-color: #1a1a1a;
@@ -204,17 +209,17 @@
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
-            /* No transition here. Transition will be set by JS for landing */
+            /* Transisi akan diatur oleh JS */
         }
 
         .reel .symbol {
-            /* **KONTROL UKURAN EMOJI DI SINI (MOBILE)** */
-            font-size: 80px; /* Ukuran emoji */
+            /* **KONTROL UKURAN EMOJI DI SINI** */
+            font-size: 80px; /* Ukuran emoji dasar */
             line-height: 1; /* Hapus spasi antar baris */
             width: 100%; /* Lebar penuh reel */
             text-align: center;
-            /* Height harus sedikit lebih besar dari font-size untuk memastikan tidak terpotong */
-            height: 85px; /* Sesuaikan ini. Misal font 80px, height 85px */
+            /* Height harus memastikan satu emoji penuh terlihat */
+            height: 100px; /* Harus sama dengan height .reels agar pas */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -222,10 +227,19 @@
             user-select: none; /* Agar tidak bisa diseleksi */
             padding: 0; /* Tanpa padding tambahan */
             margin: 0; /* Tanpa margin tambahan */
-            /* Penting: Setel warna dasar emoji di sini */
+            
+            /* Warna dasar emoji agar terlihat */
             color: #fff; /* Warna putih agar emoji terlihat */
-            text-shadow: 0 0 0.1em rgba(0,0,0,0.5), 0 0 0.5em #00ffff; /* Efek neon pada warna dasar */
+            /* Efek neon (opsional, bisa dinonaktifkan untuk debugging warna) */
+            text-shadow: 0 0 0.1em rgba(0,0,0,0.5), 0 0 0.5em #00ffff; 
         }
+        
+        /* Gaya spesifik untuk 7️⃣ jika ingin warna berbeda */
+        .reel .symbol.seven {
+            color: #ffcc00; /* Warna kuning untuk 7 */
+            text-shadow: 0 0 0.1em #ffcc00, 0 0 0.5em #ff0000; /* Efek neon merah-kuning */
+        }
+
 
         /* Class for fast spinning animation */
         .spinning {
@@ -234,9 +248,9 @@
         }
 
         @keyframes spin-blur {
-            /* Pergeseran harus sebesar tinggi satu elemen symbol */
+            /* Pergeseran harus sebesar tinggi satu elemen symbol (100px) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(-85px); } /* Sesuai dengan height dari .reel .symbol mobile */
+            100% { transform: translateY(-100px); } 
         }
 
         /* ==============================================
@@ -387,27 +401,26 @@
             }
 
             .reels {
-                height: 100px; /* **Increased height for desktop to match symbol size** */
+                height: 100px; /* Consistent height */
                 gap: 12px;
             }
 
             .reel .symbol {
-                /* **KONTROL UKURAN EMOJI DI SINI (DESKTOP)** */
                 font-size: 100px;
-                height: 100px; /* **Tinggi elemen emoji, harus sesuai font-size** */
+                height: 100px; /* Consistent height */
             }
 
             /* Adjust @keyframes spin-blur for desktop */
             @keyframes spin-blur {
                 0% { transform: translateY(0); }
-                100% { transform: translateY(-100px); } /* Sesuai dengan height dari .reel .symbol desktop */
+                100% { transform: translateY(-100px); } 
             }
         }
     </style>
 </head>
 <body>
     <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="___" preload="auto"></audio>
+    <audio id="reelStopSound" src="____" preload="auto"></audio>
     <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
     <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" preload="auto" loop></audio>
@@ -420,8 +433,9 @@
                 <p>Balance: <span id="playerBalance">0</span> Credits</p>
                 <button id="logoutBtn" class="control-btn" style="display: none;">Logout</button>
             </div>
-    </header>
-    <div class="slot-machine">
+        </header>
+
+        <div class="slot-machine">
             <div class="info-bar">
                 <div class="info-item">
                     <span class="info-light cherry"></span> CHERRY
@@ -436,8 +450,8 @@
 
             <div class="reels">
                 <div class="reel" id="reel1"><span class="symbol">🍒</span></div>
-                <div class="reel" id="reel2"><span class="symbol">🍒</span></div>
-                <div class="reel" id="reel3"><span class="symbol">🍒</span></div>
+                <div class="reel" id="reel2"><span class="symbol">🍊</span></div>
+                <div class="reel" id="reel3"><span class="symbol">🍋</span></div>
             </div>
             <div class="controls">
                 <div class="bet-control">
@@ -457,7 +471,6 @@
             </div>
         </div>
     </div>
-
     <script>
         console.log("Script starting..."); // Debug log
         const supabase = window.supabase.createClient(
@@ -465,7 +478,7 @@
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
         );
         
-        let currentSaldo = 0; // Ini akan diperbarui dari Supabase
+        let currentSaldo = 0; 
 
         // ==============================================
         //           DOM ELEMENTS & AUDIO
@@ -495,15 +508,15 @@
         const symbols = [
             { name: 'Cherry', emoji: '🍒', value: 10 },
             { name: 'Orange', emoji: '🍊', value: 15 },
-            { name: 'Lemon',  emoji: '🔔', value: 20 },
-            { name: 'Seven',  emoji: '✨', value: 100, isJackpot: true } // Menggunakan 7️⃣
+            { name: 'Lemon',  emoji: '🍋', value: 20 },
+            { name: 'Seven',  emoji: '✨', value: 100, isJackpot: true } 
         ];
-        console.log("Symbols defined:", symbols); // Debug log
+        console.log("Symbols defined:", symbols); 
 
         // Durasi spin total untuk setiap reel. Reel selanjutnya akan berhenti sedikit lebih lambat.
-        const REEL_STOP_DURATION = 2500; // Total waktu reel berputar hingga berhenti (ms) - sedikit dipercepat
-        const INITIAL_SPIN_SYMBOLS_COUNT = 30; // Jumlah simbol acak untuk efek putaran awal yang panjang
-        const LANDING_BOUNCE_SYMBOLS = 3; // Jumlah simbol acak sebelum simbol final untuk efek 'pantulan'
+        const REEL_STOP_DURATION = 2500; 
+        const INITIAL_SPIN_SYMBOLS_COUNT = 30; 
+        const LANDING_BOUNCE_SYMBOLS = 3; 
 
         let currentUser = null;
         let playerBalance = 0; 
@@ -511,70 +524,73 @@
         let currentSpinResults = null;
 
         // ==============================================
-        //           FUNGSI BANTUAN UI (DIPINDAHKAN KE ATAS)
+        //           FUNGSI BANTUAN UI
         // ==============================================
         function disableGameControls() {
-            console.log("Disabling game controls."); // Debug log
+            console.log("Disabling game controls."); 
             spinBtn.disabled = true;
             betAmountInput.disabled = true;
         }
 
         function enableGameControls() {
-            console.log("Enabling game controls."); // Debug log
+            console.log("Enabling game controls."); 
             spinBtn.disabled = false;
             betAmountInput.disabled = false;
         }
 
         function updateBalanceDisplay() {
             playerBalanceSpan.textContent = playerBalance;
-            console.log("Balance updated:", playerBalance); // Debug log
+            console.log("Balance updated:", playerBalance); 
         }
 
         function getSymbolDimensions() {
-            // Gunakan DOMRect untuk mendapatkan ukuran sebenarnya dari elemen .symbol
-            // Ambil dari salah satu reel element yang sudah ada di DOM
-            const sampleSymbol = reels_elements.reel1.querySelector('.symbol');
-            if (sampleSymbol) {
-                const rect = sampleSymbol.getBoundingClientRect();
-                console.log("Actual symbol dimensions (getBoundingClientRect):", rect.width, rect.height); // Debug log
-                return {
-                    height: rect.height,
-                    fullHeight: rect.height
-                };
-            }
-            // Fallback jika belum ada simbol di DOM (hanya untuk inisialisasi awal)
-            // Ini akan diambil dari CSS. Pastikan nilai di CSS akurat.
-            const defaultHeight = window.innerWidth < 600 ? 85 : 100; // Sesuai dengan media query CSS
-            console.log("Fallback symbol dimensions (CSS default):", defaultHeight); // Debug log
+            const reelHeightCSS = parseFloat(getComputedStyle(reels_elements.reel1.parentElement).height); // Tinggi container reels
+            const symbolHeightCSS = parseFloat(getComputedStyle(reels_elements.reel1.querySelector('.symbol')).height); // Tinggi satu symbol dari CSS
+            
+            console.log(`CSS Reel Height: ${reelHeightCSS}, CSS Symbol Height: ${symbolHeightCSS}`);
+
+            // Untuk memastikan 1 simbol terlihat di tengah reel container
+            // Tinggi reel container HARUS sama dengan tinggi symbol
+            // Jika ada perbedaan, gunakan tinggi reel container sebagai basis.
+            const calculatedSymbolHeight = symbolHeightCSS;
+            
+            console.log(`Calculated Symbol Height for positioning: ${calculatedSymbolHeight}`);
             return {
-                height: defaultHeight,
-                fullHeight: defaultHeight
+                height: calculatedSymbolHeight, // Tinggi aktual elemen symbol
+                fullHeight: calculatedSymbolHeight // Jika tidak ada padding/border tambahan
             };
         }
         
         function initializeReelsDisplay() {
-            console.log("Initializing reels display."); // Debug log
+            console.log("Initializing reels display."); 
             requestAnimationFrame(() => {
                 const { height: symbolHeight } = getSymbolDimensions();
-                // Client height dari reels_elements.reel1 akan menjadi tinggi container .reels
-                const reelViewHeight = reels_elements.reel1.parentElement.clientHeight; 
+                const reelViewHeight = reels_elements.reel1.parentElement.clientHeight; // Tinggi container .reels
                 // Offset untuk memusatkan simbol pertama di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 console.log(`Reel View Height: ${reelViewHeight}px, Symbol Height: ${symbolHeight}px, Offset to Center: ${offsetToCenter}px`);
 
                 Object.values(reels_elements).forEach((reel) => {
-                    // Hanya tambahkan satu simbol jika belum ada, atau kosongkan dan tambahkan satu jika sudah ada
-                    reel.innerHTML = ''; // Kosongkan dulu untuk memastikan hanya satu simbol awal
+                    // Kosongkan dan buat ulang simbol default agar sesuai dengan konfigurasi terbaru
+                    reel.innerHTML = ''; 
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
-                    const defaultSymbol = symbols[0]; // Tampilkan simbol default
-                    symbolSpan.textContent = defaultSymbol.emoji;
+                    // Tentukan simbol default sesuai id reel untuk visual awal yang lebih bervariasi
+                    let defaultSym;
+                    if (reel.id === 'reel1') defaultSym = symbols[0]; // Cherry
+                    else if (reel.id === 'reel2') defaultSym = symbols[1]; // Orange
+                    else defaultSym = symbols[2]; // Lemon
+
+                    symbolSpan.textContent = defaultSym.emoji;
+                    if (defaultSym.name === 'Seven') {
+                        symbolSpan.classList.add('seven');
+                    }
                     reel.appendChild(symbolSpan);
                     
-                    reel.style.transition = 'none'; // Matikan transisi
+                    reel.style.transition = 'none'; 
                     reel.style.transform = `translateY(${offsetToCenter}px)`; // Posisikan di tengah
-                    reel.classList.remove('spinning'); // Pastikan tidak ada kelas spinning
-                    console.log(`Reel ${reel.id} initialized with ${defaultSymbol.emoji} at offset ${offsetToCenter}px.`);
+                    reel.classList.remove('spinning'); 
+                    console.log(`Reel ${reel.id} initialized with ${defaultSym.emoji} at offset ${offsetToCenter}px.`);
                 });
             });
         }
@@ -585,14 +601,14 @@
         // ==============================================
 
         async function loadUserData(userId) {
-            console.log("Loading user data for user:", userId); // Debug log
+            console.log("Loading user data for user:", userId); 
             const { data, error } = await supabase
                 .from('users_data')
                 .select('*')
                 .eq('user_id', userId)
                 .single();
 
-            if (error && error.code !== 'PGRST116') { // PGRST116 berarti "Row not found"
+            if (error && error.code !== 'PGRST116') { 
                 console.error('Error loading user data:', error.message);
                 gameMessage.textContent = 'Error loading user data. Please refresh or contact support.';
                 disableGameControls();
@@ -604,10 +620,9 @@
                 playerNameSpan.textContent = data.username || currentUser.email.split('@')[0];
                 gameMessage.textContent = 'Welcome back!';
                 enableGameControls();
-                console.log("User data loaded:", data); // Debug log
+                console.log("User data loaded:", data); 
             } else {
-                console.log("No user data found, initializing new user."); // Debug log
-                // Jika data tidak ditemukan, buat entri baru untuk user ini
+                console.log("No user data found, initializing new user."); 
                 const initialBalance = 1000;
                 const defaultUsername = currentUser.email.split('@')[0];
                 const { data: newUserData, error: insertError } = await supabase
@@ -626,7 +641,7 @@
                 playerNameSpan.textContent = newUserData.username;
                 gameMessage.textContent = `Welcome, ${newUserData.username}! You received ${initialBalance} credits!`;
                 enableGameControls();
-                console.log("New user data initialized:", newUserData); // Debug log
+                console.log("New user data initialized:", newUserData); 
             }
             updateBalanceDisplay();
         }
@@ -637,7 +652,7 @@
                 gameMessage.textContent = 'Error: Not logged in to save saldo.';
                 return;
             }
-            console.log("Updating user balance to:", newBalance); // Debug log
+            console.log("Updating user balance to:", newBalance); 
             const { error } = await supabase
                 .from('users_data')
                 .update({ saldo: newBalance })
@@ -652,12 +667,12 @@
         }
 
         async function initializeGame() {
-            console.log("Initializing game..."); // Debug log
+            console.log("Initializing game..."); 
             gameMessage.textContent = 'Checking user session...';
-            disableGameControls(); // Disabled sejak awal
+            disableGameControls(); 
 
             const { data: { user } } = await supabase.auth.getUser();
-            console.log("Supabase user session:", user); // Debug log
+            console.log("Supabase user session:", user); 
 
             if (user) {
                 currentUser = user;
@@ -665,7 +680,6 @@
                 await loadUserData(user.id);
                 logoutBtn.style.display = 'inline-block';
 
-                // START BACKGROUND MUSIC
                 backgroundMusic.volume = 0.3;
                 try {
                     await backgroundMusic.play();
@@ -678,12 +692,12 @@
                 playerNameSpan.textContent = 'Guest';
                 playerBalanceSpan.textContent = 'N/A';
                 logoutBtn.style.display = 'none';
-                disableGameControls(); // Pastikan kontrol dinonaktifkan jika tidak login
+                disableGameControls(); 
             }
         }
 
         logoutBtn.addEventListener('click', async () => {
-            console.log("Logout button clicked."); // Debug log
+            console.log("Logout button clicked."); 
             const { error } = await supabase.auth.signOut();
             if (error) {
                 console.error('Logout error:', error.message);
@@ -719,42 +733,43 @@
         function spinReel(reelElement, finalSymbol, delayBeforeSlowdown) {
             return new Promise(resolve => {
                 const { height: symbolHeight, fullHeight: symbolFullHeight } = getSymbolDimensions();
-                const reelViewHeight = reelElement.parentElement.clientHeight; // Reel view height is reels container height
+                const reelViewHeight = reels_elements.reel1.parentElement.clientHeight; 
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 
-                console.log(`Spinning Reel ${reelElement.id}. Final Symbol: ${finalSymbol.emoji}. Symbol Height: ${symbolHeight}. Offset: ${offsetToCenter}`); // Debug log
+                console.log(`Spinning Reel ${reelElement.id}. Final Symbol: ${finalSymbol.emoji}. Symbol Height: ${symbolHeight}. Offset: ${offsetToCenter}`); 
 
                 // 1. Fase Spinning Cepat: Isi reel dengan banyak simbol acak
-                reelElement.innerHTML = ''; // Kosongkan reel
+                reelElement.innerHTML = ''; 
                 for (let i = 0; i < INITIAL_SPIN_SYMBOLS_COUNT; i++) { 
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
                     const randomSym = getRandomSymbol();
                     symbolSpan.textContent = randomSym.emoji;
+                    if (randomSym.name === 'Seven') {
+                        symbolSpan.classList.add('seven');
+                    }
                     reelElement.appendChild(symbolSpan);
                 }
-                reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
-                reelElement.style.transform = `translateY(0px)`; // Pastikan mulai dari atas untuk animasi putar
-                void reelElement.offsetWidth; // Trigger reflow untuk memastikan transisi dinonaktifkan
+                
+                reelElement.style.transition = 'none'; 
+                reelElement.style.transform = `translateY(0px)`; 
+                void reelElement.offsetWidth; 
 
-                reelElement.classList.add('spinning'); // Tambahkan kelas spinning untuk memulai animasi CSS
+                reelElement.classList.add('spinning'); 
 
                 // 2. Fase Melambat & Mendarat (Easing)
                 setTimeout(() => {
-                    reelElement.classList.remove('spinning'); // Hapus kelas spinning (hentikan animasi CSS)
+                    reelElement.classList.remove('spinning'); 
                     
-                    // Siapkan kembali reel dengan simbol yang akan mendarat
                     reelElement.innerHTML = '';
                     const landingSymbols = [];
 
-                    // Tambahkan simbol acak di atas simbol final untuk efek 'pantulan'
                     for (let i = 0; i < LANDING_BOUNCE_SYMBOLS; i++) {
                         landingSymbols.push(getRandomSymbol());
                     }
-                    landingSymbols.push(finalSymbol); // SIMBOL HASIL AKHIR YANG AKAN TAMPIL DI TENGAH
+                    landingSymbols.push(finalSymbol); 
 
-                    // Tambahkan beberapa simbol acak di bawah final untuk mengisi ruang jika ada overshoot
-                    // Kita akan menambahkan 2 simbol di bawah agar ada 'ruang' untuk bounce jika perlu
+                    // Tambahkan simbol di bawah final untuk efek "overshoot" atau hanya mengisi ruang
                     for (let i = 0; i < 2; i++) { 
                         landingSymbols.push(getRandomSymbol());
                     }
@@ -763,40 +778,34 @@
                         const symbolSpan = document.createElement('span');
                         symbolSpan.classList.add('symbol');
                         symbolSpan.textContent = s.emoji;
+                        if (s.name === 'Seven') {
+                            symbolSpan.classList.add('seven');
+                        }
                         reelElement.appendChild(symbolSpan);
                     });
 
-                    // >>>>>>>>>> PERBAIKAN KRITIS UNTUK POSISI AKHIR <<<<<<<<<<
-                    // Index dari simbol yang kita inginkan untuk mendarat di tengah
                     const finalSymbolArrIndex = LANDING_BOUNCE_SYMBOLS; 
-                    
-                    // Jarak dari atas reel ke bagian atas simbol final yang kita inginkan
                     const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
-                    
-                    // Posisi Y target untuk container reel agar finalSymbol tepat di tengah
                     const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
-                    console.log(`Reel ${reelElement.id} targetScrollPosition: ${targetScrollPosition}px`); // Debug log
+                    console.log(`Reel ${reelElement.id} targetScrollPosition: ${targetScrollPosition}px`); 
 
-                    // Durasi melambat: Total durasi dikurangi waktu spinning cepat
-                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000; // dalam detik
+                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000;
 
-                    // Set transisi dan target transform
-                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Melambat dengan easing
+                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; 
                     reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
-                    // Play reel stop sound when it's about to stop
                     setTimeout(() => {
                         reelStopSound.currentTime = 0;
                         reelStopSound.volume = 0.5;
                         reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
-                        resolve(finalSymbol); // Resolve setelah reel berhenti
-                    }, (REEL_STOP_DURATION - delayBeforeSlowdown)); // Resolusi ini harus pada akhir total durasi reel berputar
-                }, delayBeforeSlowdown); // Delay sebelum melambat
+                        resolve(finalSymbol); 
+                    }, (REEL_STOP_DURATION - delayBeforeSlowdown)); 
+                }, delayBeforeSlowdown); 
             });
         }
 
         async function spin() {
-            console.log("Spin button clicked. isSpinning:", isSpinning, "currentUser:", currentUser); // Debug log
+            console.log("Spin button clicked. isSpinning:", isSpinning, "currentUser:", currentUser); 
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
                     gameMessage.textContent = "Please login to play!";
@@ -839,19 +848,17 @@
             // ==============================================
             let resultReels = [];
             
-            // Random chance for a win (you can adjust probabilities)
             const winChance = Math.random(); 
             const sevenSymbol = symbols.find(s => s.name === 'Seven');
 
-            if (winChance < 0.01) { // 1% chance for Jackpot (777)
+            if (winChance < 0.01) { 
                  resultReels = [sevenSymbol, sevenSymbol, sevenSymbol];
                  console.log("Spin Result: JACKPOT (forced)");
-            } else if (winChance < 0.05) { // 4% chance for a Three of a Kind (excluding 777)
-                const winSymbol = getRandomSymbol(sevenSymbol); // Exclude Jackpot for this win
+            } else if (winChance < 0.05) { 
+                const winSymbol = getRandomSymbol(sevenSymbol); 
                 resultReels = [winSymbol, winSymbol, winSymbol];
                 console.log("Spin Result: Three of a Kind (forced)");
-            } else if (winChance < 0.12) { // 7% chance for Two Sevens (2x 7s)
-                // Place two Sevens, and one other symbol that is NOT a Seven
+            } else if (winChance < 0.12) { 
                 const nonSevenSymbol = getRandomSymbol(sevenSymbol);
                 const positions = [
                     [sevenSymbol, sevenSymbol, nonSevenSymbol],
@@ -860,8 +867,7 @@
                 ];
                 resultReels = positions[Math.floor(Math.random() * positions.length)];
                 console.log("Spin Result: Two Sevens (forced)");
-            } else if (winChance < 0.30) { // 18% chance for One Seven
-                // Place one Seven, and two other symbols that are NOT Sevens
+            } else if (winChance < 0.30) { 
                 const otherSymbol1 = getRandomSymbol(sevenSymbol);
                 const otherSymbol2 = getRandomSymbol(sevenSymbol);
                 const positions = [
@@ -871,13 +877,12 @@
                 ];
                 resultReels = positions[Math.floor(Math.random() * positions.length)];
                 console.log("Spin Result: One Seven (forced)");
-            } else { // Remaining chance for No Win (70%)
-                // Generate completely random symbols, ensuring no win combinations
+            } else { 
                 let attempts = 0;
                 do {
                     resultReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
                     attempts++;
-                    if (attempts > 100) { // Safety break
+                    if (attempts > 100) { 
                         console.warn("Too many attempts to generate non-winning combo. May result in a small win.");
                         break;
                     }
@@ -886,20 +891,20 @@
             }
 
             currentSpinResults = resultReels;
-            console.log("Final Spin Results (before animation):", currentSpinResults.map(s => s.emoji)); // Debug log
+            console.log("Final Spin Results (before animation):", currentSpinResults.map(s => s.emoji)); 
 
 
             const reelPromises = [
                 spinReel(reels_elements.reel1, currentSpinResults[0], 800),
-                spinReel(reels_elements.reel2, currentSpinResults[1], 1200),
+  spinReel(reels_elements.reel2, currentSpinResults[1], 1200),
                 spinReel(reels_elements.reel3, currentSpinResults[2], 1600)
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
-            console.log("All reels stopped. Final symbols:", finalReelSymbols.map(s => s.emoji)); // Debug log
+            console.log("All reels stopped. Final symbols:", finalReelSymbols.map(s => s.emoji)); 
 
             const winInfo = checkWin(finalReelSymbols, betAmount);
-            console.log("Win Info:", winInfo); // Debug log
+            console.log("Win Info:", winInfo); 
 
             if (winInfo.amount > 0) {
                 playerBalance += winInfo.amount;
@@ -937,11 +942,11 @@
                     case 'Lemon': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
                     case 'Seven':
                         winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
-                        totalWinAmount += resultSymbols[0].value * betAmount * 50; // Lebih besar untuk jackpot
+                        totalWinAmount += resultSymbols[0].value * betAmount * 50; 
                         break;
                     default: totalWinAmount += resultSymbols[0].value * betAmount * 3;
                 }
-                return { amount: totalWinAmount, message: winMessage }; // Return immediately if three of a kind
+                return { amount: totalWinAmount, message: winMessage }; 
             }
             // Check for Two Sevens (any two reels)
             else if (
@@ -951,7 +956,7 @@
             ) {
                 winMessage = `Two Sevens!`;
                 totalWinAmount += betAmount * 10;
-                return { amount: totalWinAmount, message: winMessage }; // Return immediately for two sevens
+                return { amount: totalWinAmount, message: winMessage }; 
             }
             // Check for One Seven (only if no other wins)
             else if (
@@ -959,28 +964,27 @@
                 resultSymbols[1].name === 'Seven' || 
                 resultSymbols[2].name === 'Seven'
             ) {
-                winMessage = `One Seven! Small win!`;
-                totalWinAmount += betAmount * 2;
-                return { amount: totalWinAmount, message: winMessage }; // Return immediately for one seven
+                if (totalWinAmount === 0) { 
+                    winMessage = `One Seven! Small win!`;
+                    totalWinAmount += betAmount * 2;
+                }
+                return { amount: totalWinAmount, message: winMessage }; 
             }
 
-            return { amount: totalWinAmount, message: winMessage }; // No win
+            return { amount: totalWinAmount, message: winMessage }; 
         }
 
         // ==============================================
         //           INISIALISASI GAME
         // ==============================================
         document.addEventListener('DOMContentLoaded', () => {
-            console.log("DOMContentLoaded fired."); // Debug log
-            // Penting: Inisialisasi tampilan reel pertama kali setelah DOM siap
+            console.log("DOMContentLoaded fired."); 
             initializeReelsDisplay(); 
-            // Kemudian, inisialisasi game (cek user, load saldo)
             initializeGame();
         });
 
         spinBtn.addEventListener('click', spin);
 
-        // Tambahan: Tambahkan event listener untuk mencegah autoplay blocking pada audio
         document.addEventListener('click', () => {
             if (backgroundMusic.paused && currentUser) { 
                 backgroundMusic.volume = 0.3;
