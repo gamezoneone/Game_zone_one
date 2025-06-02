@@ -187,7 +187,7 @@
             justify-content: space-around;
             gap: 5px; /* Added a small gap between reels */
             margin-bottom: 1rem; /* Reduced margin */
-            height: 0px; /* Fixed height for the visible area of the reels (3 symbols @ 100px / symbol) */
+            height: 100px; /* Fixed height for the visible area of the reels (3 symbols @ 100px / symbol) */
             overflow: hidden; /* Crucial: Hides symbols outside the view */
             border: 0.15rem solid #fff; /* Thinner border */
             border-radius: 0.6rem;
@@ -218,7 +218,7 @@
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
-            height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
+            height: 50px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
             display: flex; /* Untuk memusatkan emoji vertikal */
             justify-content: center;
             align-items: center;
@@ -238,7 +238,7 @@
             /* Pergeseran harus sebesar tinggi satu elemen symbol */
             /* Mobile: Tinggi simbol 100px (dari .reel .symbol) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(-100px); } 
+            100% { transform: translateY(10px); } 
         }
 
 
