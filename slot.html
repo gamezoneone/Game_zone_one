@@ -187,7 +187,7 @@
             justify-content: space-around;
             gap: 5px; /* Added a small gap between reels */
             margin-bottom: 1rem; /* Reduced margin */
-            height: 100px; /* Fixed height for the visible area of the reels (3 symbols @ 100px / symbol) */
+            height: 0px; /* Fixed height for the visible area of the reels (3 symbols @ 100px / symbol) */
             overflow: hidden; /* Crucial: Hides symbols outside the view */
             border: 0.15rem solid #fff; /* Thinner border */
             border-radius: 0.6rem;
@@ -206,7 +206,7 @@
             background-color: #fff;
             border-radius: 0.5rem; /* Adjusted border-radius for individual reels */
             border: 1px solid #333;
-            overflow: hidden; /* Hide anything outside this reel's boundary */
+            /*overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
             /* Remove 'top: 100px;' from here, it will be handled by JS for precise positioning */
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
