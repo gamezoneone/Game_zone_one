@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLOT77 - Game Slot Neon</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+        /* ==============================================
+           CSS UNTUK TAMPILAN GAME SLOT (MIRIP GAMBAR)
+           ============================================== */
+        :root {
+            font-size: 16px; /* Base font size for rem units */
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif; /* Fallback font */
+            /* Jika menggunakan Google Fonts, tambahkan: font-family: 'Press Start 2P', cursive; */
+            background-color: #0a0a0a; /* Darker background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh; /* Use full viewport height */
+            overflow: hidden;
+            color: #fff;
+            text-shadow: 0 0 0.3rem rgba(255, 255, 255, 0.5);
+            padding: 1rem; /* Add some padding around the edges */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+        .slot-game-container {
+            position: relative;
+            background: linear-gradient(45deg, #2b0051, #4d1872); /* Ungu gelap kebiruan */
+            border: 0.2rem solid #ff00ff; /* Neon magenta */
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow:
+                inset 0 0 1.5rem rgba(255, 0, 255, 0.5), /* Inner neon glow */
+                0 0 3rem rgba(255, 0, 255, 0.7),
+                0 0 1.8rem rgba(0, 255, 255, 0.5); /* Outer neon glow */
+            text-align: center;
+            width: 95%; /* Take up most of the width */
+            max-width: 650px; /* Max width for larger screens */
+            box-sizing: border-box;
+            min-height: 90vh; /* Ensure it takes up enough vertical space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden; /* Hide overflowing neon lines */
+        }
+
+        /* Dekorasi Garis Neon Horizontal */
+        .slot-game-container::before,
+        .slot-game-container::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 0.15rem;
+            background-color: #00ffff; /* Neon cyan */
+            box-shadow: 0 0 1rem #00ffff, 0 0 2rem rgba(0, 255, 255, 0.6);
+            border-radius: 0.1rem;
+        }
+        .slot-game-container::before {
+            top: 0.8rem;
+        }
+        .slot-game-container::after {
+            bottom: 0.8rem;
+        }
+
+        header {
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 2; /* Agar di atas elemen lain */
+        }
+
+        h1 {
+            font-size: 3.8rem; /* Lebih besar untuk efek utama */
+            color: #ffcc00; /* Neon kuning */
+            text-shadow:
+                0 0 0.5rem #ffcc00,    /* Yellow base glow */
+                0 0 1rem #ffcc00,
+                0 0 1.5rem #ffcc00,
+                0 0 2rem #ff0000,      /* Red outer glow */
+                0 0 3rem #ff0000,
+                0 0 4rem #ff0000;
+            margin: 0 auto; /* Tengah secara horizontal */
+            padding: 0.5rem 0;
+            letter-spacing: 0.2rem; /* Jarak antar huruf */
+            position: relative;
+            display: inline-block; /* Agar before/after bisa relatif terhadap h1 */
+        }
+
+        /* Garis Neon di Samping Judul H1 */
+        h1::before,
+        h1::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3rem; /* Lebar garis */
+            height: 0.5rem; /* Tinggi garis */
+            background-color: #ff00ff; /* Magenta */
+            box-shadow: 0 0 0.8rem #ff00ff, 0 0 1.5rem rgba(255, 0, 255, 0.6);
+            border-radius: 0.25rem;
+        }
+        h1::before {
+            left: -4rem; /* Sesuaikan posisi relatif terhadap h1 */
+        }
+        h1::after {
+            right: -4rem; /* Sesuaikan posisi relatif terhadap h1 */
+        }
+
+
+        .player-info {
+            font-size: 1.1rem; /* Adjusted for mobile */
+            margin-bottom: 1.5rem;
+            color: #00ffff; /* Neon cyan */
+            text-shadow: 0 0 0.5rem #00ffff;
+            display: flex;
+            flex-direction: column; /* Stack on mobile */
+            justify-content: center; /* Center items when stacked */
+            align-items: center;
+            gap: 0.5rem; /* Space between lines */
+            padding: 0 0.5rem;
+            background-color: rgba(0, 0, 0, 0.3); /* Slightly darker background */
+            border-radius: 0.5rem;
+            padding: 0.8rem;
+            border: 1px solid rgba(0, 255, 255, 0.5);
+            box-shadow: inset 0 0 0.5rem rgba(0, 255, 255, 0.3);
+        }
+        .player-info p {
+            margin: 0; /* Remove default paragraph margin */
+            line-height: 1.2;
+        }
+
+        .slot-machine {
+            background-color: rgba(0, 0, 0, 0.85); /* Lebih gelap, lebih solid */
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            border: 0.25rem solid #ff6600; /* Neon orange */
+            box-shadow:
+                inset 0 0 2rem rgba(255, 102, 0, 0.6), /* Inner glow */
+                0 0 1.5rem rgba(255, 102, 0, 0.4); /* Outer glow */
+            margin-bottom: 1.5rem;
+            flex-grow: 1; /* Allow slot machine to take available space */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* Area info di atas reel (Cherry, Orange, Lerang) */
+        .info-bar {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 0.8rem;
+            background-color: rgba(0, 0, 0, 0.6);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid #00ffff; /* Neon cyan */
+            box-shadow: inset 0 0 0.5rem rgba(0, 255, 255, 0.5);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            color: #00ffff;
+        }
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .info-light {
+            width: 0.6rem;
+            height: 0.6rem;
+            border-radius: 50%;
+            background-color: #ff00ff; /* Default color */
+            box-shadow: 0 0 0.4rem #ff00ff;
+        }
+        .info-light.cherry { background-color: #ff00ff; box-shadow: 0 0 0.4rem #ff00ff; }
+        .info-light.orange { background-color: #ff6600; box-shadow: 0 0 0.4rem #ff6600; }
+        .info-light.lerang { background-color: #99ff33; box-shadow: 0 0 0.4rem #99ff33; }
+
+
+        .reels {
+            display: flex;
+            justify-content: space-around;
+            gap: 0.8rem; /* Adjusted gap */
+            margin-bottom: 1.5rem;
+            height: 120px; /* Reduced height for smaller screens */
+            overflow: hidden;
+            border: 0.2rem solid #fff; /* Border reel yang lebih menonjol */
+            border-radius: 0.8rem;
+            background-color: #1a1a1a; /* Background reel yang lebih gelap */
+            position: relative;
+            flex-shrink: 0; /* Prevent reels from shrinking */
+            box-shadow: inset 0 0 1rem rgba(255,255,255,0.3); /* Inner light effect */
+        }
+
+        .reel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #0d0d0d;
+            border-radius: 0.6rem;
+            border: 1px solid #333;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .reel img {
+            width: 90%; /* Adjust image width to fit reel */
+            max-width: 100px; /* Max size for symbols */
+            height: 100px; /* Fixed height for symbols */
+            object-fit: contain;
+            padding: 0.3rem;
+            box-sizing: border-box;
+            display: block;
+            filter: drop-shadow(0 0 0.3rem rgba(255, 255, 0, 0.5));
+        }
+
+        .controls {
+            display: flex;
+            flex-direction: column; /* Stack on mobile */
+            justify-content: center;
+            align-items: center;
+            gap: 1rem; /* Space between bet control and spin button */
+            margin-top: 1rem;
+        }
+
+        .bet-control {
+            display: flex; /* Keep label and input inline */
+            align-items: center;
+            gap: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(153, 255, 51, 0.5); /* Neon green */
+            box-shadow: inset 0 0 0.5rem rgba(153, 255, 51, 0.3);
+        }
+
+        .bet-control label {
+            font-size: 1.1rem;
+            color: #99ff33; /* Neon hijau */
+            text-shadow: 0 0 0.5rem #99ff33;
+        }
+
+        .bet-control input {
+            width: 70px; /* Narrower input for mobile */
+            padding: 0.6rem 0.8rem;
+            border-radius: 0.5rem; /* Slightly smaller radius */
+            border: 0.1rem solid #66ffff; /* Neon aqua */
+            background-color: #0d1217;
+            color: #fff;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: inset 0 0 0.6rem rgba(102, 255, 255, 0.4);
+            outline: none;
+        }
+        .bet-control input:focus {
+            border-color: #ff00ff;
+            box-shadow: inset 0 0 0.9rem rgba(255, 0, 255, 0.6);
+        }
+
+        button {
+            background: linear-gradient(135deg, #ff00ff, #8a2be2); /* Neon magenta ke ungu */
+            color: #fff;
+            padding: 0.8rem 1.5rem; /* Smaller padding for mobile */
+            border: none;
+            border-radius: 0.8rem;
+            font-size: 1.5rem; /* Smaller font for mobile */
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 0 1.2rem rgba(255, 0, 255, 0.7), 0 0 0.8rem rgba(138, 43, 226, 0.5);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05rem;
+            text-shadow: 0 0 0.3rem rgba(0,0,0,0.5);
+            width: 100%; /* Full width button */
+            max-width: 200px; /* Max width for button */
+        }
+
+        button:hover {
+            background: linear-gradient(135deg, #8a2be2, #ff00ff);
+            box-shadow: 0 0 1.8rem rgba(255, 0, 255, 0.9), 0 0 1.2rem rgba(138, 43, 226, 0.7);
+            transform: translateY(-0.2rem);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 0 0.5rem rgba(255, 0, 255, 0.5);
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+            opacity: 0.7;
+        }
+
+        .messages {
+            margin-top: 1.2rem;
+            font-size: 1.1rem;
+            color: #00ff00; /* Neon hijau */
+            text-shadow: 0 0 0.6rem #00ff00;
+            min-height: 2rem; /* Menjaga tinggi agar tidak bergeser */
+            background-color: rgba(0, 0, 0, 0.4);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid rgba(0, 255, 0, 0.5);
+        }
+
+        /* Styling untuk tombol logout */
+        .control-btn {
+            background: linear-gradient(135deg, #007bff, #00c6ff); /* Biru muda */
+            font-size: 0.9rem;
+            padding: 0.5rem 0.8rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0 0.6rem rgba(0, 123, 255, 0.6);
+        }
+
+        .control-btn:hover {
+            background: linear-gradient(135deg, #00c6ff, #007bff);
+            box-shadow: 0 0 0.9rem rgba(0, 123, 255, 0.8);
+            transform: translateY(-0.1rem);
+        }
+
+        /* Bottom "indicators" - GRIFEINE, 777, U.S.NAGS */
+        .bottom-indicators {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1.5rem;
+            gap: 0.5rem; /* Added gap for smaller screens */
+        }
+        .bottom-indicator-box {
+            flex: 1;
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 0.15rem solid #00ffff;
+            border-radius: 0.6rem;
+            padding: 0.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            color: #00ffff;
+            text-shadow: 0 0 0.5rem #00ffff;
+            box-shadow: inset 0 0 0.8rem rgba(0, 255, 255, 0.4);
+            letter-spacing: 0.05rem;
+            display: flex; /* For 777 alignment */
+            justify-content: center;
+            align-items: center;
+            min-height: 2.5rem; /* Ensure consistent height */
+        }
+        .bottom-indicator-box.seven-display {
+            font-size: 2.2rem; /* Larger for 777 */
+            color: #ffcc00;
+            text-shadow: 0 0 0.5rem #ffcc00, 0 0 1rem #ff0000;
+            border-color: #ffcc00;
+            box-shadow: inset 0 0 1rem rgba(255, 204, 0, 0.6), 0 0 0.8rem rgba(255, 204, 0, 0.4);
+        }
+
+        /* Media Query for larger screens (e.g., tablets and desktops) */
+        @media (min-width: 600px) {
+            .slot-game-container {
+                padding: 30px;
+                max-width: 650px; /* Restore original max width */
+                min-height: auto; /* Allow height to adjust */
+            }
+
+            h1 {
+                font-size: 3.8em;
+                letter-spacing: 3px;
+            }
+            h1::before, h1::after {
+                width: 4rem; /* Larger lines for desktop */
+                height: 0.8rem;
+                left: -5rem;
+                right: -5rem;
+            }
+            .player-info {
+                font-size: 1.3em;
+                flex-direction: row; /* Back to row layout */
+                justify-content: space-between;
+                padding: 0 10px;
+            }
+
+            .reels {
+                height: 150px; /* Restore original height */
+                gap: 15px;
+            }
+
+            .reel img {
+                max-width: 120px;
+                height: 120px;
+            }
+
+            .controls {
+                flex-direction: row; /* Back to row layout */
+                gap: 25px;
+            }
+
+            .bet-control input {
+                width: 90px;
+                font-size: 1.2em;
+            }
+
+            button {
+                padding: 15px 30px;
+                font-size: 1.8em;
+                max-width: none; /* Remove max width constraint */
+            }
+
+            .messages {
+                font-size: 1.4em;
+            }
+
+            .control-btn {
+                font-size: 1em;
+                padding: 8px 15px;
+            }
+
+            .bottom-indicators {
+                gap: 1rem;
+            }
+            .bottom-indicator-box {
+                font-size: 1.2rem;
+                min-height: 3.5rem;
+            }
+            .bottom-indicator-box.seven-display {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="slot-game-container">
+        <header>
+            <h1>SLOT77</h1>
+            <div class="player-info">
+                <p>Player: <span id="playerName">Loading...</span></p>
+                <p>Balance: <span id="playerBalance">0</span> Credits</p>
+                <button id="logoutBtn" class="control-btn" style="display: none;">Logout</button>
+            </div>
+        </header>
+
+        <div class="slot-machine">
+            <div class="info-bar">
+                <div class="info-item">
+                    <span class="info-light cherry"></span> CHERRY
+                </div>
+                <div class="info-item">
+                    <span class="info-light orange"></span> ORANGE
+                </div>
+                <div class="info-item">
+                    <span class="info-light lerang"></span> LERANG
+                </div>
+            </div>
+
+            <div class="reels">
+                <div class="reel" id="reel1"></div>
+                <div class="reel" id="reel2"></div>
+                <div class="reel" id="reel3"></div>
+            </div>
+            <div class="controls">
+                <div class="bet-control">
+                    <label for="betAmount">Bet:</label>
+                    <input type="number" id="betAmount" value="10" min="1">
+                </div>
+                <button id="spinBtn">SPIN</button>
+            </div>
+            <div class="messages">
+                <p id="gameMessage">Checking user session...</p>
+            </div>
+
+            <div class="bottom-indicators">
+                <div class="bottom-indicator-box">GRIFEINE</div>
+                <div class="bottom-indicator-box seven-display">777</div>
+                <div class="bottom-indicator-box">U.S. NAGS</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+  const supabase = window.supabase.createClient(
+            'https://vqmfachxnjyxwuavpgds.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+        );
+
+        let user; 
+        let userSaldo = 0;
+        let userId = null; 
+        
+        const playerNameSpan = document.getElementById('playerName');
+        const playerBalanceSpan = document.getElementById('playerBalance');
+        const spinBtn = document.getElementById('spinBtn');
+        const betAmountInput = document.getElementById('betAmount');
+        const gameMessage = document.getElementById('gameMessage');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        const reels_elements = {
+            reel1: document.getElementById('reel1'),
+            reel2: document.getElementById('reel2'),
+            reel3: document.getElementById('reel3')
+        };
+
+        // ==============================================
+        //           KONFIGURASI GAME SLOT
+        // ==============================================
+        const symbols = [
+            { name: 'Cherry', image: 'images/cherry.png', value: 10 },
+            { name: 'Orange', image: 'images/orange.png', value: 15 },
+            { name: 'Lerang', image: 'images/lerang.png', value: 20 },
+            { name: 'Seven', image: 'images/seven.png', value: 100, isJackpot: true }
+            // Anda bisa tambahkan simbol lain di sini
+            // { name: 'Wild', image: 'images/wild.png', value: 0, isWild: true },
+            // { name: 'Bonus', image: 'images/bonus.png', value: 0, isScatter: true }
+        ];
+
+        // REEL_STOP_DURATION: Durasi total reel berputar (dalam ms)
+        const REEL_STOP_DURATION = 2000; // Contoh: 2 detik per reel
+        // SYMBOLS_PER_REEL_ANIMATION: Jumlah simbol yang akan di-render untuk efek putaran
+        // Semakin tinggi, semakin 'padat' putarannya, tapi bisa memakan performa jika terlalu tinggi
+        const SYMBOLS_PER_REEL_ANIMATION = 20;
+
+        let currentUser = null;
+        let playerBalance = 0;
+        let isSpinning = false;
+        let currentSpinResults = null; // Menyimpan hasil simbol yang ditentukan sebelum animasi
+
+        // ==============================================
+        //           FUNGSI BANTUAN UI
+        // ==============================================
+        function updateBalanceDisplay() {
+            playerBalanceSpan.textContent = playerBalance;
+        }
+
+        function disableGameControls() {
+            spinBtn.disabled = true;
+            betAmountInput.disabled = true;
+        }
+
+        function enableGameControls() {
+            spinBtn.disabled = false;
+            betAmountInput.disabled = false;
+        }
+
+        // Menampilkan simbol awal pada reel
+        function initializeReelsDisplay() {
+            // Tinggi yang diharapkan dari setiap simbol gambar, sesuaikan jika gambar Anda berbeda
+            const initialSymbolHeight = 100;
+            // Dapatkan tinggi visual reel yang sudah diatur di CSS
+            const reelViewHeight = reels_elements.reel1.clientHeight;
+            // Hitung offset agar simbol berada di tengah reel view
+            const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
+
+
+            Object.values(reels_elements).forEach((reel) => {
+                reel.innerHTML = '';
+                const img = document.createElement('img');
+                const defaultSymbol = symbols[0]; // Ambil simbol pertama sebagai default
+                img.src = defaultSymbol.image;
+                img.alt = defaultSymbol.name;
+                // Atur tinggi gambar agar sesuai dengan yang diharapkan
+                img.style.height = `${initialSymbolHeight}px`;
+                img.style.width = `auto`; // Pertahankan rasio aspek
+                img.style.padding = `5px`;
+                reel.appendChild(img);
+
+                // Atur posisi awal agar simbol berada di tengah reel view
+                reel.style.transform = `translateY(${offsetToCenter}px)`;
+            });
+        }
+
+        // ==============================================
+        //           LOGIKA SUPABASE
+        // ==============================================
+
+        async function loadUserData(userId) {
+            const { data, error } = await supabase
+                .from('users_data')
+                .select('*')
+                .eq('user_id', userId)
+                .single();
+
+            if (error && error.code !== 'PGRST116') { // PGRST116: no rows found
+                console.error('Error loading user data:', error.message);
+                gameMessage.textContent = 'Error loading user data. Please refresh or contact support.';
+                disableGameControls();
+                return;
+            }
+
+            if (data) {
+                playerBalance = data.saldo;
+                playerNameSpan.textContent = data.username || currentUser.email.split('@')[0];
+                gameMessage.textContent = 'Welcome back!';
+                enableGameControls();
+            } else {
+                // Jika user_id ada di auth tapi tidak di tabel users_data, anggap user baru yang perlu diinisialisasi
+                const initialBalance = 1000; // Saldo awal untuk user baru
+                const defaultUsername = currentUser.email.split('@')[0]; // Ambil bagian pertama dari email
+                const { data: newUserData, error: insertError } = await supabase
+                    .from('users_data')
+                    .insert({ user_id: userId, saldo: initialBalance, username: defaultUsername })
+                    .select() // Tambahkan .select() untuk mengembalikan data yang dimasukkan
+                    .single();
+
+                if (insertError) {
+                    console.error('Error initializing new user data:', insertError.message);
+                    gameMessage.textContent = 'Error initializing your account. Please try again.';
+                    disableGameControls();
+                    return;
+                }
+                playerBalance = newUserData.balance;
+                playerNameSpan.textContent = newUserData.username;
+                gameMessage.textContent = `Welcome, ${newUserData.username}! You received ${initialBalance} credits!`;
+                enableGameControls();
+            }
+            updateBalanceDisplay();
+        }
+
+        async function updateUserData(newBalance) {
+            if (!currentUser) {
+                console.error('No current user to update data for.');
+                gameMessage.textContent = 'Error: Not logged in to save balance.';
+                return;
+            }
+
+            const { error } = await supabase
+                .from('users_data')
+                .update({ balance: newBalance })
+                .eq('user_id', currentUser.id);
+
+            if (error) {
+                console.error('Error updating user balance:', error.message);
+                gameMessage.textContent = 'Error saving balance. Please refresh.';
+            }
+        }
+
+        async function initializeGame() {
+            gameMessage.textContent = 'Checking user session...';
+            disableGameControls();
+
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (user) {
+                currentUser = user;
+                gameMessage.textContent = 'User found. Loading player data...';
+                await loadUserData(user.id);
+                logoutBtn.style.display = 'inline-block';
+            } else {
+                gameMessage.textContent = 'You are not logged in. Please go to the login/registration page to play.';
+                playerNameSpan.textContent = 'Guest';
+                playerBalanceSpan.textContent = 'N/A';
+                logoutBtn.style.display = 'none';
+                // Opsional: Redirect ke halaman login/registrasi jika tidak login
+                // window.location.href = 'index.html';
+            }
+        }
+
+        logoutBtn.addEventListener('click', async () => {
+            const { error } = await supabase.auth.signOut();
+            if (error) {
+                console.error('Logout error:', error.message);
+                gameMessage.textContent = 'Logout failed.';
+            } else {
+                currentUser = null;
+                playerBalance = 0;
+                updateBalanceDisplay();
+                playerNameSpan.textContent = 'Guest';
+                gameMessage.textContent = 'Logged out. Please login again to play.';
+                disableGameControls();
+                logoutBtn.style.display = 'none';
+                // Opsional: Redirect ke halaman login setelah logout
+                // window.location.href = 'index.html';
+            }
+        });
+        // ==============================================
+        //           LOGIKA GAME SLOT
+        // ==============================================
+
+        function getRandomSymbol() {
+            const randomIndex = Math.floor(Math.random() * symbols.length);
+            return symbols[randomIndex];
+        }
+
+        // Fungsi animasi reel
+        function spinReel(reelElement, finalSymbol) {
+            return new Promise(resolve => {
+                const animationSymbols = [];
+                // Tinggi yang diharapkan dari setiap simbol gambar, sesuaikan jika gambar Anda berbeda
+                const initialSymbolHeight = 100;
+
+                // Tambahkan simbol acak untuk efek putaran
+                for (let i = 0; i < SYMBOLS_PER_REEL_ANIMATION; i++) {
+                    animationSymbols.push(getRandomSymbol());
+                }
+                // Tambahkan simbol final di akhir
+                animationSymbols.push(finalSymbol);
+                // Tambahkan beberapa simbol acak lagi setelah final untuk 'overshoot' visual
+                for (let i = 0; i < 5; i++) { // Jumlah simbol untuk overshoot
+                    animationSymbols.push(getRandomSymbol());
+                }
+
+                // Kosongkan reel dan tambahkan semua simbol animasi
+                reelElement.innerHTML = '';
+                animationSymbols.forEach(s => {
+                    const img = document.createElement('img');
+                    img.src = s.image;
+                    img.alt = s.name;
+                    img.style.height = `${initialSymbolHeight}px`; // Pertahankan tinggi
+                    img.style.width = `auto`;
+                    img.style.padding = `5px`;
+                    reelElement.appendChild(img);
+                });
+
+                // Hitung posisi berhenti
+                const reelViewHeight = reelElement.clientHeight;
+                const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
+                // Posisi simbol final dalam array animasi
+                const finalSymbolAnimationIndex = animationSymbols.length - (5 + 1); // Posisi simbol final (setelah overshoot)
+                // Offset 10px dari padding gambar (total 5px atas + 5px bawah)
+                const targetScrollPosition = -(finalSymbolAnimationIndex * (initialSymbolHeight + 10));
+
+                // Reset transisi dan posisi awal untuk memulai animasi
+                reelElement.style.transition = `none`;
+                reelElement.style.transform = `translateY(0px)`;
+                void reelElement.offsetWidth; // Paksa reflow
+
+                // Mulai animasi
+                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Ease-out
+                reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
+
+                // Setelah animasi selesai, bersihkan dan tampilkan hanya simbol final
+                setTimeout(() => {
+                    reelElement.style.transition = 'none';
+                    reelElement.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = finalSymbol.image;
+                    img.alt = finalSymbol.name;
+                    img.style.height = `${initialSymbolHeight}px`;
+                    img.style.width = `auto`;
+                    img.style.padding = `5px`;
+                    reelElement.appendChild(img);
+                    reelElement.style.transform = `translateY(${offsetToCenter}px)`; // Set ke posisi tengah
+                    resolve(finalSymbol);
+                }, REEL_STOP_DURATION);
+            });
+        }
+
+        // Fungsi utama putaran slot
+        async function spin() {
+            if (isSpinning || !currentUser) {
+                if (!currentUser) {
+                    gameMessage.textContent = "Please login to play!";
+                } else {
+                    gameMessage.textContent = "Please wait for current spin to finish.";
+                }
+                return;
+            }
+
+            const betAmount = parseInt(betAmountInput.value);
+            if (isNaN(betAmount) || betAmount <= 0) {
+                gameMessage.textContent = "Please enter a valid bet amount (min 1).";
+                return;
+            }
+
+            if (playerBalance < betAmount) {
+                gameMessage.textContent = "Not enough credits! Please top up or decrease your bet.";
+                return;
+            }
+
+            isSpinning = true;
+            disableGameControls();
+            gameMessage.textContent = "Spinning reels...";
+
+            playerBalance -= betAmount;
+            updateBalanceDisplay();
+            await updateUserData(playerBalance); // Simpan saldo yang sudah dikurangi
+
+            // Tentukan hasil simbol untuk putaran ini SEBELUM animasi dimulai
+            currentSpinResults = [
+                getRandomSymbol(),
+                getRandomSymbol(),
+                getRandomSymbol()
+            ];
+
+            // Jalankan animasi reel secara berurutan dengan sedikit jeda antar reel
+            const reelPromises = [
+                spinReel(reels_elements.reel1, currentSpinResults[0]),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)), // Reel 2 mulai 300ms setelah reel 1
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))  // Reel 3 mulai 600ms setelah reel 1
+            ];
+
+            // Tunggu semua reel selesai berputar
+            const finalReelSymbols = await Promise.all(reelPromises);
+
+            // Cek kemenangan
+            const winInfo = checkWin(finalReelSymbols, betAmount);
+
+            if (winInfo.amount > 0) {
+                playerBalance += winInfo.amount;
+                updateBalanceDisplay();
+                await updateUserData(playerBalance); // Simpan saldo kemenangan
+                gameMessage.textContent = winInfo.message + ` You won ${winInfo.amount} credits! Total: ${playerBalance}`;
+            } else {
+                gameMessage.textContent = "No win this time. Good luck on the next spin!";
+            }
+
+            isSpinning = false;
+            enableGameControls();
+        }
+
+        // Fungsi untuk mengecek kemenangan
+        function checkWin(resultSymbols, betAmount) {
+            let totalWinAmount = 0;
+            let winMessage = "";
+
+            // Contoh Payline 1: Tiga simbol yang sama di garis tengah
+            if (resultSymbols[0].name === resultSymbols[1].name && resultSymbols[1].name === resultSymbols[2].name) {
+                winMessage = `Three ${resultSymbols[0].name}s!`;
+                // Atur multiplier berdasarkan simbol
+                switch(resultSymbols[0].name) {
+                    case 'Cherry': totalWinAmount += resultSymbols[0].value * betAmount * 5; break;
+                    case 'Orange': totalWinAmount += resultSymbols[0].value * betAmount * 7; break;
+                    case 'Lerang': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
+                    case 'Seven':
+                        winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
+                        totalWinAmount += resultSymbols[0].value * betAmount * 50; // Jackpot besar!
+                        break;
+                    default: totalWinAmount += resultSymbols[0].value * betAmount * 3; // Default multiplier
+                }
+            }
+            // Anda bisa menambahkan payline dan logika kemenangan yang lebih kompleks di sini:
+            // Contoh Payline 2: Dua simbol "7" di awal
+            else if (resultSymbols[0].name === 'Seven' && resultSymbols[1].name === 'Seven' && resultSymbols[2].name !== 'Seven') {
+                winMessage = `Two Sevens!`;
+                totalWinAmount += betAmount * 10; // Kemenangan kecil untuk 2 "7"
+            }
+            // Contoh Payline 3: Satu simbol "7"
+            else if (resultSymbols[0].name === 'Seven' || resultSymbols[1].name === 'Seven' || resultSymbols[2].name === 'Seven') {
+                if (totalWinAmount === 0) { // Hanya jika belum ada kemenangan lain
+                    winMessage = `One Seven! Small win!`;
+                    totalWinAmount += betAmount * 2; // Kemenangan sangat kecil untuk 1 "7"
+                }
+            }
+            // Implementasi untuk WILD/SCATTER (jika Anda menambahkannya di `symbols` array)
+            // if (resultSymbols[0].isWild || resultSymbols[1].isWild || resultSymbols[2].isWild) { ... }
+
+            return { amount: totalWinAmount, message: winMessage };
+        }
+
+
+        // ==============================================
+        //           INISIALISASI
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeReelsDisplay(); // Tampilkan simbol awal
+            initializeGame(); // Mulai proses otentikasi dan pemuatan data pemain
+        });
+
+        // Tambahkan event listener untuk tombol spin
+        spinBtn.addEventListener('click', spin);
+    </script>
+</body>
+</html>
