@@ -183,14 +183,14 @@
         .info-light.lerang { background-color: #99ff33; box-shadow: 0 0 0.3rem #99ff33; }
 
 
-        .reels {
+               .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0.6rem; /* Reduced gap */
-            margin-bottom: 1rem; /* Reduced margin */
-            height: 100px; /* Further reduced height for symbols */
-            overflow: hidden;
-            border: 0.15rem solid #fff; /* Thinner border */
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            height: 100px; /* TINGGI AREA REEL YANG TERLIHAT */
+            overflow: hidden; /* SANGAT PENTING: Untuk menyembunyikan simbol di luar area pandang */
+            border: 0.15rem solid #fff;
             border-radius: 0.6rem;
             background-color: #1a1a1a;
             position: relative;
@@ -202,25 +202,29 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: flex-start; /* Simbol akan dimulai dari atas */
             align-items: center;
             background-color: #0d0d0d;
             border-radius: 0.5rem;
             border: 1px solid #333;
-            overflow: hidden;
+            overflow: hidden; /* Tetap hidden jika ada masalah di dalamnya */
             position: relative;
+            /* Tambahkan ini agar reel bisa bergeser */
+            transition: transform 0s ease-out; /* Default transition, akan diubah oleh JS */
         }
 
         .reel img {
             width: 90%;
-            max-width: 80px; /* Reduced max-width for symbols */
-            height: 80px; /* Reduced fixed height for symbols */
+            max-width: 80px;
+            height: 80px; /* Tinggi setiap simbol gambar */
             object-fit: contain;
-            padding: 0.2rem; /* Reduced padding */
-            box-sizing: border-box;
+            padding: 2px; /* Padding ini penting untuk perhitungan posisi */
+            box-sizing: border-box; /* Padding dihitung dalam total dimensi */
             display: block;
             filter: drop-shadow(0 0 0.2rem rgba(255, 255, 0, 0.5));
+            /* JANGAN ADA MARGIN/PADDING LAIN yang akan memengaruhi tinggi */
         }
+
 
         .controls {
             display: flex;
@@ -400,6 +404,7 @@
                 flex-direction: row;
                 gap: 20px;
             }
+
             .bet-control input {
                 width: 80px;
                 font-size: 1.1em;
@@ -525,52 +530,104 @@
             { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
         ];
 
-        const REEL_STOP_DURATION = 2500;
-        const SYMBOLS_PER_REEL_ANIMATION = 20;
+ const REEL_STOP_DURATION = 3000; // Durasi total reel berputar (dalam ms)
+        // Jumlah simbol yang akan di-render untuk efek putaran (semakin tinggi, semakin banyak gulungan)
+        const SYMBOLS_PER_REEL_ANIMATION = 50; // Ditingkatkan untuk gulungan yang lebih panjang
 
         let currentUser = null;
-        let playerBalance = 0; // Variabel JS untuk menyimpan saldo
+        let playerBalance = 0;
         let isSpinning = false;
         let currentSpinResults = null;
 
         // ==============================================
         //           FUNGSI BANTUAN UI
         // ==============================================
-        function updateBalanceDisplay() {
-            playerBalanceSpan.textContent = playerBalance;
-        }
-
-        function disableGameControls() {
-            spinBtn.disabled = true;
-            betAmountInput.disabled = true;
-        }
-
-        function enableGameControls() {
-            spinBtn.disabled = false;
-            betAmountInput.disabled = false;
-        }
+        // ... (updateBalanceDisplay, disableGameControls, enableGameControls) ...
 
         // Menampilkan simbol awal pada reel
         function initializeReelsDisplay() {
-            const initialSymbolHeight = 80; // Disesuaikan dengan tinggi reel baru
+            // Tinggi yang diharapkan dari setiap simbol gambar, sesuaikan jika gambar Anda berbeda
+            const individualSymbolHeight = 84; // 80px (height) + 2px*2 (padding)
+            // Dapatkan tinggi visual reel yang sudah diatur di CSS
             const reelViewHeight = reels_elements.reel1.clientHeight;
-            const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
+            // Hitung offset agar simbol berada di tengah reel view
+            const offsetToCenter = (reelViewHeight / 2) - (individualSymbolHeight / 2);
 
             Object.values(reels_elements).forEach((reel) => {
                 reel.innerHTML = '';
                 const img = document.createElement('img');
-                const defaultSymbol = symbols[0];
+                const defaultSymbol = symbols[0]; // Ambil simbol pertama sebagai default
                 img.src = defaultSymbol.image;
                 img.alt = defaultSymbol.name;
-                img.style.height = `${initialSymbolHeight}px`;
-                img.style.width = `auto`;
-                img.style.padding = `2px`; // Disesuaikan
-                reel.appendChild(img);
+                reel.appendChild(img); // Cukup satu simbol
+                // Atur posisi awal agar simbol berada di tengah reel view
                 reel.style.transform = `translateY(${offsetToCenter}px)`;
             });
         }
 
-        // ==============================================
+        // Fungsi animasi reel
+        function spinReel(reelElement, finalSymbol) {
+            return new Promise(resolve => {
+                const individualSymbolHeight = 84; // 80px height + 2px padding top + 2px padding bottom
+
+                const animationSymbols = [];
+                // Tambahkan banyak simbol acak di awal untuk efek gulungan yang panjang
+                for (let i = 0; i < SYMBOLS_PER_REEL_ANIMATION; i++) {
+                    animationSymbols.push(getRandomSymbol());
+                }
+                // Tambahkan simbol final di akhir
+                animationSymbols.push(finalSymbol);
+                // Tambahkan beberapa simbol acak lagi setelah final untuk 'overshoot' visual
+                for (let i = 0; i < 5; i++) { // Jumlah simbol untuk overshoot
+                    animationSymbols.push(getRandomSymbol());
+                }
+
+                // Kosongkan reel dan tambahkan semua simbol animasi
+                reelElement.innerHTML = '';
+                animationSymbols.forEach(s => {
+                    const img = document.createElement('img');
+                    img.src = s.image;
+                    img.alt = s.name;
+                    // img.style.height dan img.style.width sudah diatur oleh CSS global .reel img
+                    // Tidak perlu set di JS lagi kecuali ingin override
+                    reelElement.appendChild(img);
+                });
+
+                // Hitung posisi berhenti
+                // Posisi simbol final dalam array animasi
+                const finalSymbolAnimationIndex = animationSymbols.length - (5 + 1); // Posisi simbol final (setelah overshoot)
+                const targetScrollPosition = -(finalSymbolAnimationIndex * individualSymbolHeight);
+
+                // Reset transisi dan posisi awal untuk memulai animasi dari 0
+                reelElement.style.transition = `none`;
+                reelElement.style.transform = `translateY(0px)`;
+                void reelElement.offsetWidth; // Paksa reflow agar reset transisi berlaku
+
+                // Mulai animasi gulungan
+                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Ease-out
+                reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
+
+                // Setelah animasi selesai, bersihkan dan tampilkan hanya simbol final di tengah reel
+                setTimeout(() => {
+                    reelElement.style.transition = 'none'; // Matikan transisi agar perubahan posisi instan
+                    reelElement.innerHTML = ''; // Hapus semua simbol animasi
+                    const img = document.createElement('img');
+                    img.src = finalSymbol.image;
+                    img.alt = finalSymbol.name;
+                    reelElement.appendChild(img); // Hanya tambahkan simbol final
+                    // Atur posisi simbol final agar berada di tengah area pandang reel
+                    const reelViewHeight = reelElement.clientHeight;
+                    const offsetToCenter = (reelViewHeight / 2) - (individualSymbolHeight / 2);
+                    reelElement.style.transform = `translateY(${offsetToCenter}px)`; // Set ke posisi tengah
+
+                    reelStopSound.currentTime = 0;
+                    reelStopSound.volume = 0.5;
+                    reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
+
+                    resolve(finalSymbol);
+                }, REEL_STOP_DURATION);
+            });
+        }
         //           LOGIKA SUPABASE
         // ==============================================
 
@@ -615,6 +672,7 @@
             }
             updateBalanceDisplay();
         }
+
         async function updateUserData(newBalance) {
             if (!currentUser) {
                 console.error('No current user to update data for.');
@@ -699,8 +757,7 @@
                 for (let i = 0; i < 5; i++) {
                     animationSymbols.push(getRandomSymbol());
                 }
-
-                reelElement.innerHTML = '';
+reelElement.innerHTML = '';
                 animationSymbols.forEach(s => {
                     const img = document.createElement('img');
                     img.src = s.image;
