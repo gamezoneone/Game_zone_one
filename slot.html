@@ -206,7 +206,7 @@
             background-color: #fff;
             border-radius: 0.5rem; /* Adjusted border-radius for individual reels */
             border: 1px solid #333;
-            /*overflow: hidden; /* Hide anything outside this reel's boundary */
+            overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
             /* Remove 'top: 100px;' from here, it will be handled by JS for precise positioning */
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
@@ -218,7 +218,7 @@
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
-            height: 50px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
+            height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
             display: flex; /* Untuk memusatkan emoji vertikal */
             justify-content: center;
             align-items: center;
@@ -238,7 +238,7 @@
             /* Pergeseran harus sebesar tinggi satu elemen symbol */
             /* Mobile: Tinggi simbol 100px (dari .reel .symbol) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(10px); } 
+            100% { transform: translateY(50px); } 
         }
 
 
