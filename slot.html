@@ -208,13 +208,13 @@
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
-            top: 17px;
+            top: 0px;
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
         }
 
         /* Styling untuk emoji symbols */
         .reel .symbol {
-            font-size: 80px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
+            font-size: 60px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
@@ -476,8 +476,15 @@
             </div>
         </div>
     </div>
+<audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
+    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
+    <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
+    <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
+  <script>
+        console.log("Script starting..."); // Debug log utama, harus selalu muncul
 
-    <script>
+        // Supabase client initialization
         const supabase = window.supabase.createClient(
           'https://vqmfachxnjyxwuavpgds.supabase.co',
           'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
@@ -485,6 +492,9 @@
         
         let currentSaldo = 0; // Ini akan diperbarui dari Supabase
 
+        // ==============================================
+        //           DOM ELEMENTS & AUDIO
+        // ==============================================
         const playerNameSpan = document.getElementById('playerName');
         const playerBalanceSpan = document.getElementById('playerBalance');
         const spinBtn = document.getElementById('spinBtn');
@@ -498,7 +508,6 @@
             reel3: document.getElementById('reel3')
         };
 
-        // ELEMEN AUDIO
         const spinStartSound = document.getElementById('spinStartSound');
         const reelStopSound = document.getElementById('reelStopSound');
         const winSound = document.getElementById('winSound');
@@ -511,15 +520,15 @@
         const symbols = [
             { name: 'Cherry', emoji: '🍒', value: 10 },
             { name: 'Orange', emoji: '🍊', value: 15 },
-            { name: 'Lemon',  emoji: '🔔', value: 20 }, // Ganti Lerang jadi Lemon
-            { name: 'Seven',  emoji: '✨', value: 100, isJackpot: true }
+            { name: 'Lemon',  emoji: '🍋', value: 20 },
+            { name: 'Sparkle',  emoji: '✨', value: 100, isJackpot: true } // Mengganti 7️⃣ dengan ✨
         ];
+        console.log("Symbols defined:", symbols); 
 
         // Durasi spin total untuk setiap reel. Reel selanjutnya akan berhenti sedikit lebih lambat.
-        const REEL_STOP_DURATION = 2000; // Total waktu reel berputar hingga berhenti (ms)
-        const INITIAL_SPIN_SYMBOLS_COUNT = 30; // Jumlah simbol acak untuk efek putaran awal yang panjang
-        const LANDING_BOUNCE_SYMBOLS = 3; // Jumlah simbol acak sebelum simbol final untuk efek 'pantulan'
-
+        const REEL_STOP_DURATION = 2500; 
+        const INITIAL_SPIN_SYMBOLS_COUNT = 30; 
+        const LANDING_BOUNCE_SYMBOLS = 3; 
 
         let currentUser = null;
         let playerBalance = 0; 
@@ -527,58 +536,76 @@
         let currentSpinResults = null;
 
         // ==============================================
-        //           FUNGSI BANTUAN UI
+        //           FUNGSI BANTUAN UI (DIPINDAHKAN KE ATAS SCRIPT BLOCK)
         // ==============================================
-        function updateBalanceDisplay() {
-            playerBalanceSpan.textContent = playerBalance;
-        }
-
         function disableGameControls() {
+            console.log("Fungsi disableGameControls terpanggil."); 
             spinBtn.disabled = true;
             betAmountInput.disabled = true;
         }
 
         function enableGameControls() {
+            console.log("Fungsi enableGameControls terpanggil."); 
             spinBtn.disabled = false;
             betAmountInput.disabled = false;
         }
 
-        function getSymbolDimensions() {
-            // Kita akan menggunakan DOMRect untuk mendapatkan ukuran sebenarnya
-            // Ini lebih robust daripada hardcoding nilai karena font-size emoji bisa bervariasi
-            const tempSymbol = document.createElement('span');
-            tempSymbol.classList.add('symbol');
-            tempSymbol.textContent = '🍒'; // Gunakan emoji apa saja untuk pengukuran
-            // Tambahkan ke DOM sementara agar browser bisa menghitung ukurannya
-            document.body.appendChild(tempSymbol);
-            const rect = tempSymbol.getBoundingClientRect();
-            document.body.removeChild(tempSymbol); // Hapus setelah pengukuran
+        function updateBalanceDisplay() {
+            playerBalanceSpan.textContent = playerBalance;
+            console.log("Saldo diperbarui menjadi:", playerBalance); 
+        }
 
+        function getSymbolDimensions() {
+            // Ambil dimensi dari elemen yang sudah ada di DOM untuk akurasi
+            const sampleSymbol = reels_elements.reel1.querySelector('.symbol');
+            if (sampleSymbol) {
+                const rect = sampleSymbol.getBoundingClientRect();
+                console.log(`Dimensi aktual simbol: Lebar=${rect.width}px, Tinggi=${rect.height}px`); 
+                return {
+                    height: rect.height,
+                    fullHeight: rect.height // Untuk konsistensi, anggap fullHeight sama dengan height
+                };
+            }
+            // Fallback jika entah bagaimana simbol belum ada (seharusnya tidak terjadi dengan inisialisasi HTML)
+            const defaultHeight = window.innerWidth < 600 ? 100 : 100; // Tinggi 100px sudah konsisten di CSS
+            console.warn(`Fallback: Menggunakan tinggi simbol default ${defaultHeight}px.`);
             return {
-                height: rect.height,
-                fullHeight: rect.height // Karena tidak ada padding/margin di sini
+                height: defaultHeight,
+                fullHeight: defaultHeight
             };
         }
         
         function initializeReelsDisplay() {
-            // Gunakan requestAnimationFrame untuk memastikan ukuran elemen sudah dihitung
+            console.log("Memulai inisialisasi tampilan gulungan."); 
             requestAnimationFrame(() => {
-                const { height: symbolHeight } = getSymbolDimensions(); // Dapatkan tinggi emoji
-                const reelViewHeight = reels_elements.reel1.clientHeight;
+                const { height: symbolHeight } = getSymbolDimensions();
+                const reelViewHeight = reels_elements.reel1.parentElement.clientHeight; // Tinggi container .reels
+                // Offset untuk memusatkan simbol pertama di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
+                console.log(`Tinggi View Gulungan: ${reelViewHeight}px, Tinggi Simbol: ${symbolHeight}px, Offset ke Tengah: ${offsetToCenter}px`);
 
                 Object.values(reels_elements).forEach((reel) => {
-                    reel.innerHTML = '';
+                    // Kosongkan dan buat ulang simbol default agar sesuai dengan konfigurasi terbaru
+                    reel.innerHTML = ''; 
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
-                    const defaultSymbol = symbols[0]; // Tampilkan simbol default
-                    symbolSpan.textContent = defaultSymbol.emoji;
+                    // Tentukan simbol default sesuai id reel untuk visual awal yang lebih bervariasi
+                    let defaultSym;
+                    if (reel.id === 'reel1') defaultSym = symbols.find(s => s.name === 'Cherry'); 
+                    else if (reel.id === 'reel2') defaultSym = symbols.find(s => s.name === 'Orange'); 
+                    else defaultSym = symbols.find(s => s.name === 'Lemon'); 
+
+                    symbolSpan.textContent = defaultSym.emoji;
+                    // Pastikan kelas sparkle ditambahkan jika simbolnya ✨
+                    if (defaultSym.name === 'Sparkle') {
+                        symbolSpan.classList.add('sparkle');
+                    }
                     reel.appendChild(symbolSpan);
                     
-                    // Posisikan di tengah vertikal pada saat inisialisasi
-                    reel.style.transform = `translateY(${offsetToCenter}px)`; 
-                    reel.classList.remove('spinning'); // Pastikan tidak ada kelas spinning
-                    reel.style.transition = 'none'; // Pastikan transisi dinonaktifkan saat inisialisasi
+                    reel.style.transition = 'none'; 
+                    reel.style.transform = `translateY(${offsetToCenter}px)`; // Posisikan di tengah
+                    reel.classList.remove('spinning'); 
+                    console.log(`Gulungan ${reel.id} diinisialisasi dengan ${defaultSym.emoji} pada offset ${offsetToCenter}px.`);
                 });
             });
         }
@@ -589,15 +616,16 @@
         // ==============================================
 
         async function loadUserData(userId) {
+            console.log("Memuat data pengguna untuk user:", userId); 
             const { data, error } = await supabase
                 .from('users_data')
                 .select('*')
                 .eq('user_id', userId)
                 .single();
 
-            if (error && error.code !== 'PGRST116') { // PGRST116 berarti "Row not found"
-                console.error('Error loading user data:', error.message);
-                gameMessage.textContent = 'Error loading user data. Please refresh or contact support.';
+            if (error && error.code !== 'PGRST116') { 
+                console.error('Error memuat data pengguna:', error.message);
+                gameMessage.textContent = 'Error memuat data pengguna. Silakan segarkan halaman atau hubungi dukungan.';
                 disableGameControls();
                 return;
             }
@@ -605,10 +633,11 @@
             if (data) {
                 playerBalance = data.saldo; 
                 playerNameSpan.textContent = data.username || currentUser.email.split('@')[0];
-                gameMessage.textContent = 'Welcome back!';
+                gameMessage.textContent = 'Selamat datang kembali!';
                 enableGameControls();
+                console.log("Data pengguna dimuat:", data); 
             } else {
-                // Jika data tidak ditemukan, buat entri baru untuk user ini
+                console.log("Data pengguna tidak ditemukan, inisialisasi pengguna baru."); 
                 const initialBalance = 1000;
                 const defaultUsername = currentUser.email.split('@')[0];
                 const { data: newUserData, error: insertError } = await supabase
@@ -618,79 +647,82 @@
                     .single();
 
                 if (insertError) {
-                    console.error('Error initializing new user data:', insertError.message);
-                    gameMessage.textContent = 'Error initializing your account. Please try again.';
+                    console.error('Error menginisialisasi data pengguna baru:', insertError.message);
+                    gameMessage.textContent = 'Error menginisialisasi akun Anda. Silakan coba lagi.';
                     disableGameControls();
                     return;
                 }
                 playerBalance = newUserData.saldo;
                 playerNameSpan.textContent = newUserData.username;
-                gameMessage.textContent = `Welcome, ${newUserData.username}! You received ${initialBalance} credits!`;
+                gameMessage.textContent = `Selamat datang, ${newUserData.username}! Anda menerima ${initialBalance} kredit!`;
                 enableGameControls();
+                console.log("Data pengguna baru diinisialisasi:", newUserData); 
             }
             updateBalanceDisplay();
         }
 
         async function updateUserData(newBalance) {
             if (!currentUser) {
-                console.error('No current user to update data for.');
-                gameMessage.textContent = 'Error: Not logged in to save saldo.';
+                console.error('Tidak ada pengguna saat ini untuk memperbarui data.');
+                gameMessage.textContent = 'Error: Tidak login untuk menyimpan saldo.';
                 return;
             }
-
+            console.log("Memperbarui saldo pengguna menjadi:", newBalance); 
             const { error } = await supabase
                 .from('users_data')
                 .update({ saldo: newBalance })
                 .eq('user_id', currentUser.id);
 
             if (error) {
-                console.error('Error updating user saldo:', error.message);
-                gameMessage.textContent = 'Error saving saldo. Please refresh.';
+                console.error('Error memperbarui saldo pengguna:', error.message);
+                gameMessage.textContent = 'Error menyimpan saldo. Silakan segarkan halaman.';
             } else {
-                console.log('Saldo updated successfully!');
+                console.log('Saldo berhasil diperbarui!');
             }
         }
 
         async function initializeGame() {
-            gameMessage.textContent = 'Checking user session...';
-            disableGameControls(); // Disabled sejak awal
+            console.log("Menginisialisasi game..."); 
+            gameMessage.textContent = 'Memeriksa sesi pengguna...';
+            disableGameControls(); 
 
             const { data: { user } } = await supabase.auth.getUser();
+            console.log("Sesi pengguna Supabase:", user); 
 
             if (user) {
                 currentUser = user;
-                gameMessage.textContent = 'User found. Loading player data...';
+                gameMessage.textContent = 'Pengguna ditemukan. Memuat data pemain...';
                 await loadUserData(user.id);
                 logoutBtn.style.display = 'inline-block';
 
-                // START BACKGROUND MUSIC
                 backgroundMusic.volume = 0.3;
                 try {
                     await backgroundMusic.play();
                 } catch (e) {
-                    console.warn("Background music autoplay blocked. User interaction needed.", e);
+                    console.warn("Autoplay musik latar diblokir. Interaksi pengguna diperlukan.", e);
                 }
 
             } else {
-                gameMessage.textContent = 'You are not logged in. Please go to the login/registration page to play.';
-                playerNameSpan.textContent = 'Guest';
+                gameMessage.textContent = 'Anda tidak login. Silakan buka halaman login/registrasi untuk bermain.';
+                playerNameSpan.textContent = 'Tamu';
                 playerBalanceSpan.textContent = 'N/A';
                 logoutBtn.style.display = 'none';
-                disableGameControls(); // Pastikan kontrol dinonaktifkan jika tidak login
+                disableGameControls(); 
             }
         }
 
         logoutBtn.addEventListener('click', async () => {
+            console.log("Tombol Logout diklik."); 
             const { error } = await supabase.auth.signOut();
             if (error) {
-                console.error('Logout error:', error.message);
-                gameMessage.textContent = 'Logout failed.';
+                console.error('Error logout:', error.message);
+                gameMessage.textContent = 'Logout gagal.';
             } else {
                 currentUser = null;
                 playerBalance = 0;
                 updateBalanceDisplay();
-                playerNameSpan.textContent = 'Guest';
-                gameMessage.textContent = 'Logged out. Please login again to play.';
+                playerNameSpan.textContent = 'Tamu';
+                gameMessage.textContent = 'Logout. Silakan login kembali untuk bermain.';
                 disableGameControls();
                 logoutBtn.style.display = 'none';
                 backgroundMusic.pause();
@@ -698,9 +730,13 @@
             }
         });
 
-        function getRandomSymbol() {
-            const randomIndex = Math.floor(Math.random() * symbols.length);
-            return symbols[randomIndex];
+        function getRandomSymbol(excludeSymbol = null) {
+            let availableSymbols = symbols;
+            if (excludeSymbol) {
+                availableSymbols = symbols.filter(s => s.name !== excludeSymbol.name);
+            }
+            const randomIndex = Math.floor(Math.random() * availableSymbols.length);
+            return availableSymbols[randomIndex];
         }
 
         /**
@@ -712,42 +748,43 @@
         function spinReel(reelElement, finalSymbol, delayBeforeSlowdown) {
             return new Promise(resolve => {
                 const { height: symbolHeight, fullHeight: symbolFullHeight } = getSymbolDimensions();
-                const reelViewHeight = reelElement.clientHeight;
-                // Posisi Y dari bagian atas reel yang akan membuat simbol berada di tengah
+                const reelViewHeight = reelElement.parentElement.clientHeight; 
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 
+                console.log(`Memutar Gulungan ${reelElement.id}. Simbol Akhir: ${finalSymbol.emoji}. Tinggi Simbol: ${symbolHeight}. Offset: ${offsetToCenter}`); 
+
                 // 1. Fase Spinning Cepat: Isi reel dengan banyak simbol acak
-                reelElement.innerHTML = ''; // Kosongkan reel
+                reelElement.innerHTML = ''; 
                 for (let i = 0; i < INITIAL_SPIN_SYMBOLS_COUNT; i++) { 
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
                     const randomSym = getRandomSymbol();
                     symbolSpan.textContent = randomSym.emoji;
+                    if (randomSym.name === 'Sparkle') { // Kelas sparkle untuk ✨
+                        symbolSpan.classList.add('sparkle');
+                    }
                     reelElement.appendChild(symbolSpan);
                 }
                 
-                reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
+                reelElement.style.transition = 'none'; 
                 reelElement.style.transform = `translateY(0px)`; // Pastikan mulai dari atas untuk animasi putar
                 void reelElement.offsetWidth; // Trigger reflow untuk memastikan transisi dinonaktifkan
 
-                reelElement.classList.add('spinning'); // Tambahkan kelas spinning untuk memulai animasi CSS
+                reelElement.classList.add('spinning'); 
 
                 // 2. Fase Melambat & Mendarat (Easing)
                 setTimeout(() => {
-                    reelElement.classList.remove('spinning'); // Hapus kelas spinning (hentikan animasi CSS)
+                    reelElement.classList.remove('spinning'); 
                     
-                    // Siapkan kembali reel dengan simbol yang akan mendarat
                     reelElement.innerHTML = '';
                     const landingSymbols = [];
 
-                    // Tambahkan simbol acak di atas simbol final untuk efek 'pantulan'
                     for (let i = 0; i < LANDING_BOUNCE_SYMBOLS; i++) {
                         landingSymbols.push(getRandomSymbol());
                     }
-                    landingSymbols.push(finalSymbol); // SIMBOL HASIL AKHIR YANG AKAN TAMPIL DI TENGAH
+                    landingSymbols.push(finalSymbol); 
 
-                    // Tambahkan simbol di bawah final untuk mengisi ruang jika ada overshoot
-                    for (let i = 0; i < 2; i++) { // Cukup 2 simbol di bawah
+                    for (let i = 0; i < 2; i++) { 
                         landingSymbols.push(getRandomSymbol());
                     }
 
@@ -755,114 +792,155 @@
                         const symbolSpan = document.createElement('span');
                         symbolSpan.classList.add('symbol');
                         symbolSpan.textContent = s.emoji;
+                        if (s.name === 'Sparkle') { // Kelas sparkle untuk ✨
+                            symbolSpan.classList.add('sparkle');
+                        }
                         reelElement.appendChild(symbolSpan);
                     });
 
-                    // >>>>>>>>>> PERBAIKAN KRITIS UNTUK POSISI AKHIR <<<<<<<<<<
-                    // Index dari simbol yang kita inginkan untuk mendarat di tengah
                     const finalSymbolArrIndex = LANDING_BOUNCE_SYMBOLS; 
-                    
-                    // Jarak dari atas reel ke bagian atas simbol final yang kita inginkan
                     const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
-                    
-                    // Posisi Y target untuk container reel agar finalSymbol tepat di tengah
                     const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
+                    console.log(`Gulungan ${reelElement.id} posisi gulir target: ${targetScrollPosition}px`); 
 
-                    // Durasi melambat: Total durasi dikurangi waktu spinning cepat
-                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000; // dalam detik
+                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000;
 
-                    // Set transisi dan target transform
-                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Melambat dengan easing
+                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; 
                     reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
-                    // Play reel stop sound when it's about to stop
                     setTimeout(() => {
                         reelStopSound.currentTime = 0;
                         reelStopSound.volume = 0.5;
-                        reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
-                        resolve(finalSymbol); // Resolve setelah reel berhenti
-                    }, (REEL_STOP_DURATION - delayBeforeSlowdown)); // Resolusi ini harus pada akhir total durasi reel berputar
-                }, delayBeforeSlowdown); // Delay sebelum melambat
+                        reelStopSound.play().catch(e => console.warn("Pemutaran suara berhenti gulungan gagal:", e));
+                        resolve(finalSymbol); 
+                    }, (REEL_STOP_DURATION - delayBeforeSlowdown)); 
+                }, delayBeforeSlowdown); 
             });
         }
+
         async function spin() {
+            console.log("Tombol Spin diklik. isSpinning:", isSpinning, "currentUser:", currentUser); 
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
-                    gameMessage.textContent = "Please login to play!";
+                    gameMessage.textContent = "Silakan login untuk bermain!";
                 } else {
-                    gameMessage.textContent = "Please wait for current spin to finish.";
+                    gameMessage.textContent = "Mohon tunggu putaran saat ini selesai.";
                 }
                 return;
             }
 
             const betAmount = parseInt(betAmountInput.value);
             if (isNaN(betAmount) || betAmount <= 0) {
-                gameMessage.textContent = "Please enter a valid bet amount (min 1).";
+                gameMessage.textContent = "Silakan masukkan jumlah taruhan yang valid (min 1).";
                 return;
             }
 
             if (playerBalance < betAmount) {
-                gameMessage.textContent = "Not enough credits! Please top up or decrease your bet.";
+                gameMessage.textContent = "Kredit tidak cukup! Silakan isi ulang atau kurangi taruhan Anda.";
                 return;
             }
 
             isSpinning = true;
             disableGameControls();
-            gameMessage.textContent = "Spinning reels...";
+            gameMessage.textContent = "Memutar gulungan...";
 
             spinStartSound.currentTime = 0;
             spinStartSound.volume = 0.6;
-            spinStartSound.play().catch(e => console.warn("Spin start sound playback failed:", e));
+            spinStartSound.play().catch(e => console.warn("Pemutaran suara mulai spin gagal:", e));
 
             if (backgroundMusic.paused) {
                 backgroundMusic.volume = 0.3;
-                backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked again.", e));
+                backgroundMusic.play().catch(e => console.warn("Autoplay musik latar diblokir lagi.", e));
             }
 
             playerBalance -= betAmount;
             updateBalanceDisplay();
             await updateUserData(playerBalance);
+            
+            // ==============================================
+            //           LOGIKA HASIL SPIN YANG LEBIH REALISTIS
+            //           (Dengan Sparkle ✨ sebagai simbol jackpot)
+            // ==============================================
+            let resultReels = [];
+            
+            const winChance = Math.random(); 
+            const sparkleSymbol = symbols.find(s => s.name === 'Sparkle');
 
-            currentSpinResults = [
-                getRandomSymbol(),
-                getRandomSymbol(),
-                getRandomSymbol()
-            ];
+            if (winChance < 0.01) { // 1% chance for Jackpot (Sparkle x3)
+                 resultReels = [sparkleSymbol, sparkleSymbol, sparkleSymbol];
+                 console.log("Hasil Spin: JACKPOT (dipaksakan)");
+            } else if (winChance < 0.05) { // 4% chance for a Three of a Kind (excluding Sparkle x3)
+                const winSymbol = getRandomSymbol(sparkleSymbol); // Exclude Sparkle for this win
+                resultReels = [winSymbol, winSymbol, winSymbol];
+                console.log("Hasil Spin: Tiga Simbol Sama (dipaksakan)");
+            } else if (winChance < 0.12) { // 7% chance for Two Sparkles (2x ✨)
+                // Place two Sparkles, and one other symbol that is NOT a Sparkle
+                const nonSparkleSymbol = getRandomSymbol(sparkleSymbol);
+                const positions = [
+                    [sparkleSymbol, sparkleSymbol, nonSparkleSymbol],
+                    [sparkleSymbol, nonSparkleSymbol, sparkleSymbol],
+                    [nonSparkleSymbol, sparkleSymbol, sparkleSymbol]
+                ];
+                resultReels = positions[Math.floor(Math.random() * positions.length)];
+                console.log("Hasil Spin: Dua Sparkle (dipaksakan)");
+            } else if (winChance < 0.30) { // 18% chance for One Sparkle
+                // Place one Sparkle, and two other symbols that are NOT Sparkles
+                const otherSymbol1 = getRandomSymbol(sparkleSymbol);
+                const otherSymbol2 = getRandomSymbol(sparkleSymbol);
+                const positions = [
+                    [sparkleSymbol, otherSymbol1, otherSymbol2],
+                    [otherSymbol1, sparkleSymbol, otherSymbol2],
+                    [otherSymbol1, otherSymbol2, sparkleSymbol]
+                ];
+                resultReels = positions[Math.floor(Math.random() * positions.length)];
+                console.log("Hasil Spin: Satu Sparkle (dipaksakan)");
+            } else { // Remaining chance for No Win (70%)
+                // Generate completely random symbols, ensuring no win combinations
+                let attempts = 0;
+                do {
+                    resultReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+                    attempts++;
+                    if (attempts > 100) { // Safety break
+                        console.warn("Terlalu banyak percobaan untuk menghasilkan kombinasi tidak menang. Mungkin menghasilkan kemenangan kecil.");
+                        break;
+                    }
+                } while (checkWin(resultReels, 1).amount > 0);
+                console.log("Hasil Spin: Tidak Menang");
+            }
 
-            // Jalankan reel secara berurutan dengan delay untuk efek staggered stop
-            // Delay untuk setiap reel sebelum mulai melambat (total durasi spin tetap sama)
-            // Sesuaikan nilai ini untuk mengatur seberapa lama setiap reel berputar cepat
-            const reel1DelayBeforeSlow = 800; 
-            const reel2DelayBeforeSlow = 1200; 
-            const reel3DelayBeforeSlow = 1600; 
+            currentSpinResults = resultReels;
+            console.log("Hasil Spin Akhir (sebelum animasi):", currentSpinResults.map(s => s.emoji)); 
+
 
             const reelPromises = [
-                spinReel(reels_elements.reel1, currentSpinResults[0], reel1DelayBeforeSlow),
-                spinReel(reels_elements.reel2, currentSpinResults[1], reel2DelayBeforeSlow),
-                spinReel(reels_elements.reel3, currentSpinResults[2], reel3DelayBeforeSlow)
+                spinReel(reels_elements.reel1, currentSpinResults[0], 800),
+                spinReel(reels_elements.reel2, currentSpinResults[1], 1200),
+                spinReel(reels_elements.reel3, currentSpinResults[2], 1600)
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
+            console.log("Semua gulungan berhenti. Simbol akhir:", finalReelSymbols.map(s => s.emoji)); 
 
             const winInfo = checkWin(finalReelSymbols, betAmount);
+            console.log("Info Kemenangan:", winInfo); 
 
             if (winInfo.amount > 0) {
                 playerBalance += winInfo.amount;
                 updateBalanceDisplay();
                 await updateUserData(playerBalance);
-                gameMessage.textContent = winInfo.message + ` You won ${winInfo.amount} credits! Total: ${playerBalance}`;
+                gameMessage.textContent = winInfo.message + ` Anda memenangkan ${winInfo.amount} kredit! Total: ${playerBalance}`;
 
                 if (winInfo.message.includes('JACKPOT')) {
                     jackpotSound.currentTime = 0;
                     jackpotSound.volume = 0.8;
-                    jackpotSound.play().catch(e => console.warn("Jackpot sound playback failed:", e));
+                    jackpotSound.play().catch(e => console.warn("Pemutaran suara jackpot gagal:", e));
                 } else {
                     winSound.currentTime = 0;
                     winSound.volume = 0.7;
-                    winSound.play().catch(e => console.warn("Win sound playback failed:", e));
+                    winSound.play().catch(e => console.warn("Pemutaran suara kemenangan gagal:", e));
                 }
             } else {
-                gameMessage.textContent = "No win this time. Good luck on the next spin!";
+                gameMessage.textContent = "Tidak ada kemenangan kali ini. Semoga beruntung di putaran berikutnya!";
             }
 
             isSpinning = false;
@@ -873,51 +951,67 @@
             let totalWinAmount = 0;
             let winMessage = "";
 
+            // Simbol sparkle untuk pengecekan
+            const sparkleSymbolName = 'Sparkle';
+
+            // Check for Three of a Kind
             if (resultSymbols[0].name === resultSymbols[1].name && resultSymbols[1].name === resultSymbols[2].name) {
-                winMessage = `Three ${resultSymbols[0].name}s!`;
+                winMessage = `Tiga ${resultSymbols[0].name}s!`;
                 switch(resultSymbols[0].name) {
                     case 'Cherry': totalWinAmount += resultSymbols[0].value * betAmount * 5; break;
                     case 'Orange': totalWinAmount += resultSymbols[0].value * betAmount * 7; break;
                     case 'Lemon': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
-                    case 'Seven':
-                        winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
-                        totalWinAmount += resultSymbols[0].value * betAmount * 50;
+                    case sparkleSymbolName: // Peraturan untuk 3x ✨
+                        winMessage = `🔥🔥🔥 JACKPOT! Tiga ✨! 🔥🔥🔥`;
+                        totalWinAmount += resultSymbols[0].value * betAmount * 50; 
                         break;
                     default: totalWinAmount += resultSymbols[0].value * betAmount * 3;
                 }
+                return { amount: totalWinAmount, message: winMessage }; 
             }
-            else if (resultSymbols[0].name === 'Seven' && resultSymbols[1].name === 'Seven' && resultSymbols[2].name !== 'Seven') {
-                winMessage = `Two Sevens!`;
-                totalWinAmount += betAmount * 10;
+            // Check for Two Sparkles (any two reels)
+            else if (
+                (resultSymbols[0].name === sparkleSymbolName && resultSymbols[1].name === sparkleSymbolName) ||
+                (resultSymbols[0].name === sparkleSymbolName && resultSymbols[2].name === sparkleSymbolName) ||
+                (resultSymbols[1].name === sparkleSymbolName && resultSymbols[2].name === sparkleSymbolName)
+            ) {
+                winMessage = `Dua ✨!`;
+                totalWinAmount += betAmount * 10; // Nilai kemenangan untuk dua ✨
+                return { amount: totalWinAmount, message: winMessage }; 
             }
-            else if (resultSymbols[0].name === 'Seven' || resultSymbols[1].name === 'Seven' || resultSymbols[2].name === 'Seven') {
-                if (totalWinAmount === 0) { // Pastikan hanya berlaku jika belum ada kemenangan lain
-                    winMessage = `One Seven! Small win!`;
-                    totalWinAmount += betAmount * 2;
+            // Check for One Sparkle (only if no other wins)
+            else if (
+                resultSymbols[0].name === sparkleSymbolName || 
+                resultSymbols[1].name === sparkleSymbolName || 
+                resultSymbols[2].name === sparkleSymbolName
+            ) {
+                if (totalWinAmount === 0) { 
+                    winMessage = `Satu ✨! Kemenangan kecil!`;
+                    totalWinAmount += betAmount * 2; // Nilai kemenangan untuk satu ✨
                 }
+                return { amount: totalWinAmount, message: winMessage }; 
             }
 
-            return { amount: totalWinAmount, message: winMessage };
+            return { amount: totalWinAmount, message: winMessage }; 
         }
 
         // ==============================================
-        //           INISIALISASI (PENTING!)
+        //           INISIALISASI GAME
         // ==============================================
         document.addEventListener('DOMContentLoaded', () => {
-            initializeReelsDisplay(); // Panggil ini setelah DOM siap
-            initializeGame(); // Panggil fungsi inisialisasi game
+            console.log("Peristiwa DOMContentLoaded diaktifkan."); 
+            initializeReelsDisplay(); 
+            initializeGame();
         });
 
         spinBtn.addEventListener('click', spin);
 
-        // Tambahan: Tambahkan event listener untuk mencegah autoplay blocking pada audio
         document.addEventListener('click', () => {
-            // Coba putar lagi jika masih belum putar dan user sudah login
             if (backgroundMusic.paused && currentUser) { 
                 backgroundMusic.volume = 0.3;
-                backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked. User interaction needed.", e));
+                backgroundMusic.play().catch(e => console.warn("Autoplay musik latar diblokir. Interaksi pengguna diperlukan.", e));
             }
-        }, { once: true }); // Hanya perlu dijalankan sekali
+        }, { once: true });
     </script>
 </body>
 </html>
