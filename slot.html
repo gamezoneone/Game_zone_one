@@ -57,8 +57,8 @@
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            width: 90%;
-            height: 0.1rem; /* Slightly thinner */
+            width: 100%;
+            height: 1rem; /* Slightly thinner */
             background-color: #00ffff; /* Neon cyan */
             box-shadow: 0 0 0.8rem #00ffff, 0 0 1.5rem rgba(0, 255, 255, 0.6);
             border-radius: 0.1rem;
@@ -185,13 +185,13 @@
         .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0.6rem; /* Reduced gap */
+            gap: 0rem; /* Reduced gap */
             margin-bottom: 1rem; /* Reduced margin */
             height: 100px; /* Fixed height for the visible area of the reels */
             overflow: hidden; /* Crucial: Hides symbols outside the view */
             border: 0.15rem solid #fff; /* Thinner border */
             border-radius: 0.6rem;
-            background-color: #1a1a1a;
+            background-color: #333;
             position: relative;
             flex-shrink: 0;
             box-shadow: inset 0 0 0.8rem rgba(255,255,255,0.3);
@@ -203,21 +203,22 @@
             flex-direction: column; /* Symbols stack vertically */
             justify-content: flex-start; /* Start from the top for scrolling */
             align-items: center;
-            background-color: #0d0d0d;
-            border-radius: 0.5rem;
+            background-color: #fff;
+            border-radius: 1rem;
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
+            top: -40px;
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
         }
 
         /* Styling untuk emoji symbols */
         .reel .symbol {
-            font-size: 80px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
+            font-size: 40px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
-            height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) */
+            height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) */
             display: flex; /* Untuk memusatkan emoji vertikal */
             justify-content: center;
             align-items: center;
@@ -230,7 +231,7 @@
         /* Class for fast spinning animation */
         .spinning {
             animation: spin-blur 0.1s linear infinite; /* Fast spin animation */
-            filter: blur(2px); /* Blur effect while spinning */
+            filter: blur(1px); /* Blur effect while spinning */
         }
 
         @keyframes spin-blur {
