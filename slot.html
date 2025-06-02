@@ -209,15 +209,15 @@
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
-            /* No transition here for the spin. Transitions for landing will be set by JS */
+            /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
         }
 
         .reel img {
             width: 90%;
             max-width: 80px; /* Reduced max-width for symbols */
-            height: 80px; /* **Crucial: Fixed height for symbols for precise calculation** */
+            height: 80px; /* **CRUCIAL: FIXED HEIGHT FOR MOBILE SYMBOLS** */
             object-fit: contain;
-            padding: 2px; /* **Crucial: Fixed padding for precise calculation** */
+            padding: 2px; /* **CRUCIAL: FIXED PADDING FOR MOBILE SYMBOLS** */
             box-sizing: border-box; /* Include padding in height/width */
             display: block;
             filter: drop-shadow(0 0 0.2rem rgba(255, 255, 0, 0.5));
@@ -234,8 +234,8 @@
         }
 
         @keyframes spin-blur {
+            /* This value MUST be (symbolHeight + 2*symbolPadding) for mobile */
             0% { transform: translateY(0); }
-            /* This value MUST be (symbolHeight + 2*symbolPadding) */
             100% { transform: translateY(-84px); } /* 80px (height) + 2px (padding-top) + 2px (padding-bottom) = 84px */
         }
 
@@ -385,8 +385,7 @@
                 max-width: 600px; /* Increased max-width but still compact */
                 min-height: auto;
             }
-
-            h1 {
+h1 {
                 font-size: 3.5em; /* Slightly larger on desktop */
                 letter-spacing: 2px;
             }
@@ -411,58 +410,20 @@
 
             .reel img {
                 max-width: 100px; /* Larger symbols on desktop */
-                height: 100px; /* Larger symbols on desktop */
-                padding: 4px; /* Adjust padding for larger symbols */
+                height: 100px; /* **CRUCIAL: FIXED HEIGHT FOR DESKTOP SYMBOLS** */
+                padding: 4px; /* **CRUCIAL: FIXED PADDING FOR DESKTOP SYMBOLS** */
             }
-            /* Adjust @keyframes spin-blur if reel img padding/height changes for desktop */
+            /* Adjust @keyframes spin-blur for desktop: (img height + 2*img padding) */
             @keyframes spin-blur {
                 0% { transform: translateY(0); }
-                /* Must be (img height + 2*img padding) for desktop */
                 100% { transform: translateY(-108px); } /* 100px (height) + 4px (padding-top) + 4px (padding-bottom) = 108px */
-            }
-
-
-            .controls {
-                flex-direction: row;
-                gap: 20px;
-            }
-
-            .bet-control input {
-                width: 80px;
-                font-size: 1.1em;
-            }
-
-            button {
-                padding: 12px 25px;
-                font-size: 1.6em;
-                max-width: none;
-            }
-
-            .messages {
-                font-size: 1.2em;
-            }
-
-            .control-btn {
-                font-size: 0.9em;
-                padding: 6px 12px;
-            }
-
-            .bottom-indicators {
-                gap: 0.8rem;
-            }
-            .bottom-indicator-box {
-                font-size: 1.1rem;
-                min-height: 3rem;
-            }
-            .bottom-indicator-box.seven-display {
-                font-size: 2.5em;
             }
         }
     </style>
     </head>
 <body>
-<audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
+    <audio id="reelStopSound" src="_" preload="auto"></audio>
     <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
     <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
@@ -554,8 +515,8 @@
 
         // Durasi spin total untuk setiap reel. Reel selanjutnya akan berhenti sedikit lebih lambat.
         const REEL_STOP_DURATION = 3000; // Total waktu reel berputar hingga berhenti (ms)
-        const SYMBOLS_TO_SHOW_BEFORE_LANDING = 5; // Jumlah simbol acak sebelum simbol final saat melambat
-        const SYMBOLS_TO_SHOW_AFTER_LANDING = 2; // Jumlah simbol acak setelah simbol final untuk efek 'overshoot'
+        const INITIAL_SPIN_SYMBOLS_COUNT = 30; // Jumlah simbol acak untuk efek putaran awal yang panjang
+        const LANDING_BOUNCE_SYMBOLS = 3; // Jumlah simbol acak sebelum simbol final untuk efek 'pantulan'
 
 
         let currentUser = null;
@@ -599,9 +560,8 @@
         }
 
         function initializeReelsDisplay() {
-            const { height: initialSymbolHeight, padding: initialSymbolPadding, fullHeight: symbolFullHeight } = getSymbolDimensions();
+            const { height: initialSymbolHeight, padding: initialSymbolPadding } = getSymbolDimensions();
 
-            // Gunakan requestAnimationFrame untuk memastikan ukuran elemen sudah dihitung
             requestAnimationFrame(() => {
                 const reelViewHeight = reels_elements.reel1.clientHeight;
                 const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
@@ -753,13 +713,12 @@
             return new Promise(resolve => {
                 const { height: symbolHeight, padding: symbolPadding, fullHeight: symbolFullHeight } = getSymbolDimensions();
                 const reelViewHeight = reelElement.clientHeight;
-                // Posisi tengah untuk 1 simbol: (tinggi area terlihat / 2) - (tinggi simbol / 2)
+                // Posisi Y dari bagian atas reel yang akan membuat simbol berada di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 
                 // 1. Fase Spinning Cepat: Isi reel dengan banyak simbol acak
-                reelElement.innerHTML = '';
-                // Tambahkan banyak simbol untuk efek putaran yang panjang (misal 30 simbol)
-                for (let i = 0; i < SYMBOLS_TO_SHOW_BEFORE_LANDING + SYMBOLS_TO_SHOW_AFTER_LANDING + 10; i++) { // Lebih banyak dari yang dibutuhkan untuk landing
+                reelElement.innerHTML = ''; // Kosongkan reel
+                for (let i = 0; i < INITIAL_SPIN_SYMBOLS_COUNT; i++) { 
                     const img = document.createElement('img');
                     const randomSym = getRandomSymbol();
                     img.src = randomSym.image;
@@ -769,8 +728,9 @@
                     img.style.padding = `${symbolPadding}px`;
                     reelElement.appendChild(img);
                 }
-reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
-                reelElement.style.transform = `translateY(0px)`;
+                
+                reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
+                reelElement.style.transform = `translateY(0px)`; // Pastikan mulai dari atas untuk animasi putar
                 void reelElement.offsetWidth; // Trigger reflow untuk memastikan transisi dinonaktifkan
 
                 reelElement.classList.add('spinning'); // Tambahkan kelas spinning untuk memulai animasi CSS
@@ -783,14 +743,14 @@ reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
                     reelElement.innerHTML = '';
                     const landingSymbols = [];
 
-                    // Tambahkan simbol acak di atas simbol final untuk efek 'pantulan' atau 'overshoot'
-                    for (let i = 0; i < SYMBOLS_TO_SHOW_BEFORE_LANDING; i++) {
+                    // Tambahkan simbol acak di atas simbol final untuk efek 'pantulan'
+                    for (let i = 0; i < LANDING_BOUNCE_SYMBOLS; i++) {
                         landingSymbols.push(getRandomSymbol());
                     }
-                    landingSymbols.push(finalSymbol); // Simbol yang akan berhenti di tengah
+                    landingSymbols.push(finalSymbol); // SIMBOL HASIL AKHIR YANG AKAN TAMPIL DI TENGAH
 
-                    // Tambahkan beberapa simbol acak di bawah simbol final (untuk mencegah bagian bawah kosong jika ada sedikit overshoot)
-                    for (let i = 0; i < SYMBOLS_TO_SHOW_AFTER_LANDING; i++) {
+                    // Tambahkan simbol di bawah final untuk mengisi ruang jika ada overshoot
+                    for (let i = 0; i < 2; i++) { // Cukup 2 simbol di bawah
                         landingSymbols.push(getRandomSymbol());
                     }
 
@@ -804,20 +764,24 @@ reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
                         reelElement.appendChild(img);
                     });
 
-                    // Hitung target posisi Y:
-                    // Kita ingin simbol 'finalSymbol' berada di tengah reel.
-                    // Simbol 'finalSymbol' berada pada indeks 'SYMBOLS_TO_SHOW_BEFORE_LANDING' dalam array 'landingSymbols'.
-                    // Jadi, jarak dari atas kontainer reel ke bagian atas simbol final adalah:
-                    // (jumlah simbol sebelum final) * (tinggi penuh 1 simbol)
-                    const offsetToFinalSymbolTop = SYMBOLS_TO_SHOW_BEFORE_LANDING * symbolFullHeight;
+                    // >>>>>>>>>> PERBAIKAN KRITIS UNTUK POSISI AKHIR <<<<<<<<<<
+                    // Index dari simbol yang kita inginkan untuk mendarat di tengah
+                    const finalSymbolArrIndex = LANDING_BOUNCE_SYMBOLS; 
                     
-                    // Untuk memusatkan simbol: kita perlu menggeser seluruh kontainer reel ke atas
-                    // sejauh 'offsetToFinalSymbolTop' dikurangi 'offsetToCenter'.
-                    const targetScrollPosition = -(offsetToFinalSymbolTop - offsetToCenter);
+                    // Jarak dari atas reel ke bagian atas simbol final yang kita inginkan
+                    const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
+                    
+                    // Posisi Y target untuk container reel agar finalSymbol tepat di tengah
+                    // (Offset untuk memusatkan simbol) - (Jarak dari atas reel ke simbol final)
+                    const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
+
+                    // Pastikan transisi untuk pendaratan dimulai dari posisi saat ini
+                    // reelElement.style.transform = `translateY(${reelElement.getBoundingClientRect().top - reelElement.parentNode.getBoundingClientRect().top}px)`; // Ini tidak perlu jika kita reset ke 0 dan langsung transisi
                     
                     // Durasi melambat: Total durasi dikurangi waktu spinning cepat
                     const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000; // dalam detik
 
+                    // Set transisi dan target transform
                     reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Melambat dengan easing
                     reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
@@ -831,8 +795,7 @@ reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
                 }, delayBeforeSlowdown); // Delay sebelum melambat
             });
         }
-
-        async function spin() {
+async function spin() {
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
                     gameMessage.textContent = "Please login to play!";
