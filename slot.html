@@ -218,7 +218,7 @@
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
-            height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
+            height:100px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
             display: flex; /* Untuk memusatkan emoji vertikal */
             justify-content: center;
             align-items: center;
@@ -237,8 +237,8 @@
         @keyframes spin-blur {
             /* Pergeseran harus sebesar tinggi satu elemen symbol */
             /* Mobile: Tinggi simbol 100px (dari .reel .symbol) */
-            0% { transform: translateY(0); }
-            100% { transform: translateY(50px); } 
+            0% { transform: translateY(100); }
+            100% { transform: translateY(0px); } 
         }
 
 
@@ -413,7 +413,7 @@
 
             .reel .symbol {
                 font-size: 60px; /* KONTROL UKURAN EMOJI DI SINI (DESKTOP) */
-                height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (DESKTOP) */
+                height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (DESKTOP) */
             }
 
             /* Adjust @keyframes spin-blur for desktop: (height of .reel .symbol) */
