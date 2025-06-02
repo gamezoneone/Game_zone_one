@@ -545,7 +545,7 @@
     display: grid;
     /* Default: 2 kolom untuk layar yang lebih lebar (desktop). */
     /* Setiap kolom akan memiliki lebar minimum 250px dan akan mengisi ruang yang tersedia. */
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
     gap: 5px; /* Jarak antar item game */
     margin-top: 0px;
     padding-top: 20px;
@@ -555,10 +555,10 @@
 
 /* Setiap item game (elemen <a> dengan class "game-item") */
 .game-item {
-    background: rgba(255,255,255,0.08); /* Background samar untuk item game (bisa dihapus jika tidak mau) */
+    /* background: rgba(255,255,255,0.08); /* Background samar untuk item game (bisa dihapus jika tidak mau) */
     border-radius: 12px; /* Sudut membulat untuk item */
     overflow: hidden; /* Penting agar gambar dan efek tidak keluar dari border-radius */
-    box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* Bayangan untuk efek kedalaman */
+   /* box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* Bayangan untuk efek kedalaman */
     cursor: pointer; /* Menandakan item bisa diklik */
     transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi halus saat hover */
     text-decoration: none; /* Menghilangkan garis bawah pada link */
@@ -584,7 +584,7 @@
     top: 0;
     left: 0;
     width: 100%; /* Gambar akan mengisi seluruh lebar item game */
-    height: 100%; /* Gambar akan mengisi seluruh tinggi item game */
+    height: 150%; /* Gambar akan mengisi seluruh tinggi item game */
     object-fit: cover; /* **INI PENTING:** Pastikan gambar mengisi seluruh area yang tersedia. Jika rasio gambar tidak sama dengan rasio item (4:3), gambar akan dipotong (crop) agar pas tanpa distorsi. */
     border-radius: 12px; /* Agar gambar juga memiliki sudut membulat seperti itemnya */
     transition: transform 0.3s ease; /* Transisi zoom halus saat hover */
@@ -594,9 +594,6 @@
     transform: scale(1.05); /* Sedikit zoom pada gambar saat item dihover */
 }
 
-/* --- Judul Game (PILIH SALAH SATU OPSI DI BAWAH INI) --- */
-
-/* OPSI 1: Judul game hilang sepenuhnya (default) 
 .game-item h3 {
     display: none; /* Menyembunyikan elemen judul game */
 }
@@ -717,7 +714,7 @@
             grid-template-columns: 1fr; /* Satu kolom di layar sangat kecil */
             gap: 15px;
         }
-        .game-item img { height: 120px; }
+        .game-item img { height: 150px; }
     }
   </style>
 </head>
@@ -730,7 +727,7 @@
           <li><a href="#" id="nav-home">Beranda</a></li>
           <li id="nav-login-link"><a href="#" id="nav-login">Login</a></li>
           <li id="nav-register-link"><a href="#" id="nav-register">Daftar</a></li>
-          <li class="hidden" id="nav-welcome-user">Selamat datang, <span id="display-nav-username"></span>!</li>
+          <li class="hidden" id="nav-welcome-user">email:<span id="display-nav-username"></span></li>
           <li class="hidden" id="nav-logout-link"><button id="nav-logout-btn">Logout</button></li>
         </ul>
       </nav>
