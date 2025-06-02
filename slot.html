@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLOT77 - Game Slot Neon</title>
+    <title>SLOT77 - Game Slot Neon (Emoji Version)</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         /* ==============================================
-           CSS UNTUK TAMPILAN GAME SLOT (MIRIP GAMBAR & LEBIH KOMPAK)
+           CSS UNTUK TAMPILAN GAME SLOT (EMOJI & LEBIH KOMPAK)
            ============================================== */
         :root {
             font-size: 16px; /* Base font size for rem units */
@@ -195,7 +195,6 @@
             position: relative;
             flex-shrink: 0;
             box-shadow: inset 0 0 0.8rem rgba(255,255,255,0.3);
-            perspective: 500px; /* Add for slight 3D effect during spin */
         }
 
         .reel {
@@ -212,19 +211,20 @@
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
         }
 
-        .reel img {
-            width: 90%;
-            max-width: 80px; /* Reduced max-width for symbols */
-            height: 80px; /* **CRUCIAL: FIXED HEIGHT FOR MOBILE SYMBOLS** */
-            object-fit: contain;
-            padding: 2px; /* **CRUCIAL: FIXED PADDING FOR MOBILE SYMBOLS** */
-            box-sizing: border-box; /* Include padding in height/width */
-            display: block;
-            filter: drop-shadow(0 0 0.2rem rgba(255, 255, 0, 0.5));
-            flex-shrink: 0; /* Prevent images from shrinking */
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-            image-rendering: pixelated;
+        /* Styling untuk emoji symbols */
+        .reel .symbol {
+            font-size: 80px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
+            line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
+            width: 100%; /* Agar memenuhi lebar reel */
+            text-align: center;
+            height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) */
+            display: flex; /* Untuk memusatkan emoji vertikal */
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0; /* Pastikan tidak menyusut */
+            user-select: none; /* Agar tidak bisa diseleksi */
+            padding: 0; /* Pastikan tidak ada padding tambahan */
+            margin: 0; /* Pastikan tidak ada margin tambahan */
         }
 
         /* Class for fast spinning animation */
@@ -234,9 +234,9 @@
         }
 
         @keyframes spin-blur {
-            /* This value MUST be (symbolHeight + 2*symbolPadding) for mobile */
+            /* Pergeseran harus sebesar tinggi satu elemen symbol (untuk mobile: 80px) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(-84px); } /* 80px (height) + 2px (padding-top) + 2px (padding-bottom) = 84px */
+            100% { transform: translateY(-80px); } /* Sesuai dengan height dari .reel .symbol mobile */
         }
 
 
@@ -385,7 +385,8 @@
                 max-width: 600px; /* Increased max-width but still compact */
                 min-height: auto;
             }
-h1 {
+
+            h1 {
                 font-size: 3.5em; /* Slightly larger on desktop */
                 letter-spacing: 2px;
             }
@@ -404,26 +405,26 @@ h1 {
             }
 
             .reels {
-                height: 130px; /* Increased height for symbols on desktop */
+                height: 130px; /* Increased height for the visible area of the reels */
                 gap: 12px;
             }
 
-            .reel img {
-                max-width: 100px; /* Larger symbols on desktop */
-                height: 100px; /* **CRUCIAL: FIXED HEIGHT FOR DESKTOP SYMBOLS** */
-                padding: 4px; /* **CRUCIAL: FIXED PADDING FOR DESKTOP SYMBOLS** */
+            .reel .symbol {
+                font-size: 100px; /* KONTROL UKURAN EMOJI DI SINI (DESKTOP) */
+                height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (DESKTOP) */
             }
-            /* Adjust @keyframes spin-blur for desktop: (img height + 2*img padding) */
+
+            /* Adjust @keyframes spin-blur for desktop: (height of .reel .symbol) */
             @keyframes spin-blur {
                 0% { transform: translateY(0); }
-                100% { transform: translateY(-108px); } /* 100px (height) + 4px (padding-top) + 4px (padding-bottom) = 108px */
+                100% { transform: translateY(-100px); } /* Sesuai dengan height dari .reel .symbol desktop */
             }
         }
     </style>
     </head>
 <body>
     <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="_" preload="auto"></audio>
+    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
     <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
     <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
@@ -504,17 +505,17 @@ h1 {
         const backgroundMusic = document.getElementById('backgroundMusic');
 
         // ==============================================
-        //           KONFIGURASI GAME SLOT
+        //           KONFIGURASI GAME SLOT (EMOJI)
         // ==============================================
         const symbols = [
-            { name: 'Cherry', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(1).jpeg', value: 10 },
-            { name: 'Orange', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//images%20(3).jpeg', value: 15 },
-            { name: 'Lerang', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(3).jpeg', value: 20 },
-            { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
+            { name: 'Cherry', emoji: '🍒', value: 10 },
+            { name: 'Orange', emoji: '🍊', value: 15 },
+            { name: 'Lemon',  emoji: '🔔', value: 20 }, // Ganti Lerang jadi Lemon
+            { name: 'Seven',  emoji: '✨', value: 100, isJackpot: true }
         ];
 
         // Durasi spin total untuk setiap reel. Reel selanjutnya akan berhenti sedikit lebih lambat.
-        const REEL_STOP_DURATION = 3000; // Total waktu reel berputar hingga berhenti (ms)
+        const REEL_STOP_DURATION = 2000; // Total waktu reel berputar hingga berhenti (ms)
         const INITIAL_SPIN_SYMBOLS_COUNT = 30; // Jumlah simbol acak untuk efek putaran awal yang panjang
         const LANDING_BOUNCE_SYMBOLS = 3; // Jumlah simbol acak sebelum simbol final untuk efek 'pantulan'
 
@@ -542,40 +543,37 @@ h1 {
         }
 
         function getSymbolDimensions() {
-            // Check for media query and return appropriate dimensions
-            const isDesktop = window.matchMedia("(min-width: 600px)").matches;
-            if (isDesktop) {
-                return {
-                    height: 100, // height of .reel img on desktop
-                    padding: 4,  // padding of .reel img on desktop
-                    fullHeight: 100 + 4 + 4 // 100 + 8 = 108
-                };
-            } else {
-                return {
-                    height: 80, // height of .reel img on mobile
-                    padding: 2, // padding of .reel img on mobile
-                    fullHeight: 80 + 2 + 2 // 80 + 4 = 84
-                };
-            }
+            // Kita akan menggunakan DOMRect untuk mendapatkan ukuran sebenarnya
+            // Ini lebih robust daripada hardcoding nilai karena font-size emoji bisa bervariasi
+            const tempSymbol = document.createElement('span');
+            tempSymbol.classList.add('symbol');
+            tempSymbol.textContent = '🍒'; // Gunakan emoji apa saja untuk pengukuran
+            // Tambahkan ke DOM sementara agar browser bisa menghitung ukurannya
+            document.body.appendChild(tempSymbol);
+            const rect = tempSymbol.getBoundingClientRect();
+            document.body.removeChild(tempSymbol); // Hapus setelah pengukuran
+
+            return {
+                height: rect.height,
+                fullHeight: rect.height // Karena tidak ada padding/margin di sini
+            };
         }
-
+        
         function initializeReelsDisplay() {
-            const { height: initialSymbolHeight, padding: initialSymbolPadding } = getSymbolDimensions();
-
+            // Gunakan requestAnimationFrame untuk memastikan ukuran elemen sudah dihitung
             requestAnimationFrame(() => {
+                const { height: symbolHeight } = getSymbolDimensions(); // Dapatkan tinggi emoji
                 const reelViewHeight = reels_elements.reel1.clientHeight;
-                const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
+                const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
 
                 Object.values(reels_elements).forEach((reel) => {
                     reel.innerHTML = '';
-                    const img = document.createElement('img');
+                    const symbolSpan = document.createElement('span');
+                    symbolSpan.classList.add('symbol');
                     const defaultSymbol = symbols[0]; // Tampilkan simbol default
-                    img.src = defaultSymbol.image;
-                    img.alt = defaultSymbol.name;
-                    img.style.height = `${initialSymbolHeight}px`;
-                    img.style.width = `auto`;
-                    img.style.padding = `${initialSymbolPadding}px`;
-                    reel.appendChild(img);
+                    symbolSpan.textContent = defaultSymbol.emoji;
+                    reel.appendChild(symbolSpan);
+                    
                     // Posisikan di tengah vertikal pada saat inisialisasi
                     reel.style.transform = `translateY(${offsetToCenter}px)`; 
                     reel.classList.remove('spinning'); // Pastikan tidak ada kelas spinning
@@ -583,6 +581,7 @@ h1 {
                 });
             });
         }
+
 
         // ==============================================
         //           LOGIKA SUPABASE
@@ -711,7 +710,7 @@ h1 {
          */
         function spinReel(reelElement, finalSymbol, delayBeforeSlowdown) {
             return new Promise(resolve => {
-                const { height: symbolHeight, padding: symbolPadding, fullHeight: symbolFullHeight } = getSymbolDimensions();
+                const { height: symbolHeight, fullHeight: symbolFullHeight } = getSymbolDimensions();
                 const reelViewHeight = reelElement.clientHeight;
                 // Posisi Y dari bagian atas reel yang akan membuat simbol berada di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
@@ -719,14 +718,11 @@ h1 {
                 // 1. Fase Spinning Cepat: Isi reel dengan banyak simbol acak
                 reelElement.innerHTML = ''; // Kosongkan reel
                 for (let i = 0; i < INITIAL_SPIN_SYMBOLS_COUNT; i++) { 
-                    const img = document.createElement('img');
+                    const symbolSpan = document.createElement('span');
+                    symbolSpan.classList.add('symbol');
                     const randomSym = getRandomSymbol();
-                    img.src = randomSym.image;
-                    img.alt = randomSym.name;
-                    img.style.height = `${symbolHeight}px`;
-                    img.style.width = `auto`;
-                    img.style.padding = `${symbolPadding}px`;
-                    reelElement.appendChild(img);
+                    symbolSpan.textContent = randomSym.emoji;
+                    reelElement.appendChild(symbolSpan);
                 }
                 
                 reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
@@ -755,13 +751,10 @@ h1 {
                     }
 
                     landingSymbols.forEach(s => {
-                        const img = document.createElement('img');
-                        img.src = s.image;
-                        img.alt = s.name;
-                        img.style.height = `${symbolHeight}px`;
-                        img.style.width = `auto`;
-                        img.style.padding = `${symbolPadding}px`;
-                        reelElement.appendChild(img);
+                        const symbolSpan = document.createElement('span');
+                        symbolSpan.classList.add('symbol');
+                        symbolSpan.textContent = s.emoji;
+                        reelElement.appendChild(symbolSpan);
                     });
 
                     // >>>>>>>>>> PERBAIKAN KRITIS UNTUK POSISI AKHIR <<<<<<<<<<
@@ -772,12 +765,8 @@ h1 {
                     const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
                     
                     // Posisi Y target untuk container reel agar finalSymbol tepat di tengah
-                    // (Offset untuk memusatkan simbol) - (Jarak dari atas reel ke simbol final)
                     const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
 
-                    // Pastikan transisi untuk pendaratan dimulai dari posisi saat ini
-                    // reelElement.style.transform = `translateY(${reelElement.getBoundingClientRect().top - reelElement.parentNode.getBoundingClientRect().top}px)`; // Ini tidak perlu jika kita reset ke 0 dan langsung transisi
-                    
                     // Durasi melambat: Total durasi dikurangi waktu spinning cepat
                     const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000; // dalam detik
 
@@ -795,7 +784,7 @@ h1 {
                 }, delayBeforeSlowdown); // Delay sebelum melambat
             });
         }
-async function spin() {
+        async function spin() {
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
                     gameMessage.textContent = "Please login to play!";
@@ -888,7 +877,7 @@ async function spin() {
                 switch(resultSymbols[0].name) {
                     case 'Cherry': totalWinAmount += resultSymbols[0].value * betAmount * 5; break;
                     case 'Orange': totalWinAmount += resultSymbols[0].value * betAmount * 7; break;
-                    case 'Lerang': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
+                    case 'Lemon': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
                     case 'Seven':
                         winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
                         totalWinAmount += resultSymbols[0].value * betAmount * 50;
@@ -931,3 +920,4 @@ async function spin() {
     </script>
 </body>
 </html>
+        
