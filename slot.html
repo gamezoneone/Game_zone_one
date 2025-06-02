@@ -8,7 +8,7 @@
 
     <style>
         /* ==============================================
-           CSS UNTUK TAMPILAN GAME SLOT (MIRIP GAMBAR)
+           CSS UNTUK TAMPILAN GAME SLOT (MIRIP GAMBAR & LEBIH KOMPAK)
            ============================================== */
         :root {
             font-size: 16px; /* Base font size for rem units */
@@ -23,11 +23,11 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh; /* Use full viewport height */
-            overflow: hidden;
+            overflow: auto; /* Allow scrolling if content is too large, but prefer compact */
             color: #fff;
             text-shadow: 0 0 0.3rem rgba(255, 255, 255, 0.5);
-            padding: 1rem; /* Add some padding around the edges */
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            padding: 0.5rem; /* Reduced padding */
+            box-sizing: border-box;
         }
 
         .slot-game-container {
@@ -35,20 +35,20 @@
             background: linear-gradient(45deg, #2b0051, #4d1872); /* Ungu gelap kebiruan */
             border: 0.2rem solid #ff00ff; /* Neon magenta */
             border-radius: 1.5rem;
-            padding: 1.5rem;
+            padding: 1rem; /* Reduced padding */
             box-shadow:
                 inset 0 0 1.5rem rgba(255, 0, 255, 0.5), /* Inner neon glow */
                 0 0 3rem rgba(255, 0, 255, 0.7),
                 0 0 1.8rem rgba(0, 255, 255, 0.5); /* Outer neon glow */
             text-align: center;
-            width: 95%; /* Take up most of the width */
-            max-width: 650px; /* Max width for larger screens */
+            width: 98%; /* Take up more width on smaller screens */
+            max-width: 550px; /* Reduced max-width for more compact design */
             box-sizing: border-box;
-            min-height: 90vh; /* Ensure it takes up enough vertical space */
+            min-height: 85vh; /* Reduced min-height to make it less "tall" */
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            overflow: hidden; /* Hide overflowing neon lines */
+            overflow: hidden;
         }
 
         /* Dekorasi Garis Neon Horizontal */
@@ -59,39 +59,39 @@
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
-            height: 0.15rem;
+            height: 0.1rem; /* Slightly thinner */
             background-color: #00ffff; /* Neon cyan */
-            box-shadow: 0 0 1rem #00ffff, 0 0 2rem rgba(0, 255, 255, 0.6);
+            box-shadow: 0 0 0.8rem #00ffff, 0 0 1.5rem rgba(0, 255, 255, 0.6);
             border-radius: 0.1rem;
         }
         .slot-game-container::before {
-            top: 0.8rem;
+            top: 0.5rem; /* Reduced distance from top */
         }
         .slot-game-container::after {
-            bottom: 0.8rem;
+            bottom: 0.5rem; /* Reduced distance from bottom */
         }
 
         header {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem; /* Reduced margin */
             position: relative;
-            z-index: 2; /* Agar di atas elemen lain */
+            z-index: 2;
         }
 
         h1 {
-            font-size: 3.8rem; /* Lebih besar untuk efek utama */
+            font-size: 3rem; /* Slightly smaller for compactness */
             color: #ffcc00; /* Neon kuning */
             text-shadow:
-                0 0 0.5rem #ffcc00,    /* Yellow base glow */
-                0 0 1rem #ffcc00,
-                0 0 1.5rem #ffcc00,
-                0 0 2rem #ff0000,      /* Red outer glow */
-                0 0 3rem #ff0000,
-                0 0 4rem #ff0000;
-            margin: 0 auto; /* Tengah secara horizontal */
-            padding: 0.5rem 0;
-            letter-spacing: 0.2rem; /* Jarak antar huruf */
+                0 0 0.4rem #ffcc00,
+                0 0 0.8rem #ffcc00,
+                0 0 1.2rem #ffcc00,
+                0 0 1.8rem #ff0000,
+                0 0 2.5rem #ff0000,
+                0 0 3rem #ff0000;
+            margin: 0 auto;
+            padding: 0.3rem 0; /* Reduced padding */
+            letter-spacing: 0.15rem; /* Slightly reduced letter spacing */
             position: relative;
-            display: inline-block; /* Agar before/after bisa relatif terhadap h1 */
+            display: inline-block;
         }
 
         /* Garis Neon di Samping Judul H1 */
@@ -101,69 +101,67 @@
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 3rem; /* Lebar garis */
-            height: 0.5rem; /* Tinggi garis */
+            width: 2.5rem; /* Reduced width */
+            height: 0.4rem; /* Reduced height */
             background-color: #ff00ff; /* Magenta */
-            box-shadow: 0 0 0.8rem #ff00ff, 0 0 1.5rem rgba(255, 0, 255, 0.6);
-            border-radius: 0.25rem;
+            box-shadow: 0 0 0.6rem #ff00ff, 0 0 1rem rgba(255, 0, 255, 0.6);
+            border-radius: 0.2rem;
         }
         h1::before {
-            left: -4rem; /* Sesuaikan posisi relatif terhadap h1 */
+            left: -3rem; /* Adjusted position */
         }
         h1::after {
-            right: -4rem; /* Sesuaikan posisi relatif terhadap h1 */
+            right: -3rem; /* Adjusted position */
         }
 
 
         .player-info {
-            font-size: 1.1rem; /* Adjusted for mobile */
-            margin-bottom: 1.5rem;
-            color: #00ffff; /* Neon cyan */
-            text-shadow: 0 0 0.5rem #00ffff;
+            font-size: 1rem; /* Adjusted for mobile */
+            margin-bottom: 1rem; /* Reduced margin */
+            color: #00ffff;
+            text-shadow: 0 0 0.4rem #00ffff;
             display: flex;
-            flex-direction: column; /* Stack on mobile */
-            justify-content: center; /* Center items when stacked */
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 0.5rem; /* Space between lines */
-            padding: 0 0.5rem;
-            background-color: rgba(0, 0, 0, 0.3); /* Slightly darker background */
-            border-radius: 0.5rem;
-            padding: 0.8rem;
+            gap: 0.4rem; /* Reduced gap */
+            padding: 0.5rem; /* Reduced padding */
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 0.4rem;
             border: 1px solid rgba(0, 255, 255, 0.5);
-            box-shadow: inset 0 0 0.5rem rgba(0, 255, 255, 0.3);
+            box-shadow: inset 0 0 0.4rem rgba(0, 255, 255, 0.3);
         }
         .player-info p {
-            margin: 0; /* Remove default paragraph margin */
+            margin: 0;
             line-height: 1.2;
         }
 
         .slot-machine {
-            background-color: rgba(0, 0, 0, 0.85); /* Lebih gelap, lebih solid */
-            border-radius: 1.2rem;
-            padding: 1.2rem;
-            border: 0.25rem solid #ff6600; /* Neon orange */
+            background-color: rgba(0, 0, 0, 0.85);
+            border-radius: 1rem; /* Slightly smaller radius */
+            padding: 1rem; /* Reduced padding */
+            border: 0.2rem solid #ff6600; /* Neon orange */
             box-shadow:
-                inset 0 0 2rem rgba(255, 102, 0, 0.6), /* Inner glow */
-                0 0 1.5rem rgba(255, 102, 0, 0.4); /* Outer glow */
-            margin-bottom: 1.5rem;
-            flex-grow: 1; /* Allow slot machine to take available space */
+                inset 0 0 1.5rem rgba(255, 102, 0, 0.6),
+                0 0 1rem rgba(255, 102, 0, 0.4);
+            margin-bottom: 1rem; /* Reduced margin */
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             position: relative;
         }
 
-        /* Area info di atas reel (Cherry, Orange, Lerang) */
         .info-bar {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem; /* Reduced margin */
             background-color: rgba(0, 0, 0, 0.6);
-            border-radius: 0.5rem;
-            padding: 0.5rem;
-            border: 1px solid #00ffff; /* Neon cyan */
-            box-shadow: inset 0 0 0.5rem rgba(0, 255, 255, 0.5);
-            font-size: 0.8rem;
+            border-radius: 0.4rem;
+            padding: 0.4rem; /* Reduced padding */
+            border: 1px solid #00ffff;
+            box-shadow: inset 0 0 0.4rem rgba(0, 255, 255, 0.5);
+            font-size: 0.75rem; /* Slightly smaller font */
             text-transform: uppercase;
             letter-spacing: 0.05rem;
             color: #00ffff;
@@ -171,33 +169,33 @@
         .info-item {
             display: flex;
             align-items: center;
-            gap: 0.3rem;
+            gap: 0.2rem; /* Reduced gap */
         }
         .info-light {
-            width: 0.6rem;
-            height: 0.6rem;
+            width: 0.5rem; /* Smaller light */
+            height: 0.5rem; /* Smaller light */
             border-radius: 50%;
-            background-color: #ff00ff; /* Default color */
-            box-shadow: 0 0 0.4rem #ff00ff;
+            background-color: #ff00ff;
+            box-shadow: 0 0 0.3rem #ff00ff;
         }
-        .info-light.cherry { background-color: #ff00ff; box-shadow: 0 0 0.4rem #ff00ff; }
-        .info-light.orange { background-color: #ff6600; box-shadow: 0 0 0.4rem #ff6600; }
-        .info-light.lerang { background-color: #99ff33; box-shadow: 0 0 0.4rem #99ff33; }
+        .info-light.cherry { background-color: #ff00ff; box-shadow: 0 0 0.3rem #ff00ff; }
+        .info-light.orange { background-color: #ff6600; box-shadow: 0 0 0.3rem #ff6600; }
+        .info-light.lerang { background-color: #99ff33; box-shadow: 0 0 0.3rem #99ff33; }
 
 
         .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0.8rem; /* Adjusted gap */
-            margin-bottom: 1.5rem;
-            height: 120px; /* Reduced height for smaller screens */
+            gap: 0.6rem; /* Reduced gap */
+            margin-bottom: 1rem; /* Reduced margin */
+            height: 100px; /* Further reduced height for symbols */
             overflow: hidden;
-            border: 0.2rem solid #fff; /* Border reel yang lebih menonjol */
-            border-radius: 0.8rem;
-            background-color: #1a1a1a; /* Background reel yang lebih gelap */
+            border: 0.15rem solid #fff; /* Thinner border */
+            border-radius: 0.6rem;
+            background-color: #1a1a1a;
             position: relative;
-            flex-shrink: 0; /* Prevent reels from shrinking */
-            box-shadow: inset 0 0 1rem rgba(255,255,255,0.3); /* Inner light effect */
+            flex-shrink: 0;
+            box-shadow: inset 0 0 0.8rem rgba(255,255,255,0.3);
         }
 
         .reel {
@@ -207,93 +205,93 @@
             justify-content: flex-start;
             align-items: center;
             background-color: #0d0d0d;
-            border-radius: 0.6rem;
+            border-radius: 0.5rem;
             border: 1px solid #333;
             overflow: hidden;
             position: relative;
         }
 
         .reel img {
-            width: 90%; /* Adjust image width to fit reel */
-            max-width: 100px; /* Max size for symbols */
-            height: 100px; /* Fixed height for symbols */
+            width: 90%;
+            max-width: 80px; /* Reduced max-width for symbols */
+            height: 80px; /* Reduced fixed height for symbols */
             object-fit: contain;
-            padding: 0.3rem;
+            padding: 0.2rem; /* Reduced padding */
             box-sizing: border-box;
             display: block;
-            filter: drop-shadow(0 0 0.3rem rgba(255, 255, 0, 0.5));
+            filter: drop-shadow(0 0 0.2rem rgba(255, 255, 0, 0.5));
         }
 
         .controls {
             display: flex;
-            flex-direction: column; /* Stack on mobile */
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 1rem; /* Space between bet control and spin button */
-            margin-top: 1rem;
+            gap: 0.8rem; /* Reduced gap */
+            margin-top: 0.8rem; /* Reduced margin */
         }
 
         .bet-control {
-            display: flex; /* Keep label and input inline */
+            display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem; /* Reduced gap */
             background-color: rgba(0, 0, 0, 0.4);
-            border-radius: 0.5rem;
-            padding: 0.5rem 1rem;
-            border: 1px solid rgba(153, 255, 51, 0.5); /* Neon green */
-            box-shadow: inset 0 0 0.5rem rgba(153, 255, 51, 0.3);
+            border-radius: 0.4rem;
+            padding: 0.4rem 0.8rem; /* Reduced padding */
+            border: 1px solid rgba(153, 255, 51, 0.5);
+            box-shadow: inset 0 0 0.4rem rgba(153, 255, 51, 0.3);
         }
 
         .bet-control label {
-            font-size: 1.1rem;
-            color: #99ff33; /* Neon hijau */
-            text-shadow: 0 0 0.5rem #99ff33;
+            font-size: 1rem; /* Slightly smaller font */
+            color: #99ff33;
+            text-shadow: 0 0 0.4rem #99ff33;
         }
 
         .bet-control input {
-            width: 70px; /* Narrower input for mobile */
-            padding: 0.6rem 0.8rem;
-            border-radius: 0.5rem; /* Slightly smaller radius */
-            border: 0.1rem solid #66ffff; /* Neon aqua */
+            width: 60px; /* Narrower input */
+            padding: 0.5rem 0.6rem; /* Reduced padding */
+            border-radius: 0.4rem;
+            border: 0.1rem solid #66ffff;
             background-color: #0d1217;
             color: #fff;
-            font-size: 1rem;
+            font-size: 0.9rem; /* Slightly smaller font */
             text-align: center;
-            box-shadow: inset 0 0 0.6rem rgba(102, 255, 255, 0.4);
+            box-shadow: inset 0 0 0.5rem rgba(102, 255, 255, 0.4);
             outline: none;
         }
         .bet-control input:focus {
             border-color: #ff00ff;
-            box-shadow: inset 0 0 0.9rem rgba(255, 0, 255, 0.6);
+            box-shadow: inset 0 0 0.7rem rgba(255, 0, 255, 0.6);
         }
 
         button {
-            background: linear-gradient(135deg, #ff00ff, #8a2be2); /* Neon magenta ke ungu */
+            background: linear-gradient(135deg, #ff00ff, #8a2be2);
             color: #fff;
-            padding: 0.8rem 1.5rem; /* Smaller padding for mobile */
+            padding: 0.7rem 1.2rem; /* Reduced padding */
             border: none;
-            border-radius: 0.8rem;
-            font-size: 1.5rem; /* Smaller font for mobile */
+            border-radius: 0.6rem; /* Slightly smaller radius */
+            font-size: 1.3rem; /* Slightly smaller font */
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 1.2rem rgba(255, 0, 255, 0.7), 0 0 0.8rem rgba(138, 43, 226, 0.5);
+            box-shadow: 0 0 1rem rgba(255, 0, 255, 0.7), 0 0 0.6rem rgba(138, 43, 226, 0.5);
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 0.05rem;
-            text-shadow: 0 0 0.3rem rgba(0,0,0,0.5);
-            width: 100%; /* Full width button */
-            max-width: 200px; /* Max width for button */
+            text-shadow: 0 0 0.2rem rgba(0,0,0,0.5);
+            width: 90%; /* Slightly smaller width */
+            max-width: 180px; /* Reduced max-width */
         }
 
         button:hover {
             background: linear-gradient(135deg, #8a2be2, #ff00ff);
-            box-shadow: 0 0 1.8rem rgba(255, 0, 255, 0.9), 0 0 1.2rem rgba(138, 43, 226, 0.7);
-            transform: translateY(-0.2rem);
+            box-shadow: 0 0 1.5rem rgba(255, 0, 255, 0.9), 0 0 1rem rgba(138, 43, 226, 0.7);
+            transform: translateY(-0.1rem); /* Reduced lift */
         }
 
         button:active {
             transform: translateY(0);
-            box-shadow: 0 0 0.5rem rgba(255, 0, 255, 0.5);
+            box-shadow: 0 0 0.4rem rgba(255, 0, 255, 0.5);
         }
 
         button:disabled {
@@ -304,138 +302,145 @@
         }
 
         .messages {
-            margin-top: 1.2rem;
-            font-size: 1.1rem;
-            color: #00ff00; /* Neon hijau */
-            text-shadow: 0 0 0.6rem #00ff00;
-            min-height: 2rem; /* Menjaga tinggi agar tidak bergeser */
+            margin-top: 1rem; /* Reduced margin */
+            font-size: 1rem; /* Slightly smaller font */
+            color: #00ff00;
+            text-shadow: 0 0 0.5rem #00ff00;
+            min-height: 1.8rem; /* Reduced min-height */
             background-color: rgba(0, 0, 0, 0.4);
-            border-radius: 0.5rem;
-            padding: 0.5rem;
+            border-radius: 0.4rem;
+            padding: 0.4rem; /* Reduced padding */
             border: 1px solid rgba(0, 255, 0, 0.5);
         }
 
         /* Styling untuk tombol logout */
         .control-btn {
-            background: linear-gradient(135deg, #007bff, #00c6ff); /* Biru muda */
-            font-size: 0.9rem;
-            padding: 0.5rem 0.8rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 0 0.6rem rgba(0, 123, 255, 0.6);
+            background: linear-gradient(135deg, #007bff, #00c6ff);
+            font-size: 0.8rem; /* Slightly smaller */
+            padding: 0.4rem 0.7rem; /* Reduced padding */
+            border-radius: 0.4rem;
+            box-shadow: 0 0 0.5rem rgba(0, 123, 255, 0.6);
         }
 
         .control-btn:hover {
             background: linear-gradient(135deg, #00c6ff, #007bff);
-            box-shadow: 0 0 0.9rem rgba(0, 123, 255, 0.8);
-            transform: translateY(-0.1rem);
+            box-shadow: 0 0 0.7rem rgba(0, 123, 255, 0.8);
+            transform: translateY(-0.05rem);
         }
 
         /* Bottom "indicators" - GRIFEINE, 777, U.S.NAGS */
         .bottom-indicators {
             display: flex;
             justify-content: space-between;
-            margin-top: 1.5rem;
-            gap: 0.5rem; /* Added gap for smaller screens */
+            margin-top: 1rem; /* Reduced margin */
+            gap: 0.4rem; /* Reduced gap */
         }
         .bottom-indicator-box {
             flex: 1;
             background-color: rgba(0, 0, 0, 0.6);
-            border: 0.15rem solid #00ffff;
-            border-radius: 0.6rem;
-            padding: 0.5rem;
-            font-size: 1rem;
+            border: 0.1rem solid #00ffff; /* Thinner border */
+            border-radius: 0.5rem;
+            padding: 0.4rem; /* Reduced padding */
+            font-size: 0.9rem; /* Slightly smaller font */
             font-weight: bold;
             color: #00ffff;
-            text-shadow: 0 0 0.5rem #00ffff;
-            box-shadow: inset 0 0 0.8rem rgba(0, 255, 255, 0.4);
-            letter-spacing: 0.05rem;
-            display: flex; /* For 777 alignment */
+            text-shadow: 0 0 0.4rem #00ffff;
+            box-shadow: inset 0 0 0.6rem rgba(0, 255, 255, 0.4);
+            letter-spacing: 0.04rem;
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 2.5rem; /* Ensure consistent height */
+            min-height: 2rem; /* Reduced min-height */
         }
         .bottom-indicator-box.seven-display {
-            font-size: 2.2rem; /* Larger for 777 */
+            font-size: 1.8rem; /* Smaller for 777 */
             color: #ffcc00;
-            text-shadow: 0 0 0.5rem #ffcc00, 0 0 1rem #ff0000;
+            text-shadow: 0 0 0.4rem #ffcc00, 0 0 0.8rem #ff0000;
             border-color: #ffcc00;
-            box-shadow: inset 0 0 1rem rgba(255, 204, 0, 0.6), 0 0 0.8rem rgba(255, 204, 0, 0.4);
+            box-shadow: inset 0 0 0.8rem rgba(255, 204, 0, 0.6), 0 0 0.6rem rgba(255, 204, 0, 0.4);
         }
 
         /* Media Query for larger screens (e.g., tablets and desktops) */
         @media (min-width: 600px) {
             .slot-game-container {
-                padding: 30px;
-                max-width: 650px; /* Restore original max width */
-                min-height: auto; /* Allow height to adjust */
+                padding: 25px; /* Adjust padding for larger screens */
+                max-width: 600px; /* Increased max-width but still compact */
+                min-height: auto;
             }
 
             h1 {
-                font-size: 3.8em;
-                letter-spacing: 3px;
+                font-size: 3.5em; /* Slightly larger on desktop */
+                letter-spacing: 2px;
             }
             h1::before, h1::after {
-                width: 4rem; /* Larger lines for desktop */
-                height: 0.8rem;
-                left: -5rem;
-                right: -5rem;
+                width: 3.5rem;
+                height: 0.6rem;
+                left: -4rem;
+                right: -4rem;
             }
+
             .player-info {
-                font-size: 1.3em;
-                flex-direction: row; /* Back to row layout */
+                font-size: 1.2em;
+                flex-direction: row;
                 justify-content: space-between;
                 padding: 0 10px;
             }
 
             .reels {
-                height: 150px; /* Restore original height */
-                gap: 15px;
+                height: 130px; /* Increased height for symbols on desktop */
+                gap: 12px;
             }
 
             .reel img {
-                max-width: 120px;
-                height: 120px;
+                max-width: 100px; /* Larger symbols on desktop */
+                height: 100px; /* Larger symbols on desktop */
             }
 
             .controls {
-                flex-direction: row; /* Back to row layout */
-                gap: 25px;
+                flex-direction: row;
+                gap: 20px;
             }
 
             .bet-control input {
-                width: 90px;
-                font-size: 1.2em;
+                width: 80px;
+                font-size: 1.1em;
             }
 
             button {
-                padding: 15px 30px;
-                font-size: 1.8em;
-                max-width: none; /* Remove max width constraint */
+                padding: 12px 25px;
+                font-size: 1.6em;
+                max-width: none;
             }
 
             .messages {
-                font-size: 1.4em;
+                font-size: 1.2em;
             }
 
             .control-btn {
-                font-size: 1em;
-                padding: 8px 15px;
+                font-size: 0.9em;
+                padding: 6px 12px;
             }
 
             .bottom-indicators {
-                gap: 1rem;
+                gap: 0.8rem;
             }
             .bottom-indicator-box {
-                font-size: 1.2rem;
-                min-height: 3.5rem;
+                font-size: 1.1rem;
+                min-height: 3rem;
             }
             .bottom-indicator-box.seven-display {
-                font-size: 3em;
+                font-size: 2.5em;
             }
         }
     </style>
-</head>
+    </head>
 <body>
+    <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
+    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
+    <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
+    <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
+
     <div class="slot-game-container">
         <header>
             <h1>SLOT77</h1>
@@ -484,15 +489,13 @@
     </div>
 
     <script>
-  const supabase = window.supabase.createClient(
-            'https://vqmfachxnjyxwuavpgds.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
-        );
-
-        let user; 
-        let userSaldo = 0;
-        let userId = null; 
-        
+    const supabase = window.supabase.createClient(
+      'https://vqmfachxnjyxwuavpgds.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+    );
+        let uid = localStorage.getItem('uid');
+    let currentSaldo = 0;
+    
         const playerNameSpan = document.getElementById('playerName');
         const playerBalanceSpan = document.getElementById('playerBalance');
         const spinBtn = document.getElementById('spinBtn');
@@ -506,29 +509,30 @@
             reel3: document.getElementById('reel3')
         };
 
+        // <<< ELEMEN AUDIO BARU >>>
+        const spinStartSound = document.getElementById('spinStartSound');
+        const reelStopSound = document.getElementById('reelStopSound');
+        const winSound = document.getElementById('winSound');
+        const jackpotSound = document.getElementById('jackpotSound');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
         // ==============================================
         //           KONFIGURASI GAME SLOT
         // ==============================================
         const symbols = [
-            { name: 'Cherry', image: 'images/cherry.png', value: 10 },
-            { name: 'Orange', image: 'images/orange.png', value: 15 },
-            { name: 'Lerang', image: 'images/lerang.png', value: 20 },
-            { name: 'Seven', image: 'images/seven.png', value: 100, isJackpot: true }
-            // Anda bisa tambahkan simbol lain di sini
-            // { name: 'Wild', image: 'images/wild.png', value: 0, isWild: true },
-            // { name: 'Bonus', image: 'images/bonus.png', value: 0, isScatter: true }
+            { name: 'Cherry', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(1).jpeg', value: 10 },
+            { name: 'Orange', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//images%20(3).jpeg', value: 15 },
+            { name: 'Lerang', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(3).jpeg', value: 20 },
+            { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
         ];
 
-        // REEL_STOP_DURATION: Durasi total reel berputar (dalam ms)
-        const REEL_STOP_DURATION = 2000; // Contoh: 2 detik per reel
-        // SYMBOLS_PER_REEL_ANIMATION: Jumlah simbol yang akan di-render untuk efek putaran
-        // Semakin tinggi, semakin 'padat' putarannya, tapi bisa memakan performa jika terlalu tinggi
+        const REEL_STOP_DURATION = 2500;
         const SYMBOLS_PER_REEL_ANIMATION = 20;
 
         let currentUser = null;
-        let playerBalance = 0;
+        let playerBalance = 0; // Variabel JS untuk menyimpan saldo
         let isSpinning = false;
-        let currentSpinResults = null; // Menyimpan hasil simbol yang ditentukan sebelum animasi
+        let currentSpinResults = null;
 
         // ==============================================
         //           FUNGSI BANTUAN UI
@@ -549,27 +553,20 @@
 
         // Menampilkan simbol awal pada reel
         function initializeReelsDisplay() {
-            // Tinggi yang diharapkan dari setiap simbol gambar, sesuaikan jika gambar Anda berbeda
-            const initialSymbolHeight = 100;
-            // Dapatkan tinggi visual reel yang sudah diatur di CSS
+            const initialSymbolHeight = 80; // Disesuaikan dengan tinggi reel baru
             const reelViewHeight = reels_elements.reel1.clientHeight;
-            // Hitung offset agar simbol berada di tengah reel view
             const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
-
 
             Object.values(reels_elements).forEach((reel) => {
                 reel.innerHTML = '';
                 const img = document.createElement('img');
-                const defaultSymbol = symbols[0]; // Ambil simbol pertama sebagai default
+                const defaultSymbol = symbols[0];
                 img.src = defaultSymbol.image;
                 img.alt = defaultSymbol.name;
-                // Atur tinggi gambar agar sesuai dengan yang diharapkan
                 img.style.height = `${initialSymbolHeight}px`;
-                img.style.width = `auto`; // Pertahankan rasio aspek
-                img.style.padding = `5px`;
+                img.style.width = `auto`;
+                img.style.padding = `2px`; // Disesuaikan
                 reel.appendChild(img);
-
-                // Atur posisi awal agar simbol berada di tengah reel view
                 reel.style.transform = `translateY(${offsetToCenter}px)`;
             });
         }
@@ -585,7 +582,7 @@
                 .eq('user_id', userId)
                 .single();
 
-            if (error && error.code !== 'PGRST116') { // PGRST116: no rows found
+            if (error && error.code !== 'PGRST116') {
                 console.error('Error loading user data:', error.message);
                 gameMessage.textContent = 'Error loading user data. Please refresh or contact support.';
                 disableGameControls();
@@ -593,18 +590,17 @@
             }
 
             if (data) {
-                playerBalance = data.saldo;
+                playerBalance = data.saldo; // <<< PERBAIKAN: Menggunakan 'saldo'
                 playerNameSpan.textContent = data.username || currentUser.email.split('@')[0];
                 gameMessage.textContent = 'Welcome back!';
                 enableGameControls();
             } else {
-                // Jika user_id ada di auth tapi tidak di tabel users_data, anggap user baru yang perlu diinisialisasi
-                const initialBalance = 1000; // Saldo awal untuk user baru
-                const defaultUsername = currentUser.email.split('@')[0]; // Ambil bagian pertama dari email
+                const initialBalance = 1000;
+                const defaultUsername = currentUser.email.split('@')[0];
                 const { data: newUserData, error: insertError } = await supabase
                     .from('users_data')
-                    .insert({ user_id: userId, saldo: initialBalance, username: defaultUsername })
-                    .select() // Tambahkan .select() untuk mengembalikan data yang dimasukkan
+                    .insert({ user_id: userId, saldo: initialBalance, username: defaultUsername }) // <<< PERBAIKAN: Menggunakan 'saldo'
+                    .select()
                     .single();
 
                 if (insertError) {
@@ -613,7 +609,7 @@
                     disableGameControls();
                     return;
                 }
-                playerBalance = newUserData.balance;
+                playerBalance = newUserData.saldo; // <<< PERBAIKAN: Menggunakan 'saldo'
                 playerNameSpan.textContent = newUserData.username;
                 gameMessage.textContent = `Welcome, ${newUserData.username}! You received ${initialBalance} credits!`;
                 enableGameControls();
@@ -624,18 +620,20 @@
         async function updateUserData(newBalance) {
             if (!currentUser) {
                 console.error('No current user to update data for.');
-                gameMessage.textContent = 'Error: Not logged in to save balance.';
+                gameMessage.textContent = 'Error: Not logged in to save saldo.';
                 return;
             }
 
             const { error } = await supabase
                 .from('users_data')
-                .update({ balance: newBalance })
+                .update({ saldo: newBalance }) // <<< PERBAIKAN: Menggunakan 'saldo'
                 .eq('user_id', currentUser.id);
 
             if (error) {
-                console.error('Error updating user balance:', error.message);
-                gameMessage.textContent = 'Error saving balance. Please refresh.';
+                console.error('Error updating user saldo:', error.message);
+                gameMessage.textContent = 'Error saving saldo. Please refresh.';
+            } else {
+                console.log('Saldo updated successfully!');
             }
         }
 
@@ -650,13 +648,21 @@
                 gameMessage.textContent = 'User found. Loading player data...';
                 await loadUserData(user.id);
                 logoutBtn.style.display = 'inline-block';
+
+                // <<< START BACKGROUND MUSIC >>>
+                backgroundMusic.volume = 0.3;
+                try {
+                    await backgroundMusic.play();
+                } catch (e) {
+                    console.warn("Background music autoplay blocked. User interaction needed.", e);
+                    // Jika autoplay diblokir, coba putar saat spin pertama
+                }
+
             } else {
                 gameMessage.textContent = 'You are not logged in. Please go to the login/registration page to play.';
                 playerNameSpan.textContent = 'Guest';
                 playerBalanceSpan.textContent = 'N/A';
                 logoutBtn.style.display = 'none';
-                // Opsional: Redirect ke halaman login/registrasi jika tidak login
-                // window.location.href = 'index.html';
             }
         }
 
@@ -673,67 +679,52 @@
                 gameMessage.textContent = 'Logged out. Please login again to play.';
                 disableGameControls();
                 logoutBtn.style.display = 'none';
-                // Opsional: Redirect ke halaman login setelah logout
-                // window.location.href = 'index.html';
+                // Hentikan musik latar saat logout
+                backgroundMusic.pause();
+                backgroundMusic.currentTime = 0;
             }
         });
-        // ==============================================
-        //           LOGIKA GAME SLOT
-        // ==============================================
-
         function getRandomSymbol() {
             const randomIndex = Math.floor(Math.random() * symbols.length);
             return symbols[randomIndex];
         }
 
-        // Fungsi animasi reel
         function spinReel(reelElement, finalSymbol) {
             return new Promise(resolve => {
                 const animationSymbols = [];
-                // Tinggi yang diharapkan dari setiap simbol gambar, sesuaikan jika gambar Anda berbeda
-                const initialSymbolHeight = 100;
+                const initialSymbolHeight = 80; // Disesuaikan dengan tinggi reel baru
 
-                // Tambahkan simbol acak untuk efek putaran
                 for (let i = 0; i < SYMBOLS_PER_REEL_ANIMATION; i++) {
                     animationSymbols.push(getRandomSymbol());
                 }
-                // Tambahkan simbol final di akhir
                 animationSymbols.push(finalSymbol);
-                // Tambahkan beberapa simbol acak lagi setelah final untuk 'overshoot' visual
-                for (let i = 0; i < 5; i++) { // Jumlah simbol untuk overshoot
+                for (let i = 0; i < 5; i++) {
                     animationSymbols.push(getRandomSymbol());
                 }
 
-                // Kosongkan reel dan tambahkan semua simbol animasi
                 reelElement.innerHTML = '';
                 animationSymbols.forEach(s => {
                     const img = document.createElement('img');
                     img.src = s.image;
                     img.alt = s.name;
-                    img.style.height = `${initialSymbolHeight}px`; // Pertahankan tinggi
+                    img.style.height = `${initialSymbolHeight}px`;
                     img.style.width = `auto`;
-                    img.style.padding = `5px`;
+                    img.style.padding = `2px`;
                     reelElement.appendChild(img);
                 });
 
-                // Hitung posisi berhenti
                 const reelViewHeight = reelElement.clientHeight;
                 const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
-                // Posisi simbol final dalam array animasi
-                const finalSymbolAnimationIndex = animationSymbols.length - (5 + 1); // Posisi simbol final (setelah overshoot)
-                // Offset 10px dari padding gambar (total 5px atas + 5px bawah)
-                const targetScrollPosition = -(finalSymbolAnimationIndex * (initialSymbolHeight + 10));
+                const finalSymbolAnimationIndex = animationSymbols.length - (5 + 1);
+                const targetScrollPosition = -(finalSymbolAnimationIndex * (initialSymbolHeight + 4)); // Adjusted for padding
 
-                // Reset transisi dan posisi awal untuk memulai animasi
                 reelElement.style.transition = `none`;
                 reelElement.style.transform = `translateY(0px)`;
-                void reelElement.offsetWidth; // Paksa reflow
+                void reelElement.offsetWidth;
 
-                // Mulai animasi
-                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Ease-out
+                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`;
                 reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
-                // Setelah animasi selesai, bersihkan dan tampilkan hanya simbol final
                 setTimeout(() => {
                     reelElement.style.transition = 'none';
                     reelElement.innerHTML = '';
@@ -742,15 +733,20 @@
                     img.alt = finalSymbol.name;
                     img.style.height = `${initialSymbolHeight}px`;
                     img.style.width = `auto`;
-                    img.style.padding = `5px`;
+                    img.style.padding = `2px`;
                     reelElement.appendChild(img);
-                    reelElement.style.transform = `translateY(${offsetToCenter}px)`; // Set ke posisi tengah
+                    reelElement.style.transform = `translateY(${offsetToCenter}px)`;
+                    
+                    // <<< PLAY REEL STOP SOUND >>>
+                    reelStopSound.currentTime = 0;
+                    reelStopSound.volume = 0.5;
+                    reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
+
                     resolve(finalSymbol);
                 }, REEL_STOP_DURATION);
             });
         }
 
-        // Fungsi utama putaran slot
         async function spin() {
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
@@ -776,35 +772,53 @@
             disableGameControls();
             gameMessage.textContent = "Spinning reels...";
 
+            // <<< PLAY SPIN START SOUND >>>
+            spinStartSound.currentTime = 0;
+            spinStartSound.volume = 0.6;
+            spinStartSound.play().catch(e => console.warn("Spin start sound playback failed:", e));
+
+            // <<< START BACKGROUND MUSIC ON FIRST SPIN IF NOT ALREADY PLAYING >>>
+            if (backgroundMusic.paused) {
+                backgroundMusic.volume = 0.3;
+                backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked again.", e));
+            }
+
             playerBalance -= betAmount;
             updateBalanceDisplay();
-            await updateUserData(playerBalance); // Simpan saldo yang sudah dikurangi
+            await updateUserData(playerBalance);
 
-            // Tentukan hasil simbol untuk putaran ini SEBELUM animasi dimulai
             currentSpinResults = [
                 getRandomSymbol(),
                 getRandomSymbol(),
                 getRandomSymbol()
             ];
 
-            // Jalankan animasi reel secara berurutan dengan sedikit jeda antar reel
             const reelPromises = [
                 spinReel(reels_elements.reel1, currentSpinResults[0]),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)), // Reel 2 mulai 300ms setelah reel 1
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))  // Reel 3 mulai 600ms setelah reel 1
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))
             ];
 
-            // Tunggu semua reel selesai berputar
             const finalReelSymbols = await Promise.all(reelPromises);
 
-            // Cek kemenangan
             const winInfo = checkWin(finalReelSymbols, betAmount);
 
             if (winInfo.amount > 0) {
                 playerBalance += winInfo.amount;
                 updateBalanceDisplay();
-                await updateUserData(playerBalance); // Simpan saldo kemenangan
+                await updateUserData(playerBalance);
                 gameMessage.textContent = winInfo.message + ` You won ${winInfo.amount} credits! Total: ${playerBalance}`;
+
+                // <<< PLAY WIN / JACKPOT SOUND >>>
+                if (winInfo.message.includes('JACKPOT')) {
+                    jackpotSound.currentTime = 0;
+                    jackpotSound.volume = 0.8;
+                    jackpotSound.play().catch(e => console.warn("Jackpot sound playback failed:", e));
+                } else {
+                    winSound.currentTime = 0;
+                    winSound.volume = 0.7;
+                    winSound.play().catch(e => console.warn("Win sound playback failed:", e));
+                }
             } else {
                 gameMessage.textContent = "No win this time. Good luck on the next spin!";
             }
@@ -813,55 +827,45 @@
             enableGameControls();
         }
 
-        // Fungsi untuk mengecek kemenangan
         function checkWin(resultSymbols, betAmount) {
             let totalWinAmount = 0;
             let winMessage = "";
 
-            // Contoh Payline 1: Tiga simbol yang sama di garis tengah
             if (resultSymbols[0].name === resultSymbols[1].name && resultSymbols[1].name === resultSymbols[2].name) {
                 winMessage = `Three ${resultSymbols[0].name}s!`;
-                // Atur multiplier berdasarkan simbol
                 switch(resultSymbols[0].name) {
                     case 'Cherry': totalWinAmount += resultSymbols[0].value * betAmount * 5; break;
                     case 'Orange': totalWinAmount += resultSymbols[0].value * betAmount * 7; break;
                     case 'Lerang': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
                     case 'Seven':
                         winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
-                        totalWinAmount += resultSymbols[0].value * betAmount * 50; // Jackpot besar!
+                        totalWinAmount += resultSymbols[0].value * betAmount * 50;
                         break;
-                    default: totalWinAmount += resultSymbols[0].value * betAmount * 3; // Default multiplier
+                    default: totalWinAmount += resultSymbols[0].value * betAmount * 3;
                 }
             }
-            // Anda bisa menambahkan payline dan logika kemenangan yang lebih kompleks di sini:
-            // Contoh Payline 2: Dua simbol "7" di awal
             else if (resultSymbols[0].name === 'Seven' && resultSymbols[1].name === 'Seven' && resultSymbols[2].name !== 'Seven') {
                 winMessage = `Two Sevens!`;
-                totalWinAmount += betAmount * 10; // Kemenangan kecil untuk 2 "7"
+                totalWinAmount += betAmount * 10;
             }
-            // Contoh Payline 3: Satu simbol "7"
             else if (resultSymbols[0].name === 'Seven' || resultSymbols[1].name === 'Seven' || resultSymbols[2].name === 'Seven') {
-                if (totalWinAmount === 0) { // Hanya jika belum ada kemenangan lain
+                if (totalWinAmount === 0) {
                     winMessage = `One Seven! Small win!`;
-                    totalWinAmount += betAmount * 2; // Kemenangan sangat kecil untuk 1 "7"
+                    totalWinAmount += betAmount * 2;
                 }
             }
-            // Implementasi untuk WILD/SCATTER (jika Anda menambahkannya di `symbols` array)
-            // if (resultSymbols[0].isWild || resultSymbols[1].isWild || resultSymbols[2].isWild) { ... }
 
             return { amount: totalWinAmount, message: winMessage };
         }
-
 
         // ==============================================
         //           INISIALISASI
         // ==============================================
         document.addEventListener('DOMContentLoaded', () => {
-            initializeReelsDisplay(); // Tampilkan simbol awal
-            initializeGame(); // Mulai proses otentikasi dan pemuatan data pemain
+            initializeReelsDisplay();
+            initializeGame();
         });
 
-        // Tambahkan event listener untuk tombol spin
         spinBtn.addEventListener('click', spin);
     </script>
 </body>
