@@ -537,128 +537,123 @@
         background-color: #2e4d7e;
     }
 
- /* --- Game Display Grid & Items (PENTING: Pastikan ini satu-satunya versi!) --- */
+ /* --- Game Display Grid & Items (PENTING: Pastikan ini satu-satunya versi!) --- *//* --- Bagian CSS Khusus untuk Tampilan Game Grid & Item --- */
+
+/* Ini adalah container utama untuk semua item game. */
+/* Pastikan ada di dalam file HTML yang menampilkan daftar game. */
+.game-display-grid {
+    display: grid;
+    /* Ini akan membuat 2 kolom di layar lebar (misalnya > 768px) */
+    /* Setiap kolom akan memiliki lebar minimum 250px, dan akan mengisi ruang yang tersedia secara merata. */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px; /* Jarak antar item game */
+    margin-top: 30px; /* Jarak dari elemen di atasnya */
+    padding-top: 20px; /* Padding di bagian atas */
+    border-top: 1px solid rgba(255,255,255,0.2); /* Garis pemisah */
+    justify-content: center; /* Pusatkan grid jika total lebarnya kurang dari lebar kontainer induk */
+}
+
+/* Setiap item game (elemen <a> dengan class "game-item") */
+.game-item {
+    background: rgba(255,255,255,0.08); /* Background samar untuk item game (bisa dihapus jika tidak mau) */
+    border-radius: 12px; /* Sudut membulat untuk item */
+    overflow: hidden; /* Penting agar gambar dan efek tidak keluar dari border-radius */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4); /* Bayangan untuk efek kedalaman */
+    cursor: pointer; /* Menandakan item bisa diklik */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transisi halus saat hover */
+    text-decoration: none; /* Menghilangkan garis bawah pada link */
+    color: inherit; /* Mewarisi warna teks dari parent */
+    display: block; /* Pastikan item adalah blok agar bisa diatur dimensinya */
+    position: relative; /* Penting untuk memposisikan gambar dan overlay judul secara absolut */
+
+    /* Mengatur rasio aspek untuk item game (misal: rasio 4:3) */
+    /* Lebar item akan 100% dari kolom grid, dan tinggi akan 75% dari lebarnya. */
+    width: 100%;
+    padding-bottom: 75%; /* Membuat tinggi 75% dari lebar (rasio 4:3). Ubah ke 100% untuk kotak. */
+    height: 0; /* Penting! Set tinggi ke 0 agar padding-bottom bisa bekerja sebagai pengatur tinggi */
+}
+
+.game-item:hover {
+    transform: translateY(-8px) scale(1.03); /* Item sedikit melayang dan membesar saat dihover */
+    box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3); /* Efek glow oranye */
+}
+
+/* Gambar thumbnail di dalam item game */
+.game-item img {
+    position: absolute; /* Posisikan gambar secara absolut di dalam item game */
+    top: 0;
+    left: 0;
+    width: 100%; /* Gambar akan mengisi seluruh lebar item game */
+    height: 100%; /* Gambar akan mengisi seluruh tinggi item game */
+    object-fit: cover; /* **INI PENTING:** Pastikan gambar mengisi seluruh area yang tersedia. Jika rasio gambar tidak sama dengan rasio item (4:3), gambar akan dipotong (crop) agar pas tanpa distorsi. */
+    border-radius: 12px; /* Agar gambar juga memiliki sudut membulat seperti itemnya */
+    transition: transform 0.3s ease; /* Transisi zoom halus saat hover */
+}
+
+.game-item:hover img {
+    transform: scale(1.05); /* Sedikit zoom pada gambar saat item dihover */
+}
+
+/* --- Judul Game (PILIH SALAH SATU OPSI DI BAWAH INI) --- */
+
+/* OPSI 1: Judul game hilang sepenuhnya (default dan direkomendasikan untuk thumbnail full) */
+.game-item h3 {
+    display: none; /* Menyembunyikan elemen judul game */
+}
+
+/* OPSI 2: Judul game muncul sebagai overlay transparan saat hover */
+/* Jika Anda memilih opsi ini, HAPUS atau KOMENTARI OPSI 1 di atas */
+/*
+.game-item h3 {
+    position: absolute; /* Posisikan judul secara absolut */
+    bottom: 0; /* Di bagian bawah item */
+    left: 0;
+    width: 100%; /* Lebar penuh item */
+    padding: 8px 10px; /* Padding di sekitar teks judul */
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0)); /* Gradasi transparan di bawah gambar */
+    color: #fff; /* Warna teks judul */
+    font-size: 0.9em; /* Ukuran font judul */
+    font-weight: 600; /* Ketebalan font */
+    text-align: center; /* Teks judul di tengah */
+    margin: 0; /* Hapus margin default h3 */
+    opacity: 0; /* Awalnya tidak terlihat */
+    transition: opacity 0.3s ease; /* Transisi saat muncul */
+    border-bottom-left-radius: 12px; /* Sudut membulat bawah */
+    border-bottom-right-radius: 12px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* Bayangan teks untuk keterbacaan */
+    pointer-events: none; /* Penting! Agar judul tidak menghalangi event klik pada gambar di bawahnya */
+}
+
+.game-item:hover h3 {
+    opacity: 1; /* Judul muncul saat item dihover */
+}
+*/
+
+/* --- Media Queries untuk Responsivitas (Hanya untuk Game Grid) --- */
+
+@media (max-width: 768px) {
+    /* Untuk tablet dan layar yang lebih kecil dari 768px: tetap 2 kolom */
     .game-display-grid {
-        display: grid;
-        /* Default: 2 kolom untuk desktop yang lebih luas (sekitar 768px ke atas) */
-        /* Anda bisa menyesuaikan 250px ini. Semakin kecil, semakin banyak kolom (jika cukup ruang) */
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 20px; /* Jarak antar game */
-        margin-top: 30px;
-        padding-top: 20px;
-        border-top: 1px solid rgba(255,255,255,0.2);
-        justify-content: center; /* Pusatkan grid jika tidak memenuhi lebar penuh */
+        grid-template-columns: repeat(2, 1fr); /* Atur agar selalu 2 kolom */
+        gap: 15px; /* Kurangi jarak antar item */
     }
-
     .game-item {
-        /*background: rgba(255,255,255,0.08); /* Background item game */
-        border-radius: 12px; /* Sudut lebih membulat */
-        overflow: hidden; /* Penting untuk menjaga gambar di dalam border-radius */
-        box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-        cursor: pointer;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
-        text-decoration: none; /* Hapus garis bawah link */
-        color: inherit; /* Warisi warna teks dari parent */
-        display: block; /* Pastikan ini blok agar bisa diatur dimensinya */
-        position: relative; /* Penting untuk gambar absolut dan overlay judul */
-
-        /* Mengatur rasio aspek untuk item game (misal: rasio 4:3) */
-        width: 100%; /* Pastikan lebar penuh dalam grid cell */
-        padding-bottom: 75%; /* Membuat tinggi 75% dari lebar (rasio 4:3) */
-        height: 0; /* Set tinggi ke 0 agar padding-bottom bisa bekerja */
+        padding-bottom: 75%; /* Pertahankan rasio 4:3 */
     }
+}
 
-    .game-item:hover {
-        transform: translateY(-8px) scale(1.03); /* Efek melayang sedikit lebih besar */
-        box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3); /* Glow oranye */
+@media (max-width: 480px) {
+    /* Untuk ponsel dan layar yang sangat kecil: tetap 2 kolom */
+    .game-display-grid {
+        grid-template-columns: repeat(2, 1fr); /* Pastikan 2 kolom di ponsel */
+        gap: 10px; /* Kurangi jarak lebih lanjut */
     }
-
-    /* Gambar thumbnail di dalam item game */
-    .game-item img {
-        position: absolute; /* Posisikan absolut agar mengisi seluruh parent */
-        top: 0;
-        left: 0;
-        width: 100%; /* Lebar 100% dari parent */
-        height: 100%; /* Tinggi 100% dari parent */
-        object-fit: cover; /* **Penting:** Pastikan gambar mengisi seluruh area, memotong jika rasio tidak sama */
-        border-radius: 12px; /* Pastikan gambar juga memiliki sudut membulat */
-        transition: transform 0.3s ease;
+    .game-item {
+        padding-bottom: 75%; /* Pertahankan rasio 4:3 */
     }
+}
 
-    .game-item:hover img {
-        transform: scale(1.05); /* Sedikit zoom pada gambar saat hover */
-    }
 
-    /* --- Judul Game (PILIH SALAH SATU OPSI DI BAWAH INI) --- */
-
-    /* OPSI 1: Judul hilang sepenuhnya (default) */
-    .game-item h3 {
-        display: none; /* Menyembunyikan judul game */
-    }
-
-    /* OPSI 2: Judul muncul sebagai overlay transparan saat hover */
-    /* Jika Anda memilih opsi ini, HAPUS/KOMENTARI OPSI 1 di atas */
-    /*
-    .game-item h3 {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        padding: 8px 10px;
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
-        color: #fff;
-        font-size: 0.9em;
-        font-weight: 600;
-        text-align: center;
-        margin: 0;
-        opacity: 0;
-        transition: opacity 0.3s ease;
-        border-bottom-left-radius: 12px;
-        border-bottom-right-radius: 12px;
-        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-        pointer-events: none; /* Agar tidak mengganggu klik pada gambar */
-    }
-
-    .game-item:hover h3 {
-        opacity: 1;
-    }
-    */
-
-    /* --- Media Queries untuk Responsivitas --- */
-    @media (max-width: 768px) {
-        /* Untuk tablet dan layar yang lebih kecil dari 768px: tetap 2 kolom */
-        .game-display-grid {
-            grid-template-columns: repeat(2, 1fr); /* 2 kolom di tablet */
-            gap: 15px;
-        }
-        /* Mengurangi ukuran item di tablet */
-        .game-item {
-            padding-bottom: 75%; /* Tetap rasio 4:3 */
-        }
-    }
-
-    @media (max-width: 480px) {
-        /* Untuk ponsel dan layar yang sangat kecil: tetap 2 kolom */
-        .game-display-grid {
-            grid-template-columns: repeat(2, 1fr); /* 2 kolom di ponsel */
-            gap: 10px;
-        }
-        /* Mengurangi ukuran item di ponsel */
-        .game-item {
-            padding-bottom: 75%; /* Tetap rasio 4:3 */
-        }
-        .hero-section h2 { font-size: 2.2em; }
-        .auth-forms h2 { font-size: 1.8em; }
-        .profile-container { padding: 25px 30px; margin: 20px auto; }
-        .main-actions-group { flex-wrap: wrap; gap: 15px; }
-        .main-actions-group .btn { width: calc(50% - 10px); }
-        .saldo { font-size: 20px; }
-        h2 { font-size: 1.5em; }
-        th, td { padding: 10px; font-size: 0.9em; }
-        .popup-inner h2 { font-size: 1.6em; }
-        .popup-inner input, .popup-inner select, .popup-inner button { font-size: 0.9em; padding: 10px; }
-        .btn-copy { font-size: 0.8em !important; padding: 6px 10px !important; }
-    }
     /* --- Footer --- */
     footer {
         background-color: rgba(0,0,0,0.0);
