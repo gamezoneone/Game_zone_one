@@ -185,9 +185,9 @@
         .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0rem; /* Reduced gap */
+            gap: 5px; /* Added a small gap between reels */
             margin-bottom: 1rem; /* Reduced margin */
-            height: 100px; /* Fixed height for the visible area of the reels */
+            height: 100px; /* Fixed height for the visible area of the reels (3 symbols @ 100px / symbol) */
             overflow: hidden; /* Crucial: Hides symbols outside the view */
             border: 0.15rem solid #fff; /* Thinner border */
             border-radius: 0.6rem;
@@ -204,11 +204,11 @@
             justify-content: flex-start; /* Start from the top for scrolling */
             align-items: center;
             background-color: #fff;
-            border-radius: 1rem;
+            border-radius: 0.5rem; /* Adjusted border-radius for individual reels */
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
-            top: 100px;
+            /* Remove 'top: 100px;' from here, it will be handled by JS for precise positioning */
             /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
         }
 
@@ -218,7 +218,7 @@
             line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
             width: 100%; /* Agar memenuhi lebar reel */
             text-align: center;
-            height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) */
+            height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) - **Penting untuk konsistensi** */
             display: flex; /* Untuk memusatkan emoji vertikal */
             justify-content: center;
             align-items: center;
@@ -235,9 +235,10 @@
         }
 
         @keyframes spin-blur {
-            /* Pergeseran harus sebesar tinggi satu elemen symbol (untuk mobile: 80px) */
+            /* Pergeseran harus sebesar tinggi satu elemen symbol */
+            /* Mobile: Tinggi simbol 100px (dari .reel .symbol) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(-80px); } /* Sesuai dengan height dari .reel .symbol mobile */
+            100% { transform: translateY(-100px); } 
         }
 
 
@@ -406,12 +407,12 @@
             }
 
             .reels {
-                height: 130px; /* Increased height for the visible area of the reels */
+                height: 100px; /* For desktop, one symbol is fully visible */
                 gap: 12px;
             }
 
             .reel .symbol {
-                font-size: 100px; /* KONTROL UKURAN EMOJI DI SINI (DESKTOP) */
+                font-size: 60px; /* KONTROL UKURAN EMOJI DI SINI (DESKTOP) */
                 height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (DESKTOP) */
             }
 
@@ -422,7 +423,7 @@
             }
         }
     </style>
-    </head>
+</head>
 <body>
     <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
     <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
@@ -476,11 +477,6 @@
             </div>
         </div>
     </div>
-<audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
-    <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
-    <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
-    <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
   <script>
         console.log("Script starting..."); // Debug log utama, harus selalu muncul
 
@@ -521,7 +517,8 @@
             { name: 'Cherry', emoji: '🍒', value: 10 },
             { name: 'Orange', emoji: '🍊', value: 15 },
             { name: 'Lemon',  emoji: '🍋', value: 20 },
-            { name: 'Sparkle',  emoji: '✨', value: 100, isJackpot: true } // Mengganti 7️⃣ dengan ✨
+            { name: 'Bell',   emoji: '🔔', value: 30 }, // Menambahkan Bell
+            { name: 'Sparkle',  emoji: '✨', value: 100, isJackpot: true } 
         ];
         console.log("Symbols defined:", symbols); 
 
@@ -536,7 +533,7 @@
         let currentSpinResults = null;
 
         // ==============================================
-        //           FUNGSI BANTUAN UI (DIPINDAHKAN KE ATAS SCRIPT BLOCK)
+        //           FUNGSI BANTUAN UI
         // ==============================================
         function disableGameControls() {
             console.log("Fungsi disableGameControls terpanggil."); 
@@ -749,6 +746,7 @@
             return new Promise(resolve => {
                 const { height: symbolHeight, fullHeight: symbolFullHeight } = getSymbolDimensions();
                 const reelViewHeight = reelElement.parentElement.clientHeight; 
+                // Offset untuk memusatkan simbol agar berada di tengah kolom .reels
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 
                 console.log(`Memutar Gulungan ${reelElement.id}. Simbol Akhir: ${finalSymbol.emoji}. Tinggi Simbol: ${symbolHeight}. Offset: ${offsetToCenter}`); 
@@ -760,7 +758,7 @@
                     symbolSpan.classList.add('symbol');
                     const randomSym = getRandomSymbol();
                     symbolSpan.textContent = randomSym.emoji;
-                    if (randomSym.name === 'Sparkle') { // Kelas sparkle untuk ✨
+                    if (randomSym.name === 'Sparkle') { 
                         symbolSpan.classList.add('sparkle');
                     }
                     reelElement.appendChild(symbolSpan);
@@ -779,11 +777,13 @@
                     reelElement.innerHTML = '';
                     const landingSymbols = [];
 
+                    // Tambahkan simbol-simbol di atas simbol akhir untuk efek "bounce"
                     for (let i = 0; i < LANDING_BOUNCE_SYMBOLS; i++) {
                         landingSymbols.push(getRandomSymbol());
                     }
-                    landingSymbols.push(finalSymbol); 
+                    landingSymbols.push(finalSymbol); // Ini adalah simbol yang akan berhenti di tengah
 
+                    // Tambahkan beberapa simbol lagi di bawah simbol akhir
                     for (let i = 0; i < 2; i++) { 
                         landingSymbols.push(getRandomSymbol());
                     }
@@ -792,12 +792,14 @@
                         const symbolSpan = document.createElement('span');
                         symbolSpan.classList.add('symbol');
                         symbolSpan.textContent = s.emoji;
-                        if (s.name === 'Sparkle') { // Kelas sparkle untuk ✨
+                        if (s.name === 'Sparkle') { 
                             symbolSpan.classList.add('sparkle');
                         }
                         reelElement.appendChild(symbolSpan);
                     });
 
+                    // Hitung posisi akhir agar simbol final berada di tengah
+                    // Simbol final ada di indeks LANDING_BOUNCE_SYMBOLS
                     const finalSymbolArrIndex = LANDING_BOUNCE_SYMBOLS; 
                     const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
                     const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
@@ -817,7 +819,6 @@
                 }, delayBeforeSlowdown); 
             });
         }
-
         async function spin() {
             console.log("Tombol Spin diklik. isSpinning:", isSpinning, "currentUser:", currentUser); 
             if (isSpinning || !currentUser) {
@@ -859,22 +860,22 @@
             
             // ==============================================
             //           LOGIKA HASIL SPIN YANG LEBIH REALISTIS
-            //           (Dengan Sparkle ✨ sebagai simbol jackpot)
             // ==============================================
             let resultReels = [];
-            
-            const winChance = Math.random(); 
             const sparkleSymbol = symbols.find(s => s.name === 'Sparkle');
 
-            if (winChance < 0.01) { // 1% chance for Jackpot (Sparkle x3)
+            // Aturan Kemenangan (Adjusted Probabilities)
+            const randomRoll = Math.random();
+
+            if (randomRoll < 0.005) { // 0.5% chance for JACKPOT (3x Sparkle)
                  resultReels = [sparkleSymbol, sparkleSymbol, sparkleSymbol];
-                 console.log("Hasil Spin: JACKPOT (dipaksakan)");
-            } else if (winChance < 0.05) { // 4% chance for a Three of a Kind (excluding Sparkle x3)
-                const winSymbol = getRandomSymbol(sparkleSymbol); // Exclude Sparkle for this win
+                 console.log("Hasil Spin: JACKPOT (3x Sparkle)");
+            } else if (randomRoll < 0.02) { // 1.5% chance for 3 of a Kind (excluding Sparkle)
+                const eligibleSymbols = symbols.filter(s => s.name !== 'Sparkle');
+                const winSymbol = eligibleSymbols[Math.floor(Math.random() * eligibleSymbols.length)];
                 resultReels = [winSymbol, winSymbol, winSymbol];
-                console.log("Hasil Spin: Tiga Simbol Sama (dipaksakan)");
-            } else if (winChance < 0.12) { // 7% chance for Two Sparkles (2x ✨)
-                // Place two Sparkles, and one other symbol that is NOT a Sparkle
+                console.log("Hasil Spin: Tiga Simbol Sama (Bukan Sparkle)");
+            } else if (randomRoll < 0.06) { // 4% chance for 2 Sparkles + 1 Any (excluding 3rd Sparkle)
                 const nonSparkleSymbol = getRandomSymbol(sparkleSymbol);
                 const positions = [
                     [sparkleSymbol, sparkleSymbol, nonSparkleSymbol],
@@ -882,9 +883,8 @@
                     [nonSparkleSymbol, sparkleSymbol, sparkleSymbol]
                 ];
                 resultReels = positions[Math.floor(Math.random() * positions.length)];
-                console.log("Hasil Spin: Dua Sparkle (dipaksakan)");
-            } else if (winChance < 0.30) { // 18% chance for One Sparkle
-                // Place one Sparkle, and two other symbols that are NOT Sparkles
+                console.log("Hasil Spin: Dua Sparkle");
+            } else if (randomRoll < 0.15) { // 9% chance for 1 Sparkle + 2 Any (excluding other Sparkles)
                 const otherSymbol1 = getRandomSymbol(sparkleSymbol);
                 const otherSymbol2 = getRandomSymbol(sparkleSymbol);
                 const positions = [
@@ -893,20 +893,21 @@
                     [otherSymbol1, otherSymbol2, sparkleSymbol]
                 ];
                 resultReels = positions[Math.floor(Math.random() * positions.length)];
-                console.log("Hasil Spin: Satu Sparkle (dipaksakan)");
-            } else { // Remaining chance for No Win (70%)
-                // Generate completely random symbols, ensuring no win combinations
+                console.log("Hasil Spin: Satu Sparkle");
+            } else { // Remaining chance for No Win / Small Mixed Win
                 let attempts = 0;
                 do {
                     resultReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
                     attempts++;
-                    if (attempts > 100) { // Safety break
+                    // Batasi jumlah percobaan untuk menghindari infinite loop jika kombinasi terlalu ketat
+                    if (attempts > 200) { 
                         console.warn("Terlalu banyak percobaan untuk menghasilkan kombinasi tidak menang. Mungkin menghasilkan kemenangan kecil.");
                         break;
                     }
-                } while (checkWin(resultReels, 1).amount > 0);
-                console.log("Hasil Spin: Tidak Menang");
+                } while (checkWin(resultReels, 1).amount > 0); // Pastikan tidak ada kemenangan besar yang "dipaksa"
+                console.log("Hasil Spin: Campuran/Tidak Menang");
             }
+
 
             currentSpinResults = resultReels;
             console.log("Hasil Spin Akhir (sebelum animasi):", currentSpinResults.map(s => s.emoji)); 
@@ -930,7 +931,7 @@
                 await updateUserData(playerBalance);
                 gameMessage.textContent = winInfo.message + ` Anda memenangkan ${winInfo.amount} kredit! Total: ${playerBalance}`;
 
-                if (winInfo.message.includes('JACKPOT')) {
+                if (winInfo.message.includes('JACKPOT') || winInfo.message.includes('MEGA WIN')) {
                     jackpotSound.currentTime = 0;
                     jackpotSound.volume = 0.8;
                     jackpotSound.play().catch(e => console.warn("Pemutaran suara jackpot gagal:", e));
@@ -947,52 +948,80 @@
             enableGameControls();
         }
 
+        // ==============================================
+        //           LOGIKA KEMENANGAN SLOT (REVISED)
+        // ==============================================
         function checkWin(resultSymbols, betAmount) {
             let totalWinAmount = 0;
             let winMessage = "";
 
-            // Simbol sparkle untuk pengecekan
             const sparkleSymbolName = 'Sparkle';
+            const cherrySymbolName = 'Cherry';
+            const orangeSymbolName = 'Orange';
+            const lemonSymbolName = 'Lemon';
+            const bellSymbolName = 'Bell';
 
-            // Check for Three of a Kind
-            if (resultSymbols[0].name === resultSymbols[1].name && resultSymbols[1].name === resultSymbols[2].name) {
-                winMessage = `Tiga ${resultSymbols[0].name}s!`;
-                switch(resultSymbols[0].name) {
-                    case 'Cherry': totalWinAmount += resultSymbols[0].value * betAmount * 5; break;
-                    case 'Orange': totalWinAmount += resultSymbols[0].value * betAmount * 7; break;
-                    case 'Lemon': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
-                    case sparkleSymbolName: // Peraturan untuk 3x ✨
-                        winMessage = `🔥🔥🔥 JACKPOT! Tiga ✨! 🔥🔥🔥`;
-                        totalWinAmount += resultSymbols[0].value * betAmount * 50; 
+            const s1 = resultSymbols[0];
+            const s2 = resultSymbols[1];
+            const s3 = resultSymbols[2];
+
+            // 1. JACKPOT - Tiga Sparkle (✨✨✨)
+            if (s1.name === sparkleSymbolName && s2.name === sparkleSymbolName && s3.name === sparkleSymbolName) {
+                totalWinAmount = betAmount * 500; // Contoh: 500x taruhan
+                winMessage = `🔥🔥🔥 JACKPOT! Tiga ✨! Anda memenangkan ${totalWinAmount} kredit! 🔥🔥🔥`;
+            }
+            // 2. Kemenangan Besar - Tiga Simbol Sama (selain Sparkle)
+            else if (s1.name === s2.name && s2.name === s3.name) {
+                switch(s1.name) {
+                    case bellSymbolName:
+                        totalWinAmount = betAmount * 100; // Contoh: 100x taruhan untuk 🔔🔔🔔
+                        winMessage = `🔔🔔🔔 MEGA WIN! Tiga Bell!`;
                         break;
-                    default: totalWinAmount += resultSymbols[0].value * betAmount * 3;
+                    case lemonSymbolName:
+                        totalWinAmount = betAmount * 50; // Contoh: 50x taruhan untuk 🍋🍋🍋
+                        winMessage = `🍋🍋🍋 Big Win! Tiga Lemon!`;
+                        break;
+                    case orangeSymbolName:
+                        totalWinAmount = betAmount * 20; // Contoh: 20x taruhan untuk 🍊🍊🍊
+                        winMessage = `🍊🍊🍊 Win! Tiga Orange!`;
+                        break;
+                    case cherrySymbolName:
+                        totalWinAmount = betAmount * 15; // Contoh: 15x taruhan untuk 🍒🍒🍒
+                        winMessage = `🍒🍒🍒 Win! Tiga Cherry!`;
+                        break;
                 }
-                return { amount: totalWinAmount, message: winMessage }; 
             }
-            // Check for Two Sparkles (any two reels)
+            // 3. Kemenangan Menengah - Dua Sparkle (✨✨X)
             else if (
-                (resultSymbols[0].name === sparkleSymbolName && resultSymbols[1].name === sparkleSymbolName) ||
-                (resultSymbols[0].name === sparkleSymbolName && resultSymbols[2].name === sparkleSymbolName) ||
-                (resultSymbols[1].name === sparkleSymbolName && resultSymbols[2].name === sparkleSymbolName)
+                (s1.name === sparkleSymbolName && s2.name === sparkleSymbolName) ||
+                (s1.name === sparkleSymbolName && s3.name === sparkleSymbolName) ||
+                (s2.name === sparkleSymbolName && s3.name === sparkleSymbolName)
             ) {
-                winMessage = `Dua ✨!`;
-                totalWinAmount += betAmount * 10; // Nilai kemenangan untuk dua ✨
-                return { amount: totalWinAmount, message: winMessage }; 
+                totalWinAmount = betAmount * 10; // Contoh: 10x taruhan
+                winMessage = `✨✨ Double Sparkle! Nice win!`;
             }
-            // Check for One Sparkle (only if no other wins)
+            // 4. Kemenangan Kecil - Satu Sparkle (✨XX)
             else if (
-                resultSymbols[0].name === sparkleSymbolName || 
-                resultSymbols[1].name === sparkleSymbolName || 
-                resultSymbols[2].name === sparkleSymbolName
+                s1.name === sparkleSymbolName || 
+                s2.name === sparkleSymbolName || 
+                s3.name === sparkleSymbolName
             ) {
-                if (totalWinAmount === 0) { 
-                    winMessage = `Satu ✨! Kemenangan kecil!`;
-                    totalWinAmount += betAmount * 2; // Nilai kemenangan untuk satu ✨
-                }
-                return { amount: totalWinAmount, message: winMessage }; 
+                totalWinAmount = betAmount * 2; // Contoh: 2x taruhan
+                winMessage = `✨ One Sparkle! You got some credits back!`;
             }
+            // 5. Kemenangan Campuran Bar (Opsional, umum di slot klasik)
+            // Contoh: Jika Anda memiliki simbol "BAR" yang bisa cocok satu, dua, atau tiga kali.
+            // Untuk demo ini, saya tidak menambahkan simbol BAR, tapi ini contoh logikanya.
+            /*
+            else if (
+                (s1.name === 'BAR' || s2.name === 'BAR' || s3.name === 'BAR') &&
+                (s1.name !== s2.name || s2.name !== s3.name) // Bukan tiga BAR sama
+            ) {
+                // Logika kemenangan campuran BAR
+            }
+            */
 
-            return { amount: totalWinAmount, message: winMessage }; 
+            return { amount: totalWinAmount, message: totalWinAmount > 0 ? winMessage : "" }; 
         }
 
         // ==============================================
@@ -1015,4 +1044,3 @@
     </script>
 </body>
 </html>
-        
