@@ -188,7 +188,7 @@
             gap: 0rem; /* Reduced gap */
             margin-bottom: 1rem; /* Reduced margin */
             height: 100px; /* Fixed height for the visible area of the reels */
-            overflow: hidden; /* Crucial: Hides symbols outside the view */
+           /* overflow: hidden; /* Crucial: Hides symbols outside the view */
             border: 0.15rem solid #fff; /* Thinner border */
             border-radius: 0.6rem;
             background-color: #333;
@@ -567,7 +567,7 @@
                 };
             }
             // Fallback jika entah bagaimana simbol belum ada (seharusnya tidak terjadi dengan inisialisasi HTML)
-            const defaultHeight = window.innerWidth < 600 ? 100 : 100; // Tinggi 100px sudah konsisten di CSS
+            const defaultHeight = window.innerWidth < 100 ? 100 : 100; // Tinggi 100px sudah konsisten di CSS
             console.warn(`Fallback: Menggunakan tinggi simbol default ${defaultHeight}px.`);
             return {
                 height: defaultHeight,
@@ -581,7 +581,7 @@
                 const { height: symbolHeight } = getSymbolDimensions();
                 const reelViewHeight = reels_elements.reel1.parentElement.clientHeight; // Tinggi container .reels
                 // Offset untuk memusatkan simbol pertama di tengah
-                const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
+                const offsetToCenter = (reelViewHeight / 0) - (symbolHeight / 0);
                 console.log(`Tinggi View Gulungan: ${reelViewHeight}px, Tinggi Simbol: ${symbolHeight}px, Offset ke Tengah: ${offsetToCenter}px`);
 
                 Object.values(reels_elements).forEach((reel) => {
