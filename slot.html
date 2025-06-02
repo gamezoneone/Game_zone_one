@@ -171,7 +171,7 @@
             display: flex;
             justify-content: space-around;
             gap: 0.6rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0rem;
             /* Tinggi view area yang pasti menampilkan satu simbol */
             height: 100px; /* Default for mobile/small screens */
             overflow: hidden; /* Penting: menyembunyikan simbol di luar view */
@@ -244,13 +244,13 @@
         /* Class for fast spinning animation */
         .spinning {
             animation: spin-blur 0.1s linear infinite; /* Fast spin animation */
-            filter: blur(2px); /* Blur effect while spinning */
+            filter: blur(1px); /* Blur effect while spinning */
         }
 
         @keyframes spin-blur {
             /* Pergeseran harus sebesar tinggi satu elemen symbol (100px) */
             0% { transform: translateY(0); }
-            100% { transform: translateY(-100px); } 
+            100% { transform: translateY(0px); } 
         }
 
         /* ==============================================
@@ -401,13 +401,13 @@
             }
 
             .reels {
-                height: 100px; /* Consistent height */
-                gap: 12px;
+                height: 10px; /* Consistent height */
+                gap: 5px;
             }
 
             .reel .symbol {
-                font-size: 100px;
-                height: 100px; /* Consistent height */
+                font-size: 10px;
+                height: 10px; /* Consistent height */
             }
 
             /* Adjust @keyframes spin-blur for desktop */
@@ -955,7 +955,7 @@
                 (resultSymbols[1].name === 'Seven' && resultSymbols[2].name === 'Seven')
             ) {
                 winMessage = `Two Sevens!`;
-                totalWinAmount += betAmount * 10;
+                totalWinAmount += betAmount * 100;
                 return { amount: totalWinAmount, message: winMessage }; 
             }
             // Check for One Seven (only if no other wins)
