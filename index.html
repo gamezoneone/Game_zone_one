@@ -583,8 +583,8 @@
     position: absolute; /* Posisikan gambar secara absolut di dalam item game */
     top: 0;
     left: 0;
-    width: 50%; /* Gambar akan mengisi seluruh lebar item game */
-    height: 50%; /* Gambar akan mengisi seluruh tinggi item game */
+    width: 100%; /* Gambar akan mengisi seluruh lebar item game */
+    height: 100%; /* Gambar akan mengisi seluruh tinggi item game */
     object-fit: cover; /* **INI PENTING:** Pastikan gambar mengisi seluruh area yang tersedia. Jika rasio gambar tidak sama dengan rasio item (4:3), gambar akan dipotong (crop) agar pas tanpa distorsi. */
     border-radius: 12px; /* Agar gambar juga memiliki sudut membulat seperti itemnya */
     transition: transform 0.3s ease; /* Transisi zoom halus saat hover */
@@ -602,7 +602,7 @@
 }
 
 /* OPSI 2: Judul game muncul sebagai overlay transparan saat hover */
-/* Jika Anda memilih opsi ini, HAPUS atau KOMENTARI OPSI 1 di atas */
+/* Jika Anda memilih opsi ini, HAPUS atau KOMENTARI OPSI 1 di atas 
 
 .game-item h3 {
     position: absolute;
@@ -632,7 +632,7 @@
 /* --- Media Queries untuk Responsivitas (Hanya untuk Game Grid) --- */
 
 /* Pada ukuran layar 768px ke bawah (tablet dan mobile) */
-@media (max-width: 768px) {
+@media (max-width: 300px) {
     .game-display-grid {
         /* Tetapkan 2 kolom. Jika minmax(100px, 1fr) menghasilkan 2 kolom di desktop,
            maka repeat(2, 1fr) akan memaksa 2 kolom di tablet/mobile. */
@@ -640,19 +640,19 @@
         gap: 5px; /* Sedikit kurangi jarak antar item */
     }
     .game-item {
-        padding-bottom: 25%; /* Pertahankan rasio 4:3 */
+        padding-bottom: 5%; /* Pertahankan rasio 4:3 */
     }
 }
 
 /* Pada ukuran layar 480px ke bawah (kebanyakan ponsel) */
-@media (max-width: 480px) {
+@media (max-width: 100px) {
     .game-display-grid {
         /* Pastikan tetap 2 kolom di ponsel agar tidak terlalu besar */
         grid-template-columns: repeat(2, 1fr);
         gap: 5px; /* Kurangi jarak lebih lanjut untuk layar yang lebih kecil */
     }
     .game-item {
-        padding-bottom: 50%; /* Pertahankan rasio 4:3 */
+        padding-bottom: 5%; /* Pertahankan rasio 4:3 */
     }
 }
 
