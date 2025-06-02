@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLOT77 - Game Slot Neon (Emoji Version)</title>
+    <title>SLOT77 - Game Slot Neon</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         /* ==============================================
-           CSS UNTUK TAMPILAN GAME SLOT (EMOJI & LEBIH KOMPAK)
+           CSS GLOBAL & LAYOUT
            ============================================== */
         :root {
             font-size: 16px; /* Base font size for rem units */
@@ -16,41 +16,41 @@
 
         body {
             margin: 0;
-            font-family: 'Arial', sans-serif; /* Fallback font */
-            background-color: #0a0a0a; /* Darker background */
+            font-family: 'Arial', sans-serif;
+            background-color: #0a0a0a;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Use full viewport height */
-            overflow: auto; /* Allow scrolling if content is too large, but prefer compact */
+            min-height: 100vh;
+            overflow: auto;
             color: #fff;
             text-shadow: 0 0 0.3rem rgba(255, 255, 255, 0.5);
-            padding: 0.5rem; /* Reduced padding */
+            padding: 0.5rem;
             box-sizing: border-box;
         }
 
         .slot-game-container {
             position: relative;
-            background: linear-gradient(45deg, #2b0051, #4d1872); /* Ungu gelap kebiruan */
-            border: 0.2rem solid #ff00ff; /* Neon magenta */
+            background: linear-gradient(45deg, #2b0051, #4d1872);
+            border: 0.2rem solid #ff00ff;
             border-radius: 1.5rem;
-            padding: 1rem; /* Reduced padding */
+            padding: 1rem;
             box-shadow:
-                inset 0 0 1.5rem rgba(255, 0, 255, 0.5), /* Inner neon glow */
+                inset 0 0 1.5rem rgba(255, 0, 255, 0.5),
                 0 0 3rem rgba(255, 0, 255, 0.7),
-                0 0 1.8rem rgba(0, 255, 255, 0.5); /* Outer neon glow */
+                0 0 1.8rem rgba(0, 255, 255, 0.5);
             text-align: center;
-            width: 98%; /* Take up more width on smaller screens */
-            max-width: 550px; /* Reduced max-width for more compact design */
+            width: 98%;
+            max-width: 550px;
             box-sizing: border-box;
-            min-height: 85vh; /* Reduced min-height to make it less "tall" */
+            min-height: 85vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            overflow: hidden;
+            overflow: hidden; /* Prevent content overflow outside container */
         }
 
-        /* Dekorasi Garis Neon Horizontal */
+        /* Neon Border Decorations */
         .slot-game-container::before,
         .slot-game-container::after {
             content: '';
@@ -58,92 +58,76 @@
             left: 50%;
             transform: translateX(-50%);
             width: 90%;
-            height: 0.1rem; /* Slightly thinner */
-            background-color: #00ffff; /* Neon cyan */
+            height: 0.1rem;
+            background-color: #00ffff;
             box-shadow: 0 0 0.8rem #00ffff, 0 0 1.5rem rgba(0, 255, 255, 0.6);
             border-radius: 0.1rem;
         }
-        .slot-game-container::before {
-            top: 0.5rem; /* Reduced distance from top */
-        }
-        .slot-game-container::after {
-            bottom: 0.5rem; /* Reduced distance from bottom */
-        }
+        .slot-game-container::before { top: 0.5rem; }
+        .slot-game-container::after { bottom: 0.5rem; }
 
         header {
-            margin-bottom: 1rem; /* Reduced margin */
+            margin-bottom: 1rem;
             position: relative;
             z-index: 2;
         }
 
         h1 {
-            font-size: 3rem; /* Slightly smaller for compactness */
-            color: #ffcc00; /* Neon kuning */
+            font-size: 3rem;
+            color: #ffcc00;
             text-shadow:
-                0 0 0.4rem #ffcc00,
-                0 0 0.8rem #ffcc00,
-                0 0 1.2rem #ffcc00,
-                0 0 1.8rem #ff0000,
-                0 0 2.5rem #ff0000,
-                0 0 3rem #ff0000;
+                0 0 0.4rem #ffcc00, 0 0 0.8rem #ffcc00, 0 0 1.2rem #ffcc00,
+                0 0 1.8rem #ff0000, 0 0 2.5rem #ff0000, 0 0 3rem #ff0000;
             margin: 0 auto;
-            padding: 0.3rem 0; /* Reduced padding */
-            letter-spacing: 0.15rem; /* Slightly reduced letter spacing */
+            padding: 0.3rem 0;
+            letter-spacing: 0.15rem;
             position: relative;
             display: inline-block;
         }
 
-        /* Garis Neon di Samping Judul H1 */
-        h1::before,
-        h1::after {
+        /* Neon Lines next to H1 */
+        h1::before, h1::after {
             content: '';
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            width: 2.5rem; /* Reduced width */
-            height: 0.4rem; /* Reduced height */
-            background-color: #ff00ff; /* Magenta */
+            width: 2.5rem;
+            height: 0.4rem;
+            background-color: #ff00ff;
             box-shadow: 0 0 0.6rem #ff00ff, 0 0 1rem rgba(255, 0, 255, 0.6);
             border-radius: 0.2rem;
         }
-        h1::before {
-            left: -3rem; /* Adjusted position */
-        }
-        h1::after {
-            right: -3rem; /* Adjusted position */
-        }
+        h1::before { left: -3rem; }
+        h1::after { right: -3rem; }
 
 
         .player-info {
-            font-size: 1rem; /* Adjusted for mobile */
-            margin-bottom: 1rem; /* Reduced margin */
+            font-size: 1rem;
+            margin-bottom: 1rem;
             color: #00ffff;
             text-shadow: 0 0 0.4rem #00ffff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 0.4rem; /* Reduced gap */
-            padding: 0.5rem; /* Reduced padding */
+            gap: 0.4rem;
+            padding: 0.5rem;
             background-color: rgba(0, 0, 0, 0.3);
             border-radius: 0.4rem;
             border: 1px solid rgba(0, 255, 255, 0.5);
             box-shadow: inset 0 0 0.4rem rgba(0, 255, 255, 0.3);
         }
-        .player-info p {
-            margin: 0;
-            line-height: 1.2;
-        }
+        .player-info p { margin: 0; line-height: 1.2; }
 
         .slot-machine {
             background-color: rgba(0, 0, 0, 0.85);
-            border-radius: 1rem; /* Slightly smaller radius */
-            padding: 1rem; /* Reduced padding */
-            border: 0.2rem solid #ff6600; /* Neon orange */
+            border-radius: 1rem;
+            padding: 1rem;
+            border: 0.2rem solid #ff6600;
             box-shadow:
                 inset 0 0 1.5rem rgba(255, 102, 0, 0.6),
                 0 0 1rem rgba(255, 102, 0, 0.4);
-            margin-bottom: 1rem; /* Reduced margin */
+            margin-bottom: 1rem;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -154,47 +138,58 @@
         .info-bar {
             display: flex;
             justify-content: space-around;
-            margin-bottom: 0.6rem; /* Reduced margin */
+            margin-bottom: 0.6rem;
             background-color: rgba(0, 0, 0, 0.6);
             border-radius: 0.4rem;
-            padding: 0.4rem; /* Reduced padding */
+            padding: 0.4rem;
             border: 1px solid #00ffff;
             box-shadow: inset 0 0 0.4rem rgba(0, 255, 255, 0.5);
-            font-size: 0.75rem; /* Slightly smaller font */
+            font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 0.05rem;
             color: #00ffff;
         }
-        .info-item {
-            display: flex;
-            align-items: center;
-            gap: 0.2rem; /* Reduced gap */
-        }
+        .info-item { display: flex; align-items: center; gap: 0.2rem; }
         .info-light {
-            width: 0.5rem; /* Smaller light */
-            height: 0.5rem; /* Smaller light */
-            border-radius: 50%;
-            background-color: #ff00ff;
-            box-shadow: 0 0 0.3rem #ff00ff;
+            width: 0.5rem; height: 0.5rem; border-radius: 50%;
+            background-color: #ff00ff; box-shadow: 0 0 0.3rem #ff00ff;
         }
         .info-light.cherry { background-color: #ff00ff; box-shadow: 0 0 0.3rem #ff00ff; }
         .info-light.orange { background-color: #ff6600; box-shadow: 0 0 0.3rem #ff6600; }
-        .info-light.lerang { background-color: #99ff33; box-shadow: 0 0 0.3rem #99ff33; }
+        .info-light.lemon { background-color: #99ff33; box-shadow: 0 0 0.3rem #99ff33; } /* Changed to lemon */
 
 
+        /* ==============================================
+           REELS & SYMBOLS - KRITIKAL UNTUK TAMPILAN
+           ============================================== */
         .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0.6rem; /* Reduced gap */
-            margin-bottom: 1rem; /* Reduced margin */
-            height: 100px; /* Fixed height for the visible area of the reels */
-            overflow: hidden; /* Crucial: Hides symbols outside the view */
-            border: 0.15rem solid #fff; /* Thinner border */
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            height: 100px; /* **Tinggi view area untuk satu emoji penuh** */
+            overflow: hidden; /* Sangat penting: menyembunyikan simbol di luar view */
+            border: 0.15rem solid #fff;
             border-radius: 0.6rem;
             background-color: #1a1a1a;
             position: relative;
             flex-shrink: 0;
             box-shadow: inset 0 0 0.8rem rgba(255,255,255,0.3);
+        }
+
+        /* Garis payline di tengah */
+        .reels::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px; /* Ketebalan garis */
+            background-color: #00ffff; /* Warna neon cyan */
+            box-shadow: 0 0 10px #00ffff, 0 0 20px rgba(0, 255, 255, 0.7);
+            transform: translateY(-50%);
+            z-index: 10; /* Pastikan di atas gulungan */
+            pointer-events: none; /* Agar tidak mengganggu klik/interaksi */
         }
 
         .reel {
@@ -208,23 +203,25 @@
             border: 1px solid #333;
             overflow: hidden; /* Hide anything outside this reel's boundary */
             position: relative;
-            /* NO TRANSITION HERE. TRANSITION WILL BE SET BY JS FOR LANDING */
+            /* No transition here. Transition will be set by JS for landing */
         }
 
-        /* Styling untuk emoji symbols */
         .reel .symbol {
-            font-size: 80px; /* KONTROL UKURAN EMOJI DI SINI (MOBILE) */
-            line-height: 1; /* Penting untuk menghilangkan spasi antar baris */
-            width: 100%; /* Agar memenuhi lebar reel */
+            /* **KONTROL UKURAN EMOJI DI SINI (MOBILE)** */
+            font-size: 80px; /* Ukuran emoji */
+            line-height: 1; /* Hapus spasi antar baris */
+            width: 100%; /* Lebar penuh reel */
             text-align: center;
-            height: 80px; /* KONTROL TINGGI ELEMEN EMOJI (MOBILE) */
-            display: flex; /* Untuk memusatkan emoji vertikal */
+            height: 80px; /* **Tinggi elemen emoji, harus sesuai font-size untuk 100% visibilitas** */
+            display: flex;
             justify-content: center;
             align-items: center;
             flex-shrink: 0; /* Pastikan tidak menyusut */
             user-select: none; /* Agar tidak bisa diseleksi */
-            padding: 0; /* Pastikan tidak ada padding tambahan */
-            margin: 0; /* Pastikan tidak ada margin tambahan */
+            padding: 0; /* Tanpa padding tambahan */
+            margin: 0; /* Tanpa margin tambahan */
+            color: transparent; /* Sembunyikan warna asli emoji */
+            text-shadow: 0 0 0.1em rgba(0,0,0,0.5), 0 0 0 #fff; /* Jadikan emoji putih neon */
         }
 
         /* Class for fast spinning animation */
@@ -239,41 +236,41 @@
             100% { transform: translateY(-80px); } /* Sesuai dengan height dari .reel .symbol mobile */
         }
 
-
+        /* ==============================================
+           CONTROLS & MESSAGES
+           ============================================== */
         .controls {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 0.8rem; /* Reduced gap */
-            margin-top: 0.8rem; /* Reduced margin */
+            gap: 0.8rem;
+            margin-top: 0.8rem;
         }
 
         .bet-control {
             display: flex;
             align-items: center;
-            gap: 0.4rem; /* Reduced gap */
+            gap: 0.4rem;
             background-color: rgba(0, 0, 0, 0.4);
             border-radius: 0.4rem;
-            padding: 0.4rem 0.8rem; /* Reduced padding */
+            padding: 0.4rem 0.8rem;
             border: 1px solid rgba(153, 255, 51, 0.5);
             box-shadow: inset 0 0 0.4rem rgba(153, 255, 51, 0.3);
         }
-
         .bet-control label {
-            font-size: 1rem; /* Slightly smaller font */
+            font-size: 1rem;
             color: #99ff33;
             text-shadow: 0 0 0.4rem #99ff33;
         }
-
         .bet-control input {
-            width: 60px; /* Narrower input */
-            padding: 0.5rem 0.6rem; /* Reduced padding */
+            width: 60px;
+            padding: 0.5rem 0.6rem;
             border-radius: 0.4rem;
             border: 0.1rem solid #66ffff;
             background-color: #0d1217;
             color: #fff;
-            font-size: 0.9rem; /* Slightly smaller font */
+            font-size: 0.9rem;
             text-align: center;
             box-shadow: inset 0 0 0.5rem rgba(102, 255, 255, 0.4);
             outline: none;
@@ -286,10 +283,10 @@
         button {
             background: linear-gradient(135deg, #ff00ff, #8a2be2);
             color: #fff;
-            padding: 0.7rem 1.2rem; /* Reduced padding */
+            padding: 0.7rem 1.2rem;
             border: none;
-            border-radius: 0.6rem; /* Slightly smaller radius */
-            font-size: 1.3rem; /* Slightly smaller font */
+            border-radius: 0.6rem;
+            font-size: 1.3rem;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 0 1rem rgba(255, 0, 255, 0.7), 0 0 0.6rem rgba(138, 43, 226, 0.5);
@@ -297,69 +294,58 @@
             text-transform: uppercase;
             letter-spacing: 0.05rem;
             text-shadow: 0 0 0.2rem rgba(0,0,0,0.5);
-            width: 90%; /* Slightly smaller width */
-            max-width: 180px; /* Reduced max-width */
+            width: 90%;
+            max-width: 180px;
         }
-
         button:hover {
             background: linear-gradient(135deg, #8a2be2, #ff00ff);
             box-shadow: 0 0 1.5rem rgba(255, 0, 255, 0.9), 0 0 1rem rgba(138, 43, 226, 0.7);
-            transform: translateY(-0.1rem); /* Reduced lift */
+            transform: translateY(-0.1rem);
         }
-
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 0 0.4rem rgba(255, 0, 255, 0.5);
-        }
-
-        button:disabled {
-            background: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-            opacity: 0.7;
-        }
+        button:active { transform: translateY(0); box-shadow: 0 0 0.4rem rgba(255, 0, 255, 0.5); }
+        button:disabled { background: #555; cursor: not-allowed; box-shadow: none; opacity: 0.7; }
 
         .messages {
-            margin-top: 1rem; /* Reduced margin */
-            font-size: 1rem; /* Slightly smaller font */
+            margin-top: 1rem;
+            font-size: 1rem;
             color: #00ff00;
             text-shadow: 0 0 0.5rem #00ff00;
-            min-height: 1.8rem; /* Reduced min-height */
+            min-height: 1.8rem;
             background-color: rgba(0, 0, 0, 0.4);
             border-radius: 0.4rem;
-            padding: 0.4rem; /* Reduced padding */
+            padding: 0.4rem;
             border: 1px solid rgba(0, 255, 0, 0.5);
         }
 
-        /* Styling untuk tombol logout */
+        /* ==============================================
+           BOTTOM INDICATORS & LOGOUT BUTTON
+           ============================================== */
         .control-btn {
             background: linear-gradient(135deg, #007bff, #00c6ff);
-            font-size: 0.8rem; /* Slightly smaller */
-            padding: 0.4rem 0.7rem; /* Reduced padding */
+            font-size: 0.8rem;
+            padding: 0.4rem 0.7rem;
             border-radius: 0.4rem;
             box-shadow: 0 0 0.5rem rgba(0, 123, 255, 0.6);
         }
-
         .control-btn:hover {
             background: linear-gradient(135deg, #00c6ff, #007bff);
             box-shadow: 0 0 0.7rem rgba(0, 123, 255, 0.8);
             transform: translateY(-0.05rem);
         }
 
-        /* Bottom "indicators" - GRIFEINE, 777, U.S.NAGS */
         .bottom-indicators {
             display: flex;
             justify-content: space-between;
-            margin-top: 1rem; /* Reduced margin */
-            gap: 0.4rem; /* Reduced gap */
+            margin-top: 1rem;
+            gap: 0.4rem;
         }
         .bottom-indicator-box {
             flex: 1;
             background-color: rgba(0, 0, 0, 0.6);
-            border: 0.1rem solid #00ffff; /* Thinner border */
+            border: 0.1rem solid #00ffff;
             border-radius: 0.5rem;
-            padding: 0.4rem; /* Reduced padding */
-            font-size: 0.9rem; /* Slightly smaller font */
+            padding: 0.4rem;
+            font-size: 0.9rem;
             font-weight: bold;
             color: #00ffff;
             text-shadow: 0 0 0.4rem #00ffff;
@@ -368,34 +354,27 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 2rem; /* Reduced min-height */
+            min-height: 2rem;
         }
         .bottom-indicator-box.seven-display {
-            font-size: 1.8rem; /* Smaller for 777 */
+            font-size: 1.8rem;
             color: #ffcc00;
             text-shadow: 0 0 0.4rem #ffcc00, 0 0 0.8rem #ff0000;
             border-color: #ffcc00;
             box-shadow: inset 0 0 0.8rem rgba(255, 204, 0, 0.6), 0 0 0.6rem rgba(255, 204, 0, 0.4);
         }
 
-        /* Media Query for larger screens (e.g., tablets and desktops) */
+        /* ==============================================
+           MEDIA QUERIES (RESPONSIVE)
+           ============================================== */
         @media (min-width: 600px) {
             .slot-game-container {
-                padding: 25px; /* Adjust padding for larger screens */
-                max-width: 600px; /* Increased max-width but still compact */
+                padding: 25px;
+                max-width: 600px;
                 min-height: auto;
             }
-
-            h1 {
-                font-size: 3.5em; /* Slightly larger on desktop */
-                letter-spacing: 2px;
-            }
-            h1::before, h1::after {
-                width: 3.5rem;
-                height: 0.6rem;
-                left: -4rem;
-                right: -4rem;
-            }
+            h1 { font-size: 3.5em; letter-spacing: 2px; }
+            h1::before, h1::after { width: 3.5rem; height: 0.6rem; left: -4rem; right: -4rem; }
 
             .player-info {
                 font-size: 1.2em;
@@ -405,23 +384,24 @@
             }
 
             .reels {
-                height: 130px; /* Increased height for the visible area of the reels */
+                height: 100px; /* **Increased height for desktop to match symbol size** */
                 gap: 12px;
             }
 
             .reel .symbol {
-                font-size: 100px; /* KONTROL UKURAN EMOJI DI SINI (DESKTOP) */
-                height: 100px; /* KONTROL TINGGI ELEMEN EMOJI (DESKTOP) */
+                /* **KONTROL UKURAN EMOJI DI SINI (DESKTOP)** */
+                font-size: 100px;
+                height: 100px; /* **Tinggi elemen emoji, harus sesuai font-size** */
             }
 
-            /* Adjust @keyframes spin-blur for desktop: (height of .reel .symbol) */
+            /* Adjust @keyframes spin-blur for desktop */
             @keyframes spin-blur {
                 0% { transform: translateY(0); }
                 100% { transform: translateY(-100px); } /* Sesuai dengan height dari .reel .symbol desktop */
             }
         }
     </style>
-    </head>
+</head>
 <body>
     <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
     <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
@@ -448,7 +428,7 @@
                     <span class="info-light orange"></span> ORANGE
                 </div>
                 <div class="info-item">
-                    <span class="info-light lerang"></span> LERANG
+                    <span class="info-light lemon"></span> LEMON
                 </div>
             </div>
 
@@ -484,6 +464,9 @@
         
         let currentSaldo = 0; // Ini akan diperbarui dari Supabase
 
+        // ==============================================
+        //           DOM ELEMENTS & AUDIO
+        // ==============================================
         const playerNameSpan = document.getElementById('playerName');
         const playerBalanceSpan = document.getElementById('playerBalance');
         const spinBtn = document.getElementById('spinBtn');
@@ -497,7 +480,6 @@
             reel3: document.getElementById('reel3')
         };
 
-        // ELEMEN AUDIO
         const spinStartSound = document.getElementById('spinStartSound');
         const reelStopSound = document.getElementById('reelStopSound');
         const winSound = document.getElementById('winSound');
@@ -510,15 +492,14 @@
         const symbols = [
             { name: 'Cherry', emoji: '🍒', value: 10 },
             { name: 'Orange', emoji: '🍊', value: 15 },
-            { name: 'Lemon',  emoji: '🔔', value: 20 }, // Ganti Lerang jadi Lemon
+            { name: 'Lemon',  emoji: '🔔', value: 20 },
             { name: 'Seven',  emoji: '✨', value: 100, isJackpot: true }
         ];
 
         // Durasi spin total untuk setiap reel. Reel selanjutnya akan berhenti sedikit lebih lambat.
-        const REEL_STOP_DURATION = 2000; // Total waktu reel berputar hingga berhenti (ms)
+        const REEL_STOP_DURATION = 2500; // Total waktu reel berputar hingga berhenti (ms) - sedikit dipercepat
         const INITIAL_SPIN_SYMBOLS_COUNT = 30; // Jumlah simbol acak untuk efek putaran awal yang panjang
         const LANDING_BOUNCE_SYMBOLS = 3; // Jumlah simbol acak sebelum simbol final untuk efek 'pantulan'
-
 
         let currentUser = null;
         let playerBalance = 0; 
@@ -528,10 +509,6 @@
         // ==============================================
         //           FUNGSI BANTUAN UI
         // ==============================================
-        function updateBalanceDisplay() {
-            playerBalanceSpan.textContent = playerBalance;
-        }
-
         function disableGameControls() {
             spinBtn.disabled = true;
             betAmountInput.disabled = true;
@@ -542,42 +519,49 @@
             betAmountInput.disabled = false;
         }
 
-        function getSymbolDimensions() {
-            // Kita akan menggunakan DOMRect untuk mendapatkan ukuran sebenarnya
-            // Ini lebih robust daripada hardcoding nilai karena font-size emoji bisa bervariasi
-            const tempSymbol = document.createElement('span');
-            tempSymbol.classList.add('symbol');
-            tempSymbol.textContent = '🍒'; // Gunakan emoji apa saja untuk pengukuran
-            // Tambahkan ke DOM sementara agar browser bisa menghitung ukurannya
-            document.body.appendChild(tempSymbol);
-            const rect = tempSymbol.getBoundingClientRect();
-            document.body.removeChild(tempSymbol); // Hapus setelah pengukuran
+        function updateBalanceDisplay() {
+            playerBalanceSpan.textContent = playerBalance;
+        }
 
+        function getSymbolDimensions() {
+            // Gunakan DOMRect untuk mendapatkan ukuran sebenarnya dari elemen .symbol
+            // Ambil dari salah satu reel element yang sudah ada di DOM
+            const sampleSymbol = reels_elements.reel1.querySelector('.symbol');
+            if (sampleSymbol) {
+                const rect = sampleSymbol.getBoundingClientRect();
+                return {
+                    height: rect.height,
+                    fullHeight: rect.height
+                };
+            }
+            // Fallback jika belum ada simbol di DOM (hanya untuk inisialisasi awal)
+            // Ini akan diambil dari CSS. Pastikan nilai di CSS akurat.
+            const defaultHeight = window.innerWidth < 600 ? 80 : 100; // Sesuai dengan media query CSS
             return {
-                height: rect.height,
-                fullHeight: rect.height // Karena tidak ada padding/margin di sini
+                height: defaultHeight,
+                fullHeight: defaultHeight
             };
         }
         
         function initializeReelsDisplay() {
-            // Gunakan requestAnimationFrame untuk memastikan ukuran elemen sudah dihitung
             requestAnimationFrame(() => {
-                const { height: symbolHeight } = getSymbolDimensions(); // Dapatkan tinggi emoji
-                const reelViewHeight = reels_elements.reel1.clientHeight;
+                const { height: symbolHeight } = getSymbolDimensions();
+                const reelViewHeight = reels_elements.reel1.clientHeight; // Tinggi container .reels
+                // Offset untuk memusatkan simbol pertama di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
 
                 Object.values(reels_elements).forEach((reel) => {
                     reel.innerHTML = '';
+                    // Buat satu simbol default untuk ditampilkan di awal
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
                     const defaultSymbol = symbols[0]; // Tampilkan simbol default
                     symbolSpan.textContent = defaultSymbol.emoji;
                     reel.appendChild(symbolSpan);
                     
-                    // Posisikan di tengah vertikal pada saat inisialisasi
-                    reel.style.transform = `translateY(${offsetToCenter}px)`; 
+                    reel.style.transition = 'none'; // Matikan transisi
+                    reel.style.transform = `translateY(${offsetToCenter}px)`; // Posisikan di tengah
                     reel.classList.remove('spinning'); // Pastikan tidak ada kelas spinning
-                    reel.style.transition = 'none'; // Pastikan transisi dinonaktifkan saat inisialisasi
                 });
             });
         }
@@ -697,9 +681,13 @@
             }
         });
 
-        function getRandomSymbol() {
-            const randomIndex = Math.floor(Math.random() * symbols.length);
-            return symbols[randomIndex];
+        function getRandomSymbol(excludeSymbol = null) {
+            let availableSymbols = symbols;
+            if (excludeSymbol) {
+                availableSymbols = symbols.filter(s => s.name !== excludeSymbol.name);
+            }
+            const randomIndex = Math.floor(Math.random() * availableSymbols.length);
+            return availableSymbols[randomIndex];
         }
 
         /**
@@ -712,11 +700,10 @@
             return new Promise(resolve => {
                 const { height: symbolHeight, fullHeight: symbolFullHeight } = getSymbolDimensions();
                 const reelViewHeight = reelElement.clientHeight;
-                // Posisi Y dari bagian atas reel yang akan membuat simbol berada di tengah
                 const offsetToCenter = (reelViewHeight / 2) - (symbolHeight / 2);
                 
                 // 1. Fase Spinning Cepat: Isi reel dengan banyak simbol acak
-                reelElement.innerHTML = ''; // Kosongkan reel
+                reelElement.innerHTML = '';
                 for (let i = 0; i < INITIAL_SPIN_SYMBOLS_COUNT; i++) { 
                     const symbolSpan = document.createElement('span');
                     symbolSpan.classList.add('symbol');
@@ -724,18 +711,15 @@
                     symbolSpan.textContent = randomSym.emoji;
                     reelElement.appendChild(symbolSpan);
                 }
-                
-                reelElement.style.transition = 'none'; // Matikan transisi untuk reset posisi
-                reelElement.style.transform = `translateY(0px)`; // Pastikan mulai dari atas untuk animasi putar
-                void reelElement.offsetWidth; // Trigger reflow untuk memastikan transisi dinonaktifkan
-
-                reelElement.classList.add('spinning'); // Tambahkan kelas spinning untuk memulai animasi CSS
+                reelElement.style.transition = 'none';
+                reelElement.style.transform = `translateY(0px)`;
+                void reelElement.offsetWidth; // Trigger reflow
+                reelElement.classList.add('spinning');
 
                 // 2. Fase Melambat & Mendarat (Easing)
                 setTimeout(() => {
-                    reelElement.classList.remove('spinning'); // Hapus kelas spinning (hentikan animasi CSS)
+                    reelElement.classList.remove('spinning');
                     
-                    // Siapkan kembali reel dengan simbol yang akan mendarat
                     reelElement.innerHTML = '';
                     const landingSymbols = [];
 
@@ -745,8 +729,8 @@
                     }
                     landingSymbols.push(finalSymbol); // SIMBOL HASIL AKHIR YANG AKAN TAMPIL DI TENGAH
 
-                    // Tambahkan simbol di bawah final untuk mengisi ruang jika ada overshoot
-                    for (let i = 0; i < 2; i++) { // Cukup 2 simbol di bawah
+                    // Tambahkan beberapa simbol acak di bawah final untuk mengisi ruang jika ada overshoot
+                    for (let i = 0; i < 2; i++) {
                         landingSymbols.push(getRandomSymbol());
                     }
 
@@ -758,32 +742,25 @@
                     });
 
                     // >>>>>>>>>> PERBAIKAN KRITIS UNTUK POSISI AKHIR <<<<<<<<<<
-                    // Index dari simbol yang kita inginkan untuk mendarat di tengah
                     const finalSymbolArrIndex = LANDING_BOUNCE_SYMBOLS; 
-                    
-                    // Jarak dari atas reel ke bagian atas simbol final yang kita inginkan
                     const distanceToFinalSymbolTop = finalSymbolArrIndex * symbolFullHeight;
-                    
-                    // Posisi Y target untuk container reel agar finalSymbol tepat di tengah
                     const targetScrollPosition = offsetToCenter - distanceToFinalSymbolTop; 
 
-                    // Durasi melambat: Total durasi dikurangi waktu spinning cepat
-                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000; // dalam detik
+                    const slowDownDuration = (REEL_STOP_DURATION - delayBeforeSlowdown) / 1000;
 
-                    // Set transisi dan target transform
-                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`; // Melambat dengan easing
+                    reelElement.style.transition = `transform ${slowDownDuration}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`;
                     reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
-                    // Play reel stop sound when it's about to stop
                     setTimeout(() => {
                         reelStopSound.currentTime = 0;
                         reelStopSound.volume = 0.5;
                         reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
-                        resolve(finalSymbol); // Resolve setelah reel berhenti
-                    }, (REEL_STOP_DURATION - delayBeforeSlowdown)); // Resolusi ini harus pada akhir total durasi reel berputar
-                }, delayBeforeSlowdown); // Delay sebelum melambat
+                        resolve(finalSymbol);
+                    }, (REEL_STOP_DURATION - delayBeforeSlowdown));
+                }, delayBeforeSlowdown);
             });
         }
+
         async function spin() {
             if (isSpinning || !currentUser) {
                 if (!currentUser) {
@@ -822,23 +799,45 @@
             updateBalanceDisplay();
             await updateUserData(playerBalance);
 
-            currentSpinResults = [
-                getRandomSymbol(),
-                getRandomSymbol(),
-                getRandomSymbol()
-            ];
+            // ==============================================
+            //           LOGIKA HASIL SPIN YANG LEBIH REALISTIS
+            // ==============================================
+            let resultReels = [];
+            
+            // Random chance for a win (you can adjust probabilities)
+            const winChance = Math.random(); 
+            if (winChance < 0.05) { // 5% chance for a Three of a Kind (excluding 777)
+                const winSymbol = getRandomSymbol(symbols.find(s => s.isJackpot)); // Exclude Jackpot for this win
+                resultReels = [winSymbol, winSymbol, winSymbol];
+            } else if (winChance < 0.06) { // 1% chance for Jackpot (777)
+                 const jackpotSymbol = symbols.find(s => s.isJackpot);
+                 resultReels = [jackpotSymbol, jackpotSymbol, jackpotSymbol];
+            } else if (winChance < 0.10) { // 4% chance for Two Sevens
+                const sevenSymbol = symbols.find(s => s.name === 'Seven');
+                resultReels = [sevenSymbol, sevenSymbol, getRandomSymbol(sevenSymbol)]; // Two Sevens and one other
+            } else if (winChance < 0.25) { // 15% chance for One Seven
+                const sevenSymbol = symbols.find(s => s.name === 'Seven');
+                // Place one Seven randomly
+                const sevenIndex = Math.floor(Math.random() * 3);
+                resultReels[sevenIndex] = sevenSymbol;
+                for (let i = 0; i < 3; i++) {
+                    if (i !== sevenIndex) {
+                        resultReels[i] = getRandomSymbol(sevenSymbol); // Other symbols are not Seven
+                    }
+                }
+            } else { // Remaining chance for No Win
+                // Generate completely random symbols, but try to avoid accidental wins
+                do {
+                    resultReels = [getRandomSymbol(), getRandomSymbol(), getRandomSymbol()];
+                } while (checkWin(resultReels, 1).amount > 0); // Keep generating until no win
+            }
 
-            // Jalankan reel secara berurutan dengan delay untuk efek staggered stop
-            // Delay untuk setiap reel sebelum mulai melambat (total durasi spin tetap sama)
-            // Sesuaikan nilai ini untuk mengatur seberapa lama setiap reel berputar cepat
-            const reel1DelayBeforeSlow = 800; 
-            const reel2DelayBeforeSlow = 1200; 
-            const reel3DelayBeforeSlow = 1600; 
+            currentSpinResults = resultReels;
 
             const reelPromises = [
-                spinReel(reels_elements.reel1, currentSpinResults[0], reel1DelayBeforeSlow),
-                spinReel(reels_elements.reel2, currentSpinResults[1], reel2DelayBeforeSlow),
-                spinReel(reels_elements.reel3, currentSpinResults[2], reel3DelayBeforeSlow)
+                spinReel(reels_elements.reel1, currentSpinResults[0], 800),
+                spinReel(reels_elements.reel2, currentSpinResults[1], 1200),
+                spinReel(reels_elements.reel3, currentSpinResults[2], 1600)
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
@@ -872,6 +871,7 @@
             let totalWinAmount = 0;
             let winMessage = "";
 
+            // Check for Three of a Kind
             if (resultSymbols[0].name === resultSymbols[1].name && resultSymbols[1].name === resultSymbols[2].name) {
                 winMessage = `Three ${resultSymbols[0].name}s!`;
                 switch(resultSymbols[0].name) {
@@ -880,17 +880,28 @@
                     case 'Lemon': totalWinAmount += resultSymbols[0].value * betAmount * 10; break;
                     case 'Seven':
                         winMessage = `🔥🔥🔥 JACKPOT! 777! 🔥🔥🔥`;
-                        totalWinAmount += resultSymbols[0].value * betAmount * 50;
+                        totalWinAmount += resultSymbols[0].value * betAmount * 50; // Lebih besar untuk jackpot
                         break;
                     default: totalWinAmount += resultSymbols[0].value * betAmount * 3;
                 }
             }
-            else if (resultSymbols[0].name === 'Seven' && resultSymbols[1].name === 'Seven' && resultSymbols[2].name !== 'Seven') {
+            // Check for Two Sevens (regardless of third reel)
+            else if (
+                (resultSymbols[0].name === 'Seven' && resultSymbols[1].name === 'Seven') ||
+                (resultSymbols[0].name === 'Seven' && resultSymbols[2].name === 'Seven') ||
+                (resultSymbols[1].name === 'Seven' && resultSymbols[2].name === 'Seven')
+            ) {
                 winMessage = `Two Sevens!`;
                 totalWinAmount += betAmount * 10;
             }
-            else if (resultSymbols[0].name === 'Seven' || resultSymbols[1].name === 'Seven' || resultSymbols[2].name === 'Seven') {
-                if (totalWinAmount === 0) { // Pastikan hanya berlaku jika belum ada kemenangan lain
+            // Check for One Seven (only if no other wins)
+            else if (
+                resultSymbols[0].name === 'Seven' || 
+                resultSymbols[1].name === 'Seven' || 
+                resultSymbols[2].name === 'Seven'
+            ) {
+                // Pastikan ini adalah kemenangan "satu Seven" dan bukan bagian dari kemenangan yang lebih besar
+                if (totalWinAmount === 0) { 
                     winMessage = `One Seven! Small win!`;
                     totalWinAmount += betAmount * 2;
                 }
@@ -900,24 +911,24 @@
         }
 
         // ==============================================
-        //           INISIALISASI (PENTING!)
+        //           INISIALISASI GAME
         // ==============================================
         document.addEventListener('DOMContentLoaded', () => {
-            initializeReelsDisplay(); // Panggil ini setelah DOM siap
-            initializeGame(); // Panggil fungsi inisialisasi game
+            // Penting: Inisialisasi tampilan reel pertama kali setelah DOM siap
+            initializeReelsDisplay(); 
+            // Kemudian, inisialisasi game (cek user, load saldo)
+            initializeGame();
         });
 
         spinBtn.addEventListener('click', spin);
 
         // Tambahan: Tambahkan event listener untuk mencegah autoplay blocking pada audio
         document.addEventListener('click', () => {
-            // Coba putar lagi jika masih belum putar dan user sudah login
             if (backgroundMusic.paused && currentUser) { 
                 backgroundMusic.volume = 0.3;
                 backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked. User interaction needed.", e));
             }
-        }, { once: true }); // Hanya perlu dijalankan sekali
+        }, { once: true });
     </script>
 </body>
 </html>
-        
