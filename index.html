@@ -9,12 +9,21 @@
     /* --- Gaya Umum & Global --- */
     * { box-sizing: border-box; }
     body, html {
-      margin: 0; padding: 0; min-height: 100vh;
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298); /* Lebih menyatu dengan warna popup */
-      color: #fff;
-      display: flex;
-      flex-direction: column;
+        margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.0);
+  background-blend-mode: overlay;
+}
     }
     main {
         flex-grow: 1; /* Pastikan main mengisi ruang kosong */
@@ -22,9 +31,9 @@
 
     /* --- Header & Navigasi Baru --- */
     header {
-      background-color: rgba(0,0,0,0.7); /* Lebih gelap, sedikit transparan */
+     /* background-color: rgba(255,225,0,0.5); /* Lebih gelap, sedikit transparan */
       padding: 15px 0;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.0);
       position: sticky; /* Sticky header */
       top: 0;
       z-index: 1000;
@@ -40,8 +49,28 @@
     header h1 {
       margin: 0;
       font-size: 1.8em;
-      color: #ffb347; /* Warna cerah */
-      text-shadow: 0 0 8px rgba(255,179,71,0.5);
+      color: #ffd700;
+    text-shadow: 0 0 10px #ffeb3b,
+                 0 0 20px #ffeb3b,
+                 0 0 30px #ffeb3b,
+                 0 0 40px #ffeb3b,
+                 0 0 50px #ffeb3b,
+                 0 0 60px #ffeb3b;
+    animation: neon-glow 1.5s ease-in-out infinite alternate;
+    margin-top: 0;
+    line-height: 1.2;
+  }
+
+  @keyframes neon-glow {
+    from {
+      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
+      color: #ffd700;
+    }
+    to {
+      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
+                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
+      color: red;
+    }
     }
     header nav ul {
       list-style: none;
@@ -53,15 +82,36 @@
       margin-left: 30px;
     }
     header nav ul li a {
-      color: #fff;
+      color: #ffd700;
+    text-shadow: 0 0 10px #ffeb3b,
+                 0 0 20px #ffeb3b,
+                 0 0 30px #ffeb3b,
+                 0 0 40px #ffeb3b,
+                 0 0 50px #ffeb3b,
+                 0 0 60px #ffeb3b;
+    animation: neon-glow 1.5s ease-in-out infinite alternate;
+    margin-top: 0;
+    line-height: 1.2;
+  }
+
+  @keyframes neon-glow {
+    from {
+      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
+      color: #ffd700;
+    }
+    to {
+      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
+                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
+      color: red;
+    }
       text-decoration: none;
       font-weight: 600;
       font-size: 1.1em;
       transition: color 0.3s ease, text-shadow 0.3s ease;
     }
     header nav ul li a:hover {
-      color: #ff9500;
-      text-shadow: 0 0 5px rgba(255,149,0,0.8);
+      color: #ff0;
+      text-shadow: 0 0 5px rgba(255,149,0,0.9);
     }
     /* Aktifkan untuk tombol logout */
     header nav ul li button {
@@ -125,7 +175,7 @@
 
     /* Auth Forms (Login & Register) */
     .auth-forms {
-        background: rgba(0,0,0,0.7);
+        background: rgba(0,0,0,0.5);
         padding: 40px;
         border-radius: 15px;
         box-shadow: 0 0 25px 4px rgba(255,165,0,0.2);
@@ -242,7 +292,7 @@
     .main-actions-group {
       display: flex;
       justify-content: center;
-      gap: 20px; /* Jarak antar tombol */
+      gap: 10px; /* Jarak antar tombol */
       margin-bottom: 30px;
       padding: 15px 0;
       border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -255,7 +305,7 @@
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-      color: #222; /* Kontras dengan oranye */
+      color: transparent;
       box-shadow: 0 0 12px rgba(255,165,0,0.5);
       transition: background 0.3s ease, transform 0.2s ease;
     }
@@ -282,7 +332,7 @@
       margin-bottom: 30px;
       border-radius: 10px; /* Sudut membulat tabel */
       overflow: hidden; /* Penting agar border-radius berfungsi */
-      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      box-shadow: 0 0 15px rgba(0,0,0,0.0);
     }
     th, td {
       padding: 12px 15px; /* Padding lebih nyaman */
@@ -296,7 +346,7 @@
       font-weight: 700;
     }
     tr:nth-child(even) { /* Warna selang-seling */
-        background-color: rgba(255,255,255,0.05);
+       /* background-color: rgba(255,255,255,0.05);
     }
     tr:last-child td {
         border-bottom: none; /* Hilangkan border bawah di baris terakhir */
@@ -538,16 +588,16 @@
 
     /* --- Footer --- */
     footer {
-        background-color: rgba(0,0,0,0.7);
+        background-color: rgba(0,0,0,0.0);
         color: #fff;
         text-align: center;
-        padding: 15px 0;
+        padding: 0px 0;
         margin-top: auto; /* Dorong ke bawah */
-        box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+        box-shadow: 0 -4px 15px rgba(0,0,0,0.0);
     }
     footer p {
         margin: 0;
-        font-size: 0.9em;
+        font-size: 0.5em;
         color: #bbb;
     }
 
@@ -654,7 +704,7 @@
       <h2>Pilih Game Favoritmu!</h2>
       <div class="game-display-grid">
         <a href="slot.html" class="game-item">
-          <img src="https://via.placeholder.com/200x150/FFD700/000000?text=Slot+Game" alt="Slot Game">
+          <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//animasi-bergerak-game-dan-permainan-0323.gif" alt="Slot Game">
           <h3>Slot Game Zone One</h3>
         </a>
         <a href="poker1.html" class="game-item">
@@ -662,15 +712,15 @@
           <h3>Poker Game Zone One</h3>
         </a>
         <a href="tebakdadu.html" class="game-item">
-          <img src="https://via.placeholder.com/200x150/008080/FFFFFF?text=Tebak+Dadu" alt="Tebak Dadu">
+          <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1)%20(1).png" alt="Tebak Dadu">
           <h3>Tebak Dadu Game Zone One</h3>
         </a>
         <a href="samgong1.html" class="game-item">
-          <img src="https://via.placeholder.com/200x150/4682B4/FFFFFF?text=Samgong" alt="Samgong Game">
+          <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png" alt="Samgong Game">
           <h3>Samgong Game Zone One</h3>
         </a>
         <a href="susunbalok99.html" class="game-item">
-          <img src="https://via.placeholder.com/200x150/DA70D6/FFFFFF?text=Susun+Balok" alt="Susun Balok">
+          <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg" alt="Susun Balok">
           <h3>Susun Balok Game Zone One</h3>
         </a>
         </div>
@@ -741,7 +791,14 @@
       <button class="close-popup-btn" data-popup-id="history-popup">Tutup</button>
     </div>
   </div>
+     <audio id="background-music" loop>
+    <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" type="audio/mpeg">
+  </audio>
 
+  <button id="toggle-music-btn" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; background: rgba(0,0,0,0.0); color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer;">
+    🔊
+  </button>
+  
   <footer>
     <div class="container">
       <p>&copy; 2025 GameZone. Semua Hak Cipta Dilindungi.</p>
@@ -773,7 +830,6 @@
     const showRegisterLink = document.getElementById('show-register-link');
     const showLoginLinkHtml = 'Sudah punya akun? <a href="#" id="show-login-link">Login di sini</a>';
     const showRegisterLinkHtml = 'Belum punya akun? <a href="#" id="show-register-link">Daftar di sini</a>';
-
     // --- Navigasi ---
     const navHome = document.getElementById('nav-home');
     const navLoginLink = document.getElementById('nav-login-link');
@@ -816,6 +872,25 @@
     const withNomor = document.getElementById('with-nomor');
     const withJumlah = document.getElementById('with-jumlah');
     const withSubmit = document.getElementById('with-submit');
+    const bgMusic = document.getElementById('background-music');
+       const toggleMusicBtn = document.getElementById('toggle-music-btn');
+       let isPlaying = false; // Status musik
+
+       toggleMusicBtn.addEventListener('click', () => {
+         if (isPlaying) {
+           bgMusic.pause();
+           toggleMusicBtn.textContent = 'Putar Musik';
+         } else {
+           bgMusic.play().then(() => {
+             toggleMusicBtn.textContent = '🔇';
+           }).catch(error => {
+             console.error('Autoplay diblokir atau error:', error);
+             alert('Browser memblokir pemutaran otomatis. Silakan izinkan audio untuk situs ini.');
+             toggleMusicBtn.textContent = 'Putar Musik (Diblokir)';
+           });
+         }
+         isPlaying = !isPlaying;
+       });
 
     // --- General Utility Functions ---
     function showPopup(popupId) {
@@ -1300,6 +1375,7 @@
             loadProfile();
         }
     };
+    
   </script>
 </body>
 </html>
