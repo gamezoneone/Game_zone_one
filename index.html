@@ -538,95 +538,107 @@
     }
 
     /* --- Game Display Grid (NEW) --- */
-/* --- Game Display Grid (NEW) --- */
 .game-display-grid {
     display: grid;
-    /* Ubah ini untuk 2 kolom. minmax(ukuran_min, ukuran_max) */
-    /* Ukuran thumbnail akan ditentukan oleh minmax, coba nilai yang lebih kecil */
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); /* Misalnya 130px untuk lebar minimum */
-    gap: 15px; /* Kurangi jarak antar game agar muat */
+    /* Ini akan membuat 2 kolom di layar lebar dan 2 kolom di layar sangat kecil */
+    /* Ukuran item akan fleksibel tapi dengan lebar minimum sekitar 150px. */
+    /* Kita akan atur agar 2 kolom di HP, dan lebih dari 2 kolom di desktop jika ada ruang. */
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px; /* Jarak antar item game */
     margin-top: 30px;
     padding-top: 20px;
     border-top: 1px solid rgba(255,255,255,0.2);
+    justify-content: center; /* Pusatkan grid jika tidak memenuhi lebar penuh */
 }
 
+/* Setiap item game (link a) */
 .game-item {
-    background: rgba(255,255,255,0.08); /* Background item game */
-    border-radius: 10px;
-    overflow: hidden;
+    background: rgba(255,255,255,0.08); /* Background item, bisa dihapus jika ingin transparan total */
+    border-radius: 12px; /* Sudut lebih membulat */
+    overflow: hidden; /* Penting untuk menjaga gambar di dalam border-radius */
     box-shadow: 0 5px 15px rgba(0,0,0,0.4);
-    text-align: center;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    text-decoration: none;
-    color: inherit;
-    display: block;
-    /* Menentukan rasio aspek tetap untuk item game */
-    padding-bottom: 100%; /* Contoh: membuat item berbentuk kotak (tinggi = lebar) */
-    position: relative; /* Penting untuk gambar absolut */
+    text-decoration: none; /* Hapus garis bawah link */
+    color: inherit; /* Warisi warna teks dari parent */
+    display: block; /* Pastikan ini blok agar bisa diatur dimensinya */
+    position: relative; /* Penting untuk gambar absolut dan overlay judul */
+
+    /* Mengatur rasio aspek untuk item game (misal: kotak sempurna) */
+    width: 100%; /* Pastikan lebar penuh dalam grid cell */
+    padding-bottom: 100%; /* Membuat tinggi sama dengan lebar (rasio 1:1 / kotak) */
+    height: 0; /* Set tinggi ke 0 agar padding-bottom bisa bekerja */
 }
 
 .game-item:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3);
+    transform: translateY(-8px) scale(1.03); /* Efek melayang sedikit lebih besar */
+    box-shadow: 0 10px 25px rgba(255,149,0,0.5), 0 0 20px rgba(255,149,0,0.3); /* Glow oranye */
 }
 
+/* Gambar thumbnail di dalam item game */
 .game-item img {
-    position: absolute; /* Gambar mengisi seluruh item */
+    position: absolute; /* Posisikan absolut agar mengisi seluruh parent */
     top: 0;
     left: 0;
-    width: 100%; /* Lebar penuh parent */
-    height: 100%; /* Tinggi penuh parent */
-    object-fit: cover; /* Pastikan gambar mengisi kotak, memotong jika perlu */
-    border-bottom: none; /* Hapus border bottom jika ada */
+    width: 100%; /* Lebar 100% dari parent */
+    height: 100%; /* Tinggi 100% dari parent */
+    object-fit: cover; /* **Penting:** Pastikan gambar mengisi seluruh area, memotong jika rasio tidak sama */
+    border-radius: 12px; /* Pastikan gambar juga memiliki sudut membulat */
     transition: transform 0.3s ease;
-    border-radius: 10px; /* Opsional: bulatkan sudut gambar juga */
 }
 
 .game-item:hover img {
-    transform: scale(1.05);
+    transform: scale(1.05); /* Sedikit zoom pada gambar saat hover */
 }
 
+/* --- Judul Game (Pilih Salah Satu Opsi di Bawah) --- */
+
+/* OPSI 1: Judul hilang sepenuhnya (default) */
 .game-item h3 {
-    /* Sembunyikan judul game */
-    display: none;
-    /* Atau jika ingin ada overlay teks saat hover (opsional, tapi lebih kompleks) */
-    /*
+    display: none; /* Menyembunyikan judul game */
+}
+
+/* OPSI 2: Judul muncul sebagai overlay transparan saat hover */
+/* Jika Anda memilih opsi ini, HAPUS/KOMENTARI OPSI 1 di atas */
+/*
+.game-item h3 {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    padding: 8px 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
     color: #fff;
-    padding: 8px 5px;
     font-size: 0.9em;
+    font-weight: 600;
+    text-align: center;
+    margin: 0;
     opacity: 0;
     transition: opacity 0.3s ease;
-    */
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
-/* Jika Anda ingin judul muncul saat hover, aktifkan ini dan bagian di atas */
-/*
 .game-item:hover h3 {
     opacity: 1;
 }
 */
 
-/* Media Queries untuk responsivitas */
+/* --- Media Queries untuk Responsivitas (Revisi) --- */
 @media (max-width: 768px) {
     .game-display-grid {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Sedikit lebih kecil di tablet */
-        gap: 12px;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); /* Atur ukuran item untuk tablet */
+        gap: 15px;
     }
 }
+
 @media (max-width: 480px) {
     .game-display-grid {
-        grid-template-columns: repeat(2, 1fr); /* Tetap 2 kolom di HP */
+        grid-template-columns: repeat(2, 1fr); /* Pastikan 2 kolom di ponsel */
         gap: 10px;
     }
 }
-
-
     /* --- Footer --- */
     footer {
         background-color: rgba(0,0,0,0.0);
