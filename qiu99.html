@@ -6,8 +6,9 @@
     <title>Domino Qiu Qiu - Pemain vs Bandar</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-body {
+<style>
+  
+  body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #0a0a0a;
@@ -134,12 +135,12 @@ h1 {
     flex-direction: column;
     align-items: center;
     gap: 0.4rem; /* Kurangi gap */
-    width: 30%;
-    background-color: rgba(0, 0, 0, 0.0);
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0.4);
     border-radius: 0.6rem; /* Lebih kecil */
     padding: 0.4rem; /* Kurangi padding */
-    /*border: 1px solid rgba(255, 255, 0, 0.5);
-    /*box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
+    border: 1px solid rgba(255, 255, 0, 0.5);
+    box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
 }
 
 .player-label {
@@ -158,135 +159,32 @@ h1 {
 }
 
 /* ============================================== */
-/* DOMINO CARD STYLING (CSS ONLY)               */
+/* DOMINO CARD STYLING (IMAGE BASED)            */
 /* ============================================== */
 .card {
     width: 55px; /* Lebar kartu lebih kecil */
     height: 80px; /* Tinggi kartu lebih kecil */
     border: 1px solid #333; /* Border kartu */
     border-radius: 5px; /* Sudut kartu lebih kecil */
-    background-color: #f7f7f7; /* Warna dasar kartu (putih gading) */
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Shadow lebih kecil */
     position: relative;
     overflow: hidden;
-    display: flex;
-    flex-direction: column; /* Ini penting agar kita bisa menargetkan bagian atas dan bawah */
-    justify-content: space-around; /* Memberi ruang di antara bagian atas dan bawah */
-    align-items: center;
-    padding: 4px; /* Kurangi padding */
-    box-sizing: border-box;
+    background-size: cover; /* Pastikan gambar mengisi kartu */
+    background-position: center;
+    background-repeat: no-repeat;
     transition: transform 0.5s ease-out;
     transform-style: preserve-3d;
 }
 
 .card.back {
-    background-color: #555;
-    background-image: linear-gradient(45deg, #666 25%, transparent 25%, transparent 75%, #666 75%, #666),
-                      linear-gradient(45deg, #666 25%, transparent 25%, transparent 75%, #666 75%, #666);
-    background-size: 8px 8px; /* Ukuran pola lebih kecil */
-    background-position: 0 0, 4px 4px; /* Offset pola lebih kecil */
-    border: 1px solid #aaa;
+    /* Background image untuk kartu belakang akan diatur di JavaScript */
+    background-color: #555; /* Fallback color */
 }
 
-/* Garis pemisah tengah */
-.card:not(.back)::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    height: 1px; /* Tebal garis lebih kecil */
-    background-color: #333;
-    transform: translateY(-50%);
-    z-index: 1;
+.card:not(.back) {
+    /* Background image untuk kartu depan akan diatur di JavaScript */
+    background-color: #f7f7f7; /* Fallback color */
 }
-
-/* Dot styling */
-.dot {
-    position: absolute; /* Penting untuk penempatan presisi */
-    width: 7px; /* Ukuran dot lebih kecil */
-    height: 7px;
-    background-color: #333;
-    border-radius: 50%;
-    z-index: 2; /* Pastikan dot di atas garis */
-    display: none; /* Sembunyikan semua dot secara default */
-}
-
-/* Tampilkan dot jika kartu TIDAK dalam keadaan 'back' */
-.card:not(.back) .dot {
-    display: block;
-}
-
-/* ================================================================= */
-/* PENEMPATAN TITIK-TITIK DOMINO (Perbaikan Presisi)               */
-/* ================================================================= */
-
-/* TOP HALF (DATA-VALUE1) */
-.card[data-value1="0"] .dot.top-center { display: none; } /* Semua dot disembunyikan untuk 0 */
-.card[data-value1="0"] .dot.top-left { display: none; }
-.card[data-value1="0"] .dot.top-right { display: none; }
-.card[data-value1="0"] .dot.mid-center-top { display: none; }
-
-.card[data-value1="1"] .dot.mid-center-top { top: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah atas */
-
-.card[data-value1="2"] .dot.top-left { top: 8px; left: 8px; }
-.card[data-value1="2"] .dot.bottom-right { top: 25px; right: 8px; } /* Ini untuk bagian atas, di bawah kanan relative ke bagian atas */
-
-.card[data-value1="3"] .dot.top-left { top: 8px; left: 8px; }
-.card[data-value1="3"] .dot.mid-center-top { top: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah atas */
-.card[data-value1="3"] .dot.bottom-right { top: 25px; right: 8px; }
-
-.card[data-value1="4"] .dot.top-left { top: 8px; left: 8px; }
-.card[data-value1="4"] .dot.top-right { top: 8px; right: 8px; }
-.card[data-value1="4"] .dot.bottom-left { top: 25px; left: 8px; }
-.card[data-value1="4"] .dot.bottom-right { top: 25px; right: 8px; }
-
-.card[data-value1="5"] .dot.top-left { top: 8px; left: 8px; }
-.card[data-value1="5"] .dot.top-right { top: 8px; right: 8px; }
-.card[data-value1="5"] .dot.mid-center-top { top: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah atas */
-.card[data-value1="5"] .dot.bottom-left { top: 25px; left: 8px; }
-.card[data-value1="5"] .dot.bottom-right { top: 25px; right: 8px; }
-
-.card[data-value1="6"] .dot.top-left { top: 8px; left: 8px; }
-.card[data-value1="6"] .dot.top-center { top: 8px; left: 50%; transform: translateX(-50%); } /* Dot di tengah atas baris atas */
-.card[data-value1="6"] .dot.top-right { top: 8px; right: 8px; }
-.card[data-value1="6"] .dot.bottom-left { top: 25px; left: 8px; }
-.card[data-value1="6"] .dot.bottom-center { top: 25px; left: 50%; transform: translateX(-50%); } /* Dot di tengah atas baris bawah */
-.card[data-value1="6"] .dot.bottom-right { top: 25px; right: 8px; }
-
-
-/* BOTTOM HALF (DATA-VALUE2) */
-.card[data-value2="0"] .dot.bottom-center { display: none; } /* Semua dot disembunyikan untuk 0 */
-.card[data-value2="0"] .dot.bottom-left { display: none; }
-.card[data-value2="0"] .dot.bottom-right { display: none; }
-.card[data-value2="0"] .dot.mid-center-bottom { display: none; }
-
-.card[data-value2="1"] .dot.mid-center-bottom { bottom: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah bawah */
-
-.card[data-value2="2"] .dot.top-left { bottom: 25px; left: 8px; } /* Ini untuk bagian bawah, di atas kiri relative ke bagian bawah */
-.card[data-value2="2"] .dot.bottom-right { bottom: 8px; right: 8px; }
-
-.card[data-value2="3"] .dot.top-left { bottom: 25px; left: 8px; }
-.card[data-value2="3"] .dot.mid-center-bottom { bottom: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah bawah */
-.card[data-value2="3"] .dot.bottom-right { bottom: 8px; right: 8px; }
-
-.card[data-value2="4"] .dot.top-left { bottom: 25px; left: 8px; }
-.card[data-value2="4"] .dot.top-right { bottom: 25px; right: 8px; }
-.card[data-value2="4"] .dot.bottom-left { bottom: 8px; left: 8px; }
-.card[data-value2="4"] .dot.bottom-right { bottom: 8px; right: 8px; }
-
-.card[data-value2="5"] .dot.top-left { bottom: 25px; left: 8px; }
-.card[data-value2="5"] .dot.top-right { bottom: 25px; right: 8px; }
-.card[data-value2="5"] .dot.mid-center-bottom { bottom: 16px; left: 50%; transform: translateX(-50%); } /* Titik tengah bawah */
-.card[data-value2="5"] .dot.bottom-left { bottom: 8px; left: 8px; }
-.card[data-value2="5"] .dot.bottom-right { bottom: 8px; right: 8px; }
-
-.card[data-value2="6"] .dot.top-left { bottom: 25px; left: 8px; }
-.card[data-value2="6"] .dot.top-center { bottom: 25px; left: 50%; transform: translateX(-50%); } /* Dot di tengah bawah baris atas */
-.card[data-value2="6"] .dot.top-right { bottom: 25px; right: 8px; }
-.card[data-value2="6"] .dot.bottom-left { bottom: 8px; left: 8px; }
-.card[data-value2="6"] .dot.bottom-center { bottom: 8px; left: 50%; transform: translateX(-50%); } /* Dot di tengah bawah baris bawah */
-.card[data-value2="6"] .dot.bottom-right { bottom: 8px; right: 8px; }
 
 
 .hand-value {
@@ -422,7 +320,18 @@ button:disabled {
     }
 }
 
-@media (max-width:
+@media (max-width: 400px) {
+    .game-table {
+        width: 280px;
+        height: 280px;
+        max-width: 280px;
+        max-height: 280px;
+    }
+    .card {
+        width: 45px;
+        height: 68px;
+    }
+}
 
 </style>
 </head>
@@ -477,14 +386,13 @@ button:disabled {
         </div>
     </div>
 
-    <script>
-      
-      // ==============================================
+<script>
+  // ==============================================
 //           KONFIGURASI SUPABASE
 // ==============================================
 const supabase = window.supabase.createClient(
     'https://vqmfachxnjyxwuavpgds.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4njl5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
 );
 
 // ==============================================
@@ -510,13 +418,20 @@ const drawSound = document.getElementById('drawSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 
 // ==============================================
-//           VARIABEL GAME
+//           VARIABEL GAME & MAPPING GAMBAR KARTU
 // ==============================================
 let currentUser = null;
 let playerBalance = 0;
 let isDealing = false; // Untuk mencegah klik ganda saat animasi berjalan
 
+// Base URL untuk gambar kartu domino di Supabase Storage
+// GANTI DENGAN BASE URL FOLDER GAMBAR ANDA DI SUPABASE!
+// Pastikan ini mengarah ke folder 'domino' di public bucket Anda
+const CARD_IMAGE_BASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/domino99/';
+const BACK_CARD_IMAGE_URL = CARD_IMAGE_BASE_URL + 'back.png'; // Asumsikan nama file kartu belakang adalah back.png
+
 // Representasi kartu domino: [atas, bawah]
+// Kita akan memetakan ini ke nama file gambar
 const dominoCards = [
     [0,0], [0,1], [0,2], [0,3], [0,4], [0,5], [0,6],
     [1,1], [1,2], [1,3], [1,4], [1,5], [1,6],
@@ -527,13 +442,14 @@ const dominoCards = [
     [6,6]
 ];
 
-// Array untuk menyimpan posisi titik-titik yang akan dibuat
-const dotPositions = [
-    'top-left', 'top-center', 'top-right',
-    'mid-center-top', // Untuk angka 5 di sisi atas (titik tengahnya)
-    'bottom-left', 'bottom-center', 'bottom-right',
-    'mid-center-bottom' // Untuk angka 5 di sisi bawah (titik tengahnya)
-];
+// Fungsi untuk mendapatkan URL gambar kartu berdasarkan nilai [atas, bawah]
+function getCardImageUrl(cardData) {
+    // Pastikan angka selalu terurut dari kecil ke besar untuk nama file konsisten (misal: 0_1 bukan 1_0)
+    const val1 = Math.min(cardData[0], cardData[1]);
+    const val2 = Math.max(cardData[0], cardData[1]);
+    return `${CARD_IMAGE_BASE_URL}domino_${val1}_${val2}.png`; // Asumsikan format nama file domino_0_0.png
+}
+
 
 // ==============================================
 //           FUNGSI BANTUAN UI & GAME
@@ -679,11 +595,11 @@ logoutBtn.addEventListener('click', async () => {
 // ==============================================
 
 function resetTable() {
-    dealerCardsContainer.innerHTML = ''; // Kosongkan kontainer
-    playerCardsContainer.innerHTML = ''; // Kosongkan kontainer
-    // Tambahkan kembali kartu back awal
-    dealerCardsContainer.innerHTML = '<div class="card back"></div><div class="card back"></div>';
-    playerCardsContainer.innerHTML = '<div class="card back"></div><div class="card back"></div>';
+    dealerCardsContainer.innerHTML = '';
+    playerCardsContainer.innerHTML = '';
+    // Menambahkan kembali kartu back awal dengan background-image
+    dealerCardsContainer.innerHTML = `<div class="card back" style="background-image: url('${BACK_CARD_IMAGE_URL}');"></div><div class="card back" style="background-image: url('${BACK_CARD_IMAGE_URL}');"></div>`;
+    playerCardsContainer.innerHTML = `<div class="card back" style="background-image: url('${BACK_CARD_IMAGE_URL}');"></div><div class="card back" style="background-image: url('${BACK_CARD_IMAGE_URL}');"></div>`;
 
     dealerValueDisplay.textContent = '';
     playerValueDisplay.textContent = '';
@@ -723,7 +639,6 @@ async function dealCards() {
         backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked again.", e));
     }
 
-
     const shuffledDeck = shuffle(dominoCards);
     let playerHand = [];
     let dealerHand = [];
@@ -734,17 +649,19 @@ async function dealCards() {
 
     // Deal 2 kartu ke pemain
     for (let i = 0; i < 2; i++) {
-        await animateDealCard(playerCardsContainer, shuffledDeck.pop());
-        playerHand.push(playerCardsContainer.children[i].cardData); // Dapatkan data kartu dari elemen yang baru dibuat
-        dealCardSound.currentTime = 0; // Reset sound for quick successive plays
+        const cardData = shuffledDeck.pop();
+        await animateDealCard(playerCardsContainer, cardData);
+        playerHand.push(cardData); // Simpan langsung data kartu yang dibagikan
+        dealCardSound.currentTime = 0;
         dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
         await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
     }
 
     // Deal 2 kartu ke bandar
     for (let i = 0; i < 2; i++) {
-        await animateDealCard(dealerCardsContainer, shuffledDeck.pop());
-        dealerHand.push(dealerCardsContainer.children[i].cardData); // Dapatkan data kartu dari elemen yang baru dibuat
+        const cardData = shuffledDeck.pop();
+        await animateDealCard(dealerCardsContainer, cardData);
+        dealerHand.push(cardData); // Simpan langsung data kartu yang dibagikan
         dealCardSound.currentTime = 0;
         dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
         await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
@@ -768,21 +685,17 @@ async function dealCards() {
     let message = "";
 
     // Logika penentuan pemenang untuk 2 kartu (nilai tertinggi modulo 10)
-    // Dalam Qiu Qiu, nilai 9 adalah "Qiu", 0 adalah "kosong" (bisa juga tertinggi jika tidak ada 9)
-    // Bandar menang jika nilai sama, kecuali kedua-duanya 9.
-    // Jika kedua-duanya 9, pemain menang (ini aturan standar Qiu Qiu)
-
     if (playerValue === 9 && dealerValue !== 9) { // Pemain 9, bandar bukan 9
-        message = `QIU QIU! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`; // Payout 2x (total 3x bet)
-        winAmount = betAmount * 3;
+        message = `QIU QIU! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`;
+        winAmount = betAmount * 3; // Saldo + 2x bet (total 3x)
         winSound.play().catch(e => console.warn("Win sound failed:", e));
     } else if (dealerValue === 9 && playerValue !== 9) { // Bandar 9, pemain bukan 9
         message = `BANDAR QIU QIU! ANDA KALAH! ${dealerValue} vs ${playerValue}. Anda kalah ${betAmount} Credits.`;
-        winAmount = 0;
+        winAmount = 0; // Pemain kalah taruhan
         loseSound.play().catch(e => console.warn("Lose sound failed:", e));
-    } else if (playerValue === 9 && dealerValue === 9) { // Keduanya 9, pemain menang
-        message = `QIU QIU KEMBAR! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`; // Payout 2x (total 3x bet)
-        winAmount = betAmount * 3;
+    } else if (playerValue === 9 && dealerValue === 9) { // Keduanya 9, pemain menang (Aturan umum Qiu Qiu)
+        message = `QIU QIU KEMBAR! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`;
+        winAmount = betAmount * 3; // Saldo + 2x bet (total 3x)
         winSound.play().catch(e => console.warn("Win sound failed:", e));
     } else if (playerValue > dealerValue) { // Pemain nilai lebih tinggi (bukan 9)
         message = `ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount} Credits.`;
@@ -797,7 +710,6 @@ async function dealCards() {
         winAmount = 0;
         loseSound.play().catch(e => console.warn("Error sound failed:", e));
     }
-
 
     playerBalance += winAmount;
     updateBalanceDisplay();
@@ -823,30 +735,14 @@ function shuffle(array) {
 async function animateDealCard(container, cardData) {
     const cardElement = document.createElement('div');
     cardElement.classList.add('card', 'back');
+    // Set background-image untuk kartu belakang
+    cardElement.style.backgroundImage = `url('${BACK_CARD_IMAGE_URL}')`;
     container.appendChild(cardElement);
 
     // Simpan data kartu di elemen DOM untuk diakses nanti
-    // Penting untuk CSS-only cards: tambahkan data atribut
-    cardElement.cardData = cardData; // Simpan juga data aslinya
-    cardElement.dataset.value1 = Math.min(cardData[0], cardData[1]); // Pastikan yang kecil di value1
-    cardElement.dataset.value2 = Math.max(cardData[0], cardData[1]); // Pastikan yang besar di value2
+    cardElement.cardData = cardData;
 
-    // Tambahkan elemen dot ke dalam kartu
-    // Setiap kartu punya 8 posisi dot, kita tampilkan/sembunyikan dengan CSS
-    for (let i = 0; i < 8; i++) {
-        const dot = document.createElement('div');
-        dot.classList.add('dot');
-        // Memberi kelas posisi agar CSS bisa mengatur penampilannya
-        if (i === 0) dot.classList.add('top-left');
-        else if (i === 1) dot.classList.add('top-center');
-        else if (i === 2) dot.classList.add('top-right');
-        else if (i === 3) dot.classList.add('mid-center-top');
-        else if (i === 4) dot.classList.add('bottom-left');
-        else if (i === 5) dot.classList.add('bottom-center');
-        else if (i === 6) dot.classList.add('bottom-right');
-        else if (i === 7) dot.classList.add('mid-center-bottom');
-        cardElement.appendChild(dot);
-    }
+    // Tidak perlu menambahkan elemen dot, karena sekarang menggunakan gambar
 }
 
 // Mengungkap kartu (membalik dan menampilkan nilai)
@@ -854,8 +750,13 @@ async function revealHand(container, hand, valueDisplayElement) {
     const cardElements = container.querySelectorAll('.card');
     for (let i = 0; i < hand.length; i++) {
         const cardElement = cardElements[i];
+        const cardData = hand[i];
+        const imageUrl = getCardImageUrl(cardData);
 
-        // Hapus kelas 'back' untuk menampilkan titik
+        // Langsung ganti background-image kartu
+        cardElement.style.backgroundImage = `url('${imageUrl}')`;
+
+        // Hapus kelas 'back' (opsional, tapi baik untuk kejelasan)
         cardElement.classList.remove('back');
 
         await new Promise(r => setTimeout(r, 300)); // Jeda antara reveal kartu
@@ -873,6 +774,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 dealBtn.addEventListener('click', dealCards);
 
-    </script>
+</script>
 </body>
 </html>
