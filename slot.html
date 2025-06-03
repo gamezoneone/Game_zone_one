@@ -202,12 +202,12 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
+            justify-content: center; /* Mengubah ini untuk memusatkan gambar */
             align-items: center;
             background-color: #0d0d0d;
             border-radius: 0.5rem;
             border: 1px solid #333;
-            overflow: hidden;
+            overflow: hidden; /* Penting: Menyembunyikan apa pun di luar batas */
             position: relative;
         }
 
@@ -401,11 +401,6 @@
                 gap: 20px;
             }
 
-            .bet-control input {
-                width: 80px;
-                font-size: 1.1em;
-            }
-
             button {
                 padding: 12px 25px;
                 font-size: 1.6em;
@@ -435,8 +430,8 @@
     </style>
     </head>
 <body>
-    <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="___" preload="auto"></audio>
+  <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/mixkit-slot-machine-reel-stop-1936.mp3" preload="auto"></audio>
     <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
     <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
@@ -524,10 +519,11 @@
             { name: 'Orange', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//images%20(3).jpeg', value: 15 },
             { name: 'Lerang', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(3).jpeg', value: 20 },
             { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
-        ];
-
-        const REEL_STOP_DURATION = 2000;
-        const SYMBOLS_PER_REEL_ANIMATION = 10;
+        ]
+        // Durasi total animasi spin (dalam milidetik)
+        const REEL_SPIN_DURATION = 2000;
+        // Interval seberapa cepat simbol berganti selama spin (dalam milidetik)
+        const SYMBOL_CHANGE_INTERVAL = 70; // Lebih kecil = lebih cepat berganti
 
         let currentUser = null;
         let playerBalance = 0; // Variabel JS untuk menyimpan saldo
@@ -553,21 +549,14 @@
 
         // Menampilkan simbol awal pada reel
         function initializeReelsDisplay() {
-            const initialSymbolHeight = 80; // Disesuaikan dengan tinggi reel baru
-            const reelViewHeight = reels_elements.reel1.clientHeight;
-            const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
-
             Object.values(reels_elements).forEach((reel) => {
                 reel.innerHTML = '';
                 const img = document.createElement('img');
-                const defaultSymbol = symbols[0];
+                const defaultSymbol = symbols[0]; // Tampilkan simbol pertama secara default
                 img.src = defaultSymbol.image;
                 img.alt = defaultSymbol.name;
-                img.style.height = `${initialSymbolHeight}px`;
-                img.style.width = `auto`;
-                img.style.padding = `2px`; // Disesuaikan
                 reel.appendChild(img);
-                reel.style.transform = `translateY(${offsetToCenter}px)`;
+                // Tidak perlu transform lagi, CSS flexbox akan memusatkannya
             });
         }
 
@@ -684,68 +673,42 @@
                 backgroundMusic.currentTime = 0;
             }
         });
+
         function getRandomSymbol() {
             const randomIndex = Math.floor(Math.random() * symbols.length);
             return symbols[randomIndex];
         }
 
-        function spinReel(reelElement, finalSymbol) {
+        /**
+         * Animasi reel agar simbol acak muncul tanpa bergeser ke atas.
+         * Hanya mengganti gambar secara cepat dan berhenti di simbol akhir.
+         */
+        function spinReel(reelElement, finalSymbol, delay) {
             return new Promise(resolve => {
-                const animationSymbols = [];
-                const initialSymbolHeight = 80; // Disesuaikan dengan tinggi reel baru
-
-                for (let i = 0; i < SYMBOLS_PER_REEL_ANIMATION; i++) {
-                    animationSymbols.push(getRandomSymbol());
-                }
-                animationSymbols.push(finalSymbol);
-                for (let i = 0; i < 5; i++) {
-                    animationSymbols.push(getRandomSymbol());
-                }
-
-                reelElement.innerHTML = '';
-                animationSymbols.forEach(s => {
-                    const img = document.createElement('img');
-                    img.src = s.image;
-                    img.alt = s.name;
-                    img.style.height = `${initialSymbolHeight}px`;
-                    img.style.width = `auto`;
-                    img.style.padding = `2px`;
-                    reelElement.appendChild(img);
-                });
-
-                const reelViewHeight = reelElement.clientHeight;
-                const offsetToCenter = (reelViewHeight / 2) - (initialSymbolHeight / 2);
-                const finalSymbolAnimationIndex = animationSymbols.length - (5 + 1);
-                const targetScrollPosition = -(finalSymbolAnimationIndex * (initialSymbolHeight + 4)); // Adjusted for padding
-
-                reelElement.style.transition = `none`;
-                reelElement.style.transform = `translateY(0px)`;
-                void reelElement.offsetWidth;
-
-                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 700}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`;
-                reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
-
                 setTimeout(() => {
-                    reelElement.style.transition = 'none';
-                    reelElement.innerHTML = '';
-                    const img = document.createElement('img');
-                    img.src = finalSymbol.image;
-                    img.alt = finalSymbol.name;
-                    img.style.height = `${initialSymbolHeight}px`;
-                    img.style.width = `auto`;
-                    img.style.padding = `0px`;
-                    reelElement.appendChild(img);
-                    reelElement.style.transform = `translateY(${offsetToCenter}px)`;
-                    
-                    // <<< PLAY REEL STOP SOUND >>>
-                    reelStopSound.currentTime = 0;
-                    reelStopSound.volume = 0.5;
-                    reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
-
-                    resolve(finalSymbol);
-                }, REEL_STOP_DURATION);
+                    let spinStartTime = Date.now();
+                    let intervalId = setInterval(() => {
+                        if (Date.now() - spinStartTime < REEL_SPIN_DURATION) {
+                            // Selama spinning, ganti simbol secara acak dan cepat
+                            const randomSymbol = getRandomSymbol();
+                            reelElement.innerHTML = `<img src="${randomSymbol.image}" alt="${randomSymbol.name}">`;
+                        } else {
+                            // Hentikan spin dan tampilkan simbol akhir
+                            clearInterval(intervalId);
+                            reelElement.innerHTML = `<img src="${finalSymbol.image}" alt="${finalSymbol.name}">`;
+                            
+                            // <<< PLAY REEL STOP SOUND >>>
+                            reelStopSound.currentTime = 0;
+                            reelStopSound.volume = 0.5;
+                            reelStopSound.play().catch(e => console.warn("Reel stop sound playback failed:", e));
+                            
+                            resolve(finalSymbol);
+                        }
+                    }, SYMBOL_CHANGE_INTERVAL); // Ganti simbol setiap X milidetik
+                }, delay); // Delay untuk setiap reel agar berhenti berurutan
             });
         }
+
 
         async function spin() {
             if (isSpinning || !currentUser) {
@@ -794,9 +757,9 @@
             ];
 
             const reelPromises = [
-                spinReel(reels_elements.reel1, currentSpinResults[0]),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 100)),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 200))
+                spinReel(reels_elements.reel1, currentSpinResults[0], 0), // Reel 1 berhenti duluan
+                spinReel(reels_elements.reel2, currentSpinResults[1], 100), // Reel 2 sedikit telat
+                spinReel(reels_elements.reel3, currentSpinResults[2], 200)  // Reel 3 paling telat
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
