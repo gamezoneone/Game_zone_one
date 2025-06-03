@@ -416,6 +416,9 @@ const loseSound = document.getElementById('loseSound');
 const drawSound = document.getElementById('drawSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 
+let currentUser = null;
+let playerBalance = 0;
+let isDealing = false;
 
 const CARD_IMAGE_BASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/domino99/';
 const BACK_CARD_IMAGE_URL = CARD_IMAGE_BASE_URL + 'back.png';
