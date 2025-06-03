@@ -705,14 +705,14 @@
       decreaseBetBtn.addEventListener('click', () => {
           if (currentManualBet > MIN_BET_UNIT) {
               currentManualBet -= BET_STEP;
-              displayBetAmount.textContent = `Rp${currentManualBet.toLocaleString('id-ID')}`;
+              displayBetAmount.textContent = `Rp.${currentManualBet.toLocaleString('id-ID')}`;
               clickSound.play();
           }
       });
 
       increaseBetBtn.addEventListener('click', () => {
           currentManualBet += BET_STEP;
-          displayBetAmount.textContent = `Rp${currentManualBet.toLocaleString('id-ID')}`;
+          displayBetAmount.textContent = `Rp.${currentManualBet.toLocaleString('id-ID')}`;
           clickSound.play();
       });
 
