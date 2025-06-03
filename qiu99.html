@@ -621,10 +621,6 @@ logoutBtn.addEventListener('click', async () => {
     }
 });
 
-// ==============================================
-//           LOGIKA GAME UTAMA
-// ==============================================
-
 function resetTable() {
     dealerCardsContainer.innerHTML = '';
     playerCardsContainer.innerHTML = '';
@@ -670,7 +666,20 @@ async function dealCards() {
         backgroundMusic.play().catch(e => console.warn("Background music autoplay blocked again.", e));
     }
 
-    const shuffledDeck = shuffle(dominoCards);
+    // --- DEKLARASI DECK DOMINO LENGKAP UNTUK SETIAP PUTARAN ---
+    const fullDominoDeck = [
+        [0,0], [0,1], [0,2], [0,3], [0,4], [0,5], [0,6],
+        [1,1], [1,2], [1,3], [1,4], [1,5], [1,6],
+        [2,2], [2,3], [2,4], [2,5], [2,6],
+        [3,3], [3,4], [3,5], [3,6],
+        [4,4], [4,5], [4,6],
+        [5,5], [5,6],
+        [6,6]
+    ];
+    // --- AKHIR DEKLARASI DECK ---
+
+    const shuffledDeck = shuffle([...fullDominoDeck]); // Gunakan spread operator untuk membuat salinan baru
+
     let playerHand = [];
     let dealerHand = [];
 
@@ -681,8 +690,15 @@ async function dealCards() {
     // Deal 2 kartu ke pemain
     for (let i = 0; i < 2; i++) {
         const cardData = shuffledDeck.pop();
+        if (!cardData) { // Tambahkan pengecekan jika deck kosong (sangat jarang terjadi jika logika deck benar)
+            console.error("Deck is empty! Cannot deal more cards.");
+            gameMessage.textContent = "Terjadi kesalahan: Deck kartu habis. Silakan refresh halaman.";
+            isDealing = false;
+            enableGameControls();
+            return;
+        }
         await animateDealCard(playerCardsContainer, cardData);
-        playerHand.push(cardData); // Simpan langsung data kartu yang dibagikan
+        playerHand.push(cardData);
         dealCardSound.currentTime = 0;
         dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
         await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
@@ -691,8 +707,15 @@ async function dealCards() {
     // Deal 2 kartu ke bandar
     for (let i = 0; i < 2; i++) {
         const cardData = shuffledDeck.pop();
+        if (!cardData) { // Tambahkan pengecekan jika deck kosong
+            console.error("Deck is empty! Cannot deal more cards for dealer.");
+            gameMessage.textContent = "Terjadi kesalahan: Deck kartu habis. Silakan refresh halaman.";
+            isDealing = false;
+            enableGameControls();
+            return;
+        }
         await animateDealCard(dealerCardsContainer, cardData);
-        dealerHand.push(cardData); // Simpan langsung data kartu yang dibagikan
+        dealerHand.push(cardData);
         dealCardSound.currentTime = 0;
         dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
         await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
@@ -750,6 +773,7 @@ async function dealCards() {
     isDealing = false;
     enableGameControls();
 }
+
 
 // Fungsi pengocok kartu Fisher-Yates
 function shuffle(array) {
