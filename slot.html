@@ -515,9 +515,9 @@
         //           KONFIGURASI GAME SLOT
         // ==============================================
         const symbols = [
-            { name: 'Cherry', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(1).jpeg', value: 10 },
-            { name: 'Orange', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//images%20(3).jpeg', value: 15 },
-            { name: 'Lerang', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(3).jpeg', value: 20 },
+            { name: 'Cherry', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(1).jpeg', value: 5 },
+            { name: 'Orange', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//images%20(3).jpeg', value: 10 },
+            { name: 'Lerang', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(3).jpeg', value: 15 },
             { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
         ]
         // Durasi total animasi spin (dalam milidetik)
@@ -675,9 +675,30 @@
         });
 
         function getRandomSymbol() {
-            const randomIndex = Math.floor(Math.random() * symbols.length);
-            return symbols[randomIndex];
-        }
+    // Cara 1: Menambahkan simbol yang lebih umum beberapa kali ke array sementara
+    const weightedSymbols = [
+        symbols[0], symbols[0], symbols[0], // Cherry (lebih sering)
+        symbols[1], symbols[1],             // Orange
+        symbols[2],                         // Lerang
+        symbols[3]                          // Seven (paling jarang)
+    ];
+    
+    // const weightedSymbols = [];
+    // symbols.forEach(symbol => {
+    //     let weight = 1; // Default weight
+    //     if (symbol.name === 'Cherry') weight = 5; // Cherry 5x lebih sering
+    //     if (symbol.name === 'Orange') weight = 3;
+    //     if (symbol.name === 'Lerang') weight = 2;
+    //     if (symbol.name === 'Seven') weight = 1; // Seven tetap 1x
+    //
+    //     for (let i = 0; i < weight; i++) {
+    //         weightedSymbols.push(symbol);
+    //     }
+    // });
+
+    const randomIndex = Math.floor(Math.random() * weightedSymbols.length);
+    return weightedSymbols[randomIndex];
+}
 
         /**
          * Animasi reel agar simbol acak muncul tanpa bergeser ke atas.
