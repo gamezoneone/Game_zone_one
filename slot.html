@@ -733,7 +733,7 @@
                     img.alt = finalSymbol.name;
                     img.style.height = `${initialSymbolHeight}px`;
                     img.style.width = `auto`;
-                    img.style.padding = `2px`;
+                    img.style.padding = `0px`;
                     reelElement.appendChild(img);
                     reelElement.style.transform = `translateY(${offsetToCenter}px)`;
                     
@@ -795,8 +795,8 @@
 
             const reelPromises = [
                 spinReel(reels_elements.reel1, currentSpinResults[0]),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 100)),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 200))
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
