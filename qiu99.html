@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-      body {
+    body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #0a0a0a;
@@ -25,14 +25,14 @@
     background: linear-gradient(145deg, #1a0a30, #3a1a50); /* Background ungu gelap */
     border: 0.2rem solid #a020f0; /* Purple neon */
     border-radius: 1.5rem;
-    padding: 1.5rem;
+    padding: 1rem; /* Kurangi padding */
     box-shadow:
         inset 0 0 1.5rem rgba(160, 32, 240, 0.5),
         0 0 3rem rgba(160, 32, 240, 0.7),
         0 0 1.8rem rgba(0, 255, 255, 0.5);
     text-align: center;
-    width: 95%;
-    max-width: 700px; /* Lebar maksimum untuk layar yang lebih besar */
+    width: 98%; /* Sedikit lebih lebar */
+    max-width: 600px; /* Lebar maksimum yang lebih kecil */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -43,37 +43,37 @@
 
 header {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem; /* Kurangi margin */
     position: relative;
     z-index: 2;
 }
 
 h1 {
-    font-size: 2.8rem;
+    font-size: 2.2rem; /* Perkecil font */
     color: #ffcc00; /* Neon kuning */
-    text-shadow: 0 0 0.4rem #ffcc00, 0 0 0.8rem #ffcc00, 0 0 1.2rem #ffcc00, 0 0 1.8rem #ff0000;
+    text-shadow: 0 0 0.3rem #ffcc00, 0 0 0.6rem #ffcc00, 0 0 0.9rem #ffcc00, 0 0 1.2rem #ff0000;
     margin: 0 auto;
-    padding: 0.3rem 0;
-    letter-spacing: 0.1rem;
+    padding: 0.2rem 0;
+    letter-spacing: 0.08rem;
     position: relative;
     display: inline-block;
 }
 
 .player-info {
-    font-size: 0.9rem;
-    margin-top: 0.8rem;
+    font-size: 0.8rem; /* Perkecil font */
+    margin-top: 0.6rem; /* Kurangi margin */
     color: #00ffff;
-    text-shadow: 0 0 0.3rem #00ffff;
+    text-shadow: 0 0 0.2rem #00ffff;
     display: flex;
-    flex-wrap: wrap; /* Untuk responsivitas */
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border-radius: 0.5rem;
-    border: 1px solid rgba(0, 255, 255, 0.5);
-    box-shadow: inset 0 0 0.4rem rgba(0, 255, 255, 0.3);
+    gap: 0.4rem; /* Kurangi gap */
+    padding: 0.4rem 0.8rem; /* Kurangi padding */
+    background-color: rgba(0, 0, 0, 0.0);
+    border-radius: 0rem;
+    border: 1px solid rgba(0, 255, 255, 0.0);
+    box-shadow: inset 0 0 0.3rem rgba(0, 255, 255, 0.0);
 }
 .player-info p {
     margin: 0;
@@ -82,18 +82,18 @@ h1 {
 
 .control-btn {
     background: linear-gradient(135deg, #007bff, #00c6ff);
-    font-size: 0.8rem;
-    padding: 0.4rem 0.7rem;
+    font-size: 0.7rem; /* Perkecil font */
+    padding: 0.3rem 0.6rem; /* Kurangi padding */
     border: none;
-    border-radius: 0.4rem;
-    box-shadow: 0 0 0.5rem rgba(0, 123, 255, 0.6);
+    border-radius: 0.3rem;
+    box-shadow: 0 0 0.4rem rgba(0, 123, 255, 0.6);
     color: #fff;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 .control-btn:hover {
     background: linear-gradient(135deg, #00c6ff, #007bff);
-    box-shadow: 0 0 0.7rem rgba(0, 123, 255, 0.8);
+    box-shadow: 0 0 0.6rem rgba(0, 123, 255, 0.8);
     transform: translateY(-0.05rem);
 }
 
@@ -101,21 +101,20 @@ h1 {
 .game-table {
     background: linear-gradient(to bottom, #006400, #008000); /* Dark green felt */
     border: 0.2rem solid #a020f0;
-    border-radius: 50%; /* Bentuk meja bulat */
+    border-radius: 50%;
     width: 90%;
-    max-width: 450px; /* Ukuran meja */
-    height: 450px;
+    max-width: 400px; /* Ukuran meja lebih kecil */
+    height: 400px; /* Ukuran meja lebih kecil */
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
     position: relative;
-    margin: 1.5rem 0; /* Memberi ruang di atas dan bawah */
-    box-shadow: inset 0 0 2rem rgba(0, 0, 0, 0.8), 0 0 1rem rgba(160, 32, 240, 0.5);
-    flex-shrink: 0; /* Jangan biarkan menyusut */
+    margin: 1rem 0; /* Kurangi margin */
+    box-shadow: inset 0 0 1.5rem rgba(0, 0, 0, 0.8), 0 0 0.8rem rgba(160, 32, 240, 0.5);
+    flex-shrink: 0;
 }
 
-/* Garis neon di tepi meja */
 .game-table::before {
     content: '';
     position: absolute;
@@ -123,9 +122,9 @@ h1 {
     left: 0;
     right: 0;
     bottom: 0;
-    border: 0.3rem solid #00ffff; /* Neon cyan */
+    border: 0.2rem solid #00ffff; /* Neon cyan, lebih tipis */
     border-radius: 50%;
-    box-shadow: 0 0 1rem #00ffff, 0 0 2rem rgba(0, 255, 255, 0.6);
+    box-shadow: 0 0 0.8rem #00ffff, 0 0 1.5rem rgba(0, 255, 255, 0.6);
     z-index: 0;
 }
 
@@ -134,19 +133,17 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.5rem;
-    height: 30%;
-    width: 30%; /* Lebar area pemain/bandar di dalam meja */
+    gap: 0.4rem; /* Kurangi gap */
+    width: 80%;
     background-color: rgba(0, 0, 0, 0.0);
-    border-radius: 0.8rem;
-    padding: 0.5rem;
+    border-radius: 0.6rem; /* Lebih kecil */
+    padding: 0.4rem; /* Kurangi padding */
     border: 1px solid rgba(255, 255, 0, 0.0);
-    box-shadow: inset 0 0 0.5rem rgba(255, 255, 0, 0.0);
+    box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.);
 }
 
-
 .player-label {
-    font-size: 1.1rem;
+    font-size: 1rem; /* Perkecil font */
     font-weight: bold;
     color: #ffcc00;
     text-shadow: 0 0 0.3rem #ffcc00;
@@ -155,139 +152,123 @@ h1 {
 .cards-container {
     display: flex;
     justify-content: center;
-    gap: 0.5rem;
-    height: 90px; /* Tinggi untuk dua kartu */
-    perspective: 1000px; /* Untuk animasi flip 3D */
+    gap: 0.4rem; /* Kurangi gap */
+    height: 60px; /* Tinggi untuk dua kartu yang lebih kecil */
+    perspective: 1000px;
 }
 
 /* ============================================== */
-/* DOMINO CARD STYLING (CSS ONLY)       */
+/* DOMINO CARD STYLING (CSS ONLY)               */
 /* ============================================== */
 .card {
-    width: 60px; /* Lebar kartu */
-    height: 90px; /* Tinggi kartu */
-    border: 2px solid #333; /* Border kartu */
-    border-radius: 6px; /* Sudut kartu */
+    width: 55px; /* Lebar kartu lebih kecil */
+    height: 80px; /* Tinggi kartu lebih kecil */
+    border: 1px solid #333; /* Border kartu */
+    border-radius: 5px; /* Sudut kartu lebih kecil */
     background-color: #f7f7f7; /* Warna dasar kartu (putih gading) */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Shadow lebih kecil */
     position: relative;
     overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    padding: 5px;
+    padding: 4px; /* Kurangi padding */
     box-sizing: border-box;
-    transition: transform 0.5s ease-out; /* Untuk animasi deal/flip */
+    transition: transform 0.5s ease-out;
     transform-style: preserve-3d;
 }
 
 .card.back {
-    background-color: gold; /* Warna belakang kartu */
-    background-image: linear-gradient(45deg, red 25%, transparent 25%, transparent 75%, red 75%, red),
-                      linear-gradient(45deg, red 25%, transparent 25%, transparent 75%, red 75%, red);
-    background-size: 10px 10px; /* Ukuran pola */
-    background-position: 0 0, 5px 5px; /* Offset pola */
+    background-color: #555;
+    background-image: linear-gradient(45deg, #666 25%, transparent 25%, transparent 75%, #666 75%, #666),
+                      linear-gradient(45deg, #666 25%, transparent 25%, transparent 75%, #666 75%, #666);
+    background-size: 8px 8px; /* Ukuran pola lebih kecil */
+    background-position: 0 0, 4px 4px; /* Offset pola lebih kecil */
     border: 1px solid #aaa;
 }
 
-/* Bagian tengah kartu (garis pemisah) */
 .card:not(.back)::before {
     content: '';
     position: absolute;
     top: 50%;
     left: 0;
     width: 100%;
-    height: 2px; /* Tebal garis */
-    background-color: #333; /* Warna garis */
+    height: 1px; /* Tebal garis lebih kecil */
+    background-color: #333;
     transform: translateY(-50%);
     z-index: 1;
 }
 
-/* Dot styling */
 .dot {
     position: absolute;
-    width: 8px; /* Ukuran dot */
-    height: 8px;
-    background-color: #333; /* Warna dot */
+    width: 7px; /* Ukuran dot lebih kecil */
+    height: 7px;
+    background-color: #333;
     border-radius: 50%;
-    z-index: 2; /* Pastikan dot di atas garis */
+    z-index: 2;
 }
 
 /* Positioning for top half (value1) */
 .card[data-value1="0"] .dot.top-center { display: none; }
-.card[data-value1="1"] .dot.top-center { top: 15px; left: 50%; transform: translateX(-50%); }
-.card[data-value1="2"] .dot.top-left { top: 10px; left: 10px; }
-.card[data-value1="2"] .dot.bottom-right { top: 30px; right: 10px; }
-.card[data-value1="3"] .dot.top-left { top: 10px; left: 10px; }
-.card[data-value1="3"] .dot.top-center { top: 15px; left: 50%; transform: translateX(-50%); }
-.card[data-value1="3"] .dot.bottom-right { top: 30px; right: 10px; }
-.card[data-value1="4"] .dot.top-left { top: 10px; left: 10px; }
-.card[data-value1="4"] .dot.top-right { top: 10px; right: 10px; }
-.card[data-value1="4"] .dot.bottom-left { top: 30px; left: 10px; }
-.card[data-value1="4"] .dot.bottom-right { top: 30px; right: 10px; }
-.card[data-value1="5"] .dot.top-left { top: 10px; left: 10px; }
-.card[data-value1="5"] .dot.top-right { top: 10px; right: 10px; }
-.card[data-value1="5"] .dot.mid-center-top { top: 20px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value1="5"] .dot.bottom-left { top: 30px; left: 10px; }
-.card[data-value1="5"] .dot.bottom-right { top: 30px; right: 10px; }
-.card[data-value1="6"] .dot.top-left { top: 10px; left: 10px; }
-.card[data-value1="6"] .dot.top-center { top: 10px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value1="6"] .dot.top-right { top: 10px; right: 10px; }
-.card[data-value1="6"] .dot.bottom-left { top: 30px; left: 10px; }
-.card[data-value1="6"] .dot.bottom-center { top: 30px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value1="6"] .dot.bottom-right { top: 30px; right: 10px; }
+.card[data-value1="1"] .dot.top-center { top: 12px; left: 50%; transform: translateX(-50%); }
+.card[data-value1="2"] .dot.top-left { top: 8px; left: 8px; }
+.card[data-value1="2"] .dot.bottom-right { top: 25px; right: 8px; }
+.card[data-value1="3"] .dot.top-left { top: 8px; left: 8px; }
+.card[data-value1="3"] .dot.top-center { top: 12px; left: 50%; transform: translateX(-50%); }
+.card[data-value1="3"] .dot.bottom-right { top: 25px; right: 8px; }
+.card[data-value1="4"] .dot.top-left { top: 8px; left: 8px; }
+.card[data-value1="4"] .dot.top-right { top: 8px; right: 8px; }
+.card[data-value1="4"] .dot.bottom-left { top: 25px; left: 8px; }
+.card[data-value1="4"] .dot.bottom-right { top: 25px; right: 8px; }
+.card[data-value1="5"] .dot.top-left { top: 8px; left: 8px; }
+.card[data-value1="5"] .dot.top-right { top: 8px; right: 8px; }
+.card[data-value1="5"] .dot.mid-center-top { top: 18px; left: 50%; transform: translateX(-50%); }
+.card[data-value1="5"] .dot.bottom-left { top: 25px; left: 8px; }
+.card[data-value1="5"] .dot.bottom-right { top: 25px; right: 8px; }
+.card[data-value1="6"] .dot.top-left { top: 8px; left: 8px; }
+.card[data-value1="6"] .dot.top-center { top: 8px; left: 50%; transform: translateX(-50%); }
+.card[data-value1="6"] .dot.top-right { top: 8px; right: 8px; }
+.card[data-value1="6"] .dot.bottom-left { top: 25px; left: 8px; }
+.card[data-value1="6"] .dot.bottom-center { top: 25px; left: 50%; transform: translateX(-50%); }
+.card[data-value1="6"] .dot.bottom-right { top: 25px; right: 8px; }
 
 
 /* Positioning for bottom half (value2) */
 .card[data-value2="0"] .dot.bottom-center { display: none; }
-.card[data-value2="1"] .dot.bottom-center { bottom: 15px; left: 50%; transform: translateX(-50%); }
-.card[data-value2="2"] .dot.bottom-left { bottom: 10px; left: 10px; }
-.card[data-value2="2"] .dot.top-right { bottom: 30px; right: 10px; } /* relative to bottom half */
-.card[data-value2="3"] .dot.bottom-left { bottom: 10px; left: 10px; }
-.card[data-value2="3"] .dot.bottom-center { bottom: 15px; left: 50%; transform: translateX(-50%); }
-.card[data-value2="3"] .dot.top-right { bottom: 30px; right: 10px; }
-.card[data-value2="4"] .dot.top-left { bottom: 30px; left: 10px; } /* relative to bottom half */
-.card[data-value2="4"] .dot.top-right { bottom: 30px; right: 10px; }
-.card[data-value2="4"] .dot.bottom-left { bottom: 10px; left: 10px; }
-.card[data-value2="4"] .dot.bottom-right { bottom: 10px; right: 10px; }
-.card[data-value2="5"] .dot.top-left { bottom: 30px; left: 10px; }
-.card[data-value2="5"] .dot.top-right { bottom: 30px; right: 10px; }
-.card[data-value2="5"] .dot.mid-center-bottom { bottom: 20px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value2="5"] .dot.bottom-left { bottom: 10px; left: 10px; }
-.card[data-value2="5"] .dot.bottom-right { bottom: 10px; right: 10px; }
-.card[data-value2="6"] .dot.top-left { bottom: 30px; left: 10px; }
-.card[data-value2="6"] .dot.top-center { bottom: 30px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value2="6"] .dot.top-right { bottom: 30px; right: 10px; }
-.card[data-value2="6"] .dot.bottom-left { bottom: 10px; left: 10px; }
-.card[data-value2="6"] .dot.bottom-center { bottom: 10px; left: 50%; transform: translateX(-50%); } /* new dot */
-.card[data-value2="6"] .dot.bottom-right { bottom: 10px; right: 10px; }
+.card[data-value2="1"] .dot.bottom-center { bottom: 12px; left: 50%; transform: translateX(-50%); }
+.card[data-value2="2"] .dot.bottom-left { bottom: 8px; left: 8px; }
+.card[data-value2="2"] .dot.top-right { bottom: 25px; right: 8px; }
+.card[data-value2="3"] .dot.bottom-left { bottom: 8px; left: 8px; }
+.card[data-value2="3"] .dot.bottom-center { bottom: 12px; left: 50%; transform: translateX(-50%); }
+.card[data-value2="3"] .dot.top-right { bottom: 25px; right: 8px; }
+.card[data-value2="4"] .dot.top-left { bottom: 25px; left: 8px; }
+.card[data-value2="4"] .dot.top-right { bottom: 25px; right: 8px; }
+.card[data-value2="4"] .dot.bottom-left { bottom: 8px; left: 8px; }
+.card[data-value2="4"] .dot.bottom-right { bottom: 8px; right: 8px; }
+.card[data-value2="5"] .dot.top-left { bottom: 25px; left: 8px; }
+.card[data-value2="5"] .dot.top-right { bottom: 25px; right: 8px; }
+.card[data-value2="5"] .dot.mid-center-bottom { bottom: 18px; left: 50%; transform: translateX(-50%); }
+.card[data-value2="5"] .dot.bottom-left { bottom: 8px; left: 8px; }
+.card[data-value2="5"] .dot.bottom-right { bottom: 8px; right: 8px; }
+.card[data-value2="6"] .dot.top-left { bottom: 25px; left: 8px; }
+.card[data-value2="6"] .dot.top-center { bottom: 25px; left: 50%; transform: translateX(-50%); }
+.card[data-value2="6"] .dot.top-right { bottom: 25px; right: 8px; }
+.card[data-value2="6"] .dot.bottom-left { bottom: 8px; left: 8px; }
+.card[data-value2="6"] .dot.bottom-center { bottom: 8px; left: 50%; transform: translateX(-50%); }
+.card[data-value2="6"] .dot.bottom-right { bottom: 8px; right: 8px; }
 
 
-/* Sembunyikan semua dot secara default */
 .dot { display: none; }
-
-/* Tampilkan dot berdasarkan kelas posisi */
-.dot.top-left { }
-.dot.top-center { }
-.dot.top-right { }
-.dot.mid-center-top { }
-.dot.bottom-left { }
-.dot.bottom-center { }
-.dot.bottom-right { }
-.dot.mid-center-bottom { } /* For the bottom half center dot */
-
-
-/* Tambahkan kelas dot ke dalam card container untuk posisi yang umum */
 .card:not(.back) .dot { display: block; }
 
 
 .hand-value {
-    font-size: 1.3rem;
+    font-size: 1.1rem; /* Perkecil font */
     font-weight: bold;
     color: #99ff33;
-    text-shadow: 0 0 0.4rem #99ff33;
-    min-height: 1.5rem; /* Untuk menahan ruang sebelum nilai muncul */
+    text-shadow: 0 0 0.3rem #99ff33;
+    min-height: 1.3rem; /* Menyesuaikan ruang */
 }
 
 
@@ -296,71 +277,72 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.6rem; /* Kurangi gap */
     width: 100%;
-    margin-top: 1rem;
+    margin-top: 0.8rem; /* Kurangi margin */
 }
 
 .bet-control {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem; /* Kurangi gap */
     background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 0.5rem;
-    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    padding: 0.4rem 0.8rem;
     border: 1px solid rgba(153, 255, 51, 0.5);
-    box-shadow: inset 0 0 0.4rem rgba(153, 255, 51, 0.3);
+    box-shadow: inset 0 0 0.3rem rgba(153, 255, 51, 0.3);
 }
 
 .bet-control label {
-    font-size: 1rem;
+    font-size: 0.9rem; /* Perkecil font */
     color: #99ff33;
-    text-shadow: 0 0 0.4rem #99ff33;
+    text-shadow: 0 0 0.3rem #99ff33;
 }
+
 .bet-control input {
-    width: 80px;
-    padding: 0.6rem 0.8rem;
-    border-radius: 0.4rem;
+    width: 70px; /* Lebar input lebih kecil */
+    padding: 0.5rem 0.7rem; /* Kurangi padding */
+    border-radius: 0.3rem;
     border: 0.1rem solid #66ffff;
     background-color: #0d1217;
     color: #fff;
-    font-size: 1rem;
+    font-size: 0.9rem; /* Perkecil font */
     text-align: center;
-    box-shadow: inset 0 0 0.5rem rgba(102, 255, 255, 0.4);
+    box-shadow: inset 0 0 0.4rem rgba(102, 255, 255, 0.4);
     outline: none;
 }
 .bet-control input:focus {
     border-color: #ff00ff;
-    box-shadow: inset 0 0 0.7rem rgba(255, 0, 255, 0.6);
+    box-shadow: inset 0 0 0.6rem rgba(255, 0, 255, 0.6);
 }
 
 button {
     background: linear-gradient(135deg, #ff00ff, #8a2be2);
     color: #fff;
-    padding: 0.8rem 1.5rem;
+    padding: 0.7rem 1.2rem; /* Kurangi padding */
     border: none;
-    border-radius: 0.7rem;
-    font-size: 1.4rem;
+    border-radius: 0.6rem;
+    font-size: 1.2rem; /* Perkecil font */
     font-weight: bold;
     cursor: pointer;
-    box-shadow: 0 0 1rem rgba(255, 0, 255, 0.7), 0 0 0.6rem rgba(138, 43, 226, 0.5);
+    box-shadow: 0 0 0.8rem rgba(255, 0, 255, 0.7), 0 0 0.5rem rgba(138, 43, 226, 0.5);
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 0.08rem;
-    text-shadow: 0 0 0.2rem rgba(0,0,0,0.5);
+    letter-spacing: 0.07rem;
+    text-shadow: 0 0 0.1rem rgba(0,0,0,0.5);
     width: 90%;
-    max-width: 250px;
+    max-width: 220px; /* Lebar tombol lebih kecil */
 }
 
 button:hover {
     background: linear-gradient(135deg, #8a2be2, #ff00ff);
-    box-shadow: 0 0 1.5rem rgba(255, 0, 255, 0.9), 0 0 1rem rgba(138, 43, 226, 0.7);
+    box-shadow: 0 0 1.2rem rgba(255, 0, 255, 0.9), 0 0 0.8rem rgba(138, 43, 226, 0.7);
     transform: translateY(-0.1rem);
 }
 
 button:active {
     transform: translateY(0);
-    box-shadow: 0 0 0.4rem rgba(255, 0, 255, 0.5);
+    box-shadow: 0 0 0.3rem rgba(255, 0, 255, 0.5);
 }
 
 button:disabled {
@@ -371,14 +353,14 @@ button:disabled {
 }
 
 .messages {
-    margin-top: 1rem;
-    font-size: 1rem;
+    margin-top: 0.8rem; /* Kurangi margin */
+    font-size: 0.9rem; /* Perkecil font */
     color: #00ff00;
-    text-shadow: 0 0 0.5rem #00ff00;
-    min-height: 2rem;
+    text-shadow: 0 0 0.4rem #00ff00;
+    min-height: 1.8rem; /* Menyesuaikan ruang */
     background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 0.5rem;
-    padding: 0.5rem;
+    border-radius: 0.4rem;
+    padding: 0.4rem;
     border: 1px solid rgba(0, 255, 0, 0.5);
     width: 100%;
     box-sizing: border-box;
@@ -387,46 +369,47 @@ button:disabled {
 /* Media Queries untuk Responsivitas */
 @media (max-width: 600px) {
     h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
     .game-table {
-        width: 350px;
-        height: 350px;
-        max-width: 350px;
-        max-height: 350px;
+        width: 320px;
+        height: 320px;
+        max-width: 320px;
+        max-height: 320px;
     }
     .player-label {
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
     .card {
         width: 50px;
         height: 75px;
     }
     .hand-value {
-        font-size: 1.1rem;
+        font-size: 1rem;
     }
     button {
-        font-size: 1.2rem;
-        padding: 0.6rem 1rem;
+        font-size: 1.1rem;
+        padding: 0.5rem 0.8rem;
     }
     .messages {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
     }
 }
 
 @media (max-width: 400px) {
     .game-table {
-        width: 300px;
-        height: 300px;
-        max-width: 300px;
-        max-height: 300px;
+        width: 280px;
+        height: 280px;
+        max-width: 280px;
+        max-height: 280px;
     }
     .card {
         width: 45px;
         height: 68px;
     }
 }
-</style>
+
+    </style>
 </head>
 <body>
     <audio id="dealCardSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/deal_card_sound.mp3" preload="auto"></audio>
@@ -481,7 +464,10 @@ button:disabled {
 
     <script>
       
-      const supabase = window.supabase.createClient(
+      // ==============================================
+//           KONFIGURASI SUPABASE
+// ==============================================
+const supabase = window.supabase.createClient(
     'https://vqmfachxnjyxwuavpgds.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
 );
@@ -529,9 +515,9 @@ const dominoCards = [
 // Array untuk menyimpan posisi titik-titik yang akan dibuat
 const dotPositions = [
     'top-left', 'top-center', 'top-right',
-    'mid-center-top', // Untuk angka 5 di sisi atas
+    'mid-center-top', // Untuk angka 5 di sisi atas (titik tengahnya)
     'bottom-left', 'bottom-center', 'bottom-right',
-    'mid-center-bottom' // Untuk angka 5 di sisi bawah
+    'mid-center-bottom' // Untuk angka 5 di sisi bawah (titik tengahnya)
 ];
 
 // ==============================================
@@ -556,9 +542,8 @@ function enableGameControls() {
 function calculateHandValue(cards) {
     if (cards.length === 0) return 0;
     const totalDots = cards.reduce((sum, card) => sum + card[0] + card[1], 0);
-    // Qiu Qiu: nilai tertinggi adalah 9.
-    // Jika total 19 atau 29, nilainya 9.
-    // Jika total 10 atau 20, nilainya 0.
+    // Dalam Qiu Qiu, nilai tertinggi adalah 9.
+    // Jika total 10 atau 20, nilainya 0. Jika total 19 atau 29, nilainya 9.
     // Ini sudah diatasi dengan modulo 10
     return totalDots % 10;
 }
@@ -679,8 +664,12 @@ logoutBtn.addEventListener('click', async () => {
 // ==============================================
 
 function resetTable() {
+    dealerCardsContainer.innerHTML = ''; // Kosongkan kontainer
+    playerCardsContainer.innerHTML = ''; // Kosongkan kontainer
+    // Tambahkan kembali kartu back awal
     dealerCardsContainer.innerHTML = '<div class="card back"></div><div class="card back"></div>';
     playerCardsContainer.innerHTML = '<div class="card back"></div><div class="card back"></div>';
+
     dealerValueDisplay.textContent = '';
     playerValueDisplay.textContent = '';
     gameMessage.textContent = 'Siap untuk putaran berikutnya!';
@@ -724,35 +713,37 @@ async function dealCards() {
     let playerHand = [];
     let dealerHand = [];
 
-    // Deal 2 kartu ke pemain dan bandar
-    // Kartu pertama pemain
-    await animateDealCard(playerCardsContainer, shuffledDeck.pop());
-    playerHand.push(playerCardsContainer.lastChild.cardData);
-    dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
-    await new Promise(r => setTimeout(r, 500)); // Jeda antar kartu
+    // Clear existing cards first before dealing new ones for animation
+    dealerCardsContainer.innerHTML = '';
+    playerCardsContainer.innerHTML = '';
 
-    // Kartu pertama bandar
-    await animateDealCard(dealerCardsContainer, shuffledDeck.pop());
-    dealerHand.push(dealerCardsContainer.lastChild.cardData);
-    dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
-    await new Promise(r => setTimeout(r, 500));
+    // Deal 2 kartu ke pemain
+    for (let i = 0; i < 2; i++) {
+        await animateDealCard(playerCardsContainer, shuffledDeck.pop());
+        playerHand.push(playerCardsContainer.children[i].cardData); // Dapatkan data kartu dari elemen yang baru dibuat
+        dealCardSound.currentTime = 0; // Reset sound for quick successive plays
+        dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
+        await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
+    }
 
-    // Kartu kedua pemain
-    await animateDealCard(playerCardsContainer, shuffledDeck.pop());
-    playerHand.push(playerCardsContainer.lastChild.cardData);
-    dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
-    await new Promise(r => setTimeout(r, 500));
+    // Deal 2 kartu ke bandar
+    for (let i = 0; i < 2; i++) {
+        await animateDealCard(dealerCardsContainer, shuffledDeck.pop());
+        dealerHand.push(dealerCardsContainer.children[i].cardData); // Dapatkan data kartu dari elemen yang baru dibuat
+        dealCardSound.currentTime = 0;
+        dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
+        await new Promise(r => setTimeout(r, 400)); // Jeda antar kartu
+    }
 
-    // Kartu kedua bandar
-    await animateDealCard(dealerCardsContainer, shuffledDeck.pop());
-    dealerHand.push(dealerCardsContainer.lastChild.cardData);
-    dealCardSound.play().catch(e => console.warn("Deal sound failed:", e));
     await new Promise(r => setTimeout(r, 1000)); // Jeda setelah semua kartu dibagikan
 
     gameMessage.textContent = "Menghitung nilai tangan...";
 
-    // Ungkap kartu dan hitung nilai
+    // Ungkap kartu pemain dan hitung nilai
     await revealHand(playerCardsContainer, playerHand, playerValueDisplay);
+    await new Promise(r => setTimeout(r, 500)); // Jeda sebelum bandar mengungkap
+
+    // Ungkap kartu bandar dan hitung nilai
     await revealHand(dealerCardsContainer, dealerHand, dealerValueDisplay);
 
     const playerValue = calculateHandValue(playerHand);
@@ -761,25 +752,38 @@ async function dealCards() {
     let winAmount = 0;
     let message = "";
 
-    // Logika penentuan pemenang (Qiu Qiu)
-    // Aturan yang lebih spesifik untuk Qiu Qiu:
-    // Pemenang ditentukan oleh nilai tertinggi. Jika nilai sama, pemenang adalah yang memiliki kartu balak (double) tertinggi.
-    // Jika tidak ada balak, maka pemenang adalah yang memiliki nilai tertinggi pada satu sisi kartu (misal 5-6 vs 4-7, total sama 11/1, tapi 6 > 7 kalah)
+    // Logika penentuan pemenang untuk 2 kartu (nilai tertinggi modulo 10)
+    // Dalam Qiu Qiu, nilai 9 adalah "Qiu", 0 adalah "kosong" (bisa juga tertinggi jika tidak ada 9)
+    // Bandar menang jika nilai sama, kecuali kedua-duanya 9.
+    // Jika kedua-duanya 9, pemain menang (ini aturan standar Qiu Qiu)
 
-    // Untuk saat ini, kita hanya membandingkan nilai total modulo 10
-    if (playerValue > dealerValue) {
+    if (playerValue === 9 && dealerValue !== 9) { // Pemain 9, bandar bukan 9
+        message = `QIU QIU! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`; // Payout 2x (total 3x bet)
+        winAmount = betAmount * 3;
+        winSound.play().catch(e => console.warn("Win sound failed:", e));
+    } else if (dealerValue === 9 && playerValue !== 9) { // Bandar 9, pemain bukan 9
+        message = `BANDAR QIU QIU! ANDA KALAH! ${dealerValue} vs ${playerValue}. Anda kalah ${betAmount} Credits.`;
+        winAmount = 0;
+        loseSound.play().catch(e => console.warn("Lose sound failed:", e));
+    } else if (playerValue === 9 && dealerValue === 9) { // Keduanya 9, pemain menang
+        message = `QIU QIU KEMBAR! ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount * 2} Credits!`; // Payout 2x (total 3x bet)
+        winAmount = betAmount * 3;
+        winSound.play().catch(e => console.warn("Win sound failed:", e));
+    } else if (playerValue > dealerValue) { // Pemain nilai lebih tinggi (bukan 9)
         message = `ANDA MENANG! ${playerValue} vs ${dealerValue}. Anda memenangkan ${betAmount} Credits.`;
         winAmount = betAmount * 2; // Taruhan dikembalikan + kemenangan
         winSound.play().catch(e => console.warn("Win sound failed:", e));
-    } else if (dealerValue > playerValue) {
+    } else if (dealerValue >= playerValue) { // Bandar nilai lebih tinggi atau seri (bandar menang jika seri)
         message = `BANDAR MENANG! ${dealerValue} vs ${playerValue}. Anda kalah ${betAmount} Credits.`;
         winAmount = 0; // Pemain kalah taruhan
         loseSound.play().catch(e => console.warn("Lose sound failed:", e));
-    } else { // Seri
-        message = `SERI! ${playerValue} vs ${dealerValue}. Taruhan Anda dikembalikan.`;
-        winAmount = betAmount; // Taruhan dikembalikan
-        drawSound.play().catch(e => console.warn("Draw sound failed:", e));
+    } else { // Ini seharusnya tidak tercapai jika logika di atas benar
+        message = `Terjadi kesalahan.`;
+        winAmount = 0;
+        loseSound.play().catch(e => console.warn("Error sound failed:", e));
     }
+
+
     playerBalance += winAmount;
     updateBalanceDisplay();
     await updateUserData(playerBalance);
@@ -808,6 +812,7 @@ async function animateDealCard(container, cardData) {
 
     // Simpan data kartu di elemen DOM untuk diakses nanti
     // Penting untuk CSS-only cards: tambahkan data atribut
+    cardElement.cardData = cardData; // Simpan juga data aslinya
     cardElement.dataset.value1 = Math.min(cardData[0], cardData[1]); // Pastikan yang kecil di value1
     cardElement.dataset.value2 = Math.max(cardData[0], cardData[1]); // Pastikan yang besar di value2
 
@@ -820,19 +825,13 @@ async function animateDealCard(container, cardData) {
         if (i === 0) dot.classList.add('top-left');
         else if (i === 1) dot.classList.add('top-center');
         else if (i === 2) dot.classList.add('top-right');
-        else if (i === 3) dot.classList.add('mid-center-top'); // Untuk 5 di atas
+        else if (i === 3) dot.classList.add('mid-center-top');
         else if (i === 4) dot.classList.add('bottom-left');
         else if (i === 5) dot.classList.add('bottom-center');
         else if (i === 6) dot.classList.add('bottom-right');
-        else if (i === 7) dot.classList.add('mid-center-bottom'); // Untuk 5 di bawah
+        else if (i === 7) dot.classList.add('mid-center-bottom');
         cardElement.appendChild(dot);
     }
-
-    dealCardSound.currentTime = 0;
-    dealCardSound.volume = 0.6;
-    dealCardSound.play().catch(e => console.warn("Deal card sound playback failed:", e));
-
-    await new Promise(r => setTimeout(r, 200));
 }
 
 // Mengungkap kartu (membalik dan menampilkan nilai)
@@ -840,14 +839,9 @@ async function revealHand(container, hand, valueDisplayElement) {
     const cardElements = container.querySelectorAll('.card');
     for (let i = 0; i < hand.length; i++) {
         const cardElement = cardElements[i];
-        const cardData = hand[i];
 
         // Hapus kelas 'back' untuk menampilkan titik
         cardElement.classList.remove('back');
-
-        // Card data sudah ada di cardElement.dataset yang dibuat di animateDealCard
-        // cardElement.dataset.value1 = Math.min(cardData[0], cardData[1]);
-        // cardElement.dataset.value2 = Math.max(cardData[0], cardData[1]);
 
         await new Promise(r => setTimeout(r, 300)); // Jeda antara reveal kartu
     }
