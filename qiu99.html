@@ -173,7 +173,7 @@ h1 {
 .card {
     width: 60px; /* Lebar kartu sedikit lebih besar */
     height: 90px; /* Tinggi kartu sedikit lebih besar (rasio 2:3) */
-    border: 0px solid #333;
+    border: 1px solid #333;
     border-radius: 5px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.0);
     position: relative;
@@ -423,7 +423,7 @@ button:disabled {
         <div class="controls">
             <div class="bet-control">
                 <label for="betAmount">Taruhan:</label>
-                <input type="number" id="betAmount" value="100" min="10">
+                <input type="number" id="betAmount" value="500" min="10">
             </div>
             <button id="dealBtn">BAGIKAN KARTU</button>
         </div>
@@ -640,8 +640,8 @@ async function dealCards() {
     }
 
     const betAmount = parseInt(betAmountInput.value);
-    if (isNaN(betAmount) || betAmount < 10) { // Taruhan minimum 10
-        gameMessage.textContent = "Masukkan jumlah taruhan yang valid (min 10).";
+    if (isNaN(betAmount) || betAmount < 500) { // Taruhan minimum 10
+        gameMessage.textContent = "Masukkan jumlah taruhan yang valid (min 500).";
         return;
     }
 
