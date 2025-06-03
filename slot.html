@@ -435,8 +435,8 @@
     </style>
     </head>
 <body>
-    <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3" preload="auto"></audio>
-    <audio id="reelStopSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="spinStartSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-arcade-video-game-machine-alert-2821%20(mp3cut.net).mp3" preload="auto"></audio>
+    <audio id="reelStopSound" src="___" preload="auto"></audio>
     <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3" preload="auto"></audio>
     <audio id="jackpotSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" preload="auto"></audio>
     <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
@@ -526,7 +526,7 @@
             { name: 'Seven', image: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//download%20(2).jpeg', value: 100, isJackpot: true }
         ];
 
-        const REEL_STOP_DURATION = 2500;
+        const REEL_STOP_DURATION = 2000;
         const SYMBOLS_PER_REEL_ANIMATION = 10;
 
         let currentUser = null;
@@ -794,9 +794,9 @@
             ];
 
             const reelPromises = [
-                spinReel(reels_elements.reel1, currentSpinResults[10]),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[10])), 300)),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[10])), 300))
+                spinReel(reels_elements.reel1, currentSpinResults[0]),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
