@@ -152,9 +152,10 @@ h1 {
 
 .cards-container {
     display: flex;
-    justify-content: center;
-    gap: 0.2rem; /* Kurangi gap */
-    height: 80px; /* Tinggi untuk dua kartu yang lebih kecil */
+    justify-content: center; /* Memusatkan kartu secara horizontal */
+    align-items: center;   /* Memusatkan kartu secara vertikal jika tinggi kontainer lebih besar */
+    gap: 0.6rem;           /* Tingkatkan gap sedikit untuk jarak antar kartu */
+    height: 80px;          /* Sesuaikan tinggi sesuai kebutuhan agar kartu tidak tumpang tindih */
     perspective: 1000px;
 }
 
@@ -162,28 +163,40 @@ h1 {
 /* DOMINO CARD STYLING (IMAGE BASED)            */
 /* ============================================== */
 .card {
-    width: 55px; /* Lebar kartu lebih kecil */
-    height: 80px; /* Tinggi kartu lebih kecil */
-    border: 1px solid #333; /* Border kartu */
-    border-radius: 5px; /* Sudut kartu lebih kecil */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); /* Shadow lebih kecil */
+    width: 55px;  /* Lebar kartu */
+    height: 80px; /* Tinggi kartu */
+    /* Properti lain tetap sama */
+    border: 1px solid #333;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
     position: relative;
     overflow: hidden;
-    background-size: cover; /* Pastikan gambar mengisi kartu */
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     transition: transform 0.5s ease-out;
     transform-style: preserve-3d;
 }
 
-.card.back {
-    /* Background image untuk kartu belakang akan diatur di JavaScript */
-    background-color: #555; /* Fallback color */
+/* Tambahkan atau sesuaikan media queries jika perlu untuk responsivitas */
+@media (max-width: 600px) {
+    .card {
+        width: 50px; /* Sedikit perkecil lagi untuk layar kecil */
+        height: 75px;
+    }
+    .cards-container {
+        gap: 0.5rem; /* Sesuaikan gap untuk layar kecil */
+    }
 }
 
-.card:not(.back) {
-    /* Background image untuk kartu depan akan diatur di JavaScript */
-    background-color: #f7f7f7; /* Fallback color */
+@media (max-width: 400px) {
+    .card {
+        width: 45px; /* Lebih kecil lagi untuk layar sangat kecil */
+        height: 68px;
+    }
+    .cards-container {
+        gap: 0.4rem; /* Sesuaikan gap untuk layar sangat kecil */
+    }
 }
 
 
