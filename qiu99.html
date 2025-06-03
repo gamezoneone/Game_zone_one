@@ -136,11 +136,11 @@ h1 {
     align-items: center;
     gap: 0.4rem; /* Kurangi gap */
     width: 80%;
-    background-color: rgba(0, 0, 0, 0.4);
+   /* background-color: rgba(0, 0, 0, 0.4);
     border-radius: 0.6rem; /* Lebih kecil */
     padding: 0.4rem; /* Kurangi padding */
-    border: 1px solid rgba(255, 255, 0, 0.5);
-    box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
+   /* border: 1px solid rgba(255, 255, 0, 0.5);
+    /*box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
 }
 
 .player-label {
@@ -387,17 +387,16 @@ button:disabled {
     </div>
 
 <script>
-  // ==============================================
-//           KONFIGURASI SUPABASE
-// ==============================================
-const supabase = window.supabase.createClient(
-    'https://vqmfachxnjyxwuavpgds.supabase.co',
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4njl5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
-);
 
-// ==============================================
-//           ELEMEN DOM
-// ==============================================
+        const supabase = window.supabase.createClient(
+            'https://vqmfachxnjyxwuavpgds.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+        );
+
+        let user; 
+        let userSaldo = 0;
+        let userId = null; 
+
 const playerNameSpan = document.getElementById('playerName');
 const playerBalanceSpan = document.getElementById('playerBalance');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -417,16 +416,7 @@ const loseSound = document.getElementById('loseSound');
 const drawSound = document.getElementById('drawSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 
-// ==============================================
-//           VARIABEL GAME & MAPPING GAMBAR KARTU
-// ==============================================
-let currentUser = null;
-let playerBalance = 0;
-let isDealing = false; // Untuk mencegah klik ganda saat animasi berjalan
 
-// Base URL untuk gambar kartu domino di Supabase Storage
-// GANTI DENGAN BASE URL FOLDER GAMBAR ANDA DI SUPABASE!
-// Pastikan ini mengarah ke folder 'domino' di public bucket Anda
 const CARD_IMAGE_BASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/domino99/';
 const BACK_CARD_IMAGE_URL = CARD_IMAGE_BASE_URL + 'back.png'; // Asumsikan nama file kartu belakang adalah back.png
 
