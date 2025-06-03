@@ -203,7 +203,7 @@ body {
 /* Posisi Dealer */
 .dealer-position {
     position: absolute; /* Posisikan absolut di dalam meja */
-    top: 10%; /* Lebih ke atas meja */
+    top: 1%; /* Lebih ke atas meja */
     left: 50%;
     transform: translateX(-50%);
 }
@@ -211,7 +211,7 @@ body {
 /* Posisi Player */
 .player-position {
     position: absolute; /* Posisikan absolut di dalam meja */
-    bottom: 10%; /* Lebih ke bawah meja */
+    bottom: 1%; /* Lebih ke bawah meja */
     left: 50%;
     transform: translateX(-50%);
 }
@@ -278,7 +278,7 @@ body {
 /* --- GAME INFO & POT --- */
 .pot-display {
     position: absolute;
-    top: 66%; /* Di bawah kartu komunitas */
+    top: 68%; /* Di bawah kartu komunitas */
     left: 50%;
     transform: translateX(-50%);
     font-size: 0.5rem; /* Ukuran pot lebih besar */
@@ -301,10 +301,10 @@ body {
     align-items: center;
     gap: 0.8rem;
     width: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Background untuk kontrol */
+   /* background-color: rgba(0, 0, 0, 0.4); /* Background untuk kontrol */
     border-radius: 0.8rem;
     padding: 1rem;
-    box-shadow: inset 0 0 0.8rem rgba(0,0,0,0.6);
+  /*  box-shadow: inset 0 0 0.8rem rgba(0,0,0,0.6);
     border: 1px solid rgba(0, 255, 255, 0.3); /* Border cyan */
     flex-shrink: 0; /* Mencegah container menyusut */
 }
@@ -701,7 +701,7 @@ input[type="number"]:focus {
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        //const supabase = window.supabase.createClient(
+        const supabase = window.supabase.createClient(
             'https://vqmfachxnjyxwuavpgds.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
         );
