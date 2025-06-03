@@ -94,7 +94,7 @@
         /* --- PLAYER & DEALER POSITIONS (Diatur ulang) --- */
         .dealer-position {
             position: absolute;
-            top: 10%; /* Lebih ke tengah, tapi masih di atas */
+            top: 7%; /* Lebih ke tengah, tapi masih di atas */
             left: 50%; /* Pindah ke kiri meja */
             transform: translate(-50%, -50%); /* Penyesuaian posisi */
             display: flex;
@@ -116,7 +116,7 @@
             z-index: 10;
         }
 
-        .player-avatar, .dealer-avatar {
+          .dealer-avatar {
             width: 45px; /* Avatar lebih kecil */
             height: 45px; /* Avatar lebih kecil */
             border-radius: 50%;
@@ -130,7 +130,7 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
             overflow: hidden; /* Untuk gambar avatar */
         }
-        .player-avatar img, .dealer-avatar img {
+          .dealer-avatar img {
             width: 100%;
             height: 100%;
             object-fit: cover;
@@ -540,7 +540,7 @@
             <div class="pot-display">Pot: <span id="current-pot">Rp0</span></div>
 
             <div class="player-position">
-                <div class="player-avatar">🙋‍♂️</div> <div class="player-name">Anda</div>
+                <div class="player-avatar"></div> <div class="player-name"></div>
                 <div id="player-hand" class="hand-display"></div>
             </div>
         </div>
