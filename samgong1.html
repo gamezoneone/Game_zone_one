@@ -11,8 +11,8 @@
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #0a0a0a;
+    font-family: 'Arial', sans-serif; /* Konsisten dengan game lain */
+    background-color: #0a0a0a; /* Latar belakang hitam gelap */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,7 +23,7 @@ body {
     box-sizing: border-box;
 }
 
-/* Landscape Orientation Message (Optional) */
+/* Orientasi Landscape Checker (Opsional, uncomment jika diperlukan) */
 /* @media screen and (orientation: portrait) {
     body::before {
         content: "Silakan putar ponsel Anda ke mode landscape untuk pengalaman terbaik!";
@@ -49,8 +49,8 @@ body {
 } */
 
 .game-container {
-    background: linear-gradient(145deg, #1a0a30, #3a1a50);
-    border: 0.2rem solid #a020f0;
+    background: linear-gradient(145deg, #1a0a30, #3a1a50); /* Background ungu gelap */
+    border: 0.2rem solid #a020f0; /* Purple neon */
     border-radius: 1.5rem;
     padding: 1rem;
     box-shadow:
@@ -58,19 +58,45 @@ body {
         0 0 3rem rgba(160, 32, 240, 0.7),
         0 0 1.8rem rgba(0, 255, 255, 0.5);
     text-align: center;
-    width: 98%;
-    max-width: 900px;
-    height: 95vh;
-    position: relative; /* Penting untuk tombol absolut di dalamnya */
-    overflow: hidden;
+    width: 98%; /* Maximize width */
+    max-width: 900px; /* Allow wider on larger screens */
+    height: 95vh; /* Maximize height */
+    position: relative; /* Penting untuk tombol absolut */
+    overflow: hidden; /* Pastikan tidak ada overflow yang tidak diinginkan */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
 }
 
-/* Music Toggle & Logout Buttons - Absolute Positioning */
-.music-toggle-btn {
+/* --- Tombol Keluar Game (jika ini adalah logout-btn Anda) --- */
+/* Asumsi bahwa ini berada di luar .top-section-samgong atau di awal game-container */
+#backToProfileBtn { /* Menggunakan ID jika ini tombol logout */
+    background: linear-gradient(135deg, #ff00ff, #8a2be2); /* Magenta ke Ungu */
+    color: #fff;
+    border: none;
+    border-radius: 0.6rem;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    box-shadow: 0 0 0.6rem rgba(255, 0, 255, 0.6);
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    position: absolute; /* Posisikan absolut di sudut container */
+    top: 0.8rem; /* Sesuaikan jarak dari atas */
+    left: 0.8rem; /* Sesuaikan jarak dari kiri */
+    z-index: 10; /* Pastikan di atas elemen lain */
+}
+#backToProfileBtn:hover {
+    background: linear-gradient(135deg, #8a2be2, #ff00ff);
+    box-shadow: 0 0 0.9rem rgba(255, 0, 255, 0.8);
+    transform: translateY(-0.1rem);
+}
+
+/* --- Tombol Musik (jika ini adalah musicToggleBtn Anda) --- */
+/* Asumsi bahwa ini berada di luar .top-section-samgong atau di awal game-container */
+#musicToggleBtn { /* Menggunakan ID untuk tombol musik */
     background-color: rgba(0, 0, 0, 0.5);
     color: #fff;
     border: none;
@@ -82,86 +108,68 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 10; /* Pastikan di atas elemen lain */
     box-shadow: 0 0 0.5rem rgba(255, 255, 255, 0.3);
     transition: background-color 0.2s, transform 0.1s;
-    position: absolute;
-    top: 0.8rem; /* Lebih dekat ke sudut */
-    right: 0.8rem; /* Lebih dekat ke sudut */
+    position: absolute; /* Posisikan absolut di sudut container */
+    top: 0.8rem; /* Sesuaikan jarak dari atas */
+    right: 0.8rem; /* Sesuaikan jarak dari kanan */
 }
-.music-toggle-btn:hover {
+#musicToggleBtn:hover {
     background-color: rgba(0, 0, 0, 0.7);
     transform: scale(1.05);
 }
 
-.logout-btn {
-    background: linear-gradient(135deg, #ff00ff, #8a2be2);
-    color: #fff;
-    border: none;
-    border-radius: 0.6rem;
-    padding: 0.5rem 0.8rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-    box-shadow: 0 0 0.6rem rgba(255, 0, 255, 0.6);
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
-    position: absolute;
-    top: 0.8rem; /* Lebih dekat ke sudut */
-    left: 0.8rem; /* Lebih dekat ke sudut */
-}
-.logout-btn:hover {
-    background: linear-gradient(135deg, #8a2be2, #ff00ff);
-    box-shadow: 0 0 0.9rem rgba(255, 0, 255, 0.8);
-    transform: translateY(-0.1rem);
-}
-
 /* --- Top Section: Info Pengguna & Kontrol --- */
-.top-section-samgong {
+/* Ini adalah div yang mungkin berisi informasi pemain dan kontrol taruhan */
+/* Jika Anda memiliki satu div besar untuk semua ini, kita atur flexbox di sana */
+/* Contoh: jika ada div seperti <div class="top-section-container"> yang membungkus semua ini */
+.top-section-samgong { /* Sesuaikan selector ini jika div pembungkus Anda berbeda */
     display: flex;
-    justify-content: space-between;
-    align-items: center; /* Pusatkan secara vertikal elemen di dalam top-section */
-    width: calc(100% - 2rem); /* Kurangi padding container */
-    margin-left: 1rem;
-    margin-right: 1rem;
-    padding-top: 2.5rem; /* Beri ruang untuk tombol absolut di atasnya */
+    flex-wrap: wrap; /* Izinkan wrapping jika layar sempit */
+    justify-content: center; /* Pusatkan secara horizontal */
+    align-items: center; /* Pusatkan secara vertikal */
+    gap: 1rem; /* Jarak antar elemen utama di baris ini */
+    width: 100%; /* Ambil lebar penuh */
+    padding-top: 3rem; /* Beri ruang untuk tombol absolut di atasnya */
     padding-bottom: 0.5rem;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    box-sizing: border-box;
 }
 
-.user-info-samgong {
+/* Div untuk info pemain (Selamat Datang, Saldo, Pot) */
+.user-info { /* Asumsi nama class div ini, sesuaikan jika berbeda */
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.8rem;
+    flex-wrap: wrap; /* Izinkan wrapping untuk setiap span */
+    justify-content: center; /* Pusatkan info pemain */
     align-items: center;
-    flex-grow: 1;
-    justify-content: flex-start; /* Rata kiri */
-    min-width: 250px; /* Pastikan tidak terlalu kecil */
+    gap: 0.8rem; /* Jarak antar span info */
+    flex-grow: 1; /* Biarkan mengisi ruang yang tersedia */
+    min-width: 250px; /* Minimal lebar agar tidak terlalu padat */
 }
 
-.user-info-samgong span {
+.user-info span {
     background-color: rgba(0, 0, 0, 0.6);
     padding: 0.5rem 0.8rem;
     border-radius: 0.4rem;
     font-size: 0.8rem;
     font-weight: bold;
-    color: #00ffff;
+    color: #00ffff; /* Cyan */
     border: 1px solid rgba(0, 255, 255, 0.5);
     box-shadow: 0 0 0.8rem rgba(0, 255, 255, 0.4);
     text-shadow: 0 0 0.2rem #00ffff;
-    white-space: nowrap;
+    white-space: nowrap; /* Mencegah teks patah baris */
 }
-.user-info-samgong span strong {
-    color: #ffcc00;
+.user-info span strong {
+    color: #ffcc00; /* Kuning neon untuk nilai */
     text-shadow: 0 0 0.2rem #ffcc00;
 }
 
-.game-controls-samgong {
+/* Div untuk kontrol game (Taruhan, Deal) */
+.game-controls { /* Asumsi nama class div ini, sesuaikan jika berbeda */
     display: flex;
-    flex-direction: row;
+    flex-direction: row; /* Jadikan horizontal: Label, Input, Button */
     align-items: center;
-    gap: 0.8rem;
+    gap: 0.8rem; /* Jarak antar elemen kontrol */
     flex-shrink: 0;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 0.8rem;
@@ -170,15 +178,15 @@ body {
     border: 1px solid rgba(0, 255, 255, 0.3);
 }
 
-.game-controls-samgong label {
+.game-controls label {
     font-size: 0.9rem;
-    color: #99ff33;
+    color: #99ff33; /* Hijau neon */
     text-shadow: 0 0 0.2rem #99ff33;
-    white-space: nowrap;
+    white-space: nowrap; /* Mencegah teks patah baris */
 }
 
 #bet-input {
-    width: 80px;
+    width: 80px; /* Lebar input number */
     padding: 0.5rem;
     border-radius: 0.4rem;
     border: 0.1rem solid #66ffff;
@@ -206,7 +214,7 @@ body {
     white-space: nowrap;
     text-transform: uppercase;
     letter-spacing: 0.05rem;
-    background: linear-gradient(135deg, #00ff00, #008000);
+    background: linear-gradient(135deg, #00ff00, #008000); /* Hijau neon */
     color: #fff;
     text-shadow: 0 0 0.1rem rgba(0,0,0,0.5);
     border: 1px solid rgba(0, 255, 0, 0.5);
@@ -232,33 +240,33 @@ body {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
-    align-items: center;
-    flex-grow: 1;
+    align-items: center; /* Pusat di tengah secara vertikal */
+    flex-grow: 1; /* Biarkan area permainan mengisi ruang tersisa */
     padding: 0.5rem 0;
     gap: 1rem;
-    position: relative;
-    background: radial-gradient(ellipse at center, #006400 0%, #004d00 70%, #003300 100%);
+    position: relative; /* Untuk posisi absolut anak-anak jika perlu */
+    background: radial-gradient(ellipse at center, #006400 0%, #004d00 70%, #003300 100%); /* Green felt effect */
     border-radius: 1.2rem;
-    border: 0.2rem solid #00ffff;
+    border: 0.2rem solid #00ffff; /* Cyan neon */
     box-shadow: inset 0 0 1.2rem rgba(0, 0, 0, 0.8), 0 0 1.5rem rgba(0, 255, 255, 0.6);
-    margin-top: 0.8rem; /* Lebih kecil, karena top-section sudah punya padding atas */
-    margin-bottom: 0.8rem;
-    flex-wrap: wrap;
+    margin-top: 0.8rem; /* Jarak dari header */
+    margin-bottom: 0.8rem; /* Jarak ke pesan game */
+    flex-wrap: wrap; /* Untuk responsivitas di layar kecil */
 }
 
 .dealer-area, .player-area {
-    background-color: transparent;
+    background-color: transparent; /* Biarkan background dari .game-area */
     border-radius: 0.8rem;
     padding: 0.8rem;
-    flex: 1;
+    flex: 1; /* Ambil ruang yang tersedia */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     box-shadow: inset 0 0 0.8rem rgba(0, 0, 0, 0.9);
     min-height: 180px;
-    max-width: 48%;
-    border: 1px solid #a020f0;
+    max-width: 48%; /* Maksimal lebar untuk 2 kolom */
+    border: 1px solid #a020f0; /* Ungu neon */
     box-sizing: border-box;
 }
 @media (max-width: 768px) {
@@ -268,51 +276,51 @@ body {
         align-items: center;
     }
     .dealer-area, .player-area {
-        max-width: 90%;
+        max-width: 90%; /* Lebar penuh di layar kecil */
         width: 100%;
     }
 }
 
 
 h2 {
-    color: #ffcc00;
+    color: #ffcc00; /* Kuning neon */
     margin-top: 0;
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
     text-shadow: 0 0 0.2rem #ffcc00;
 }
 h2 span {
-    color: #99ff33;
+    color: #99ff33; /* Hijau neon untuk nilai kartu */
     text-shadow: 0 0 0.2rem #99ff33;
 }
 
 .hand {
     display: flex;
     justify-content: center;
-    gap: 0.4rem;
+    gap: 0.4rem; /* Jarak antar kartu */
     flex-wrap: nowrap;
-    overflow-x: auto;
+    overflow-x: auto; /* Untuk scrolling jika banyak kartu */
     -webkit-overflow-scrolling: touch;
-    height: 90px;
+    height: 90px; /* Tinggi disesuaikan untuk kartu */
     align-items: center;
     padding-bottom: 0.5rem;
 }
 
 /* --- CSS for Cards --- */
 .card-container {
-    width: 60px;
-    height: 90px;
+    width: 60px; /* Lebar kartu konsisten */
+    height: 90px; /* Tinggi kartu konsisten */
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.7s ease-in-out, opacity 0.4s ease-out;
-    border-radius: 0.4rem;
+    transition: transform 0.7s ease-in-out, opacity 0.4s ease-out; /* Transisi lebih halus */
+    border-radius: 0.4rem; /* Radius kartu */
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.4);
-    flex-shrink: 0;
-    opacity: 0;
+    flex-shrink: 0; /* Mencegah kartu menyusut */
+    opacity: 0; /* Untuk animasi awal */
 }
 
 .card-container.dealt {
-    animation: dealAnimation 0.4s ease-out forwards;
+    animation: dealAnimation 0.4s ease-out forwards; /* Animasi muncul */
 }
 
 @keyframes dealAnimation {
@@ -338,24 +346,24 @@ h2 span {
     padding: 0.2rem;
     box-sizing: border-box;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Ukuran angka/simbol kartu */
     border: 1px solid #555;
 }
 
 .card-front {
-    background-color: #fff;
+    background-color: #fff; /* Warna putih standar kartu */
     transform: rotateY(0deg);
-    flex-direction: column;
-    justify-content: space-between;
-    color: #333;
+    /* flex-direction: column; /* Untuk menata rank dan suit vertikal */
+     justify-content: center; 
+    color: #333; /* Warna default untuk rank/suit */
 }
 
 .card-back {
-    background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg'); /* GANTI DENGAN URL GAMBAR BELAKANG KARTU SAMGONG */
+    background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20.png'); /* GANTI DENGAN URL GAMBAR BELAKANG KARTU SAMGONG */
     background-size: cover;
     background-position: center;
     transform: rotateY(180deg);
-    border: 1px solid #00ffff;
+    border: 1px solid #00ffff; /* Border cyan pada kartu belakang */
     box-shadow: 0 0 0.6rem rgba(0, 255, 255, 0.5);
 }
 
@@ -367,9 +375,9 @@ h2 span {
     transform: rotateY(0deg);
 }
 
-.card-front .rank-display {
+.card-front .rank-display { /* Untuk teks angka atau gambar dot kartu domino */
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* Ukuran angka lebih besar */
     line-height: 1;
     text-align: center;
     position: absolute;
@@ -380,7 +388,7 @@ h2 span {
 
 .card-suit-top-left, .card-suit-bottom-right {
     position: absolute;
-    font-size: 0.8rem;
+    font-size: 0.8rem; /* Ukuran suit */
 }
 
 .card-suit-top-left {
@@ -395,26 +403,26 @@ h2 span {
 }
 
 .red-suit {
-    color: #f44336;
+    color: #f44336; /* Merah */
 }
 .black-suit {
-    color: #333;
+    color: #333; /* Hitam */
 }
 
 /* --- Game Message --- */
 .game-message {
     font-size: 1rem;
     font-weight: bold;
-    color: #99ff33;
+    color: #99ff33; /* Hijau neon */
     background-color: rgba(0, 0, 0, 0.4);
     padding: 0.5rem 1rem;
     border-radius: 0.5rem;
     box-shadow: 0 0 0.8rem rgba(153, 255, 51, 0.5);
     z-index: 20;
     text-align: center;
-    width: 90%;
+    width: 90%; /* Lebih lebar di tengah */
     max-width: 400px;
-    margin: 0.5rem auto;
+    margin: 0.5rem auto; /* Pusatkan secara horizontal */
 }
 .game-message p {
     margin: 0;
@@ -422,7 +430,7 @@ h2 span {
 
 .win-message { color: #2ecc71; }
 .lose-message { color: #f44336; }
-.error-message { color: #ffcc00; }
+.error-message { color: #ffcc00; } /* Kuning neon */
 
 /* --- Action Buttons (Hit/Stand) --- */
 .action-buttons {
@@ -448,7 +456,7 @@ h2 span {
 }
 
 #hit-button {
-    background: linear-gradient(135deg, #00ffff, #008080);
+    background: linear-gradient(135deg, #00ffff, #008080); /* Cyan neon */
     color: #fff;
     text-shadow: 0 0 0.1rem rgba(0,0,0,0.5);
     border: 1px solid rgba(0, 255, 255, 0.5);
@@ -460,7 +468,7 @@ h2 span {
 }
 
 #stand-button {
-    background: linear-gradient(135deg, #ff00ff, #8a2be2);
+    background: linear-gradient(135deg, #ff00ff, #8a2be2); /* Magenta ke Ungu */
     color: #fff;
     text-shadow: 0 0 0.1rem rgba(0,0,0,0.5);
     border: 1px solid rgba(255, 0, 255, 0.5);
@@ -503,7 +511,7 @@ h2 span {
 }
 
 .popup-content {
-    background: linear-gradient(145deg, #1a0a30, #3a1a50);
+    background: linear-gradient(145deg, #1a0a30, #3a1a50); /* Background ungu gelap */
     color: #fff;
     padding: 1.5rem;
     border-radius: 1rem;
@@ -511,16 +519,16 @@ h2 span {
         inset 0 0 1rem rgba(160, 32, 240, 0.4),
         0 0 2rem rgba(160, 32, 240, 0.6);
     text-align: center;
-    max-width: 350px;
+    max-width: 350px; /* Ukuran popup lebih besar */
     width: 90%;
     position: relative;
-    border: 0.2rem solid #a020f0;
+    border: 0.2rem solid #a020f0; /* Purple neon */
     font-size: 1rem;
 }
 
 .popup-content h3 {
     margin-top: 0;
-    color: #ffcc00;
+    color: #ffcc00; /* Kuning neon */
     font-size: 1.5rem;
     text-shadow: 0 0 0.3rem #ffcc00;
     margin-bottom: 0.8rem;
@@ -533,26 +541,26 @@ h2 span {
 }
 
 .popup-content .result-text.win {
-    color: #99ff33;
+    color: #99ff33; /* Hijau neon */
     font-weight: bold;
     font-size: 1.3rem;
     text-shadow: 0 0 0.3rem #99ff33;
 }
 .popup-content .result-text.lose {
-    color: #f44336;
+    color: #f44336; /* Merah */
     font-weight: bold;
     font-size: 1.3rem;
     text-shadow: 0 0 0.3rem #f44336;
 }
 .popup-content .result-text.draw {
-    color: #00ffff;
+    color: #00ffff; /* Cyan neon */
     font-weight: bold;
     font-size: 1.3rem;
     text-shadow: 0 0 0.3rem #00ffff;
 }
 
 .popup-content button {
-    background: linear-gradient(135deg, #00ff00, #008000);
+    background: linear-gradient(135deg, #00ff00, #008000); /* Hijau neon */
     color: #fff;
     border: none;
     padding: 0.8rem 1.5rem;
@@ -590,8 +598,8 @@ h2 span {
         box-sizing: border-box; /* Pastikan padding tidak membuat overflow */
     }
     /* Tombol absolut tetap di pojok */
-    .music-toggle-btn { top: 0.5rem; right: 0.5rem; }
-    .logout-btn { top: 0.5rem; left: 0.5rem; }
+    #musicToggleBtn { top: 0.5rem; right: 0.5rem; }
+    #backToProfileBtn { top: 0.5rem; left: 0.5rem; }
 
     .game-area {
         flex-direction: column;
@@ -665,22 +673,19 @@ h2 span {
     </style>
 </head>
 <body>
-    <div class="game-container">
+     <div class="game-container">
         <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" loop volume="0.3"></audio>
         <audio id="clickSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3"></audio>
         <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
         <audio id="loseSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
 
-        <button id="backToProfileBtn" class="logout-btn">Keluar Game</button>
-        <button id="musicToggleBtn" class="music-toggle-btn">🔊</button>
-
-        <div class="top-section-samgong">
-            <div class="user-info-samgong">
-                <span>Selamat Datang, <strong id="username-display">Pemain</strong>!</span>
-                <span>Saldo: <strong id="current-saldo">Rp0</strong></span>
+        <div class="game-header">
+            <div class="user-info">
+                <span>ID :<strong id="username-display"></strong></span> 
+                <span>Saldo: <strong id="current-saldo">Rp0</strong></span> 
                 <span>Pot: <strong id="current-pot">Rp0</strong></span>
             </div>
-            <div class="game-controls-samgong">
+            <div class="game-controls">
                 <label for="bet-input">Taruhan:</label>
                 <input type="number" id="bet-input" value="100" min="10" step="10">
                 <button id="deal-button">Deal</button>
@@ -699,16 +704,16 @@ h2 span {
                 <div id="player-hand" class="hand">
                     </div>
                 <div class="action-buttons">
-                    <button id="hit-button" class="btn btn-primary hidden">Ambil Kartu</button>
-                    <button id="stand-button" class="btn btn-secondary hidden">Berhenti</button>
+                    <button id="hit-button" style="display: none;">Ambil Kartu</button>
+                    <button id="stand-button" style="display: none;">Berhenti</button>
                 </div>
             </div>
         </div>
 
         <div class="game-message">
-            <p id="game-message-text">Silakan atur taruhan dan klik 'Deal' untuk memulai!</p>
+            <p id="game-message">Silakan atur taruhan dan klik 'Deal' untuk memulai!</p>
         </div>
-
+        
         <div id="community-cards" style="display: none;"></div>
         <div id="bet-slider-group" style="display: none;"></div>
         <input type="range" id="bet-slider" style="display: none;">
@@ -721,6 +726,9 @@ h2 span {
         <button id="next-round-btn" style="display: none;"></button>
         <button id="showdown-btn" style="display: none;"></button>
         <button id="play-again-btn" style="display: none;"></button>
+        <button id="musicToggleBtn" style="display: none;"></button>
+        <button id="backToProfileBtn" style="display: none;"></button>
+
     </div>
 
     <div id="result-popup-overlay" class="popup-overlay">
