@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Domino Qiu Qiu - Pemain vs Bandar</title>
+    <title>Domino Qiu Qiu</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<style>
-  
-  body {
+    <style>
+      body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #0a0a0a;
@@ -134,13 +133,13 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.4rem; /* Kurangi gap */
+    gap: 0rem; /* Kurangi gap */
     width: 80%;
-   /* background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.0);
     border-radius: 0.6rem; /* Lebih kecil */
     padding: 0.4rem; /* Kurangi padding */
-   /* border: 1px solid rgba(255, 255, 0, 0.5);
-    /*box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
+    border: 1px solid rgba(255, 255, 0, 0.0);
+    box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.0);
 }
 
 .player-label {
@@ -154,13 +153,11 @@ h1 {
     display: flex;
     justify-content: center;
     gap: 0.4rem; /* Kurangi gap */
-    height: 80px; /* Tinggi untuk dua kartu yang lebih kecil */
+    height: 10px; /* Tinggi untuk dua kartu yang lebih kecil */
     perspective: 1000px;
 }
 
-/* ============================================== */
-/* DOMINO CARD STYLING (IMAGE BASED)            */
-/* ============================================== */
+
 .card {
     width: 55px; /* Lebar kartu lebih kecil */
     height: 80px; /* Tinggi kartu lebih kecil */
@@ -333,45 +330,38 @@ button:disabled {
     }
 }
 
-</style>
+    </style>
 </head>
 <body>
-    <audio id="dealCardSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/deal_card_sound.mp3" preload="auto"></audio>
-    <audio id="winSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/win_sound.mp3" preload="auto"></audio>
-    <audio id="loseSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/lose_sound.mp3" preload="auto"></audio>
-    <audio id="drawSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music/draw_sound.mp3" preload="auto"></audio>
-    <audio id="backgroundMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" preload="auto" loop></audio>
-
-
     <div class="game-container">
         <header>
             <h1>Domino Qiu Qiu</h1>
             <div class="player-info">
-                <p>Player: <span id="playerName">Loading...</span></p>
-                <p>Balance: <span id="playerBalance">0</span> Credits</p>
-                <button id="logoutBtn" class="control-btn" style="display: none;">Logout</button>
+                <p>Player: <span id="playerName">Tamu</span></p>
+                <p>Balance: <span id="playerBalance">N/A</span> Credits</p>
+                <button id="logoutBtn" class="control-btn" style="display: none;">LOGOUT</button>
             </div>
         </header>
 
-        <div class="game-table">
-            <div class="dealer-area player-box">
-                <div class="player-label">BANDAR</div>
-                <div class="cards-container" id="dealerCards">
+        <main class="game-table">
+            <div class="player-box">
+                <p class="player-label">BANDAR</p>
+                <div id="dealerCards" class="cards-container">
                     <div class="card back"></div>
                     <div class="card back"></div>
                 </div>
-                <div class="hand-value" id="dealerValue"></div>
+                <p class="hand-value" id="dealerValue"></p>
             </div>
 
-            <div class="player-area player-box">
-                <div class="player-label"></div>
-                <div class="cards-container" id="playerCards">
+            <div class="player-box">
+                <p class="player-label"></p>
+                <div id="playerCards" class="cards-container">
                     <div class="card back"></div>
                     <div class="card back"></div>
                 </div>
-                <div class="hand-value" id="playerValue"></div>
+                <p class="hand-value" id="playerValue"></p>
             </div>
-        </div>
+        </main>
 
         <div class="controls">
             <div class="bet-control">
@@ -381,22 +371,23 @@ button:disabled {
             <button id="dealBtn">BAGIKAN KARTU</button>
         </div>
 
-        <div class="messages">
-            <p id="gameMessage">Memuat sesi pengguna...</p>
+        <div id="gameMessage" class="messages">
+            Selamat datang di Domino Qiu Qiu!
         </div>
     </div>
 
-<script>
+    <audio id="dealCardSound" src="sounds/card_deal.mp3" preload="auto"></audio>
+    <audio id="winSound" src="sounds/win.mp3" preload="auto"></audio>
+    <audio id="loseSound" src="sounds/lose.mp3" preload="auto"></audio>
+    <audio id="drawSound" src="sounds/draw.mp3" preload="auto"></audio>
+    <audio id="backgroundMusic" src="sounds/bg_music.mp3" loop preload="auto" volume="0.3"></audio>
 
+    <script>
         const supabase = window.supabase.createClient(
             'https://vqmfachxnjyxwuavpgds.supabase.co',
             'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
         );
-
-        let user; 
-        let userSaldo = 0;
-        let userId = null; 
-
+        
 const playerNameSpan = document.getElementById('playerName');
 const playerBalanceSpan = document.getElementById('playerBalance');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -410,6 +401,7 @@ const dealerValueDisplay = document.getElementById('dealerValue');
 const playerValueDisplay = document.getElementById('playerValue');
 
 // <<< ELEMEN AUDIO >>>
+// Pastikan folder 'sounds' ada di direktori yang sama dengan index.html
 const dealCardSound = document.getElementById('dealCardSound');
 const winSound = document.getElementById('winSound');
 const loseSound = document.getElementById('loseSound');
@@ -417,11 +409,13 @@ const drawSound = document.getElementById('drawSound');
 const backgroundMusic = document.getElementById('backgroundMusic');
 
 
-const CARD_IMAGE_BASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/domino99/';
-const BACK_CARD_IMAGE_URL = CARD_IMAGE_BASE_URL + 'back.png'; // Asumsikan nama file kartu belakang adalah back.png
+let currentUser = null;
+let playerBalance = 0;
+let isDealing = false
 
-// Representasi kartu domino: [atas, bawah]
-// Kita akan memetakan ini ke nama file gambar
+const CARD_IMAGE_BASE_URL = 'https://YOUR_SUPABASE_PROJECT_REF.supabase.co/storage/v1/object/public/domino99/';
+const BACK_CARD_IMAGE_URL = CARD_IMAGE_BASE_URL + 'back.png
+
 const dominoCards = [
     [0,0], [0,1], [0,2], [0,3], [0,4], [0,5], [0,6],
     [1,1], [1,2], [1,3], [1,4], [1,5], [1,6],
@@ -432,18 +426,16 @@ const dominoCards = [
     [6,6]
 ];
 
-// Fungsi untuk mendapatkan URL gambar kartu berdasarkan nilai [atas, bawah]
+
 function getCardImageUrl(cardData) {
-    // Pastikan angka selalu terurut dari kecil ke besar untuk nama file konsisten (misal: 0_1 bukan 1_0)
+
     const val1 = Math.min(cardData[0], cardData[1]);
     const val2 = Math.max(cardData[0], cardData[1]);
     return `${CARD_IMAGE_BASE_URL}domino_${val1}_${val2}.png`; // Asumsikan format nama file domino_0_0.png
 }
 
 
-// ==============================================
-//           FUNGSI BANTUAN UI & GAME
-// ==============================================
+
 
 function updateBalanceDisplay() {
     playerBalanceSpan.textContent = playerBalance;
@@ -463,15 +455,11 @@ function enableGameControls() {
 function calculateHandValue(cards) {
     if (cards.length === 0) return 0;
     const totalDots = cards.reduce((sum, card) => sum + card[0] + card[1], 0);
-    // Dalam Qiu Qiu, nilai tertinggi adalah 9.
-    // Jika total 10 atau 20, nilainya 0. Jika total 19 atau 29, nilainya 9.
-    // Ini sudah diatasi dengan modulo 10
+
     return totalDots % 10;
 }
 
-// ==============================================
-//           LOGIKA SUPABASE
-// ==============================================
+
 
 async function loadUserData(userId) {
     const { data, error } = await supabase
@@ -764,6 +752,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 dealBtn.addEventListener('click', dealCards);
 
-</script>
+ </script>
 </body>
 </html>
