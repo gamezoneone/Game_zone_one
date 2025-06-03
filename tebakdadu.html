@@ -6,14 +6,10 @@
   <title>Tebak Dadu Fantasi - GameZone</title>
   <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <style>
-/* Global Styles */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
-/* Asumsi Anda mungkin ingin font Luckiest Guy tetap ada untuk judul game, 
-   jika tidak, hapus import ini dan ganti di h1 */
-/* @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap'); */
-
-* { box-sizing: border-box; }
-body, html {
+    /* Global Styles */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    * { box-sizing: border-box; }
+    body, html {
   margin: 0; padding: 0; min-height: 100vh;
   font-family: 'Poppins', sans-serif;
   /* LATAR BELAKANG SEPERTI SAMGONG */
@@ -28,11 +24,15 @@ body, html {
   overflow-x: hidden;
 }
 
-/* Hapus @keyframes gradientAnimation jika background tidak bergerak */
+    @keyframes gradientAnimation {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
 
-/* Game Container */
-.game-container {
-  max-width: 600px;
+    /* Game Container */
+    .game-container {
+      max-width: 600px;
   width: 100%;
   /* BACKGROUND SEPERTI SAMGONG */
   background: linear-gradient(145deg, #1a0a30, #3a1a50);
@@ -56,73 +56,79 @@ body, html {
   justify-content: space-between;
 }
 
-@keyframes pulsateGlowNeon {
-    from { box-shadow: inset 0 0 1.2rem rgba(160, 32, 240, 0.4), 0 0 2.5rem rgba(160, 32, 240, 0.6), 0 0 1.5rem rgba(0, 255, 255, 0.4); }
+    @keyframes pulsateGlow {
+  from { box-shadow: inset 0 0 1.2rem rgba(160, 32, 240, 0.4), 0 0 2.5rem rgba(160, 32, 240, 0.6), 0 0 1.5rem rgba(0, 255, 255, 0.4); }
     to { box-shadow: inset 0 0 1.8rem rgba(160, 32, 240, 0.6), 0 0 4rem rgba(160, 32, 240, 0.8), 0 0 2.5rem rgba(0, 255, 255, 0.6); }
 }
 
-/* Hapus .particle dan @keyframes floatAndFade jika tidak diinginkan */
-/* Jika ingin tetap ada, sesuaikan warna partikel menjadi lebih terang/neon */
-/*
-.particle {
-    background-color: rgba(0, 255, 255, 0.6); // Cyan particles
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
-}
-*/
+    /* Particles Effect */
+    .particle {
+        position: absolute;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 50%;
+        animation: floatAndFade 5s infinite ease-out;
+        opacity: 0;
+        pointer-events: none;
+        z-index: -1; /* Behind content */
+    }
 
+    @keyframes floatAndFade {
+        0% { transform: translateY(0) translateX(0); opacity: 0; }
+        10% { opacity: 0.8; }
+        100% { transform: translateY(-150px) translateX(var(--x-offset)); opacity: 0; } /* Shorter float */
+    }
 
-/* Titles and Saldo */
-h1 {
-  font-family: 'Poppins', sans-serif; /* Ganti font jika ingin sama dengan Samgong */
-  font-weight: 700;
-  color: #ffcc00; /* Kuning neon */
-  text-shadow: 0 0 10px #ffcc00, 0 0 20px #ff00ff; /* Kuning ke Magenta neon */
-  margin-bottom: 15px;
-  font-size: 0.8em; /* Slightly larger title */
-}
-.saldo {
-  font-size: 26px; /* Slightly larger saldo display */
-  font-weight: 700;
-  margin-bottom: 25px; /* Adjusted margin */
-  color: #ff0; /* Cyan neon */
-  text-shadow: 0 0 10px #00ffff;
-}
+    /* Titles and Saldo */
+    h1 {
+      font-family: 'Luckiest Guy', cursive;
+      color: #ffd700;
+      text-shadow: 0 0 10px red, 0 0 20px #ffc107;
+      margin-bottom: 15px; /* Reduced margin */
+      font-size: 3.5em; /* Smaller title */
+    }
+    .saldo {
+      font-size: 24px; /* Smaller saldo display */
+      font-weight: 700;
+      margin-bottom: 20px; /* Reduced margin */
+      color: #ffeb3b;
+      text-shadow: 0 0 8px rgba(255,255,0,0.5);
+    }
 
-/* Dice Area */
-.dice-area {
-  display: flex;
-  justify-content: center;
-  gap: 1px; /* Increased gap slightly */
-  margin-bottom: 30px; /* Adjusted margin */
-  min-height: 90px; /* Adjusted min-height */
-  align-items: center;
-}
-/* Base Dice Styling */
-.dice, .guess-box {
-    width: 80px; /* Larger dice */
-    height: 80px; /* Larger dice */
-    background: rgba(255, 255, 255, 0.95); /* Hampir putih */
-    border-radius: 20px; /* More rounded */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.6), 0 5px 15px rgba(0,0,0,0.4); /* Stronger shadow */
-    border: 3px solid #00ffff; /* Cyan neon border */
-    transition: transform 0.1s ease-out;
-    position: relative;
-    flex-shrink: 0;
-}
+    /* Dice Area */
+    .dice-area {
+      display: flex;
+      justify-content: center; /* Memusatkan dadu hasil */
+      gap: 10px; /* Reduced gap */
+      margin-bottom: 25px; /* Reduced margin */
+      min-height: 80px; /* Reduced min-height */
+      align-items: center;
+    }
+    /* Base Dice Styling */
+    .dice, .guess-box {
+        width: 70px; /* Smaller dice */
+        height: 70px; /* Smaller dice */
+        background: #fefefe;
+        border-radius: 15px; /* Slightly less rounded */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 3px 10px rgba(0,0,0,0.3); /* Smaller shadow */
+        border: 2px solid #ff9500; /* Thinner border */
+        transition: transform 0.1s ease-out;
+        position: relative; /* For dots */
+        flex-shrink: 0;
+    }
 
-/* Dice dots */
-.dice .dot, .guess-box .dot {
-    position: absolute;
-    background: #ff00ff; /* Magenta neon dots */
-    width: 12px; /* Larger dots */
-    height: 12px; /* Larger dots */
-    border-radius: 50%;
-    box-shadow: 0 0 5px #ff00ff;
-}
-     .dice[data-value="1"] .dot:nth-child(1),
+    /* Dice dots */
+    .dice .dot, .guess-box .dot {
+        position: absolute;
+        background: red;
+        width: 10px; /* Smaller dots */
+        height: 10px; /* Smaller dots */
+        border-radius: 50%;
+    }
+    /* Dot positioning (remains the same relative to size) */
+    .dice[data-value="1"] .dot:nth-child(1),
     .guess-box[data-value="1"] .dot:nth-child(1) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
     .dice[data-value="2"] .dot:nth-child(1),
     .guess-box[data-value="2"] .dot:nth-child(1) { top: 15%; left: 15%; }
@@ -165,220 +171,219 @@ h1 {
     .dice[data-value="6"] .dot:nth-child(6),
     .guess-box[data-value="6"] .dot:nth-child(6) { bottom: 15%; right: 15%; }
 
-/* Dot positioning (remains the same relative to size) */
-/* ... (Tetap sama seperti CSS Anda) ... */
-
-/* Dice rolling animation */
-.dice.rolling {
-    animation: shakeDice 0.2s infinite alternate;
-    transform-style: preserve-3d;
-}
-@keyframes shakeDice {
-    0% { transform: translate(0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
-    25% { transform: translate(5px, -5px) rotateX(10deg) rotateY(-10deg) rotateZ(5deg); }
-    50% { transform: translate(-5px, 5px) rotateX(-10deg) rotateY(10deg) rotateZ(-5deg); }
-    75% { transform: translate(5px, 5px) rotateX(10deg) rotateY(10deg) rotateZ(5deg); }
-    100% { transform: translate(-5px, -5px) rotateX(-10deg) rotateY(-10deg) rotateZ(-5deg); }
-}
+    /* Dice rolling animation */
+    .dice.rolling {
+        animation: shakeDice 0.2s infinite alternate; /* Rapid shaking */
+        transform-style: preserve-3d;
+    }
+    @keyframes shakeDice {
+        0% { transform: translate(0px, 0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+        25% { transform: translate(5px, -5px) rotateX(10deg) rotateY(-10deg) rotateZ(5deg); }
+        50% { transform: translate(-5px, 5px) rotateX(-10deg) rotateY(10deg) rotateZ(-5deg); }
+        75% { transform: translate(5px, 5px) rotateX(10deg) rotateY(10deg) rotateZ(5deg); }
+        100% { transform: translate(-5px, -5px) rotateX(-10deg) rotateY(-10deg) rotateZ(-5deg); }
+    }
 
 
-/* Animal Dice Specific Styling (for emojis) */
-.dice.animal, .guess-box.animal {
-  font-size: 38px; /* Larger emoji size */
-  background: #fff;
-  border-color: #99ff33; /* Green neon border */
-  line-height: 1;
-}
-
-.guess-section {
-  margin-bottom: 0px; /* Adjusted margin */
-  text-align: center;
-}
-label {
-  display: block;
-  margin-bottom: 8px; /* Adjusted margin */
-  font-weight: 700;
-  font-size: 1.1em; /* Slightly larger font */
-  color: #99ff33; /* Green neon */
-  text-shadow: 0 0 5px #99ff33;
-}
-input[type="number"] {
-  width: calc(100% - 20px); /* Adjusted width */
-  padding: 10px; /* Adjusted padding */
-  margin-bottom: 15px; /* Adjusted margin */
-  border-radius: 10px;
-  border: 1px solid #00ffff; /* Cyan neon border */
-  background: rgba(0, 0, 0, 0.4); /* Darker background */
-  color: #fff;
-  font-size: 18px; /* Larger font */
-  outline: none;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  display: block;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  text-align: center; /* Pastikan teks di tengah */
-}
-input[type="number"]:focus {
-  border-color: #ff00ff; /* Magenta neon on focus */
-  box-shadow: 0 0 10px rgba(255,0,255,0.9); /* Magenta neon shadow */
-}
-input[type="number"]::placeholder {
-  color: #aaa; /* Lighter placeholder */
-}
-   
-.bet-control {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 15px; /* Increased gap */
-    margin-top: 8px; /* Adjusted margin */
-    margin-bottom: 20px; /* Adjusted margin */
-}
-
-.bet-control #display-bet-amount {
-    font-size: 24px; /* Larger font */
-    font-weight: 700;
-    color: #ffcc00; /* Yellow neon */
-    min-width: 120px; /* Wider for numbers */
-    text-align: center;
-    text-shadow: 0 0 5px #ffcc00;
-}
-
-.btn-bet-adjust {
-    background: linear-gradient(135deg, #00ffff, #008080); /* Cyan neon gradient */
-    color: #fff;
-    border: none;
-    border-radius: 50%;
-    width: 45px; /* Larger buttons */
-    height: 45px; /* Larger buttons */
-    font-size: 26px; /* Larger font */
-    font-weight: 700;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 0 8px rgba(0, 255, 255, 0.6); /* Cyan neon shadow */
-}
-
-.btn-bet-adjust:hover {
-    background: linear-gradient(135deg, #008080, #00ffff);
-    transform: translateY(-2px);
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
-}
-
-.btn-bet-adjust:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
-
-/* Guess Options - Boxes (for number and animal) */
-.guess-options-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px; /* Increased gap */
-    margin-bottom: 25px; /* Adjusted margin */
+    /* Animal Dice Specific Styling (for emojis) */
+    .dice.animal, .guess-box.animal {
+      font-size: 32px; /* Emoji size */
+      background: #fff;
+      color: #28a745; /* This color might not affect emojis, which have their own rendering */
+      border-color: red;
+      line-height: 1;
+    }
     
-    /* Lebar untuk 3 dadu (80px * 3) + 2x gap (10px * 2) = 240 + 20 = 260px */
-    max-width: 260px; /* Adjusted max-width for new dice size */
-    margin-left: auto;
-    margin-right: auto;
-}
-.guess-options-grid input[type="radio"] {
-    display: none;
-}
-.guess-options-grid label.guess-box {
-    cursor: pointer;
-    background: rgba(255, 255, 255, 0.1); /* Slightly transparent white for unselected */
-    border: 2px solid rgba(0, 255, 255, 0.3); /* Cyan border (subtle) */
-    transition: background 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    font-weight: 600;
-    font-size: 1em; /* Adjusted font */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-    height: 80px; /* Same height as dice */
-    color: #eee;
-    position: relative;
-    border-radius: 20px; /* Match dice border-radius */
-    box-shadow: inset 0 0 8px rgba(0,0,0,0.5); /* Inner shadow */
-}
+    .guess-section {
+      margin-bottom: 15px; /* Reduced margin */
+      text-align: center; /* Memusatkan label tebakan */
+    }
+    label {
+      display: block;
+      margin-bottom: 5px; /* Reduced margin */
+      font-weight: 700;
+      font-size: 1em; /* Smaller font */
+      color: #eee;
+    }
+    input[type="number"] {
+      width: calc(100% - 10px); /* Slightly less width for padding */
+      padding: 8px; /* Reduced padding */
+      margin-bottom: 10px; /* Reduced margin */
+      border-radius: 8px;
+      border: 1px solid #ff9500; /* Thinner border */
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-size: 16px; /* Smaller font */
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      /* Pastikan input number juga di tengah */
+      display: block; /* Agar margin auto bekerja */
+      max-width: 300px; /* Batasi lebar agar bisa di tengah */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    input[type="number"]:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 8px rgba(255,215,0,0.5);
+    }
+    input[type="number"]::placeholder {
+      color: #ccc;
+    }
+   
+       /* Tambahkan di bawah bagian input[type="number"] atau di akhir CSS Anda */
+    .bet-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px; /* Jarak antara tombol dan tampilan taruhan */
+        margin-top: 5px; /* Sedikit jarak dari label */
+        margin-bottom: 15px; /* Jarak ke elemen berikutnya */
+    }
 
-.guess-options-grid label.guess-box:hover {
-    transform: translateY(-3px); /* Larger lift */
-    box-shadow: 0 0 12px rgba(0, 255, 255, 0.5); /* Cyan neon on hover */
-    background: rgba(255, 255, 255, 0.15);
-}
-.guess-options-grid input[type="radio"]:checked + label.guess-box {
-    background: black; /* Ungu neon saat dipilih */
-    border-color: #00ffff; /* Cyan neon */
-    color: #fff;
-    font-weight: 700;
-    transform: scale(1.05); /* Larger scale effect */
-    box-shadow: 0 0 15px rgba(0, 255, 255, 0.8); /* Cyan neon glow */
-}
+    .bet-control #display-bet-amount {
+        font-size: 20px;
+        font-weight: 700;
+        color: #ffeb3b;
+        min-width: 100px; /* Agar ukurannya stabil saat angka berubah */
+        text-align: center;
+    }
 
-/* Specific styling for guess number boxes */
-.guess-options-grid label.guess-box.number-guess-box .dot {
-    background: #ff00ff; /* Magenta neon dots */
-    box-shadow: 0 0 9px #ff00ff;
-}
+    .btn-bet-adjust {
+        background: #007bff; /* Warna biru untuk tombol adjust */
+        color: white;
+        border: none;
+        border-radius: 50%; /* Membuat tombol bulat */
+        width: 40px; /* Ukuran tombol */
+        height: 40px; /* Ukuran tombol */
+        font-size: 24px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.3s, transform 0.2s;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
 
-/* Specific styling for guess animal boxes */
-.guess-options-grid label.guess-box.animal-guess-box {
-  background: rgba(255, 255, 255, 0.95); /* White background for emojis */
-  border-color: #00ffff; /* Cyan neon border */
-  font-size: 38px;
-  line-height: 1;
-}
-.guess-options-grid input[type="radio"]:checked + label.guess-box.animal-guess-box {
-    background: black; /* Ungu neon saat dipilih */
-    border-color: #99ff33; /* Green neon saat dipilih */
-    color: #fff; /* Ini mungkin tidak berpengaruh banyak pada warna emoji */
-    box-shadow: 0 0 15px rgba(99, 255, 51, 0.8); /* Green neon glow */
-}
+    .btn-bet-adjust:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+    }
+
+    .btn-bet-adjust:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* Jika Anda ingin warna yang lebih sesuai dengan tema emas/oranye */
+    .btn-bet-adjust {
+        background: #ffc107; /* Warna emas */
+        color: #333; /* Warna teks gelap */
+        box-shadow: 0 0 10px rgba(255,193,7,0.7);
+    }
+    .btn-bet-adjust:hover {
+        background: #ffcd38;
+        box-shadow: 0 0 15px rgba(255,193,7,0.9);
+    }
+
+    /* Guess Options - Boxes (for number and animal) */
+    .guess-options-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr); /* Tetapkan 3 kolom per baris */
+        gap: 8px; /* Reduced gap */
+        margin-bottom: 15px; /* Reduced margin */
+        
+        /* Penting untuk memposisikan grid di tengah */
+        /* Lebar untuk 3 dadu (70px * 3) + 2x gap (8px * 2) = 210 + 16 = 226px */
+        max-width: 226px; 
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .guess-options-grid input[type="radio"] {
+        display: none;
+    }
+    .guess-options-grid label.guess-box {
+        cursor: pointer;
+        background: #fff;
+        border: 2px solid transparent; /* Thinner border */
+        transition: background 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
+        font-weight: 600;
+        font-size: 0.9em; /* Smaller font */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        user-select: none;
+        height: 70px; /* Same height as dice */
+        color: #eee;
+        position: relative;
+        border-radius: 15px; /* Match dice border-radius */
+    }
+
+    .guess-options-grid label.guess-box:hover {
+        transform: translateY(-2px);
+    }
+    .guess-options-grid input[type="radio"]:checked + label.guess-box {
+        background: black;
+        border-color: #ffd700;
+        color: #222;
+        font-weight: 700;
+        transform: scale(1.03); /* Smaller scale effect */
+        box-shadow: 0 0 10px rgba(255,215,0,0.5); /* Smaller shadow */
+    }
+
+    /* Specific styling for guess number boxes */
+    .guess-options-grid label.guess-box.number-guess-box .dot {
+        background: red;
+    }
+
+    /* Specific styling for guess animal boxes */
+    .guess-options-grid label.guess-box.animal-guess-box {
+      background: #fff;
+      /* color: #28a745; This color might not affect emojis */
+      border-color: gold;
+      font-size: 32px; /* Emoji size */
+      line-height: 1; /* Adjust line height for better emoji centering */
+    }
+    .guess-options-grid input[type="radio"]:checked + label.guess-box.animal-guess-box {
+        background: black;
+        border-color: gold;
+        color: #fff; /* This color might not affect emojis */
+        box-shadow: 0 0 10px rgba(40,167,69,0.7); /* Smaller shadow */
+    }
 
 
-/* Roll Button */
-.btn {
-  background: linear-gradient(135deg, #00ff00, #008000); /* Hijau neon gradient */
-  border: none;
-  border-radius: 0.8rem; /* Match Samgong button radius */
-  padding: 0.8rem 1.5rem; /* Match Samgong button padding */
-  font-size: 1.1rem; /* Match Samgong button font size */
-  font-weight: bold; /* Match Samgong button font weight */
-  cursor: pointer;
-  color: #fff;
-  /* SHADOW SEPERTI TOMBOL SAMGONG */
-  box-shadow: 0 0 1.2rem rgba(0, 255, 0, 0.7), 0 0 0.8rem rgba(0, 128, 0, 0.5);
-  transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-  width: 100%;
-  margin-top: 30px; /* Adjusted margin */
-  display: block;
-  max-width: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  text-transform: uppercase;
-  letter-spacing: 0.05rem;
-  border: 1px solid rgba(0, 255, 0, 0.5); /* Border like Samgong */
-}
-.btn:hover:not(:disabled) {
-    background: linear-gradient(135deg, #008000, #00ff00);
-    transform: translateY(-0.1rem); /* Smaller lift for consistency */
-    box-shadow: 0 0 1.5rem rgba(0, 255, 0, 0.9), 0 0 1rem rgba(0, 128, 0, 0.7);
-}
-.btn:disabled {
-    background: #555;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-    opacity: 0.7;
-    border: none;
-}
+    /* Roll Button */
+    .btn {
+      background: #ff9500;
+      border: none;
+      border-radius: 30px; /* Slightly less rounded */
+      padding: 12px 25px; /* Reduced padding */
+      font-size: 18px; /* Smaller font */
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 0 15px #ffb347; /* Smaller glow */
+      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      width: 100%;
+      margin-top: 20px; /* Reduced margin */
+      /* Pastikan tombol juga di tengah jika tidak 100% width */
+      display: block;
+      max-width: 300px; /* Batasi lebar tombol */
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .btn:hover:not(:disabled) {
+        background: #ffb347;
+        transform: translateY(-2px); /* Smaller lift */
+        box-shadow: 0 0 20px #ffb347;
+    }
+    .btn:disabled {
+        background: #666;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
+    }
 
-/* Message Popup */
 .message {
   position: fixed;
   top: 0;
@@ -395,8 +400,6 @@ input[type="number"]::placeholder {
   transition: opacity 0.3s ease, visibility 0.3s ease;
   flex-direction: column; 
   padding: 20px; 
-  /* BACKGROUND DAN BORDER SEPERTI POPUP SAMGONG */
-  background: rgba(0, 0, 0, 0.8); /* Agak lebih gelap untuk overlay */
 }
 
 .message.active {
@@ -404,168 +407,150 @@ input[type="number"]::placeholder {
   visibility: visible;
 }
 
-/* Konten popup */
-.message-content { /* Tambahkan class ini di HTML Anda untuk membungkus konten pesan */
-    background: linear-gradient(145deg, #1a0a30, #3a1a50); /* Background ungu gelap */
-    color: #fff;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    box-shadow:
-        inset 0 0 1rem rgba(160, 32, 240, 0.4),
-        0 0 2rem rgba(160, 32, 240, 0.6);
-    text-align: center;
-    max-width: 350px;
-    width: 90%;
-    position: relative;
-    border: 0.2rem solid #a020f0; /* Purple neon */
-    font-size: 1rem;
-}
-
-.message p { /* Ini akan menjadi h3 di popup Samgong */
+.message p {
     font-size: 1.8em; /* Ukuran font lebih besar untuk judul */
     font-weight: 700;
-    margin-bottom: 15px;
-    /* font-family: 'Luckiest Guy', cursive; */ /* Opsional: gunakan font ini jika ada */
-    color: #ffcc00; /* Kuning neon */
-    text-shadow: 0 0 10px #ffcc00;
+    margin-bottom: 15px; /* Jarak antara judul dan pesan */
+    font-family: 'Luckiest Guy', cursive;
+    text-shadow: 0 0 10px; /* Default shadow */
 }
 
-.message span { /* Ini akan menjadi p di popup Samgong */
+.message span { /* Untuk detail pesan di bawah judul */
     font-size: 1.1em;
     font-weight: 400;
     line-height: 1.4;
     text-align: center;
-    color: #ecf0f1; /* Warna teks standar */
 }
 
 /* Warna untuk pesan menang/kalah */
 .message.win p {
-    color: #99ff33; /* Green neon for win */
-    text-shadow: 0 0 15px #99ff33;
+    color: #aaffaa;
+    text-shadow: 0 0 15px #aaffaa;
 }
 .message.win span {
-    color: #c2ffc2;
+    color: #e0ffe0;
 }
 .message.lose p {
-    color: #f44336; /* Red for lose */
-    text-shadow: 0 0 15px #f44336;
+    color: #ffaaaa;
+    text-shadow: 0 0 15px #ffaaaa;
 }
 .message.lose span {
-    color: #ffc2c2;
+    color: #ffe0e0;
 }
 
 /* Tombol Tutup (opsional, tapi disarankan untuk popup) */
 .message .close-popup-btn {
-    background: linear-gradient(135deg, #00ff00, #008000); /* Hijau neon gradient */
+    background: #ff9500;
     border: none;
-    border-radius: 0.6rem; /* Match Samgong button radius */
-    padding: 0.8rem 1.5rem; /* Match Samgong button padding */
-    font-size: 1.1rem; /* Match Samgong button font size */
-    font-weight: bold;
+    border-radius: 25px;
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 700;
     cursor: pointer;
     color: #fff;
-    box-shadow: 0 0 0.8rem rgba(0, 255, 0, 0.4);
-    transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
-    margin-top: 1.5rem; /* Match Samgong popup margin */
-    text-transform: uppercase;
-    letter-spacing: 0.05rem;
+    box-shadow: 0 0 10px #ffb347;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 25px; /* Jarak dari teks pesan */
 }
 .message .close-popup-btn:hover {
-    background: linear-gradient(135deg, #008000, #00ff00);
-    transform: translateY(-0.1rem);
-    box-shadow: 0 0 1.2rem rgba(0, 255, 0, 0.7), 0 0 0.8rem rgba(0, 128, 0, 0.5);
+    background: #ffb347;
+    transform: translateY(-1px);
 }
 
 /* Media queries untuk responsif */
 @media (max-width: 550px) {
-    .game-container {
-        padding: 1rem; /* Adjusted padding */
-        border-radius: 1rem;
-    }
-    h1 { font-size: 2.2em; margin-bottom: 10px; }
-    .saldo { font-size: 20px; margin-bottom: 20px; }
-    .dice-area { gap: 10px; margin-bottom: 25px; min-height: 80px; }
-    .dice, .guess-box {
-        width: 70px; /* Adjusted dice size */
-        height: 70px;
-        border-radius: 15px;
-    }
-    .dice .dot, .guess-box .dot {
-        width: 10px;
-        height: 10px;
-    }
-    .dice.animal, .guess-box.animal {
-        font-size: 32px;
-    }
-    label { font-size: 1em; margin-bottom: 6px; }
-    input[type="number"] { font-size: 16px; padding: 8px; margin-bottom: 10px; }
-    .bet-control { gap: 10px; margin-bottom: 15px; }
-    .bet-control #display-bet-amount { font-size: 20px; min-width: 100px; }
-    .btn-bet-adjust { width: 40px; height: 40px; font-size: 24px; }
-    .guess-options-grid {
-        gap: 8px;
-        /* Lebar untuk 3 dadu 70px + 2x gap 8px = 210 + 16 = 226px */
-        max-width: 226px; /* Adjusted max-width */
-    }
-    .guess-options-grid label.guess-box {
-        height: 70px;
-        font-size: 0.9em;
-        border-radius: 15px;
-    }
-    .btn { padding: 0.7rem 1.2rem; font-size: 1.1rem; margin-top: 25px; border-radius: 0.6rem; }
-    .message-content { padding: 1.2rem; border-radius: 0.8rem; }
     .message p { font-size: 1.6em; margin-bottom: 10px; }
     .message span { font-size: 1em; }
-    .message .close-popup-btn { padding: 0.6rem 1.1rem; font-size: 1em; margin-top: 1.2rem; border-radius: 0.5rem; }
+    .message .close-popup-btn { padding: 8px 18px; font-size: 0.95em; margin-top: 20px; }
+}
+@media (max-width: 400px) {
+    .message p { font-size: 1.4em; margin-bottom: 8px; }
+    .message span { font-size: 0.9em; }
+    .message .close-popup-btn { padding: 7px 15px; font-size: 0.9em; margin-top: 15px; }
 }
 
-@media (max-width: 400px) {
-    .game-container {
-        padding: 0.8rem;
-        border-radius: 1rem;
+
+  
+    @media (max-width: 550px) {
+        .game-container {
+            padding: 20px 25px;
+            border-radius: 15px;
+        }
+        h1 { font-size: 2.2em; margin-bottom: 10px; }
+        .saldo { font-size: 20px; margin-bottom: 15px; }
+        .dice-area { gap: 8px; margin-bottom: 20px; min-height: 70px; }
+        .dice, .guess-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+        .dice .dot, .guess-box .dot {
+            width: 8px;
+            height: 8px;
+        }
+        .dice.animal, .guess-box.animal {
+            font-size: 28px;
+        }
+        label { font-size: 0.9em; margin-bottom: 5px; }
+        input[type="number"] { font-size: 14px; padding: 7px; margin-bottom: 8px; }
+        .guess-options-grid {
+            grid-template-columns: repeat(3, 1fr); 
+            /* Lebar untuk 3 dadu 60px + 2x gap 6px = 180 + 12 = 192px */
+            max-width: 192px; /* Sesuaikan max-width untuk dadu 60px */
+            gap: 6px;
+        }
+        .guess-options-grid label.guess-box {
+            height: 60px;
+            font-size: 0.85em;
+            border-radius: 12px;
+        }
+        .btn { padding: 10px 20px; font-size: 16px; margin-top: 15px; border-radius: 25px; }
+        .message { font-size: 18px; margin-top: 15px; }
     }
-    h1 { font-size: 2em; margin-bottom: 1px; }
-    .saldo { font-size: 10px; margin-bottom: 15px; }
-    .dice-area { gap: 2px; margin-bottom: 10px; min-height: 50px; }
-    .dice, .guess-box {
-        width: 60px;
-        height: 60px;
-        border-radius: 12px;
+
+    @media (max-width: 400px) {
+        .game-container {
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
+        h1 { font-size: 1.8em; margin-bottom: 8px; }
+        .saldo { font-size: 18px; margin-bottom: 12px; }
+        .dice-area { gap: 6px; margin-bottom: 15px; min-height: 60px; }
+        .dice, .guess-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+        }
+        .dice .dot, .guess-box .dot {
+            width: 7px;
+            height: 7px;
+        }
+        .dice.animal, .guess-box.animal {
+            font-size: 24px;
+        }
+        label { font-size: 0.85em; margin-bottom: 0px; }
+        input[type="number"] { font-size: 12px; padding: 5px; margin-bottom: 5px; }
+        .guess-options-grid {
+            /* Untuk layar yang sangat kecil, kita bisa tetap 3 kolom jika 50px dadu memungkinkan */
+            grid-template-columns: repeat(3, 1fr); 
+            /* Lebar untuk 3 dadu 50px + 2x gap 5px = 150 + 10 = 160px */
+            max-width: 160px; /* Sesuaikan max-width untuk dadu 50px */
+            gap: 5px;
+        }
+        .guess-options-grid label.guess-box {
+            height: 50px;
+            font-size: 0.8em;
+            border-radius: 10px;
+        }
+        .btn { padding: 10px 15px; font-size: 14px; margin-top: 10px; border-radius: 20px; }
+        .message { font-size: 16px; margin-top: 10px; }
     }
-    .dice .dot, .guess-box .dot {
-        width: 8px;
-        height: 8px;
-    }
-    .dice.animal, .guess-box.animal {
-        font-size: 28px;
-    }
-    label { font-size: 0.9em; margin-bottom: 5px; }
-    input[type="number"] { font-size: 10px; padding: 5px; margin-bottom: 8px; }
-    .bet-control { gap: 8px; margin-bottom: 12px; }
-    .bet-control #display-bet-amount { font-size: 18px; min-width: 80px; }
-    .btn-bet-adjust { width: 35px; height: 35px; font-size: 10px; }
-    .guess-options-grid {
-        gap: 2px;
-        /* Lebar untuk 3 dadu 60px + 2x gap 6px = 180 + 12 = 192px */
-        max-width: 192px; /* Adjusted max-width */
-    }
-    .guess-options-grid label.guess-box {
-        height: 60px;
-        font-size: 0.60em;
-        border-radius: 12px;
-    }
-    .btn { padding: 0.6rem 1rem; font-size: 1rem; margin-top: 0px; border-radius: 0.5rem; }
-    .message-content { padding: 1rem; border-radius: 0.8rem; }
-    .message p { font-size: 1em; margin-bottom: 5px; }
-    .message span { font-size: 0.9em; }
-    .message .close-popup-btn { padding: 0.5rem 1rem; font-size: 0.9em; margin-top: 1rem; border-radius: 0.4rem; }
-}
-</style>
+  </style>
 </head>
 <body>
   <div class="game-container" id="game-container">
-    <h1>Tebak Dadu Fantasi</h1>
-    <div class="saldo" id="saldo-display">Saldo: Rp0</div>
+    <h1>Tebak Dadu Fantasi Game Zone</h1>
+    <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
 
     <div class="dice-area">
       <div class="dice" id="die1" data-value="?">
@@ -586,7 +571,7 @@ input[type="number"]::placeholder {
         <label>Jumlah Taruhan (Rp):</label>
         <div class="bet-control">
          <button class="btn-bet-adjust" id="decrease-bet">-</button>
-            <span id="display-bet-amount">Rp. 100</span> <button class="btn-bet-adjust" id="increase-bet">+</button>
+            <span id="display-bet-amount">Rp.100</span> <button class="btn-bet-adjust" id="increase-bet">+</button>
         </div>
     </div>
 
@@ -640,12 +625,7 @@ input[type="number"]::placeholder {
 
     <button class="btn" id="roll-dice-btn">Gulirkan Dadu!</button>
 
-<div class="message">
-    <div class="message-content"> <p>Hasil Permainan</p>
-        <span>Anda Menang!</span>
-        <button class="close-popup-btn">OK</button>
-    </div> </div>
-
+    <div class="message" id="game-message"></div>
   </div>
 
   <audio id="bg-music" loop>
@@ -737,7 +717,7 @@ input[type="number"]::placeholder {
       });
 
       // Initialize displayed bet amount
-      displayBetAmount.textContent = `Rp${currentManualBet.toLocaleString('id-ID')}`;
+      displayBetAmount.textContent = `Rp.${currentManualBet.toLocaleString('id-ID')}`;
 
       // Play background music on user interaction (e.g., first click)
       document.body.addEventListener('click', () => {
@@ -798,7 +778,7 @@ input[type="number"]::placeholder {
       } else {
         currentSaldo = userData.saldo ?? 0;
       }
-      saldoDisplay.textContent = `Saldo: Rp${currentSaldo.toLocaleString('id-ID')}`;
+      saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
     }
 
     async function updateSaldoInSupabase(amount) {
