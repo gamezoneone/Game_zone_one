@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-  
   body {
     margin: 0;
     font-family: 'Arial', sans-serif;
@@ -15,8 +14,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    overflow: hidden; /* Prevent scrolling */
+    min-height: 100vh; /* Pastikan tinggi minimum setinggi viewport */
+    overflow: hidden; /* Mencegah scrolling */
     color: #fff;
     text-shadow: 0 0 0.2rem rgba(255, 255, 255, 0.4);
     box-sizing: border-box;
@@ -26,31 +25,31 @@
     background: linear-gradient(145deg, #1a0a30, #3a1a50); /* Background ungu gelap */
     border: 0.2rem solid #a020f0; /* Purple neon */
     border-radius: 1.5rem;
-    padding: 1rem; /* Kurangi padding */
+    padding: 1rem;
     box-shadow:
         inset 0 0 1.5rem rgba(160, 32, 240, 0.5),
         0 0 3rem rgba(160, 32, 240, 0.7),
         0 0 1.8rem rgba(0, 255, 255, 0.5);
     text-align: center;
-    width: 98%; /* Sedikit lebih lebar */
-    max-width: 600px; /* Lebar maksimum yang lebih kecil */
+    width: 95%; /* Sedikit lebih lebar agar muat di berbagai layar */
+    max-width: 600px; /* Batasan lebar maksimum */
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-between; /* Untuk mendistribusikan ruang secara vertikal */
     min-height: 90vh; /* Memastikan cukup tinggi untuk konten */
 }
 
 header {
     width: 100%;
-    margin-bottom: 0.8rem; /* Kurangi margin */
+    margin-bottom: 0.8rem;
     position: relative;
     z-index: 2;
 }
 
 h1 {
-    font-size: 2.2rem; /* Perkecil font */
+    font-size: 2.2rem;
     color: #ffcc00; /* Neon kuning */
     text-shadow: 0 0 0.3rem #ffcc00, 0 0 0.6rem #ffcc00, 0 0 0.9rem #ffcc00, 0 0 1.2rem #ff0000;
     margin: 0 auto;
@@ -61,16 +60,16 @@ h1 {
 }
 
 .player-info {
-    font-size: 0.8rem; /* Perkecil font */
-    margin-top: 0.6rem; /* Kurangi margin */
+    font-size: 0.8rem;
+    margin-top: 0.6rem;
     color: #00ffff;
     text-shadow: 0 0 0.2rem #00ffff;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    gap: 0.4rem; /* Kurangi gap */
-    padding: 0.4rem 0.8rem; /* Kurangi padding */
+    gap: 0.4rem;
+    padding: 0.4rem 0.8rem;
     background-color: rgba(0, 0, 0, 0.3);
     border-radius: 0.4rem;
     border: 1px solid rgba(0, 255, 255, 0.5);
@@ -83,8 +82,8 @@ h1 {
 
 .control-btn {
     background: linear-gradient(135deg, #007bff, #00c6ff);
-    font-size: 0.7rem; /* Perkecil font */
-    padding: 0.3rem 0.6rem; /* Kurangi padding */
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
     border: none;
     border-radius: 0.3rem;
     box-shadow: 0 0 0.4rem rgba(0, 123, 255, 0.6);
@@ -98,53 +97,23 @@ h1 {
     transform: translateY(-0.05rem);
 }
 
-
 .game-table {
     background: linear-gradient(to bottom, #006400, #008000); /* Dark green felt */
     border: 0.2rem solid #a020f0;
-    border-radius: 50%;
+    border-radius: 50%; /* Meja bundar */
     width: 90%;
-    max-width: 400px; /* Ukuran meja lebih kecil */
-    height: 400px; /* Ukuran meja lebih kecil */
+    max-width: 400px;
+    height: 400px; /* Ukuran meja yang sama lebar dan tinggi */
     display: flex;
     flex-direction: column;
-    justify-content: space-around;
+    justify-content: space-around; /* Mendistribusikan ruang antara player-box */
     align-items: center;
-    position: relative;
-    margin: 1rem 0; /* Kurangi margin */
-    box-shadow: inset 0 0 1.5rem rgba(0, 0, 0, 0.3), 0 0 0.8rem rgba(160, 32, 240, 0.5);
-    flex-shrink: 0;
-}
-.table-center-value {
-    position: absolute; /* Posisikan secara absolut di dalam .game-table */
-    font-size: 1.1rem; /* Ukuran font bisa disesuaikan */
-    font-weight: bold;
-    color: #99ff33; /* Warna sama dengan sebelumnya */
-    text-shadow: 0 0 0.3rem #99ff33;
-    width: 100%; /* Agar teks bisa di-center */
-    text-align: center; /* Pusatkan teks */
-    left: 0; /* Pastikan dari kiri 0 */
-    right: 0; /* Pastikan dari kanan 0 */
-    z-index: 10; /* Pastikan di atas elemen lain */
-}
-#dealerValue.table-center-value {
-    top: 35%; /* Sesuaikan nilai ini untuk posisi vertikalnya */
-    transform: translateY(-50%); /* Menyesuaikan posisi berdasarkan tinggi elemen itu sendiri */
+    position: relative; /* Penting untuk positioning absolut anak-anaknya */
+    margin: 1rem 0;
+    box-shadow: inset 0 0 1.5rem rgba(0, 0, 0, 0.8), 0 0 0.8rem rgba(160, 32, 240, 0.5);
+    flex-shrink: 0; /* Mencegah meja menyusut */
 }
 
-/* Posisikan nilai pemain di bawah tengah */
-#playerValue.table-center-value {
-    bottom: 35%; /* Sesuaikan nilai ini untuk posisi vertikalnya */
-    transform: translateY(50%); /* Menyesuaikan posisi berdasarkan tinggi elemen itu sendiri */
-}
-
-/* Opsional: Sesuaikan posisi player-box jika diperlukan */
-.player-box.dealer-box {
-    margin-top: -30px; /* Geser sedikit ke atas jika perlu */
-}
-.player-box.player-box-bottom {
-    margin-bottom: -30px; /* Geser sedikit ke bawah jika perlu */
-}
 .game-table::before {
     content: '';
     position: absolute;
@@ -158,22 +127,32 @@ h1 {
     z-index: 0;
 }
 
-
 .player-box {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.3rem; /* Kurangi gap */
-    width: 10%;
-   /* background-color: rgba(0, 0, 0, 0.4);
-    border-radius: 0.6rem; /* Lebih kecil */
-    padding: 0.4rem; /* Kurangi padding */
-   /* border: 1px solid rgba(255, 255, 0, 0.5);
-    /*box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.3);
+    gap: 0.4rem;
+    width: 35%;
+    height: 35%;
+    background-color: rgba(0, 0, 0, 0.0);
+    border-radius: 0.6rem;
+    padding: 0.4rem;
+    border: 1px solid rgba(255, 255, 0, 0.0);
+    box-shadow: inset 0 0 0.4rem rgba(255, 255, 0, 0.0);
+    z-index: 1; /* Pastikan kotak kartu di atas efek meja */
 }
 
+/* Penyesuaian margin agar player-box tidak terlalu dekat dengan tepi meja */
+.player-box.dealer-box {
+    margin-top: -30px; /* Geser sedikit ke atas (ke dalam meja) */
+}
+.player-box.player-box-bottom {
+    margin-bottom: -30px; /* Geser sedikit ke bawah (ke dalam meja) */
+}
+
+
 .player-label {
-    font-size: 1rem; /* Perkecil font */
+    font-size: 1rem;
     font-weight: bold;
     color: #ffcc00;
     text-shadow: 0 0 0.3rem #ffcc00;
@@ -182,9 +161,9 @@ h1 {
 .cards-container {
     display: flex;
     justify-content: center; /* Memusatkan kartu secara horizontal */
-    align-items: center;   /* Memusatkan kartu secara vertikal jika tinggi kontainer lebih besar */
-    gap: 0.6rem;           /* Tingkatkan gap sedikit untuk jarak antar kartu */
-    height: 80px;          /* Sesuaikan tinggi sesuai kebutuhan agar kartu tidak tumpang tindih */
+    align-items: center; /* Memusatkan kartu secara vertikal di dalam kontainer */
+    gap: 0.8rem; /* Jarak antar kartu. Bisa disesuaikan */
+    height: 80px; /* Tinggi kontainer cukup untuk kartu */
     perspective: 1000px;
 }
 
@@ -192,48 +171,54 @@ h1 {
 /* DOMINO CARD STYLING (IMAGE BASED)            */
 /* ============================================== */
 .card {
-    width: 56px;  /* Lebar kartu */
-    height: 83px; /* Tinggi kartu */
-    /* Properti lain tetap sama */
-    border: 1px solid #333;
+    width: 60px; /* Lebar kartu sedikit lebih besar */
+    height: 90px; /* Tinggi kartu sedikit lebih besar (rasio 2:3) */
+    border: 0px solid #333;
     border-radius: 5px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.0);
     position: relative;
     overflow: hidden;
-    background-size: cover;
+    background-size: contain; /* Ganti cover menjadi contain agar gambar tidak terpotong */
     background-position: center;
     background-repeat: no-repeat;
     transition: transform 0.5s ease-out;
     transform-style: preserve-3d;
+   /* background-color: #f7f7f7; /* Warna latar belakang kartu jika gambar belum dimuat */
 }
 
-/* Tambahkan atau sesuaikan media queries jika perlu untuk responsivitas */
-@media (max-width: 600px) {
-    .card {
-        width: 50px; /* Sedikit perkecil lagi untuk layar kecil */
-        height: 75px;
-    }
-    .cards-container {
-        gap: 0.5rem; /* Sesuaikan gap untuk layar kecil */
-    }
+/*.card.back {
+    background-color: #555; /* Fallback color untuk kartu belakang */
 }
 
-@media (max-width: 400px) {
-    .card {
-        width: 45px; /* Lebih kecil lagi untuk layar sangat kecil */
-        height: 68px;
-    }
-    .cards-container {
-        gap: 0.4rem; /* Sesuaikan gap untuk layar sangat kecil */
-    }
+/* Aturan baru untuk nilai di tengah meja */
+.table-center-value {
+    position: absolute; /* Posisikan secara absolut di dalam .game-table */
+    font-size: 1.1rem; /* Ukuran font bisa disesuaikan */
+    font-weight: bold;
+    color: #99ff33; /* Warna sama dengan sebelumnya */
+    text-shadow: 0 0 0.3rem #99ff33;
+    width: 100%; /* Agar teks bisa di-center */
+    text-align: center; /* Pusatkan teks */
+    left: 0;
+    right: 0;
+    z-index: 10; /* Pastikan di atas elemen lain */
+}
+
+/* Posisikan nilai bandar di atas tengah */
+#dealerValue.table-center-value {
+    top: 30%; /* Sesuaikan nilai ini untuk posisi vertikalnya */
+    transform: translateY(-50%); /* Menyesuaikan posisi berdasarkan tinggi elemen itu sendiri */
+}
+
+/* Posisikan nilai pemain di bawah tengah */
+#playerValue.table-center-value {
+    bottom: 30%; /* Sesuaikan nilai ini untuk posisi vertikalnya */
+    transform: translateY(50%); /* Menyesuaikan posisi berdasarkan tinggi elemen itu sendiri */
 }
 
 
 .hand-value {
-    font-size: 1.1rem; /* Perkecil font */
-    font-weight: bold;
-    color: #99ff33;
-    text-shadow: 0 0 0.3rem #99ff33;
+    /* Aturan umum untuk nilai, bisa juga dihapus jika hanya table-center-value yang dipakai */
     min-height: 1.3rem; /* Menyesuaikan ruang */
 }
 
@@ -243,15 +228,15 @@ h1 {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 0.6rem; /* Kurangi gap */
+    gap: 0.6rem;
     width: 100%;
-    margin-top: 0.8rem; /* Kurangi margin */
+    margin-top: 0.8rem;
 }
 
 .bet-control {
     display: flex;
     align-items: center;
-    gap: 0.4rem; /* Kurangi gap */
+    gap: 0.4rem;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 0.4rem;
     padding: 0.4rem 0.8rem;
@@ -260,19 +245,19 @@ h1 {
 }
 
 .bet-control label {
-    font-size: 0.9rem; /* Perkecil font */
+    font-size: 0.9rem;
     color: #99ff33;
     text-shadow: 0 0 0.3rem #99ff33;
 }
 
 .bet-control input {
-    width: 70px; /* Lebar input lebih kecil */
-    padding: 0.5rem 0.7rem; /* Kurangi padding */
+    width: 70px;
+    padding: 0.5rem 0.7rem;
     border-radius: 0.3rem;
     border: 0.1rem solid #66ffff;
     background-color: #0d1217;
     color: #fff;
-    font-size: 0.9rem; /* Perkecil font */
+    font-size: 0.9rem;
     text-align: center;
     box-shadow: inset 0 0 0.4rem rgba(102, 255, 255, 0.4);
     outline: none;
@@ -285,10 +270,10 @@ h1 {
 button {
     background: linear-gradient(135deg, #ff00ff, #8a2be2);
     color: #fff;
-    padding: 0.7rem 1.2rem; /* Kurangi padding */
+    padding: 0.7rem 1.2rem;
     border: none;
     border-radius: 0.6rem;
-    font-size: 1.2rem; /* Perkecil font */
+    font-size: 1.2rem;
     font-weight: bold;
     cursor: pointer;
     box-shadow: 0 0 0.8rem rgba(255, 0, 255, 0.7), 0 0 0.5rem rgba(138, 43, 226, 0.5);
@@ -297,7 +282,7 @@ button {
     letter-spacing: 0.07rem;
     text-shadow: 0 0 0.1rem rgba(0,0,0,0.5);
     width: 90%;
-    max-width: 220px; /* Lebar tombol lebih kecil */
+    max-width: 220px;
 }
 
 button:hover {
@@ -319,11 +304,11 @@ button:disabled {
 }
 
 .messages {
-    margin-top: 0.8rem; /* Kurangi margin */
-    font-size: 0.9rem; /* Perkecil font */
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
     color: #00ff00;
     text-shadow: 0 0 0.4rem #00ff00;
-    min-height: 1.8rem; /* Menyesuaikan ruang */
+    min-height: 1.8rem;
     background-color: rgba(0, 0, 0, 0.4);
     border-radius: 0.4rem;
     padding: 0.4rem;
@@ -342,15 +327,16 @@ button:disabled {
         height: 320px;
         max-width: 320px;
         max-height: 320px;
-        position: relative;
-        overflow: hidden; 
     }
     .player-label {
         font-size: 0.9rem;
     }
     .card {
-        width: 50px;
-        height: 75px;
+        width: 55px; /* Sesuaikan ukuran kartu untuk layar menengah */
+        height: 82px;
+    }
+    .cards-container {
+        gap: 0.6rem; /* Sesuaikan gap untuk layar menengah */
     }
     .hand-value {
         font-size: 1rem;
@@ -362,6 +348,13 @@ button:disabled {
     .messages {
         font-size: 0.8rem;
     }
+    /* Sesuaikan posisi nilai di tengah meja untuk layar menengah */
+    #dealerValue.table-center-value {
+        top: 28%;
+    }
+    #playerValue.table-center-value {
+        bottom: 28%;
+    }
 }
 
 @media (max-width: 400px) {
@@ -372,8 +365,18 @@ button:disabled {
         max-height: 280px;
     }
     .card {
-        width: 45px;
-        height: 68px;
+        width: 50px; /* Sesuaikan ukuran kartu untuk layar kecil */
+        height: 75px;
+    }
+    .cards-container {
+        gap: 0.5rem; /* Sesuaikan gap untuk layar kecil */
+    }
+    /* Sesuaikan posisi nilai di tengah meja untuk layar kecil */
+    #dealerValue.table-center-value {
+        top: 25%;
+    }
+    #playerValue.table-center-value {
+        bottom: 25%;
     }
 }
 
