@@ -186,12 +186,12 @@
         .reels {
             display: flex;
             justify-content: space-around;
-            gap: 0.6rem; /* Reduced gap */
-            margin-bottom: 1rem; /* Reduced margin */
-            height: 100px; /* Further reduced height for symbols */
+            gap: 0rem; /* Reduced gap */
+            margin-bottom: 0rem; /* Reduced margin */
+            height: 80px; /* Further reduced height for symbols */
             overflow: hidden;
-            border: 0.15rem solid #fff; /* Thinner border */
-            border-radius: 0.6rem;
+            border: 0.15rem solid gold; /* Thinner border */
+            border-radius: 0.5rem;
             background-color: #1a1a1a;
             position: relative;
             flex-shrink: 0;
@@ -212,11 +212,11 @@
         }
 
         .reel img {
-            width: 90%;
+            width: 100%;
             max-width: 80px; /* Reduced max-width for symbols */
             height: 80px; /* Reduced fixed height for symbols */
             object-fit: contain;
-            padding: 0.2rem; /* Reduced padding */
+            padding: 0.5rem; /* Reduced padding */
             box-sizing: border-box;
             display: block;
             filter: drop-shadow(0 0 0.2rem rgba(255, 255, 0, 0.5));
@@ -527,7 +527,7 @@
         ];
 
         const REEL_STOP_DURATION = 2500;
-        const SYMBOLS_PER_REEL_ANIMATION = 20;
+        const SYMBOLS_PER_REEL_ANIMATION = 10;
 
         let currentUser = null;
         let playerBalance = 0; // Variabel JS untuk menyimpan saldo
@@ -722,7 +722,7 @@
                 reelElement.style.transform = `translateY(0px)`;
                 void reelElement.offsetWidth;
 
-                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 1000}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`;
+                reelElement.style.transition = `transform ${REEL_STOP_DURATION / 700}s cubic-bezier(0.25, 0.1, 0.25, 1.0)`;
                 reelElement.style.transform = `translateY(${targetScrollPosition}px)`;
 
                 setTimeout(() => {
@@ -794,9 +794,9 @@
             ];
 
             const reelPromises = [
-                spinReel(reels_elements.reel1, currentSpinResults[0]),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[1])), 300)),
-                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[2])), 600))
+                spinReel(reels_elements.reel1, currentSpinResults[10]),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel2, currentSpinResults[10])), 300)),
+                new Promise(resolve => setTimeout(() => resolve(spinReel(reels_elements.reel3, currentSpinResults[10])), 300))
             ];
 
             const finalReelSymbols = await Promise.all(reelPromises);
