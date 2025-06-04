@@ -711,7 +711,7 @@
 <body>
   <div class="container">
     <div class="player-info-container">
-        <span id="player-id">ID Pemain: Loading...</span>
+        <span id="player-id">ID: Loading...</span>
         <span id="saldo-display-top">Saldo: Rp.0</span>
     </div>
     <h1>GAME ZONE</h1>
@@ -866,7 +866,7 @@
     getCurrentUserEmail().then(() => {
       loadProfile();
       // Tampilkan ID Pemain dari UID
-      document.getElementById('player-id').textContent = `ID Pemain: ${uid ? uid.substring(0, 8) + '...' : 'N/A'}`; // Menampilkan sebagian UID
+      document.getElementById('player-id').textContent = `ID : ${uid ? uid.substring(0, 8) + '...' : 'N/A'}`; // Menampilkan sebagian UID
     }).catch(err => {
       console.error("Failed to initialize user session:", err);
       showNotificationModal("Sesi Tidak Valid", "Sesi pengguna tidak valid. Silakan login kembali.");
