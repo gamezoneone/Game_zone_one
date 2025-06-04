@@ -18,7 +18,14 @@
     body, html {
       min-height: 100vh;
       /* Background lebih gelap untuk kontras neon */
-      background: #0d0d1a; /* Dark Blue-Purple */
+      background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.0);
+  background-blend-mode: overlay;
+}
       font-family: 'Poppins', sans-serif;
       color: #e0e0e0; /* Warna teks umum */
       overflow-x: hidden;
@@ -52,10 +59,10 @@
     /* Saldo di Pojok Kiri Atas */
     .saldo {
       position: absolute;
-      top: 25px; /* Jarak dari atas */
+      top: 28px; /* Jarak dari atas */
       left: 25px; /* Jarak dari kiri */
       font-family: 'Orbitron', sans-serif; /* Font futuristik */
-      font-size: 1.2em;
+      font-size: 1em;
       font-weight: 700;
       color: #39ff14; /* Neon hijau terang */
       background: rgba(10, 10, 30, 0.8); /* Background gelap */
@@ -70,11 +77,28 @@
     h1 {
       text-align: center;
       font-family: 'Orbitron', sans-serif;
-      color: #e000ff; /* Neon ungu terang */
-      text-shadow: 0 0 20px rgba(224, 0, 255, 0.8), 0 0 30px rgba(224, 0, 255, 0.5);
-      margin-bottom: 50px;
-      font-size: 2.5em; /* Ukuran judul lebih besar */
-      padding-top: 20px;
+      color: #ffd700;
+    text-shadow: 0 0 10px #ffeb3b,
+                 0 0 20px #ffeb3b,
+                 0 0 30px #ffeb3b,
+                 0 0 40px #ffeb3b,
+                 0 0 50px #ffeb3b,
+                 0 0 60px #ffeb3b;
+    animation: neon-glow 1.5s ease-in-out infinite alternate;
+    margin-top: 0;
+    line-height: 1.2;
+  }
+
+  @keyframes neon-glow {
+    from {
+      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
+      color: #ffd700;
+    }
+    to {
+      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
+                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
+      color: red;
+    }
     }
 
     /* Grup Tombol (Deposit, Penarikan, Riwayat) */
@@ -126,9 +150,16 @@
       padding-bottom: 12px;
       margin-top: 40px; /* Jarak dari atas */
       margin-bottom: 25px;
-      color: #e000ff; /* Warna judul neon ungu */
-      font-size: 1.8em;
-      text-shadow: 0 0 15px rgba(224, 0, 255, 0.6);
+  color: #ffd700;
+    text-shadow: 0 0 10px red,
+                 0 0 20px #ffeb,
+                 0 0 30px #ff3b,
+                 0 0 40px #ffeb3b,
+                 0 0 50px #ffeb3b,
+                 0 0 60px #ffeb3b;
+    animation: neon-glow 1.5s ease-in-out infinite alternate;
+    margin-top: 0;
+    line-height: 1.2;
       text-align: center; /* Pusatkan judul */
     }
 
@@ -571,7 +602,7 @@
   </audio>
 
   <audio id="click-sound">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" type="audio/mpeg">
+    <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
 
