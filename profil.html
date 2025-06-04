@@ -291,115 +291,112 @@
         padding-bottom: 0;
     }
 
-    .modal-content label {
-        display: block;
-        margin-bottom: 8px;
-        color: #00bcd4; /* Label biru neon */
-        font-size: 0.95em;
-        text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
-    }
+.modal-content label {
+    display: block;
+    margin-bottom: 8px;
+    color: #00bcd4; /* Label biru neon */
+    font-size: 0.95em;
+    text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+}
 
-    .modal-content input[type="text"],
-    .modal-content input[type="email"],
-    .modal-content input[type="number"],
-    .modal-content select {
-        width: 100%;
-        padding: 12px 18px;
-        margin-bottom: 20px; /* Jarak antar input lebih besar */
-        border-radius: 10px;
-        border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
-        background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
-        color: #e0e0e0;
-        font-size: 1em;
-        transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
+.modal-content input[type="text"],
+.modal-content input[type="email"],
+.modal-content input[type="number"],
+.modal-content select {
+    width: 100%;
+    padding: 12px 18px;
+    margin-bottom: 20px; /* Jarak antar input lebih besar */
+    border-radius: 10px;
+    border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
+    background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
+    color: #e0e0e0;
+    font-size: 1em;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
-    .modal-content input:focus,
-    .modal-content select:focus {
-        outline: none;
-        border-color: #39ff14; /* Border hijau neon saat fokus */
-        box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
-        background-color: rgba(0, 0, 0, 0.8);
-    }
+.modal-content input:focus,
+.modal-content select:focus {
+    outline: none;
+    border-color: #39ff14; /* Border hijau neon saat fokus */
+    box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
+    background-color: rgba(0, 0, 0, 0.8);
+}
 
-    .modal-content input::placeholder {
-        color: #888;
-    }
+.modal-content input::placeholder {
+    color: #888;
+}
 
-    .modal-content input[readonly] {
-        background-color: rgba(0, 0, 0, 0.4);
-        border-color: rgba(0, 255, 255, 0.2);
-        cursor: default;
-    }
+.modal-content input[readonly] {
+    background-color: rgba(0, 0, 0, 0.4);
+    border-color: rgba(0, 255, 255, 0.2);
+    cursor: default;
+}
 
-    .modal-buttons {
-        display: flex;
-        justify-content: center;
-        gap: 15px;
-        margin-top: 30px;
-    }
+/* --- Penyesuaian Baru/Modifikasi --- */
+.input-group-with-copy { /* Kelas baru untuk membungkus label, input, dan button copy */
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Jarak antar grup */
+    gap: 10px; /* Jarak antara input dan button */
+}
 
-    .modal-content button {
-        padding: 12px 25px;
-        border: none;
-        border-radius: 25px;
-        font-size: 1em;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        flex: 1;
-        min-width: 120px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-    }
+.input-group-with-copy label {
+    margin-bottom: 0; /* Hapus margin-bottom default */
+    flex-shrink: 0; /* Pastikan label tidak menyusut */
+    white-space: nowrap; /* Pastikan teks label tidak pecah baris */
+    padding-right: 5px; /* Sedikit padding agar tidak terlalu mepet */
+}
 
-    .modal-content button.primary {
-        background: #e000ff; /* Ungu neon */
-        color: #fff;
-        box-shadow: 0 0 15px rgba(224, 0, 255, 0.6), 0 0 25px rgba(224, 0, 255, 0.4);
-        border: 1px solid rgba(224, 0, 255, 0.8);
-    }
+.input-group-with-copy input[type="text"] {
+    flex-grow: 1; /* Biarkan input mengambil sisa ruang yang tersedia */
+    margin-bottom: 0; /* Hapus margin-bottom default */
+}
 
-    .modal-content button.primary:hover {
-        background: #39ff14; /* Hijau neon */
-        transform: translateY(-3px);
-        box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.5);
-        border-color: rgba(57, 255, 20, 1);
-    }
+.btn-copy {
+    background: #e000ff !important;
+    color: white !important;
+    border-radius: 8px !important;
+    padding: 8px 15px !important;
+    font-size: 0.9em !important;
+    /* margin-left: 10px; <--- HAPUS ATAU KOMENTARI INI */
+    box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
+    flex-shrink: 0; /* Penting: mencegah button menyusut */
+    border: 1px solid rgba(224, 0, 255, 0.8);
+    /* Lebar tetap, bisa disesuaikan jika perlu */
+    min-width: 80px; /* Minimum width untuk tombol Salin */
+    text-align: center;
+    display: flex; /* Untuk ikon dan teks sejajar */
+    align-items: center;
+    justify-content: center;
+    gap: 5px; /* Jarak antara ikon dan teks */
+}
 
-    .modal-content button.secondary {
-        background: #00bcd4; /* Biru neon */
-        color: #0d0d1a;
-        box-shadow: 0 0 15px rgba(0, 188, 212, 0.6), 0 0 25px rgba(0, 188, 212, 0.4);
-        border: 1px solid rgba(0, 188, 212, 0.8);
-    }
+.btn-copy:hover {
+    background: #39ff14 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
+    border-color: rgba(57, 255, 20, 1);
+}
 
-    .modal-content button.secondary:hover {
-        background: #ffeb3b; /* Kuning neon */
-        transform: translateY(-3px);
-        box-shadow: 0 0 20px rgba(255, 235, 59, 0.8), 0 0 30px rgba(255, 235, 59, 0.5);
-        border-color: rgba(255, 235, 59, 1);
-        color: #0d0d1a;
+/* Media Queries untuk Responsif */
+@media (max-width: 480px) {
+    .input-group-with-copy {
+        flex-direction: column; /* Ubah ke kolom pada layar sangat kecil */
+        align-items: flex-start; /* Sejajarkan ke kiri */
+        gap: 5px; /* Kurangi gap */
     }
-
+    .input-group-with-copy label {
+        width: 100%; /* Label ambil penuh lebar */
+    }
+    .input-group-with-copy input[type="text"] {
+        width: 100%; /* Input ambil penuh lebar */
+    }
     .btn-copy {
-        background: #e000ff !important; /* Ungu neon untuk copy */
-        color: white !important;
-        border-radius: 8px !important;
-        padding: 5px 5px !important;
-        font-size: 0.5em !important;
-        margin-left: 10px;
-        box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
-        flex-shrink: 0;
-        border: 1px solid rgba(224, 0, 255, 0.8);
+        width: 100%; /* Tombol salin ambil penuh lebar juga */
+        min-width: unset; /* Hapus min-width */
+        padding: 10px 15px !important; /* Sesuaikan padding */
     }
-
-    .btn-copy:hover {
-        background: #39ff14 !important; /* Hijau neon saat hover */
-        transform: translateY(-2px) !important;
-        box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
-        border-color: rgba(57, 255, 20, 1);
-    }
+}
 
     #form-qris {
         text-align: center;
@@ -650,10 +647,7 @@
       <label for="dep-email">Email Pemain:</label>
       <input type="email" id="dep-email" placeholder="Email" readonly />
 
-      <div style="display: flex; align-items: center; margin-bottom: 20px;">
-        <label for="dep-nomor" style="margin-bottom: 0; margin-right: 10px; flex-shrink: 0;">Nomor Tujuan(salin):</label>
-        <input type="text" id="dep-nomor" placeholder="Nomor" readonly style="flex-grow: 1; margin-bottom: 0;" />
-        <button class="btn-copy" data-target="dep-nomor">
+      <div class="input-group-with-copy"> <label for="dep-nomor">Nomor Tujuan:</label> <input type="text" id="dep-nomor" placeholder="Nomor" readonly /> <button class="btn-copy" data-target="dep-nomor">
           <i class="fas fa-copy"></i> Salin
         </button>
       </div>
