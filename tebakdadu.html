@@ -4,67 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Tebak Dadu Fantasi - GameZone</title>
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&family=Luckiest+Guy&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    /* Global Styles */
+    /* Global Styles (dari profil.html) */
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+
+    :root {
+        --neon-green: #00ff00;
+        --neon-blue: #00ffff;
+        --neon-purple: #ff00ff;
+        --dark-bg: #1a0033; /* Dark purple/black */
+        --light-text: #e0e0e0;
+        --accent-glow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 30px var(--neon-blue);
+        --btn-glow: 0 0 8px var(--neon-green), 0 0 15px var(--neon-green);
+    }
+
     * { box-sizing: border-box; }
     body, html {
-  margin: 0; padding: 0; min-height: 100vh;
-  font-family: 'Poppins', sans-serif;
-  /* LATAR BELAKANG SEPERTI SAMGONG */
-  background: linear-gradient(145deg, #0a0a0a, #1a0a30); /* Dark purple-black gradient */
-  background-size: 100% 100%; /* No animation needed if using static gradient */
-  color: #fff;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-    @keyframes gradientAnimation {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Poppins', sans-serif;
+      background: var(--dark-bg); /* Solid dark background */
+      /* Hapus animasi gradient karena profil.html menggunakan solid background */
+      color: var(--light-text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 0px; /* Kembali ke padding standar untuk fleksibilitas */
+      overflow-y: auto; /* Allow vertical scroll if content overflows */
+      overflow-x: hidden; /* Prevent horizontal scroll */
     }
 
     /* Game Container */
     .game-container {
       max-width: 600px;
-  width: 100%;
-  /* BACKGROUND SEPERTI SAMGONG */
-  background: linear-gradient(145deg, #1a0a30, #3a1a50);
-  /* BORDER SEPERTI SAMGONG */
-  border: 0.2rem solid #a020f0; /* Purple neon border */
-  border-radius: 1.5rem; /* Match Samgong's border-radius */
-  padding: 1rem; /* Increased padding slightly for better look */
-  /* SHADOW SEPERTI SAMGONG */
-  box-shadow:
-      inset 0 0 1.5rem rgba(160, 32, 240, 0.5), /* Inner purple glow */
-      0 0 3rem rgba(160, 32, 240, 0.7), /* Outer purple glow */
-      0 0 1.8rem rgba(0, 255, 255, 0.5); /* Outer cyan glow */
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  /* Animasi pulsateGlow disesuaikan warnanya */
-  animation: pulsateGlowNeon 2s infinite alternate;
-  min-height: 40vh; /* Slightly more min-height */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+      width: 100%;
+      background: rgba(0,0,0,0.8); /* Background yang lebih gelap */
+      border-radius: 20px;
+      padding: 30px;
+      border: 3px solid var(--neon-blue); /* Border neon blue */
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* Glow neon blue */
+      text-align: center;
+      position: relative;
+      overflow: hidden; /* For particles */
+      animation: pulsateGlow 2s infinite alternate; /* Tetap pertahankan pulsate glow */
+      min-height: 80vh; /* Make it taller to match profil.html feel */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
 
     @keyframes pulsateGlow {
-  from { box-shadow: inset 0 0 1.2rem rgba(160, 32, 240, 0.4), 0 0 2.5rem rgba(160, 32, 240, 0.6), 0 0 1.5rem rgba(0, 255, 255, 0.4); }
-    to { box-shadow: inset 0 0 1.8rem rgba(160, 32, 240, 0.6), 0 0 4rem rgba(160, 32, 240, 0.8), 0 0 2.5rem rgba(0, 255, 255, 0.6); }
-}
+        from { box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); }
+        to { box-shadow: 0 0 40px rgba(0, 255, 255, 1); }
+    }
 
-    /* Particles Effect */
+    /* Particles Effect (disesuaikan agar sesuai tema) */
     .particle {
         position: absolute;
-        background-color: rgba(255, 255, 255, 0.8);
+        background-color: rgba(0, 255, 255, 0.6); /* Warna partikel cyan */
         border-radius: 50%;
         animation: floatAndFade 5s infinite ease-out;
         opacity: 0;
@@ -75,105 +73,97 @@
     @keyframes floatAndFade {
         0% { transform: translateY(0) translateX(0); opacity: 0; }
         10% { opacity: 0.8; }
-        100% { transform: translateY(-150px) translateX(var(--x-offset)); opacity: 0; } /* Shorter float */
+        100% { transform: translateY(-150px) translateX(var(--x-offset)); opacity: 0; }
     }
 
-    /* Titles and Saldo */
+    /* Titles and Saldo (disesuaikan dengan profil.html) */
     h1 {
-      font-family: 'Luckiest Guy', cursive;
-      color: #ffd700;
-      text-shadow: 0 0 10px red, 0 0 20px #ffc107;
-      margin-bottom: 15px; /* Reduced margin */
-      font-size: 3.5em; /* Smaller title */
+      font-family: 'Orbitron', sans-serif; /* Ganti font title */
+      color: var(--neon-green); /* Warna hijau neon */
+      text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
+      margin-bottom: 20px; /* Sedikit lebih besar */
+      font-size: 2em; /* Ukuran lebih besar */
+      letter-spacing: 2px;
+    }
+
+    /* Saldo display (dibuat mirip dengan saldo di profil.html) */
+    .saldo-container {
+        width: 100%;
+        margin-bottom: 25px;
+        text-align: center;
     }
     .saldo {
-      font-size: 24px; /* Smaller saldo display */
-      font-weight: 700;
-      margin-bottom: 20px; /* Reduced margin */
-      color: #ffeb3b;
-      text-shadow: 0 0 8px rgba(255,255,0,0.5);
+        display: inline-block;
+        padding: 1px 2px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 10px;
+        border: 2px solid var(--neon-green);
+        box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+        color: var(--neon-green);
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.8em;
+        font-weight: 700;
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.7);
     }
 
     /* Dice Area */
     .dice-area {
       display: flex;
-      justify-content: center; /* Memusatkan dadu hasil */
-      gap: 10px; /* Reduced gap */
-      margin-bottom: 25px; /* Reduced margin */
-      min-height: 80px; /* Reduced min-height */
+      justify-content: center;
+      gap: 15px; /* Jarak antar dadu sedikit lebih besar */
+      margin-bottom: 30px; /* Jarak ke elemen berikutnya */
+      min-height: 100px; /* Sesuaikan min-height */
       align-items: center;
     }
-    /* Base Dice Styling */
+    /* Base Dice Styling - TIDAK BERUBAH SESUAI PERMINTAAN */
     .dice, .guess-box {
-        width: 70px; /* Smaller dice */
-        height: 70px; /* Smaller dice */
+        width: 70px;
+        height: 70px;
         background: #fefefe;
-        border-radius: 15px; /* Slightly less rounded */
+        border-radius: 15px;
         display: flex;
         justify-content: center;
         align-items: center;
-        box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 3px 10px rgba(0,0,0,0.3); /* Smaller shadow */
-        border: 2px solid #ff9500; /* Thinner border */
+        box-shadow: inset 0 0 10px rgba(0,0,0,0.4), 0 3px 10px rgba(0,0,0,0.3);
+        border: 2px solid #ff9500; /* Border oranye asli dadu */
         transition: transform 0.1s ease-out;
-        position: relative; /* For dots */
+        position: relative;
         flex-shrink: 0;
     }
-
-    /* Dice dots */
+    /* Dice dots - TIDAK BERUBAH SESUAI PERMINTAAN */
     .dice .dot, .guess-box .dot {
         position: absolute;
         background: red;
-        width: 10px; /* Smaller dots */
-        height: 10px; /* Smaller dots */
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
     }
-    /* Dot positioning (remains the same relative to size) */
-    .dice[data-value="1"] .dot:nth-child(1),
-    .guess-box[data-value="1"] .dot:nth-child(1) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .dice[data-value="2"] .dot:nth-child(1),
-    .guess-box[data-value="2"] .dot:nth-child(1) { top: 15%; left: 15%; }
-    .dice[data-value="2"] .dot:nth-child(2),
-    .guess-box[data-value="2"] .dot:nth-child(2) { bottom: 15%; right: 15%; }
-    .dice[data-value="3"] .dot:nth-child(1),
-    .guess-box[data-value="3"] .dot:nth-child(1) { top: 15%; left: 15%; }
-    .dice[data-value="3"] .dot:nth-child(2),
-    .guess-box[data-value="3"] .dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .dice[data-value="3"] .dot:nth-child(3),
-    .guess-box[data-value="3"] .dot:nth-child(3) { bottom: 15%; right: 15%; }
-    .dice[data-value="4"] .dot:nth-child(1),
-    .guess-box[data-value="4"] .dot:nth-child(1) { top: 15%; left: 15%; }
-    .dice[data-value="4"] .dot:nth-child(2),
-    .guess-box[data-value="4"] .dot:nth-child(2) { top: 15%; right: 15%; }
-    .dice[data-value="4"] .dot:nth-child(3),
-    .guess-box[data-value="4"] .dot:nth-child(3) { bottom: 15%; left: 15%; }
-    .dice[data-value="4"] .dot:nth-child(4),
-    .guess-box[data-value="4"] .dot:nth-child(4) { bottom: 15%; right: 15%; }
-    .dice[data-value="5"] .dot:nth-child(1),
-    .guess-box[data-value="5"] .dot:nth-child(1) { top: 15%; left: 15%; }
-    .dice[data-value="5"] .dot:nth-child(2),
-    .guess-box[data-value="5"] .dot:nth-child(2) { top: 15%; right: 15%; }
-    .dice[data-value="5"] .dot:nth-child(3),
-    .guess-box[data-value="5"] .dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
-    .dice[data-value="5"] .dot:nth-child(4),
-    .guess-box[data-value="5"] .dot:nth-child(4) { bottom: 15%; left: 15%; }
-    .dice[data-value="5"] .dot:nth-child(5),
-    .guess-box[data-value="5"] .dot:nth-child(5) { bottom: 15%; right: 15%; }
-    .dice[data-value="6"] .dot:nth-child(1),
-    .guess-box[data-value="6"] .dot:nth-child(1) { top: 15%; left: 15%; }
-    .dice[data-value="6"] .dot:nth-child(2),
-    .guess-box[data-value="6"] .dot:nth-child(2) { top: 15%; right: 15%; }
-    .dice[data-value="6"] .dot:nth-child(3),
-    .guess-box[data-value="6"] .dot:nth-child(3) { top: 50%; left: 15%; }
-    .dice[data-value="6"] .dot:nth-child(4),
-    .guess-box[data-value="6"] .dot:nth-child(4) { top: 50%; right: 15%; }
-    .dice[data-value="6"] .dot:nth-child(5),
-    .guess-box[data-value="6"] .dot:nth-child(5) { bottom: 15%; left: 15%; }
-    .dice[data-value="6"] .dot:nth-child(6),
-    .guess-box[data-value="6"] .dot:nth-child(6) { bottom: 15%; right: 15%; }
+    /* Dot positioning - TIDAK BERUBAH SESUAI PERMINTAAN */
+    .dice[data-value="1"] .dot:nth-child(1), .guess-box[data-value="1"] .dot:nth-child(1) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .dice[data-value="2"] .dot:nth-child(1), .guess-box[data-value="2"] .dot:nth-child(1) { top: 15%; left: 15%; }
+    .dice[data-value="2"] .dot:nth-child(2), .guess-box[data-value="2"] .dot:nth-child(2) { bottom: 15%; right: 15%; }
+    .dice[data-value="3"] .dot:nth-child(1), .guess-box[data-value="3"] .dot:nth-child(1) { top: 15%; left: 15%; }
+    .dice[data-value="3"] .dot:nth-child(2), .guess-box[data-value="3"] .dot:nth-child(2) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .dice[data-value="3"] .dot:nth-child(3), .guess-box[data-value="3"] .dot:nth-child(3) { bottom: 15%; right: 15%; }
+    .dice[data-value="4"] .dot:nth-child(1), .guess-box[data-value="4"] .dot:nth-child(1) { top: 15%; left: 15%; }
+    .dice[data-value="4"] .dot:nth-child(2), .guess-box[data-value="4"] .dot:nth-child(2) { top: 15%; right: 15%; }
+    .dice[data-value="4"] .dot:nth-child(3), .guess-box[data-value="4"] .dot:nth-child(3) { bottom: 15%; left: 15%; }
+    .dice[data-value="4"] .dot:nth-child(4), .guess-box[data-value="4"] .dot:nth-child(4) { bottom: 15%; right: 15%; }
+    .dice[data-value="5"] .dot:nth-child(1), .guess-box[data-value="5"] .dot:nth-child(1) { top: 15%; left: 15%; }
+    .dice[data-value="5"] .dot:nth-child(2), .guess-box[data-value="5"] .dot:nth-child(2) { top: 15%; right: 15%; }
+    .dice[data-value="5"] .dot:nth-child(3), .guess-box[data-value="5"] .dot:nth-child(3) { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+    .dice[data-value="5"] .dot:nth-child(4), .guess-box[data-value="5"] .dot:nth-child(4) { bottom: 15%; left: 15%; }
+    .dice[data-value="5"] .dot:nth-child(5), .guess-box[data-value="5"] .dot:nth-child(5) { bottom: 15%; right: 15%; }
+    .dice[data-value="6"] .dot:nth-child(1), .guess-box[data-value="6"] .dot:nth-child(1) { top: 15%; left: 15%; }
+    .dice[data-value="6"] .dot:nth-child(2), .guess-box[data-value="6"] .dot:nth-child(2) { top: 15%; right: 15%; }
+    .dice[data-value="6"] .dot:nth-child(3), .guess-box[data-value="6"] .dot:nth-child(3) { top: 50%; left: 15%; }
+    .dice[data-value="6"] .dot:nth-child(4), .guess-box[data-value="6"] .dot:nth-child(4) { top: 50%; right: 15%; }
+    .dice[data-value="6"] .dot:nth-child(5), .guess-box[data-value="6"] .dot:nth-child(5) { bottom: 15%; left: 15%; }
+    .dice[data-value="6"] .dot:nth-child(6), .guess-box[data-value="6"] .dot:nth-child(6) { bottom: 15%; right: 15%; }
 
-    /* Dice rolling animation */
+    /* Dice rolling animation - TIDAK BERUBAH SESUAI PERMINTAAN */
     .dice.rolling {
-        animation: shakeDice 0.2s infinite alternate; /* Rapid shaking */
+        animation: shakeDice 0.2s infinite alternate;
         transform-style: preserve-3d;
     }
     @keyframes shakeDice {
@@ -184,118 +174,86 @@
         100% { transform: translate(-5px, -5px) rotateX(-10deg) rotateY(-10deg) rotateZ(-5deg); }
     }
 
-
-    /* Animal Dice Specific Styling (for emojis) */
+    /* Animal Dice Specific Styling (for emojis) - TIDAK BERUBAH SESUAI PERMINTAAN */
     .dice.animal, .guess-box.animal {
-      font-size: 32px; /* Emoji size */
+      font-size: 32px;
       background: #fff;
-      color: #28a745; /* This color might not affect emojis, which have their own rendering */
+      color: #28a745;
       border-color: red;
       line-height: 1;
     }
     
-    .guess-section {
-      margin-bottom: 15px; /* Reduced margin */
-      text-align: center; /* Memusatkan label tebakan */
+    .bet-section, .guess-section {
+      margin-bottom: 20px; /* Jarak antar section */
+      text-align: center;
     }
     label {
       display: block;
-      margin-bottom: 5px; /* Reduced margin */
+      margin-bottom: 10px; /* Jarak antara label dan input/pilihan */
       font-weight: 700;
-      font-size: 1em; /* Smaller font */
-      color: #eee;
+      font-size: 1.1em; /* Ukuran font label */
+      color: var(--neon-blue); /* Warna label biru neon */
+      text-shadow: 0 0 5px var(--neon-blue);
     }
-    input[type="number"] {
-      width: calc(100% - 10px); /* Slightly less width for padding */
-      padding: 8px; /* Reduced padding */
-      margin-bottom: 10px; /* Reduced margin */
-      border-radius: 8px;
-      border: 1px solid #ff9500; /* Thinner border */
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-      font-size: 16px; /* Smaller font */
-      outline: none;
-      transition: border-color 0.3s, box-shadow 0.3s;
-      /* Pastikan input number juga di tengah */
-      display: block; /* Agar margin auto bekerja */
-      max-width: 300px; /* Batasi lebar agar bisa di tengah */
-      margin-left: auto;
-      margin-right: auto;
-    }
-    input[type="number"]:focus {
-      border-color: #ffd700;
-      box-shadow: 0 0 8px rgba(255,215,0,0.5);
-    }
-    input[type="number"]::placeholder {
-      color: #ccc;
-    }
-   
-       /* Tambahkan di bawah bagian input[type="number"] atau di akhir CSS Anda */
+    
+    /* Bet Control */
     .bet-control {
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px; /* Jarak antara tombol dan tampilan taruhan */
-        margin-top: 5px; /* Sedikit jarak dari label */
-        margin-bottom: 15px; /* Jarak ke elemen berikutnya */
+        gap: 15px; /* Jarak antara tombol dan tampilan taruhan */
+        margin-top: 5px;
+        margin-bottom: 20px;
     }
 
     .bet-control #display-bet-amount {
-        font-size: 20px;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 24px; /* Ukuran font taruhan */
         font-weight: 700;
-        color: #ffeb3b;
-        min-width: 100px; /* Agar ukurannya stabil saat angka berubah */
+        color: var(--neon-green); /* Warna hijau neon */
+        min-width: 120px; /* Agar ukurannya stabil */
         text-align: center;
+        padding: 8px 15px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 8px;
+        border: 2px solid var(--neon-green);
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
     }
 
     .btn-bet-adjust {
-        background: #007bff; /* Warna biru untuk tombol adjust */
-        color: white;
+        background: var(--neon-purple); /* Warna ungu neon */
+        color: #fff;
         border: none;
-        border-radius: 50%; /* Membuat tombol bulat */
-        width: 40px; /* Ukuran tombol */
-        height: 40px; /* Ukuran tombol */
-        font-size: 24px;
+        border-radius: 50%;
+        width: 45px; /* Ukuran tombol */
+        height: 45px;
+        font-size: 28px; /* Ukuran font tombol */
         font-weight: 700;
         cursor: pointer;
         display: flex;
         justify-content: center;
         align-items: center;
-        transition: background 0.3s, transform 0.2s;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        box-shadow: 0 0 10px var(--neon-purple);
     }
 
     .btn-bet-adjust:hover {
-        background: #0056b3;
-        transform: translateY(-1px);
+        background: #ff66ff; /* Warna ungu lebih terang */
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px #ff66ff;
     }
-
     .btn-bet-adjust:active {
         transform: translateY(0);
         box-shadow: none;
     }
 
-    /* Jika Anda ingin warna yang lebih sesuai dengan tema emas/oranye */
-    .btn-bet-adjust {
-        background: #ffc107; /* Warna emas */
-        color: #333; /* Warna teks gelap */
-        box-shadow: 0 0 10px rgba(255,193,7,0.7);
-    }
-    .btn-bet-adjust:hover {
-        background: #ffcd38;
-        box-shadow: 0 0 15px rgba(255,193,7,0.9);
-    }
-
-    /* Guess Options - Boxes (for number and animal) */
+    /* Guess Options - Boxes (untuk angka dan hewan) */
     .guess-options-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* Tetapkan 3 kolom per baris */
-        gap: 8px; /* Reduced gap */
-        margin-bottom: 15px; /* Reduced margin */
-        
-        /* Penting untuk memposisikan grid di tengah */
-        /* Lebar untuk 3 dadu (70px * 3) + 2x gap (8px * 2) = 210 + 16 = 226px */
-        max-width: 226px; 
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px; /* Jarak antar kotak */
+        margin-bottom: 20px;
+        max-width: 240px; /* Sesuaikan dengan ukuran dadu */
         margin-left: auto;
         margin-right: auto;
     }
@@ -304,185 +262,186 @@
     }
     .guess-options-grid label.guess-box {
         cursor: pointer;
-        background: #fff;
-        border: 2px solid transparent; /* Thinner border */
+        background: rgba(0, 0, 0, 0.6); /* Background gelap */
+        border: 2px solid var(--neon-blue); /* Border biru neon */
+        color: var(--light-text);
         transition: background 0.3s, border-color 0.3s, transform 0.2s, box-shadow 0.3s;
         font-weight: 600;
-        font-size: 0.9em; /* Smaller font */
+        font-size: 1em;
         display: flex;
         justify-content: center;
         align-items: center;
         user-select: none;
-        height: 70px; /* Same height as dice */
-        color: #eee;
+        height: 70px; /* Sama tinggi dengan dadu */
         position: relative;
-        border-radius: 15px; /* Match dice border-radius */
+        border-radius: 15px; /* Sesuai dengan dadu */
+        box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
     }
 
     .guess-options-grid label.guess-box:hover {
-        transform: translateY(-2px);
+        transform: translateY(-3px); /* Angkat lebih tinggi saat hover */
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
     }
     .guess-options-grid input[type="radio"]:checked + label.guess-box {
-        background: black;
-        border-color: #ffd700;
-        color: #222;
+        background: var(--neon-blue); /* Warna biru neon saat dipilih */
+        border-color: var(--neon-green); /* Border hijau neon saat dipilih */
+        color: #000; /* Warna teks gelap agar kontras */
         font-weight: 700;
-        transform: scale(1.03); /* Smaller scale effect */
-        box-shadow: 0 0 10px rgba(255,215,0,0.5); /* Smaller shadow */
+        transform: scale(1.05); /* Skala lebih besar saat dipilih */
+        box-shadow: 0 0 20px var(--neon-blue), 0 0 30px var(--neon-green); /* Glow lebih kuat */
     }
 
     /* Specific styling for guess number boxes */
     .guess-options-grid label.guess-box.number-guess-box .dot {
-        background: red;
+        background: red; /* Tetap merah */
     }
 
     /* Specific styling for guess animal boxes */
     .guess-options-grid label.guess-box.animal-guess-box {
-      background: #fff;
-      /* color: #28a745; This color might not affect emojis */
-      border-color: gold;
-      font-size: 32px; /* Emoji size */
-      line-height: 1; /* Adjust line height for better emoji centering */
+      background: rgba(0, 0, 0, 0.6);
+      /* Emojis have their own colors, no need to set color here */
+      border-color: var(--neon-purple); /* Border ungu neon */
+      font-size: 32px;
+      line-height: 1;
+      box-shadow: 0 0 8px rgba(255, 0, 255, 0.3);
     }
     .guess-options-grid input[type="radio"]:checked + label.guess-box.animal-guess-box {
-        background: black;
-        border-color: gold;
-        color: #fff; /* This color might not affect emojis */
-        box-shadow: 0 0 10px rgba(40,167,69,0.7); /* Smaller shadow */
+        background: var(--neon-purple); /* Warna ungu neon saat dipilih */
+        border-color: var(--neon-green); /* Border hijau neon saat dipilih */
+        color: #000; /* Emojis will likely ignore this, but good practice */
+        box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-green); /* Glow lebih kuat */
     }
 
 
-    /* Roll Button */
+    /* Roll Button (menyesuaikan dengan tombol di profil.html) */
     .btn {
-      background: #ff9500;
-      border: none;
-      border-radius: 30px; /* Slightly less rounded */
-      padding: 12px 25px; /* Reduced padding */
-      font-size: 18px; /* Smaller font */
+      background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); /* Gradien neon */
+      border: 2px solid var(--neon-green);
+      border-radius: 30px;
+      padding: 15px 30px; /* Padding lebih besar */
+      font-size: 20px; /* Ukuran font lebih besar */
       font-weight: 700;
       cursor: pointer;
       color: #fff;
-      box-shadow: 0 0 15px #ffb347; /* Smaller glow */
-      transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+      text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 5px rgba(0, 255, 255, 0.8);
+      box-shadow: var(--btn-glow); /* Glow tombol */
+      transition: all 0.3s ease;
       width: 100%;
-      margin-top: 20px; /* Reduced margin */
-      /* Pastikan tombol juga di tengah jika tidak 100% width */
+      margin-top: 30px; /* Lebih banyak jarak */
       display: block;
-      max-width: 300px; /* Batasi lebar tombol */
+      max-width: 350px; /* Batasi lebar tombol */
       margin-left: auto;
       margin-right: auto;
     }
     .btn:hover:not(:disabled) {
-        background: #ffb347;
-        transform: translateY(-2px); /* Smaller lift */
-        box-shadow: 0 0 20px #ffb347;
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-green)); /* Balik gradien */
+        transform: translateY(-3px); /* Angkat lebih tinggi */
+        box-shadow: 0 0 25px var(--neon-green), 0 0 35px var(--neon-blue);
+        border-color: var(--neon-blue);
     }
     .btn:disabled {
-        background: #666;
+        background: #333;
+        color: #888;
         cursor: not-allowed;
         box-shadow: none;
         transform: none;
+        border-color: #555;
     }
 
-.message {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7); 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  opacity: 0;
-  visibility: hidden; 
-  transition: opacity 0.3s ease, visibility 0.3s ease;
-  flex-direction: column; 
-  padding: 20px; 
-}
+    /* ==== MODAL NOTIFIKASI (dari profil.html) ==== */
+    #notificationModal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1000; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
 
-.message.active {
-  opacity: 1;
-  visibility: visible;
-}
+    #notificationModal.active {
+        opacity: 1;
+        visibility: visible;
+    }
 
-.message p {
-    font-size: 1.8em; /* Ukuran font lebih besar untuk judul */
-    font-weight: 700;
-    margin-bottom: 15px; /* Jarak antara judul dan pesan */
-    font-family: 'Luckiest Guy', cursive;
-    text-shadow: 0 0 10px; /* Default shadow */
-}
+    .notification-modal-content {
+        background: #1a0033; /* Dark purple background */
+        padding: 30px;
+        border-radius: 15px;
+        border: 2px solid var(--neon-blue);
+        box-shadow: 0 0 25px var(--neon-blue);
+        width: 90%;
+        max-width: 450px;
+        text-align: center;
+        position: relative;
+        animation: fadeInScale 0.3s ease-out;
+    }
 
-.message span { /* Untuk detail pesan di bawah judul */
-    font-size: 1.1em;
-    font-weight: 400;
-    line-height: 1.4;
-    text-align: center;
-}
+    @keyframes fadeInScale {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
 
-/* Warna untuk pesan menang/kalah */
-.message.win p {
-    color: #aaffaa;
-    text-shadow: 0 0 15px #aaffaa;
-}
-.message.win span {
-    color: #e0ffe0;
-}
-.message.lose p {
-    color: #ffaaaa;
-    text-shadow: 0 0 15px #ffaaaa;
-}
-.message.lose span {
-    color: #ffe0e0;
-}
+    .notification-modal-content h2 {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--neon-green);
+        text-shadow: 0 0 10px var(--neon-green);
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 2em;
+    }
 
-/* Tombol Tutup (opsional, tapi disarankan untuk popup) */
-.message .close-popup-btn {
-    background: #ff9500;
-    border: none;
-    border-radius: 25px;
-    padding: 10px 20px;
-    font-size: 1em;
-    font-weight: 700;
-    cursor: pointer;
-    color: #fff;
-    box-shadow: 0 0 10px #ffb347;
-    transition: background 0.3s, transform 0.2s;
-    margin-top: 25px; /* Jarak dari teks pesan */
-}
-.message .close-popup-btn:hover {
-    background: #ffb347;
-    transform: translateY(-1px);
-}
+    .notification-modal-content p {
+        font-family: 'Poppins', sans-serif;
+        color: var(--light-text);
+        font-size: 1.1em;
+        line-height: 1.6;
+        margin-bottom: 25px;
+    }
 
-/* Media queries untuk responsif */
-@media (max-width: 550px) {
-    .message p { font-size: 1.6em; margin-bottom: 10px; }
-    .message span { font-size: 1em; }
-    .message .close-popup-btn { padding: 8px 18px; font-size: 0.95em; margin-top: 20px; }
-}
-@media (max-width: 400px) {
-    .message p { font-size: 1.4em; margin-bottom: 8px; }
-    .message span { font-size: 0.9em; }
-    .message .close-popup-btn { padding: 7px 15px; font-size: 0.9em; margin-top: 15px; }
-}
+    .notification-modal-content button {
+        background: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+        border: 2px solid var(--neon-green);
+        border-radius: 25px;
+        padding: 12px 25px;
+        font-size: 1.1em;
+        font-weight: 700;
+        color: #fff;
+        text-shadow: 0 0 5px rgba(0, 255, 0, 0.8), 0 0 5px rgba(0, 255, 255, 0.8);
+        box-shadow: var(--btn-glow);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
+    .notification-modal-content button:hover {
+        background: linear-gradient(90deg, var(--neon-blue), var(--neon-green));
+        transform: translateY(-2px);
+        box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-blue);
+        border-color: var(--neon-blue);
+    }
+    /* === AKHIR MODAL NOTIFIKASI === */
 
-  
+    /* Media queries untuk responsif */
     @media (max-width: 550px) {
         .game-container {
-            padding: 20px 25px;
+            padding: 25px;
             border-radius: 15px;
+            min-height: 70vh;
         }
-        h1 { font-size: 2.2em; margin-bottom: 10px; }
-        .saldo { font-size: 20px; margin-bottom: 15px; }
-        .dice-area { gap: 8px; margin-bottom: 20px; min-height: 70px; }
+        h1 { font-size: 2.2em; margin-bottom: 15px; }
+        .saldo { font-size: 1.5em; padding: 8px 15px; }
+        .dice-area { gap: 10px; margin-bottom: 25px; min-height: 80px; }
         .dice, .guess-box {
             width: 60px;
             height: 60px;
-            border-radius: 12px;
         }
         .dice .dot, .guess-box .dot {
             width: 8px;
@@ -491,35 +450,46 @@
         .dice.animal, .guess-box.animal {
             font-size: 28px;
         }
-        label { font-size: 0.9em; margin-bottom: 5px; }
-        input[type="number"] { font-size: 14px; padding: 7px; margin-bottom: 8px; }
+        label { font-size: 1em; margin-bottom: 8px; }
+        .bet-control #display-bet-amount {
+            font-size: 20px;
+            padding: 6px 12px;
+            min-width: 100px;
+        }
+        .btn-bet-adjust {
+            width: 40px;
+            height: 40px;
+            font-size: 24px;
+        }
         .guess-options-grid {
-            grid-template-columns: repeat(3, 1fr); 
-            /* Lebar untuk 3 dadu 60px + 2x gap 6px = 180 + 12 = 192px */
-            max-width: 192px; /* Sesuaikan max-width untuk dadu 60px */
-            gap: 6px;
+            gap: 8px;
+            max-width: 200px; /* 3 x 60px + 2 x 8px */
+            margin-bottom: 15px;
         }
         .guess-options-grid label.guess-box {
             height: 60px;
-            font-size: 0.85em;
-            border-radius: 12px;
+            font-size: 0.9em;
         }
-        .btn { padding: 10px 20px; font-size: 16px; margin-top: 15px; border-radius: 25px; }
-        .message { font-size: 18px; margin-top: 15px; }
+        .btn { padding: 12px 25px; font-size: 18px; margin-top: 20px; }
+        .notification-modal-content { padding: 25px; max-width: 400px; }
+        .notification-modal-content h2 { font-size: 1.8em; margin-bottom: 15px; }
+        .notification-modal-content p { font-size: 1em; margin-bottom: 20px; }
+        .notification-modal-content button { padding: 10px 20px; font-size: 1em; }
     }
 
     @media (max-width: 400px) {
+        body { padding: 10px; }
         .game-container {
-            padding: 15px 20px;
+            padding: 20px;
             border-radius: 10px;
+            min-height: 60vh;
         }
-        h1 { font-size: 1.8em; margin-bottom: 8px; }
-        .saldo { font-size: 18px; margin-bottom: 12px; }
-        .dice-area { gap: 6px; margin-bottom: 15px; min-height: 60px; }
+        h1 { font-size: 1.8em; margin-bottom: 10px; }
+        .saldo { font-size: 1.2em; padding: 6px 10px; }
+        .dice-area { gap: 8px; margin-bottom: 20px; min-height: 70px; }
         .dice, .guess-box {
             width: 50px;
             height: 50px;
-            border-radius: 10px;
         }
         .dice .dot, .guess-box .dot {
             width: 7px;
@@ -528,29 +498,41 @@
         .dice.animal, .guess-box.animal {
             font-size: 24px;
         }
-        label { font-size: 0.85em; margin-bottom: 0px; }
-        input[type="number"] { font-size: 12px; padding: 5px; margin-bottom: 5px; }
+        label { font-size: 0.9em; margin-bottom: 5px; }
+        .bet-control { gap: 10px; margin-bottom: 15px; }
+        .bet-control #display-bet-amount {
+            font-size: 18px;
+            padding: 5px 10px;
+            min-width: 80px;
+        }
+        .btn-bet-adjust {
+            width: 35px;
+            height: 35px;
+            font-size: 20px;
+        }
         .guess-options-grid {
-            /* Untuk layar yang sangat kecil, kita bisa tetap 3 kolom jika 50px dadu memungkinkan */
-            grid-template-columns: repeat(3, 1fr); 
-            /* Lebar untuk 3 dadu 50px + 2x gap 5px = 150 + 10 = 160px */
-            max-width: 160px; /* Sesuaikan max-width untuk dadu 50px */
-            gap: 5px;
+            gap: 6px;
+            max-width: 170px; /* 3 x 50px + 2 x 6px */
+            margin-bottom: 12px;
         }
         .guess-options-grid label.guess-box {
             height: 50px;
-            font-size: 0.8em;
-            border-radius: 10px;
+           font-size: 0.8em;
         }
-        .btn { padding: 10px 15px; font-size: 14px; margin-top: 10px; border-radius: 20px; }
-        .message { font-size: 16px; margin-top: 10px; }
+        .btn { padding: 10px 20px; font-size: 16px; margin-top: 15px; }
+        .notification-modal-content { padding: 20px; max-width: 350px; }
+        .notification-modal-content h2 { font-size: 1.6em; margin-bottom: 12px; }
+        .notification-modal-content p { font-size: 0.95em; margin-bottom: 18px; }
+        .notification-modal-content button { padding: 8px 18px; font-size: 0.9em; }
     }
   </style>
 </head>
 <body>
   <div class="game-container" id="game-container">
-    <h1>Tebak Dadu Fantasi Game Zone</h1>
-    <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
+    <h1>Tebak Dadu Fantasi </h1>
+    <div class="saldo-container">
+        <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
+    </div>
 
     <div class="dice-area">
       <div class="dice" id="die1" data-value="?">
@@ -568,15 +550,15 @@
       <div class="dice animal" id="animal-die">❓</div> </div>
 
     <div class="bet-section">
-        <label>Jumlah Taruhan (Rp):</label>
+        <label>Jumlah Taruhan:</label>
         <div class="bet-control">
          <button class="btn-bet-adjust" id="decrease-bet">-</button>
-            <span id="display-bet-amount">Rp.100</span> <button class="btn-bet-adjust" id="increase-bet">+</button>
+            <span id="display-bet-amount">Rp100</span> <button class="btn-bet-adjust" id="increase-bet">+</button>
         </div>
     </div>
 
     <div class="guess-section">
-      <label>Tebakan Dadu</label>
+      <label>Tebakan Angka Dadu (1-6)</label>
       <div class="guess-options-grid">
         <input type="radio" id="guess-num-1" name="number-guess" value="1">
         <label for="guess-num-1" class="guess-box number-guess-box" data-value="1">
@@ -606,7 +588,7 @@
     </div>
 
     <div class="guess-section">
-      <label> Simbol Hewan (x4)</label>
+      <label> Tebakan Simbol Hewan (x4)</label>
       <div class="guess-options-grid">
         <input type="radio" id="guess-gajah" name="animal-guess" value="gajah">
         <label for="guess-gajah" class="guess-box animal-guess-box">🐘</label>
@@ -624,8 +606,14 @@
     </div>
 
     <button class="btn" id="roll-dice-btn">Gulirkan Dadu!</button>
+  </div>
 
-    <div class="message" id="game-message"></div>
+  <div id="notificationModal" class="notification-modal">
+    <div class="notification-modal-content">
+        <h2 id="notificationTitle"></h2>
+        <p id="notificationMessage"></p>
+        <button id="notificationCloseBtn">Oke</button>
+    </div>
   </div>
 
   <audio id="bg-music" loop>
@@ -657,10 +645,9 @@
     );
 
     let uid = localStorage.getItem('uid');
-    let currentSaldo = 0; // Deklarasi dan inisialisasi currentSaldo
+    let currentSaldo = 0;
 
-  const saldoDisplay = document.getElementById('saldo-display');
-    // const betAmountInput = document.getElementById('bet-amount'); // REMOVED
+    const saldoDisplay = document.getElementById('saldo-display');
     const numberGuessOptions = document.querySelectorAll('input[name="number-guess"]');
     const animalGuessOptions = document.querySelectorAll('input[name="animal-guess"]');
     const rollDiceBtn = document.getElementById('roll-dice-btn');
@@ -668,16 +655,15 @@
     const die2Display = document.getElementById('die2');
     const die3Display = document.getElementById('die3');
     const animalDieDisplay = document.getElementById('animal-die');
-    const gameMessage = document.getElementById('game-message');
 
     // New Bet Adjustment Elements
     const decreaseBetBtn = document.getElementById('decrease-bet');
     const increaseBetBtn = document.getElementById('increase-bet');
     const displayBetAmount = document.getElementById('display-bet-amount');
 
-    const MIN_BET_UNIT = 100; // Minimum unit for bet adjustment
-    const BET_STEP = 100; // Step for bet adjustment
-    let currentManualBet = MIN_BET_UNIT; // Current base bet selected by user
+    const MIN_BET_UNIT = 200;
+    const BET_STEP = 100;
+    let currentManualBet = MIN_BET_UNIT;
 
     // Audio Elements
     const bgMusic = document.getElementById('bg-music');
@@ -685,6 +671,12 @@
     const winSound = document.getElementById('win-sound');
     const loseSound = document.getElementById('lose-sound');
     const diceRollSound = document.getElementById('dice-roll-sound');
+
+    // Modal Notifikasi Elements
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationTitle = document.getElementById('notificationTitle');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const notificationCloseBtn = document.getElementById('notificationCloseBtn');
 
     // Animal mapping using EMOJIS
     const animals = {
@@ -701,7 +693,6 @@
       await loadUserProfile();
       rollDiceBtn.addEventListener('click', playDiceGame);
       
-      // Event listeners for bet adjustment buttons
       decreaseBetBtn.addEventListener('click', () => {
           if (currentManualBet > MIN_BET_UNIT) {
               currentManualBet -= BET_STEP;
@@ -716,40 +707,53 @@
           clickSound.play();
       });
 
-      // Initialize displayed bet amount
       displayBetAmount.textContent = `Rp.${currentManualBet.toLocaleString('id-ID')}`;
 
       // Play background music on user interaction (e.g., first click)
       document.body.addEventListener('click', () => {
         if (bgMusic.paused) {
           bgMusic.play().catch(e => console.warn("Failed to play background music:", e));
-          bgMusic.volume = 0.3; // Lower volume for background music
+          bgMusic.volume = 0.3;
         }
-      }, { once: true }); // Only run once
+      }, { once: true });
 
-      createParticles(); // Add particles to background
+      createParticles();
     });
+
+    // Function untuk menampilkan modal notifikasi (dari profil.html)
+    function showNotificationModal(title, message) {
+        notificationTitle.textContent = title;
+        notificationMessage.innerHTML = message; /* Use innerHTML to allow for bold tags */
+        notificationModal.classList.add('active');
+        notificationCloseBtn.onclick = () => {
+            notificationModal.classList.remove('active');
+            clickSound.play();
+        };
+    }
 
     // Particle effect
     function createParticles() {
         const container = document.getElementById('game-container');
-        for (let i = 0; i < 20; i++) { // Create 20 particles
+        for (let i = 0; i < 20; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
-            const size = Math.random() * 8 + 4; // Size between 4px and 12px
+            const size = Math.random() * 8 + 4;
             particle.style.width = `${size}px`;
             particle.style.height = `${size}px`;
             particle.style.left = `${Math.random() * 100}%`;
             particle.style.animationDelay = `${Math.random() * 5}s`;
-            particle.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 100}px`); // Random horizontal drift
+            particle.style.setProperty('--x-offset', `${(Math.random() - 0.5) * 100}px`);
             container.appendChild(particle);
         }
     }
 
     async function loadUserProfile() {
       if (!uid) {
-        alert('Anda harus login untuk bermain game ini.');
-        window.location.href = 'login.html'; // Redirect to login page
+        showNotificationModal('Perhatian!', 'Anda harus login untuk bermain game ini.');
+        // Beri sedikit waktu agar modal muncul sebelum redirect
+        setTimeout(() => {
+            window.location.href = 'login.html';
+        }, 2000);
         return;
       }
 
@@ -759,22 +763,22 @@
         .eq('user_id', uid)
         .single();
 
-      if (userError && userError.code === 'PGRST116') { // No rows found
+      if (userError && userError.code === 'PGRST116') {
         console.warn('Pengguna baru, membuat entri saldo awal...');
         const { error: insertError } = await supabase
             .from('users_data')
             .insert([{ user_id: uid, saldo: 0 }]);
         if (insertError) {
             console.error('Error saat membuat entri saldo awal:', insertError.message);
-            alert('Gagal membuat entri saldo awal. Cek log.');
+            showNotificationModal('Error', 'Gagal membuat entri saldo awal. Cek log.');
             currentSaldo = 0;
         } else {
             currentSaldo = 0;
         }
       } else if (userError) {
         console.error('Error memuat data saldo:', userError.message);
-        alert('Gagal memuat saldo: ' + userError.message);
-        currentSaldo = 0; // Default to 0 on error
+        showNotificationModal('Error', 'Gagal memuat saldo: ' + userError.message);
+        currentSaldo = 0;
       } else {
         currentSaldo = userData.saldo ?? 0;
       }
@@ -789,16 +793,15 @@
 
       if (error) {
         console.error('Error memperbarui saldo:', error.message);
-        alert('Gagal memperbarui saldo di database. Harap hubungi admin.');
+        showNotificationModal('Error', 'Gagal memperbarui saldo di database. Harap hubungi admin.');
         return false;
       }
       return true;
     }
 
-    // Function to render dots on a dice element
     function renderDiceDots(element, value) {
-        element.innerHTML = ''; // Clear existing dots
-        element.setAttribute('data-value', value); // Set data-value for CSS styling
+        element.innerHTML = '';
+        element.setAttribute('data-value', value);
         if (value === '?') return;
 
         const numDots = value;
@@ -810,7 +813,7 @@
     }
 
     function getRandomDiceRoll() {
-      return Math.floor(Math.random() * 6) + 1; // Random number between 1 and 6
+      return Math.floor(Math.random() * 6) + 1;
     }
 
     function getRandomAnimal() {
@@ -820,10 +823,8 @@
 
     async function playDiceGame() {
       clickSound.play();
-      gameMessage.textContent = '';
-      gameMessage.className = 'message'; // Ini mengatur ulang kelas dasar, tapi kita akan menambahkan 'active' nanti
 
-      let betAmount = 0; // Final bet amount based on chosen guesses
+      let betAmount = 0;
       let selectedNumberGuess = null;
       for (const radio of numberGuessOptions) {
         if (radio.checked) {
@@ -841,16 +842,16 @@
       }
 
       if (selectedNumberGuess && selectedAnimalGuess) {
-          betAmount = currentManualBet * 2; // Bet 2x if both types are guessed
+          betAmount = currentManualBet * 2;
       } else if (selectedNumberGuess || selectedAnimalGuess) {
-          betAmount = currentManualBet; // Bet 1x if only one type is guessed
+          betAmount = currentManualBet;
       } else {
-          alert('Pilih tebakan Angka (1-6) atau tebakan Simbol Hewan.');
-          return; // Stop game if no guess is selected
+          showNotificationModal('Perhatian!', 'Pilih tebakan Angka (1-6) atau tebakan Simbol Hewan.');
+          return;
       }
 
       if (currentSaldo < betAmount) {
-        alert('Saldo Anda tidak cukup untuk taruhan ini! Diperlukan Rp' + betAmount.toLocaleString('id-ID'));
+        showNotificationModal('Saldo Tidak Cukup!', `Saldo Anda tidak cukup untuk taruhan ini! Diperlukan <b>Rp.${betAmount.toLocaleString('id-ID')}</b>.`);
         return;
       }
 
@@ -865,8 +866,8 @@
       currentSaldo -= betAmount;
       const successDeduct = await updateSaldoInSupabase(currentSaldo);
       if (!successDeduct) {
-        currentSaldo += betAmount; // Revert saldo if update failed
-        saldoDisplay.textContent = `Saldo: Rp${currentSaldo.toLocaleString('id-ID')}`;
+        currentSaldo += betAmount;
+        saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
         rollDiceBtn.disabled = false;
         decreaseBetBtn.disabled = false;
         increaseBetBtn.disabled = false;
@@ -882,13 +883,12 @@
       die3Display.classList.add('rolling');
       animalDieDisplay.classList.add('rolling');
 
-      // Initial "?" state for dice
       renderDiceDots(die1Display, '?');
       renderDiceDots(die2Display, '?');
       renderDiceDots(die3Display, '?');
-      animalDieDisplay.innerHTML = '❓'; // Use initial emoji for animal die
+      animalDieDisplay.innerHTML = '❓';
 
-      diceRollSound.play(); // Play dice roll sound
+      diceRollSound.play();
 
       setTimeout(async () => {
         die1Display.classList.remove('rolling');
@@ -900,27 +900,27 @@
         const die2 = getRandomDiceRoll();
         const die3 = getRandomDiceRoll();
         const animalResultKey = getRandomAnimal();
-        const animalResultEmoji = animals[animalResultKey]; // Get emoji
+        const animalResultEmoji = animals[animalResultKey];
 
         renderDiceDots(die1Display, die1);
         renderDiceDots(die2Display, die2);
         renderDiceDots(die3Display, die3);
         animalDieDisplay.innerHTML = animalResultEmoji;
 
-        let totalProfit = 0; // Ini adalah keuntungan murni, tidak termasuk taruhan yang dikembalikan
-        let winDetails = []; // Array untuk menyimpan detail kemenangan
+        let totalProfit = 0;
+        let winDetails = [];
         let isAnyWin = false;
 
         // Check Animal Guess
         if (selectedAnimalGuess) {
             if (selectedAnimalGuess === animalResultKey) {
-                const winMultiplier = 4; // 4x payout
+                const winMultiplier = 4;
                 const animalWinAmount = currentManualBet * winMultiplier;
-                totalProfit += currentManualBet * (winMultiplier - 1); // Keuntungan murni dari hewan
-                winDetails.push(`Tebakan Hewan: **${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})** tepat! Anda memenangkan **Rp${animalWinAmount.toLocaleString('id-ID')}** (taruhan Rp${currentManualBet.toLocaleString('id-ID')} x${winMultiplier}).`);
+                totalProfit += currentManualBet * (winMultiplier - 1);
+                winDetails.push(`Tebakan Hewan: <b>${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})</b> tepat! Anda memenangkan <b>Rp.${animalWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp.${currentManualBet.toLocaleString('id-ID')} x${winMultiplier}).`);
                 isAnyWin = true;
             } else {
-                winDetails.push(`Tebakan Hewan: **${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})** salah. Hasil: **${animals[animalResultKey]} (${animalResultKey.charAt(0).toUpperCase() + animalResultKey.slice(1)})**.`);
+                winDetails.push(`Tebakan Hewan: <b>${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})</b> salah. Hasil: <b>${animals[animalResultKey]} (${animalResultKey.charAt(0).toUpperCase() + animalResultKey.slice(1)})</b>.`);
             }
         }
 
@@ -933,13 +933,13 @@
             if (die3 === guessedNumber) { numberMatches++; }
 
             if (numberMatches > 0) {
-                const multiplier = numberMatches; // Multiplier adalah jumlah kemunculan angka
-                const numberWinAmount = currentManualBet * (multiplier + 1); // Total payout (bet + profit)
-                totalProfit += currentManualBet * multiplier; // Keuntungan murni dari angka
-                winDetails.push(`Tebakan Angka: **${guessedNumber}** tepat (${numberMatches} kali)! Anda memenangkan **Rp${numberWinAmount.toLocaleString('id-ID')}** (taruhan Rp${currentManualBet.toLocaleString('id-ID')} x${multiplier+1}).`);
+                const multiplier = numberMatches;
+                const numberWinAmount = currentManualBet * (multiplier + 1);
+                totalProfit += currentManualBet * multiplier;
+                winDetails.push(`Tebakan Angka: <b>${guessedNumber}</b> tepat (${numberMatches} kali)! Anda memenangkan <b>Rp${numberWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp${currentManualBet.toLocaleString('id-ID')} x${multiplier+1}).`);
                 isAnyWin = true;
             } else {
-                winDetails.push(`Tebakan Angka: **${guessedNumber}** salah. Tidak ada dadu angka yang menunjukkan ${guessedNumber}.`);
+                winDetails.push(`Tebakan Angka: <b>${guessedNumber}</b> salah. Tidak ada dadu angka yang menunjukkan ${guessedNumber}.`);
             }
         }
 
@@ -947,47 +947,30 @@
         let messageBody = "";
 
         if (isAnyWin) {
-            currentSaldo += betAmount + totalProfit; // Kembalikan taruhan awal + tambahkan keuntungan
+            currentSaldo += betAmount + totalProfit;
             messageTitle = "Selamat! Anda Menang!";
-            messageBody = `Total kemenangan Anda: **Rp.${(betAmount + totalProfit).toLocaleString('id-ID')}**.<br><br>` + winDetails.join('<br>');
-            gameMessage.classList.add('win');
+            messageBody = `Total kemenangan Anda: <b>Rp.${(betAmount + totalProfit).toLocaleString('id-ID')}</b>.<br><br>` + winDetails.join('<br>');
             winSound.play();
         } else {
             messageTitle = "Anda Kalah!";
-            messageBody = `Taruhan Anda **Rp.${betAmount.toLocaleString('id-ID')}** hangus.<br><br>` + winDetails.join('<br>');
-            gameMessage.classList.add('lose');
+            messageBody = `Taruhan Anda <b>Rp.${betAmount.toLocaleString('id-ID')}</b> hangus.<br><br>` + winDetails.join('<br>');
             loseSound.play();
         }
 
         await updateSaldoInSupabase(currentSaldo);
-        saldoDisplay.textContent = `Saldo: Rp${currentSaldo.toLocaleString('id-ID')}`;
+        saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
 
-        // Mengisi popup dengan struktur HTML yang sesuai
-        gameMessage.innerHTML = `
-            <p>${messageTitle}</p>
-            <span>${messageBody}</span>
-            <button class="close-popup-btn">Tutup</button>
-        `;
-        gameMessage.classList.add('active'); // Tampilkan pop-up
+        // Menggunakan showNotificationModal yang sudah disesuaikan
+        showNotificationModal(messageTitle, messageBody);
 
-        // Event listener untuk tombol tutup pop-up
-        document.querySelector('#game-message .close-popup-btn').onclick = () => {
-            gameMessage.classList.remove('active');
-            gameMessage.classList.remove('win');
-            gameMessage.classList.remove('lose');
-            clickSound.play(); // Mainkan suara saat tombol tutup diklik
-        };
-
-        // Re-enable buttons and inputs
         rollDiceBtn.disabled = false;
         decreaseBetBtn.disabled = false;
         increaseBetBtn.disabled = false;
         numberGuessOptions.forEach(radio => radio.disabled = false);
         animalGuessOptions.forEach(radio => radio.disabled = false);
 
-      }, 2500); // Durasi kocokan dadu
+      }, 2500);
     }
-
   </script>
 </body>
 </html>
