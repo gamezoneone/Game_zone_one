@@ -421,7 +421,41 @@
     
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
   );
+  
+     const loginForm = document.getElementById('login');
+const registerForm = document.getElementById('register');
+const tabsContainer = document.querySelector('.tabs');
+loginForm.style.display = 'none';
+registerForm.style.display = 'none';
+tabsContainer.style.display = 'none';
 
+async function checkSupabaseSession() {
+    const { data: { session }, error } = await supabase.auth.getSession();
+
+    if (session) {
+        console.log('Sesi Supabase ditemukan:', session);
+      
+        window.location.href = 'profil.html';
+    } else {
+      
+        console.log('Tidak ada sesi Supabase aktif. Tampilkan formulir login.');
+      
+        loginForm.style.display = 'flex';
+        tabsContainer.style.display = 'flex';
+        document.querySelector('.tab-btn[data-tab="login"]').classList.add('active');
+        document.getElementById('login').classList.add('active');
+    }
+
+    if (error) {
+        console.error('Error fetching session:', error.message);
+      
+        loginForm.style.display = 'flex';
+        tabsContainer.style.display = 'flex';
+    }
+}
+
+document.addEventListener('DOMContentLoaded', checkSupabaseSession);
+  
   const tabs = document.querySelectorAll('.tab-btn');
   const forms = document.querySelectorAll('form');
   const notificationModal = document.getElementById('notificationModal');
