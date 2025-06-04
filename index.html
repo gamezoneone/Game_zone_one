@@ -873,6 +873,11 @@
       <button class="close-popup-btn" data-popup-id="history-popup">Tutup</button>
     </div>
   </div>
+  <div id="customAlert" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 20px; border: 1px solid black; z-index: 1000;">
+    <p id="alertMessage"></p>
+    <button onclick="hideCustomAlert()">OK</button>
+</div>
+  
      <audio id="background-music" loop>
     <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" type="audio/mpeg">
   </audio>
@@ -973,6 +978,14 @@
          }
          isPlaying = !isPlaying;
        });
+
+  function showCustomAlert(message) {
+    document.getElementById('alertMessage').innerText = message;
+    document.getElementById('customAlert').style.display = 'block';
+}
+
+ function hideCustomAlert() {
+    document.getElementById('customAlert').style.display = 'none';
 
     // --- General Utility Functions ---
     function showPopup(popupId) {
@@ -1191,10 +1204,10 @@
                     inputElement.select();
                     inputElement.setSelectionRange(0, 99999);
                     navigator.clipboard.writeText(inputElement.value)
-                        .then(() => alert('Nomor berhasil disalin: ' + inputElement.value))
+                        .then(() => showCustomAlert('Nomor berhasil disalin: ' + inputElement.value))
                         .catch(err => {
                             console.error('Gagal menyalin teks:', err);
-                            alert('Gagal menyalin nomor. Silakan salin manual.');
+                            showCustomAlert('Gagal menyalin nomor. Silakan salin manual.');
                         });
                 }
             });
@@ -1354,7 +1367,7 @@
         const metode = depSubmit.dataset.metode;
 
         if (!nama || !nomor || !jumlah || !email || isNaN(jumlah) || jumlah <= 0) {
-            alert("Lengkapi semua kolom dengan benar. Jumlah harus angka positif.");
+            showCustomAlert("Lengkapi semua kolom dengan benar. Jumlah harus angka positif.");
             return;
         }
 
@@ -1364,9 +1377,9 @@
 
         if (error) {
             console.error('Error kirim deposit:', error);
-            alert("Gagal kirim deposit. Silakan coba lagi.");
+            showCustomAlert("Gagal kirim deposit. Silakan coba lagi.");
         } else {
-            alert("Permintaan deposit berhasil dikirim.");
+            showCustomAlert("Permintaan deposit berhasil dikirim.");
             closePopup('popup-deposit');
             loadProfile();
         }
@@ -1389,7 +1402,7 @@
         const jumlah = parseInt(withJumlah.value);
 
         if (!nama || !metode || !nomor || !jumlah || !email || isNaN(jumlah) || jumlah <= 0) {
-            alert("Lengkapi semua kolom dengan benar. Jumlah harus angka positif.");
+            showCustomAlert("Lengkapi semua kolom dengan benar. Jumlah harus angka positif.");
             return;
         }
 
@@ -1401,17 +1414,17 @@
 
         if (saldoError && saldoError.code !== 'PGRST116') {
             console.error('Error fetching user saldo for withdraw:', saldoError);
-            alert('Gagal mengambil saldo user untuk penarikan. Silakan coba lagi.');
+            showCustomAlert('Gagal mengambil saldo user untuk penarikan. Silakan coba lagi.');
             return;
         } else if (saldoError && saldoError.code === 'PGRST116' || (userData && userData.saldo === null)) {
-            alert('Saldo Anda 0. Tidak bisa melakukan penarikan.');
+            showCustomAlert('Saldo Anda 0. Tidak bisa melakukan penarikan.');
             return;
         }
 
         const currentSaldo = userData.saldo;
 
         if (jumlah > currentSaldo) {
-            alert(`Saldo tidak mencukupi. Saldo Anda saat ini adalah Rp${currentSaldo.toLocaleString('id-ID')}.`);
+            showCustomAlert(`Saldo tidak mencukupi. Saldo Anda saat ini adalah Rp${currentSaldo.toLocaleString('id-ID')}.`);
             return;
         }
 
@@ -1438,7 +1451,7 @@
 
         if (insertRequestError) {
             console.error('Error inserting withdraw request:', insertRequestError);
-            alert('Gagal mencatat permintaan penarikan. Saldo Anda akan dikembalikan. Silakan coba lagi.');
+            showCustomAlert('Gagal mencatat permintaan penarikan. Saldo Anda akan dikembalikan. Silakan coba lagi.');
 
             const { error: refundError } = await supabase
                 .from('users_data')
@@ -1447,12 +1460,12 @@
 
             if (refundError) {
                 console.error('CRITICAL ERROR: Gagal mengembalikan saldo setelah permintaan penarikan gagal dicatat:', refundError);
-                alert('KRITIS: Saldo gagal dikembalikan setelah permintaan penarikan gagal dicatat. MOHON SEGERA HUBUNGI ADMIN!');
+                showCustomAlert('KRITIS: Saldo gagal dikembalikan setelah permintaan penarikan gagal dicatat. MOHON SEGERA HUBUNGI ADMIN!');
 } else {
                 document.getElementById('saldo-display').textContent = `Saldo: Rp${currentSaldo.toLocaleString('id-ID')}`;
             }
         } else {
-            alert('Permintaan penarikan dikirim dan saldo berhasil dikurangi. Menunggu proses admin.');
+            showCustomAlert('Permintaan penarikan dikirim dan saldo berhasil dikurangi. Menunggu proses admin.');
             closePopup('popup-withdraw');
             loadProfile();
         }
