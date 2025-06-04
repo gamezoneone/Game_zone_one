@@ -866,7 +866,7 @@
     getCurrentUserEmail().then(() => {
       loadProfile();
       // Tampilkan ID Pemain dari UID
-      document.getElementById('player-id').textContent = `ID : ${uid ? uid.substring(0, 8) + '...' : 'N/A'}`; // Menampilkan sebagian UID
+      document.getElementById('player-id').textContent = `ID: ${uid ? uid.substring(0, 8) + '...' : 'N/A'}`; // Menampilkan sebagian UID
     }).catch(err => {
       console.error("Failed to initialize user session:", err);
       showNotificationModal("Sesi Tidak Valid", "Sesi pengguna tidak valid. Silakan login kembali.");
@@ -926,14 +926,14 @@
     if (!uid) {
         console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
         document.getElementById('saldo-display-top').textContent = 'Saldo: Rp.0 (Harap Login)'; // Update saldo di pojok kiri atas
-        document.getElementById('player-id').textContent = 'ID Pemain: N/A'; // Update ID Pemain
+        document.getElementById('player-id').textContent = 'ID: N/A'; // Update ID Pemain
         document.querySelector('#riwayat-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
         document.querySelector('#riwayat-penarikan tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
         return;
     }
     
     // Update ID Pemain saat loadProfile
-    document.getElementById('player-id').textContent = `ID Pemain: ${uid.substring(0, 8)}...`;
+    document.getElementById('player-id').textContent = `ID: ${uid.substring(0, 8)}...`;
 
 
     const { data: userData, error: userError } = await supabase
