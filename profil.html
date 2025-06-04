@@ -592,7 +592,24 @@
       .game-item {
         padding-top: 100%; /* Pertahankan rasio aspek */
       }
+       .dana-button {
+      display: inline-flex;
+      align-items: center;
+      background-color: #fff;
+      color: #007aff;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 15px;
     }
+
+    .dana-button img {
+      width: 20px;
+      height: 20px;
+      margin-right: 10px;
+    }
+    
   </style>
 </head>
 <body>
@@ -698,10 +715,15 @@
       <label for="with-jumlah">Jumlah (Rp):</label>
       <input type="number" id="with-jumlah" placeholder="Contoh: 100000" />
 
-      <div class="modal-buttons">
-        <button class="primary" id="with-submit">Kirim</button>
-        <button class="secondary" onclick="closeModal('modal-withdraw')">Batal</button>
-      </div>
+<div class="modal-buttons" style="display: flex; gap: 10px; justify-content: flex-end; align-items: center;">
+  <a href="https://link.dana.id/minta?full_url=https://qr.dana.id/v1/281012012021012454432003" class="dana-button" style="display: flex; align-items: center; background-color: #007aff; color: white; padding: 8px 16px; border-radius: 6px; text-decoration: none; font-weight: bold;">
+    <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1)%20(1).png" alt="DANA Logo" style="width: 20px; height: 20px; margin-right: 8px;">
+    Buka DANA
+  </a>
+
+  <button class="primary" id="with-submit">Kirim</button>
+  <button class="secondary" onclick="closeModal('modal-withdraw')">Batal</button>
+     </div>
     </div>
   </div>
 
@@ -726,6 +748,14 @@
       </div>
     </div>
   </div>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/628892l3707993" target="_blank" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
+       alt="WhatsApp" 
+       style="width:30px; height:30px;">
+</a>
+
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
