@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SLOT77 - Profil Pemain</title>
+  <link rel="icon" href="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/SLOT77.png" type="image/png">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+    
+    * { box-sizing: border-box; }
+    body, html {
+      margin: 0; padding: 0; min-height: 100vh;
+      font-family: 'Share Tech Mono', monospace; /* Font konsisten dengan index.html */
+        background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.0);
+  background-blend-mode: overlay;
+}
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column; /* Untuk menempatkan footer jika ada */
+      align-items: center;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 600px; /* Lebar maksimum untuk konten utama */
+      margin: 30px auto; /* Margin disesuaikan */
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 20px; /* Lebih membulat */
+      padding: 30px 40px;
+      box-shadow: 0 0 25px 8px rgba(102, 0, 255, 0.6), /* Ungu neon */
+                  0 0 45px rgba(102, 0, 255, 0.4);
+      border: 3px solid #ff00ff; /* Border utama ungu/magenta */
+      animation: fadeIn 1s ease-out;
+      display: flex;
+      flex-direction: column;
+      gap: 25px; /* Jarak antar bagian utama */
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: -5px; bottom: -5px; left: -5px; right: -5px;
+      border: 5px solid #00ffff; /* Warna cyan/biru neon */
+      border-radius: 25px;
+      box-shadow: 0 0 8px #00ffff, 0 0 30px #00ffff;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Penyesuaian untuk info pemain dan saldo */
+    .player-info-container {
+        position: absolute;
+        top: 20px; /* Jarak dari atas */
+        left: 20px; /* Jarak dari kiri */
+        z-index: 2; /* Pastikan di atas elemen lain */
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start; /* Rata kiri */
+        text-align: left;
+        color: #00ffff; /* Warna cyan untuk info pemain */
+        font-family: 'Share Tech Mono', monospace;
+        text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+    }
+    .player-info-container span {
+        display: block;
+        padding: 5px 10px;
+        background: rgba(0, 0, 0, 0.6);
+        border-radius: 8px;
+        border: 1px solid rgba(0, 255, 255, 0.5);
+        margin-bottom: 5px; /* Jarak antara ID dan Saldo */
+        font-size: 0.9em;
+        white-space: nowrap; /* Jangan wrap teks */
+        overflow: hidden; /* Sembunyikan jika terlalu panjang */
+        text-overflow: ellipsis; /* Tampilkan ... jika terlalu panjang */
+    }
+    .player-info-container #player-id {
+        font-weight: bold;
+        font-size: 1em;
+        color: #ffff00; /* ID Pemain bisa kuning */
+        text-shadow: 0 0 8px rgba(255, 255, 0, 0.7);
+    }
+    .player-info-container #saldo-display-top {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1em;
+        font-weight: 700;
+        background: linear-gradient(90deg, #00ff00 0%, #ffff00 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border: none; /* Hilangkan border karena sudah ada background clip */
+        box-shadow: none; /* Hilangkan shadow karena sudah ada text-shadow */
+        padding: 0; /* Hilangkan padding */
+        margin-bottom: 0;
+    }
+
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      text-align: center;
+      font-size: 55px;
+      margin-bottom: 25px;
+      letter-spacing: 8px;
+      color: #ffff00; /* Kuning terang */
+      text-shadow: 0 0 10px #ffff00, 0 0 20px #ffff00, 0 0 30px #ffff00;
+      animation: neon-glow-yellow 1.5s ease-in-out infinite alternate;
+      line-height: 1.2;
+      padding-bottom: 0px;
+      border-bottom: 3px solid #ff00ff; /* Garis bawah magenta */
+    }
+
+    @keyframes neon-glow-yellow {
+      from { text-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00; color: #ffff00; }
+      to { text-shadow: 0 0 15px #ffff00, 0 0 30px #ffff00, 0 0 45px #ffff00; color: #fff; }
+    }
+
+    /* Saldo utama dihilangkan, diganti dengan saldo di player-info-container */
+    .saldo { display: none; }
+
+    .btn-group {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* Kurangi jarak antar tombol */
+      margin-bottom: 30px;
+      flex-wrap: wrap; /* Agar tombol bisa wrap di layar kecil */
+      /* Tambahan untuk membuat tombol selalu sejajar ke samping jika muat */
+      align-items: center;
+    }
+    .btn {
+      background: linear-gradient(90deg, #ff00ff 0%, #00ffff 100%); /* Gradien ungu ke cyan */
+      border: 2px solid #ffff00; /* Border kuning neon */
+      border-radius: 30px;
+      padding: 12px 22px; /* Perkecil padding tombol */
+      font-size: 16px; /* Perkecil ukuran font */
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.6), 0 0 25px rgba(0, 255, 255, 0.4);
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      flex-shrink: 0; /* Pastikan tombol tidak menyusut terlalu banyak */
+      white-space: nowrap; /* Pastikan teks tidak patah */
+    }
+    .btn:hover {
+      background: linear-gradient(90deg, #00ffff 0%, #ff00ff 100%); /* Gradien terbalik */
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 35px rgba(255, 0, 255, 0.8);
+    }
+
+    /* Riwayat Transaksi Section */
+    .history-section {
+      background: rgba(255, 255, 255, 0.08); /* Background sedikit transparan */
+      border-radius: 15px;
+      padding: 25px;
+      margin-top: 30px;
+      border: 2px solid #00ff00; /* Border hijau neon */
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+      transition: all 0.4s ease-out;
+      display: none; /* Default tersembunyi */
+      flex-direction: column;
+      gap: 20px;
+    }
+    .history-section.active {
+        display: flex; /* Tampilkan saat aktif */
+        animation: slideDownFadeIn 0.6s ease-out forwards;
+    }
+    @keyframes slideDownFadeIn {
+        from { opacity: 0; transform: translateY(-20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .history-section h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #ffff00; /* Kuning neon */
+      text-shadow: 0 0 8px #ffff00;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ff00ff; /* Border ungu neon */
+      text-align: center;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+
+    .history-section table {
+      width: 100%;
+      border-collapse: separate; /* Penting untuk border-radius */
+      border-spacing: 0; /* Hilangkan jarak antar sel */
+      margin-bottom: 20px;
+      overflow: hidden; /* Pastikan border-radius terlihat */
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.3); /* Shadow cyan */
+      border: 1px solid #00ffff; /* Border cyan */
+    }
+    .history-section th, .history-section td {
+      padding: 12px 15px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f0f0f0;
+      font-size: 0.9em;
+    }
+    .history-section th {
+      background: linear-gradient(90deg, #ff00ff 0%, #00ffff 100%); /* Header gradien ungu-cyan */
+      color: #222; /* Teks header lebih gelap untuk kontras */
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .history-section td {
+      background-color: rgba(255, 255, 255, 0.05); /* Background cell sedikit transparan */
+    }
+    .history-section tr:nth-child(even) td {
+      background-color: rgba(255, 255, 255, 0.03); /* Warna zebra striping */
+    }
+    .history-section .empty {
+      color: #bbb;
+      font-style: italic;
+      text-align: center;
+      padding: 15px 0;
+      background-color: rgba(255, 255, 255, 0.02);
+    }
+    .status-pending { color: #ffff00; text-shadow: 0 0 5px #ffff00; } /* Kuning neon */
+    .status-approved { color: #00ff00; text-shadow: 0 0 5px #00ff00; } /* Hijau neon */
+    .status-rejected { color: #ff0000; text-shadow: 0 0 5px #ff0000; } /* Merah neon */
+
+    /* Game Grid Section kini kembali di luar container utama lagi */
+    .game-grid-section {
+        position: relative;
+        z-index: 1;
+        width: 95%; /* Lebar yang sama dengan container utama */
+        max-width: 600px;
+        margin: 30px auto 50px; /* Jarak dari container utama */
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 0 25px 8px rgba(102, 0, 255, 0.6),
+                    0 0 45px rgba(102, 0, 255, 0.4);
+        border: 3px solid #ff00ff;
+        display: flex; /* Menggunakan flexbox untuk konten di dalam section */
+        flex-direction: column;
+        gap: 25px;
+    }
+    .game-grid-section::before {
+        content: '';
+        position: absolute;
+        top: -5px; bottom: -5px; left: -5px; right: -5px;
+        border: 5px solid #00ffff;
+        border-radius: 25px;
+        box-shadow: 0 0 18px #00ffff, 0 0 30px #00ffff;
+        z-index: -1;
+        pointer-events: none;
+    }
+
+    .game-grid-section h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #ffff00;
+      text-shadow: 0 0 8px #ffff00;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #ff00ff;
+      text-align: center;
+      font-size: 2.2em;
+      letter-spacing: 1px;
+    }
+
+    .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsif */
+      gap: 20px;
+      justify-content: center;
+    }
+    .game-item {
+      background: rgba(252, 255, 255, 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #00ff00; /* Hijau neon */
+      box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      transition: all 0.3s ease;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      text-decoration: none; /* Hapus underline dari link */
+      color: inherit; /* Warisi warna teks */
+    }
+    .game-item:hover {
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 30px rgba(255, 255, 0, 0.5);
+      border-color: #ffff00; /* Kuning saat hover */
+    }
+    .game-item img {
+      width: 100%;
+      height: 120px; /* Tinggi tetap untuk thumbnail */
+      object-fit: cover;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .game-item h3 {
+      font-size: 1.1em;
+      margin: 15px 10px;
+      color: #fff;
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.0);
+      white-space: nowrap; /* Jangan wrap nama game */
+      overflow: hidden; /* Sembunyikan jika terlalu panjang */
+      text-overflow: ellipsis; /* Tampilkan ... jika terlalu panjang */
+    }
+
+    /* Modal Styling - Konsisten dengan index.html */
+    .notification-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.85);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      animation: modalFadeIn 0.3s ease-out;
+      backdrop-filter: blur(8px);
+    }
+
+    .notification-modal > div {
+      background: #111;
+      padding: 40px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), 0 0 50px rgba(0, 255, 255, 0.5);
+      color: #fff;
+      transform: scale(0.9);
+      animation: modalPopUp 0.4s ease-out forwards;
+      border: 3px solid #00ffff;
+      max-width: 90%;
+      position: relative;
+    }
+
+    .notification-modal h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: #ffff00;
+      text-shadow: 0 0 10px #ffff00;
+      margin-bottom: 25px;
+      font-size: 2.5em;
+      border-bottom: none; /* Override default h2 border */
+      padding-bottom: 0;
+    }
+
+    .notification-modal p {
+      font-size: 1.3em;
+      margin-bottom: 25px;
+      color: #eee;
+    }
+
+    .notification-modal button {
+      background: linear-gradient(90deg, #ff00ff, #00ffff);
+      border: 2px solid #ffff00;
+      padding: 15px 30px;
+      border-radius: 30px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .notification-modal button:hover {
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes modalPopUp {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Popup Form Styling - Konsisten dengan index.html */
+    .popup-form {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        backdrop-filter: blur(8px);
+    }
+    .popup-form.active { /* Class untuk mengaktifkan transisi */
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .popup-inner {
+        background: rgba(0, 0, 0, 0.8); /* Background gelap transparan */
+        color: #e0e0e0;
+        padding: 30px; /* Padding lebih besar */
+        border-radius: 20px; /* Sudut lebih membulat */
+        box-shadow: 0 0 25px rgba(102, 0, 255, 0.8), 0 0 40px rgba(102, 0, 255, 0.5); /* Glow ungu */
+        border: 3px solid #ff00ff; /* Border ungu */
+        width: 90%;
+        max-width: 480px; /* Max lebar untuk popup */
+        transform: translateY(-20px) scale(0.95);
+        opacity: 0;
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        position: relative;
+    }
+    .popup-form.active .popup-inner {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+
+    .popup-inner h2 {
+        font-family: 'Orbitron', sans-serif;
+        color: #ffff00; /* Kuning neon */
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 2em;
+        text-shadow: 0 0 8px #ffff00;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .popup-inner input[type="text"],
+    .popup-inner input[type="email"],
+    .popup-inner input[type="number"],
+    .popup-inner select {
+        width: 100%;
+        padding: 14px 20px;
+        margin-bottom: 20px; /* Jarak antar input */
+        border-radius: 30px;
+        border: 2px solid #00ffff; /* Border cyan */
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        font-size: 18px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+    }
+
+    .popup-inner input:focus,
+    .popup-inner select:focus {
+        outline: none;
+        border-color: #ffff00; /* Kuning saat fokus */
+        box-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .popup-inner input::placeholder {
+        color: #aaa;
+        opacity: 0.7;
+    }
+
+    .popup-inner input[readonly] {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: #ff00ff; /* Ungu */
+        cursor: default;
+        color: #bbb;
+    }
+
+    .popup-inner .flex-input-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+    .popup-inner .flex-input-group input {
+        margin-bottom: 0; /* Override default margin */
+    }
+
+    .popup-inner .btn-copy {
+        background: linear-gradient(90deg, #ff00ff, #00ffff); /* Gradien ungu ke cyan */
+        color: white;
+        border-radius: 30px;
+        padding: 10px 18px;
+        font-size: 16px;
+        font-weight: bold;
+        border: 2px solid #ffff00;
+        box-shadow: 0 0 10px rgba(255, 0, 255, 0.6);
+        transition: all 0.3s ease;
+    }
+    .popup-inner .btn-copy:hover {
+        background: linear-gradient(90deg, #00ffff, #ff00ff);
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.8);
+    }
+
+    .popup-inner button {
+        background: linear-gradient(90deg, #ff00ff 0%, #ffff00 100%);
+        border: 2px solid #00ffff;
+        padding: 15px 30px;
+        border-radius: 30px;
+        color: #fff;
+        font-weight: 700;
+        font-size: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 15px rgba(255, 0, 255, 0.7);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        width: 100%; /* Tombol lebar penuh */
+        margin-top: 10px; /* Jarak antar tombol */
+    }
+
+    .popup-inner button:hover {
+        background: linear-gradient(90deg, #ffff00 0%, #ff00ff 100%);
+        transform: translateY(-3px) scale(1.01);
+        box-shadow: 0 0 25px rgba(255, 255, 0, 0.9), 0 0 35px rgba(255, 0, 255, 0.9);
+    }
+
+    .popup-inner button.secondary-btn { /* Untuk tombol Batal / Kembali */
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px solid #00ff00; /* Hijau neon */
+        box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    }
+    .popup-inner button.secondary-btn:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: #ffff00; /* Kuning saat hover */
+        box-shadow: 0 0 15px rgba(255, 255, 0, 0.7);
+        transform: translateY(-2px) scale(1.01);
+    }
+
+    #form-qris {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #gambar-qris {
+      max-width: 80%; /* Gambar tidak terlalu besar */
+      height: auto;
+      margin: 15px auto;
+      border-radius: 10px;
+      border: 3px solid #ffff00; /* Border kuning neon */
+      box-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+    }
+
+    /* Close Button for Popups */
+    .popup-inner .close-popup-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        color: #ff00ff; /* Ungu neon */
+        cursor: pointer;
+        transition: all 0.2s ease;
+        line-height: 1; /* Rata tengah vertikal */
+    }
+    .popup-inner .close-popup-btn:hover {
+        color: #ffff00; /* Kuning saat hover */
+        transform: rotate(90deg) scale(1.1);
+    }
+
+
+    /* Responsive Adjustments */
+    @media (max-width: 550px) {
+      .container, .game-grid-section {
+        margin: 20px 10px;
+        padding: 25px 25px;
+        width: calc(100% - 20px);
+      }
+      .player-info-container {
+        top: 15px;
+        left: 15px;
+      }
+      .player-info-container span {
+        font-size: 0.8em;
+        padding: 4px 8px;
+      }
+      .player-info-container #saldo-display-top {
+          font-size: 1em;
+      }
+
+      h1 {
+        font-size: 45px;
+        letter-spacing: 5px;
+      }
+      .saldo {
+        font-size: 24px;
+        padding: 12px 20px;
+      }
+      /* Untuk layar lebih kecil, tombol tetap sejajar tapi mungkin wrap jika tidak muat */
+      .btn-group {
+        flex-wrap: wrap; /* Izinkan wrapping */
+        justify-content: center; /* Pusatkan tombol */
+      }
+      .btn {
+        font-size: 14px; /* Lebih kecil lagi */
+        padding: 10px 18px; /* Padding lebih kecil */
+        flex-grow: 1; /* Biarkan tombol tumbuh untuk mengisi ruang */
+        min-width: 100px; /* Batasi ukuran minimum */
+      }
+.history-section h2, .game-grid-section h2 {
+        font-size: 1.8em;
+      }
+      .history-section th, .history-section td {
+        font-size: 0.8em;
+        padding: 10px;
+      }
+      .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 15px;
+      }
+      .game-item h3 {
+        font-size: 1em;
+        margin: 10px 8px;
+      }
+      .popup-inner {
+          padding: 25px;
+      }
+      .popup-inner h2 {
+          font-size: 1.8em;
+      }
+      .popup-inner input, .popup-inner select {
+          font-size: 16px;
+          padding: 12px 15px;
+      }
+      .popup-inner button {
+          font-size: 18px;
+          padding: 14px;
+      }
+      .notification-modal > div {
+          padding: 30px;
+      }
+      .notification-modal h2 {
+          font-size: 2em;
+      }
+      .notification-modal p {
+          font-size: 1.1em;
+      }
+      .notification-modal button {
+          font-size: 1.1em;
+          padding: 12px 25px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      h1 {
+        font-size: 30px;
+        letter-spacing: 3px;
+      }
+      .saldo {
+        font-size: 20px;
+      }
+      .btn {
+        font-size: 13px; /* Perkecil lagi untuk layar sangat kecil */
+        padding: 5px 15px;
+      }
+      .game-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+      }
+      .game-item img {
+        height: 100px;
+      }
+      .game-item h3 {
+        font-size: 0.9em;
+        margin: 8px 5px;
+      }
+      .player-info-container {
+        top: 10px;
+        left: 10px;
+      }
+      .player-info-container span {
+        font-size: 0.75em;
+        padding: 3px 6px;
+      }
+      .player-info-container #saldo-display-top {
+          font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="player-info-container">
+        <span id="player-id">ID Pemain: Loading...</span>
+        <span id="saldo-display-top">Saldo: Rp0</span>
+    </div>
+    <h1>GAME ZONE</h1>
+    <div class="btn-group">
+      <button class="btn" id="btn-deposit">Deposit</button>
+      <button class="btn" id="btn-withdraw">Penarikan</button>
+      <button class="btn" id="btn-show-history">Riwayat Transaksi</button>
+    </div>
+
+    <div id="history-wrapper" class="history-section">
+      <h2>Riwayat Deposit</h2>
+      <table id="riwayat-deposit">
+        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
+      </table>
+      <h2>Riwayat Penarikan</h2>
+      <table id="riwayat-penarikan">
+        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
+        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
+      </table>
+      <button class="btn secondary-btn" onclick="hideHistory()">Sembunyikan Riwayat</button>
+    </div>
+  </div>
+
+  <div class="game-grid-section">
+    <h2>Pilih Game</h2>
+    <div class="game-grid">
+      <a href="slot.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//Slot77.jpeg" alt="Slot Game">
+        <h3>Slot Game</h3>
+      </a>
+      <a href="poker1.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download.jpeg" alt="Poker Game">
+        <h3>Poker Game</h3>
+      </a>
+      <a href="tebakdadu.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1).png" alt="Tebak Dadu">
+        <h3>Tebak Dadu</h3>
+      </a>
+      <a href="samgong1.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png" alt="Samgong">
+        <h3>Samgong</h3>
+      </a>
+      <a href="susunbalok99.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg" alt="Susun Balok">
+        <h3>Susun Balok</h3>
+      </a>
+            <a href="qiu99.html" class="game-item">
+        <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg" alt="Susun Balok">
+        <h3>Qiu Qiu</h3>
+      </a>
+      </div>
+  </div>
+
+<div id="popup-deposit" class="popup-form">
+  <div class="popup-inner">
+    <span class="close-popup-btn" onclick="closePopup('popup-deposit')">&times;</span>
+    <h2>Deposit via E-Wallet / QRIS</h2>
+    <input type="text" id="dep-nama" placeholder="Nama Akun E-Wallet" readonly />
+    <input type="email" id="dep-email" placeholder="Email Anda" readonly />
+    
+    <div class="flex-input-group">
+      <input type="text" id="dep-nomor" placeholder="Nomor Tujuan (e.g., DANA, OVO)" readonly />
+      <button class="btn-copy" data-target="dep-nomor">Salin</button>
+    </div>
+
+    <div style="text-align:center; margin: 15px 0;">
+      <button id="btn-qris" class="btn">Tampilkan QRIS</button>
+      <button id="btn-kembali-ewallet" class="btn secondary-btn" style="display:none;">Kembali ke E-Wallet</button>
+    </div>
+    
+    <div id="form-qris" style="display:none; text-align:center;">
+      <img src="" alt="QRIS Code" id="gambar-qris" />
+      <p style="margin-top: 15px; font-size:0.9em; color:#bbb;">Scan QRIS di atas untuk pembayaran.</p>
+    </div>
+
+    <input type="number" id="dep-jumlah" placeholder="Jumlah Deposit (Min Rp10.000)" />
+    <button id="dep-submit">Kirim Permintaan Deposit</button>
+    <button class="secondary-btn" onclick="closePopup('popup-deposit')">Batal</button>
+  </div>
+</div>
+
+<div id="popup-withdraw" class="popup-form">
+  <div class="popup-inner">
+    <span class="close-popup-btn" onclick="closePopup('popup-withdraw')">&times;</span>
+    <h2>Penarikan Saldo</h2>
+    <input type="text" id="with-nama" placeholder="Nama Akun e-Wallet Anda" required />
+    <input type="email" id="with-email" placeholder="Email Anda" readonly />
+    
+    <div class="flex-input-group">
+      <input type="text" id="with-nomor" placeholder="Nomor e-Wallet Anda" required />
+    </div>
+
+    <select id="with-metode" required>
+      <option value="">Pilih Metode e-Wallet</option>
+      <option value="DANA">DANA</option>
+      <option value="OVO">OVO</option>
+      <option value="GoPay">GoPay</option>
+    </select>
+    <input type="number" id="with-jumlah" placeholder="Jumlah Penarikan (Min Rp50.000)" required />
+    <button id="with-submit">Kirim Permintaan Penarikan</button>
+    <button class="secondary-btn" onclick="closePopup('popup-withdraw')">Batal</button>
+  </div>
+</div>
+
+<div id="notificationModal" class="notification-modal">
+    <div>
+      <h2 id="notificationTitle"></h2>
+      <p id="notificationMessage"></p>
+      <button onclick="hideNotificationModal()">Tutup</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const supabase = window.supabase.createClient(
+    'https://vqmfachxnjyxwuavpgds.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+  );
+
+  let uid = localStorage.getItem('uid');
+  const notificationModal = document.getElementById('notificationModal');
+  const notificationTitle = document.getElementById('notificationTitle');
+  const notificationMessage = document.getElementById('notificationMessage');
+
+  function showNotificationModal(title, message) {
+    notificationTitle.innerText = title;
+    notificationMessage.innerText = message;
+    notificationModal.classList.add('active'); // Gunakan class untuk animasi
+  }
+
+  function hideNotificationModal() {
+    notificationModal.classList.remove('active');
+  }
+
+  async function getCurrentUserEmail() {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) {
+      console.error('Error fetching user from Supabase auth:', error.message);
+      return null;
+    }
+    
+    if (user && uid !== user.id) {
+        uid = user.id;
+        localStorage.setItem('uid', user.id);
+    }
+    return user ? user.email : null;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    getCurrentUserEmail().then(() => {
+      loadProfile();
+      // Tampilkan ID Pemain dari UID
+      document.getElementById('player-id').textContent = `ID Pemain: ${uid ? uid.substring(0, 8) + '...' : 'N/A'}`; // Menampilkan sebagian UID
+    }).catch(err => {
+      console.error("Failed to initialize user session:", err);
+      showNotificationModal("Sesi Tidak Valid", "Sesi pengguna tidak valid. Silakan login kembali.");
+      setTimeout(() => {
+        window.location.href = 'index.html'; // Redirect ke halaman login
+      }, 2000);
+    });
+
+    document.querySelectorAll('.btn-copy').forEach(button => {
+      button.addEventListener('click', (event) => {
+        const targetId = event.currentTarget.dataset.target;
+        const inputElement = document.getElementById(targetId);
+        if (inputElement) {
+          inputElement.select();
+          inputElement.setSelectionRange(0, 99999); 
+          try {
+            navigator.clipboard.writeText(inputElement.value)
+              .then(() => {
+                showNotificationModal('Berhasil Disalin!', `"${inputElement.value}" telah disalin ke clipboard.`);
+              })
+              .catch(err => {
+                console.error('Gagal menyalin teks: ', err);
+                showNotificationModal('Gagal Salin', 'Gagal menyalin nomor. Silakan salin manual.');
+              });
+          } catch (err) {
+            // Fallback for older browsers (might not be needed for modern browsers)
+            document.execCommand('copy');
+            showNotificationModal('Berhasil Disalin!', `"${inputElement.value}" telah disalin ke clipboard.`);
+          }
+        }
+      });
+    });
+
+    // Event listener untuk tombol "Riwayat Transaksi"
+    document.getElementById('btn-show-history').addEventListener('click', function() {
+        const historyWrapper = document.getElementById('history-wrapper');
+        if (historyWrapper.classList.contains('active')) {
+            historyWrapper.classList.remove('active');
+            // Jika mau ada animasi sembunyi, bisa tambahkan timeout sebelum display:none
+            setTimeout(() => { historyWrapper.style.display = 'none'; }, 400); 
+        } else {
+            historyWrapper.style.display = 'flex'; // Pastikan display:flex agar animasi bisa bekerja
+            historyWrapper.classList.add('active');
+            loadProfile(); // Muat ulang data riwayat saat ditampilkan
+        }
+    });
+  });
+
+  function closePopup(id) {
+    document.getElementById(id).classList.remove('active');
+    setTimeout(() => {
+        document.getElementById(id).style.display = 'none';
+    }, 300); // Sesuaikan dengan durasi transisi opacity
+  }
+
+  async function loadProfile() {
+    if (!uid) {
+        console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
+        document.getElementById('saldo-display-top').textContent = 'Saldo: Rp0 (Harap Login)'; // Update saldo di pojok kiri atas
+        document.getElementById('player-id').textContent = 'ID Pemain: N/A'; // Update ID Pemain
+        document.querySelector('#riwayat-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+        document.querySelector('#riwayat-penarikan tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+        return;
+    }
+    
+    // Update ID Pemain saat loadProfile
+    document.getElementById('player-id').textContent = `ID Pemain: ${uid.substring(0, 8)}...`;
+
+
+    const { data: userData, error: userError } = await supabase
+      .from('users_data')
+      .select('saldo')
+      .eq('user_id', uid)
+      .single();
+
+    if (userError && userError.code !== 'PGRST116') {
+      console.error('Error memuat data saldo:', userError.message);
+      showNotificationModal('Error Saldo', 'Gagal memuat data saldo Anda: ' + userError.message);
+      document.getElementById('saldo-display-top').textContent = `Saldo: Rp0 (Error)`; // Update saldo di pojok kiri atas
+      return;
+    } else if (userError && userError.code === 'PGRST116') {
+        console.warn('Pengguna baru, membuat entri saldo awal...');
+        document.getElementById('saldo-display-top').textContent = `Saldo: Rp0 (Baru)`; // Update saldo di pojok kiri atas
+        const { error: insertError } = await supabase
+            .from('users_data')
+            .insert([{ user_id: uid, saldo: 0 }]);
+
+        if (insertError) {
+            console.error('Error saat membuat entri saldo awal:', insertError.message);
+            showNotificationModal('Error Inisialisasi Saldo', 'Gagal membuat entri saldo awal. Cek log konsol.');
+            document.getElementById('saldo-display-top').textContent = `Saldo: Rp0 (Error Inisialisasi)`; // Update saldo di pojok kiri atas
+        }
+    } else {
+        document.getElementById('saldo-display-top').textContent = `Saldo: Rp${(userData.saldo ?? 0).toLocaleString('id-ID')}`; // Update saldo di pojok kiri atas
+    }
+
+    // Load Deposit History
+    const { data: depositData, error: depHistoryError } = await supabase
+      .from('deposit_requests')
+      .select('created_at, amount, status')
+      .eq('user_id', uid)
+      .order('created_at', { ascending: false });
+
+    const depositTableBody = document.querySelector('#riwayat-deposit tbody');
+    depositTableBody.innerHTML = '';
+    if (depHistoryError) {
+        console.error('Error fetching deposit history:', depHistoryError.message);
+        depositTableBody.innerHTML = '<tr><td colspan="3" class="empty">Gagal memuat riwayat deposit.</td></tr>';
+    } else if (!depositData || depositData.length === 0) {
+      depositTableBody.innerHTML = '<tr><td colspan="3" class="empty">Belum ada riwayat deposit.</td></tr>';
+    } else {
+      depositData.forEach(row => {
+        const date = new Date(row.created_at).toLocaleString('id-ID');
+        const statusClass = `status-${row.status}`;
+        depositTableBody.innerHTML += `<tr><td>${date}</td><td>Rp${row.amount.toLocaleString('id-ID')}</td><td class="${statusClass}">${row.status.charAt(0).toUpperCase() + row.status.slice(1)}</td></tr>`;
+      });
+    }
+
+    // Load Withdraw History
+    const { data: withdrawData, error: withdrawHistoryError } = await supabase
+      .from('withdraw_requests')
+      .select('created_at, amount, status')
+      .eq('user_id', uid)
+      .order('created_at', { ascending: false });
+
+    const withdrawTableBody = document.querySelector('#riwayat-penarikan tbody');
+    withdrawTableBody.innerHTML = '';
+    if (withdrawHistoryError) {
+        console.error('Error fetching withdraw history:', withdrawHistoryError.message);
+        withdrawTableBody.innerHTML = '<tr><td colspan="3" class="empty">Gagal memuat riwayat penarikan.</td></tr>';
+    } else if (!withdrawData || withdrawData.length === 0) {
+      withdrawTableBody.innerHTML = '<tr><td colspan="3" class="empty">Belum ada riwayat penarikan.</td></tr>';
+    } else {
+      withdrawData.forEach(row => {
+        const date = new Date(row.created_at).toLocaleString('id-ID');
+        const statusClass = `status-${row.status}`;
+        withdrawTableBody.innerHTML += `<tr><td>${date}</td><td>Rp${row.amount.toLocaleString('id-ID')}</td><td class="${statusClass}">${row.status.charAt(0).toUpperCase() + row.status.slice(1)}</td></tr>`;
+      });
+    }
+  }
+
+  // Hide history function
+  function hideHistory() {
+      const historyWrapper = document.getElementById('history-wrapper');
+      historyWrapper.classList.remove('active');
+      setTimeout(() => { historyWrapper.style.display = 'none'; }, 400); // Sesuaikan dengan durasi transisi
+  }
+
+  document.getElementById('btn-deposit').onclick = async () => {
+    if (!uid) { showNotificationModal("Perhatian!", "Anda harus login untuk melakukan deposit."); return; }
+    document.getElementById('popup-deposit').style.display = 'flex';
+    document.getElementById('popup-deposit').classList.add('active'); // Aktifkan animasi
+    const userEmail = await getCurrentUserEmail();
+    if (userEmail) {
+      document.getElementById('dep-email').value = userEmail;
+    }
+// Default: tampilkan eWallet info
+    const { data, error } = await supabase
+      .from('deposit_config')
+      .select('*')
+      .eq('metode', 'eWallet')
+      .single();
+
+    if (error || !data) {
+      showNotificationModal('Error Konfigurasi', 'Gagal mengambil data konfigurasi e-Wallet. Silakan coba lagi.');
+      return;
+    }
+    document.getElementById('dep-nama').value = data.nama;
+    document.getElementById('dep-nomor').value = data.nomor;
+    document.getElementById('dep-submit').dataset.metode = 'eWallet';
+
+    // Reset QRIS view
+    document.getElementById('form-qris').style.display = 'none';
+    document.getElementById('btn-kembali-ewallet').style.display = 'none';
+  };
+
+  document.getElementById('btn-qris').onclick = async () => {
+    const { data, error } = await supabase
+      .from('deposit_config')
+      .select('*')
+      .eq('metode', 'QRIS')
+      .single();
+
+    if (error || !data) {
+      showNotificationModal('Error Konfigurasi', 'Gagal mengambil data QRIS. Silakan coba lagi.');
+      return;
+    }
+
+    document.getElementById('form-qris').style.display = 'block';
+    document.getElementById('gambar-qris').src = data.qris_url;
+    document.getElementById('dep-submit').dataset.metode = 'QRIS';
+
+    document.getElementById('btn-kembali-ewallet').style.display = 'inline-block';
+    document.getElementById('dep-nama').value = ''; // Kosongkan nama & nomor untuk QRIS
+    document.getElementById('dep-nomor').value = '';
+  };
+
+  document.getElementById('btn-kembali-ewallet').onclick = async () => {
+    const { data, error } = await supabase
+      .from('deposit_config')
+      .select('*')
+      .eq('metode', 'eWallet')
+      .single();
+
+    if (error || !data) {
+      showNotificationModal('Error Konfigurasi', 'Gagal mengambil data e-Wallet. Silakan coba lagi.');
+      return;
+    }
+
+    document.getElementById('form-qris').style.display = 'none';
+    document.getElementById('dep-nama').value = data.nama;
+    document.getElementById('dep-nomor').value = data.nomor;
+    document.getElementById('dep-submit').dataset.metode = 'eWallet';
+
+    document.getElementById('btn-kembali-ewallet').style.display = 'none';
+  };
+
+  document.getElementById('dep-submit').onclick = async () => {
+    if (!uid) { showNotificationModal("Perhatian!", "Anda harus login untuk melakukan deposit."); return; }
+    const nama = document.getElementById('dep-nama').value;
+    const email = document.getElementById('dep-email').value;
+    const nomor = document.getElementById('dep-nomor').value;
+    const jumlah = parseInt(document.getElementById('dep-jumlah').value);
+    const metode = document.getElementById('dep-submit').dataset.metode; // Ambil metode dari dataset
+
+    if (!jumlah || isNaN(jumlah) || jumlah < 10000) {
+      showNotificationModal("Input Tidak Valid", "Jumlah deposit minimal Rp10.000.");
+      return;
+    }
+
+    if (metode === 'eWallet' && (!nama || !nomor)) {
+      showNotificationModal("Input Tidak Valid", "Lengkapi nama dan nomor e-Wallet.");
+      return;
+    }
+    // Jika metode QRIS, nama dan nomor mungkin kosong, itu normal.
+
+    const depositTableBody = document.querySelector('#riwayat-deposit tbody');
+    const now = new Date();
+    const dateString = now.toLocaleString('id-ID');
+    const newRowHTML = `<tr class="pending-item" data-id="temp-${Date.now()}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
+
+    if (depositTableBody.querySelector('.empty')) {
+      depositTableBody.innerHTML = '';
+    }
+    depositTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+    const { error } = await supabase.from('deposit_requests').insert([
+      { user_id: uid, nama, metode, amount: jumlah, status: 'pending', email: email, nomor_tujuan: nomor } // Tambahkan nomor_tujuan
+    ]);
+
+    if (error) {
+      console.error(error);
+      showNotificationModal("Deposit Gagal", "Gagal mengirim permintaan deposit. Silakan coba lagi.");
+      const tempRow = depositTableBody.querySelector(`[data-id="temp-${now.getTime()}"]`);
+      if (tempRow) {
+          tempRow.remove();
+      }
+    } else {
+      showNotificationModal("Deposit Terkirim", "Permintaan deposit Anda telah dikirim dan akan segera diproses.");
+      closePopup('popup-deposit');
+      document.getElementById('dep-jumlah').value = ''; // Reset jumlah
+      loadProfile(); // Muat ulang profil untuk update saldo
+    }
+  };
+
+  document.getElementById('btn-withdraw').onclick = async () => {
+    if (!uid) { showNotificationModal("Perhatian!", "Anda harus login untuk melakukan penarikan."); return; }
+    document.getElementById('popup-withdraw').style.display = 'flex';
+    document.getElementById('popup-withdraw').classList.add('active'); // Aktifkan animasi
+    const userEmail = await getCurrentUserEmail();
+    if (userEmail) {
+      document.getElementById('with-email').value = userEmail;
+    }
+  };
+
+  document.getElementById('with-submit').onclick = async () => {
+    if (!uid) { showNotificationModal("Perhatian!", "Anda harus login untuk melakukan penarikan."); return; }
+
+    const nama = document.getElementById('with-nama').value;
+    const email = document.getElementById('with-email').value;
+    const metode = document.getElementById('with-metode').value;
+    const nomor = document.getElementById('with-nomor').value;
+    const jumlah = parseInt(document.getElementById('with-jumlah').value);
+
+    if (!nama || !metode || !nomor || !jumlah || !email) {
+      showNotificationModal("Input Tidak Valid", "Mohon lengkapi semua kolom untuk penarikan.");
+      return;
+    }
+
+    if (isNaN(jumlah) || jumlah < 50000) {
+        showNotificationModal("Input Tidak Valid", "Jumlah penarikan minimal Rp50.000.");
+        return;
+    }
+
+    const { data: userData, error: saldoError } = await supabase
+        .from('users_data')
+        .select('saldo')
+        .eq('user_id', uid)
+        .single();
+
+    if (saldoError && saldoError.code !== 'PGRST116') {
+        console.error('Error fetching user saldo for withdraw:', saldoError);
+        showNotificationModal('Error Saldo', 'Gagal mengambil saldo Anda untuk penarikan. Silakan coba lagi.');
+        return;
+    } else if (saldoError && saldoError.code === 'PGRST116' || (userData && userData.saldo === null)) {
+        showNotificationModal('Saldo Tidak Cukup', 'Saldo Anda 0. Tidak bisa melakukan penarikan.');
+        return;
+    }
+    
+    const currentSaldo = userData.saldo;
+
+    if (jumlah > currentSaldo) {
+        showNotificationModal('Saldo Tidak Cukup', `Saldo Anda tidak mencukupi. Saldo Anda saat ini adalah Rp${currentSaldo.toLocaleString('id-ID')}.`);
+        return;
+    }
+
+    const withdrawTableBody = document.querySelector('#riwayat-penarikan tbody');
+    const now = new Date();
+    const dateString = now.toLocaleString('id-ID');
+    const newRowHTML = `<tr class="pending-item" data-id="temp-${Date.now()}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
+    if (withdrawTableBody.querySelector('.empty')) {
+      withdrawTableBody.innerHTML = '';
+    }
+    withdrawTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+    const saldoBaru = currentSaldo - jumlah;
+    
+    const { error: updateSaldoError } = await supabase
+        .from('users_data')
+        .update({ saldo: saldoBaru })
+        .eq('user_id', uid);
+
+    if (updateSaldoError) {
+        console.error('Error updating saldo during withdraw request:', updateSaldoError);
+        showNotificationModal('Penarikan Gagal', 'Gagal mengurangi saldo. Silakan coba lagi. Saldo Anda tidak berkurang.');
+        const tempRow = withdrawTableBody.querySelector(`[data-id="temp-${now.getTime()}"]`);
+        if (tempRow) {
+            tempRow.remove();
+        }
+        return;
+    }
+
+    document.getElementById('saldo-display-top').textContent = `Saldo: Rp.${saldoBaru.toLocaleString('id-ID')}`; // Update saldo di pojok kiri atas
+
+    const { error: insertRequestError } = await supabase
+        .from('withdraw_requests')
+        .insert([
+            { user_id: uid, nama, metode, amount: jumlah, email: email, nomor_tujuan: nomor, status: 'pending' }
+        ]);
+
+    if (insertRequestError) {
+        console.error('Error inserting withdraw request:', insertRequestError);
+        showNotificationModal('Penarikan Gagal', 'Gagal mencatat permintaan penarikan. Saldo Anda akan dikembalikan. Silakan coba lagi.');
+
+        const { error: refundError } = await supabase
+            .from('users_data')
+            .update({ saldo: currentSaldo })
+            .eq('user_id', uid);
+
+        if (refundError) {
+            console.error('CRITICAL ERROR: Gagal mengembalikan saldo setelah permintaan penarikan gagal dicatat:', refundError);
+            showNotificationModal('ERROR KRITIS', 'Saldo gagal dikembalikan setelah permintaan penarikan gagal dicatat. MOHON SEGERA HUBUNGI ADMIN!');
+        } else {
+            document.getElementById('saldo-display-top').textContent = `Saldo: Rp${currentSaldo.toLocaleString('id-ID')}`; // Update saldo di pojok kiri atas
+        }
+
+        const tempRow = withdrawTableBody.querySelector(`[data-id="temp-${now.getTime()}"]`);
+        if (tempRow) {
+            tempRow.remove();
+        }
+    } else {
+        showNotificationModal('Penarikan Terkirim', 'Permintaan penarikan Anda telah dikirim dan saldo berhasil dikurangi. Menunggu proses admin.');
+        closePopup('popup-withdraw');
+        document.getElementById('with-jumlah').value = ''; // Reset jumlah
+        document.getElementById('with-nama').value = ''; // Reset nama
+        document.getElementById('with-metode').value = ''; // Reset metode
+        document.getElementById('with-nomor').value = ''; // Reset nomor
+        loadProfile();
+    }
+  };
+</script>
+</body>
+</html>
