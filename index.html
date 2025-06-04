@@ -962,7 +962,11 @@
     const bgMusic = document.getElementById('background-music');
        const toggleMusicBtn = document.getElementById('toggle-music-btn');
        let isPlaying = false; // Status musik
-
+      const showCustomAlert = document.getElementById('alertMessage').innerText = message;
+      
+     const costomAlert = document.getElementById('customAlert').style.display = 'block');
+      document.getElementById('customAlert').style.display = 'none');
+      
        toggleMusicBtn.addEventListener('click', () => {
          if (isPlaying) {
            bgMusic.pause();
@@ -979,13 +983,6 @@
          isPlaying = !isPlaying;
        });
 
-  function showCustomAlert(message) {
-    document.getElementById('alertMessage').innerText = message;
-    document.getElementById('customAlert').style.display = 'block';
-}
-
- function hideCustomAlert() {
-    document.getElementById('customAlert').style.display = 'none';
 
     // --- General Utility Functions ---
     function showPopup(popupId) {
