@@ -40,7 +40,7 @@
       width: 100%;
       max-width: 600px; /* Lebar maksimum untuk konten utama */
       margin: 30px auto; /* Margin disesuaikan */
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.3);
       border-radius: 20px; /* Lebih membulat */
       padding: 30px 40px;
       box-shadow: 0 0 25px 8px rgba(102, 0, 255, 0.6), /* Ungu neon */
@@ -75,42 +75,52 @@
         left: 20px; /* Jarak dari kiri */
         z-index: 2; /* Pastikan di atas elemen lain */
         display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* Rata kiri */
-        text-align: left;
+        flex-direction: row; /* UBAH INI: Agar sejajar ke samping */
+        align-items: center; /* Pusatkan secara vertikal */
+        gap: 15px; /* Tambahkan jarak antar ID Pemain dan Saldo */
+        /* Hapus properti text-align karena sudah flex */
         color: #00ffff; /* Warna cyan untuk info pemain */
         font-family: 'Share Tech Mono', monospace;
         text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
     }
     .player-info-container span {
-        display: block;
-        padding: 5px 10px;
-        background: rgba(0, 0, 0, 0.6);
-        border-radius: 8px;
-        border: 1px solid rgba(0, 255, 255, 0.5);
-        margin-bottom: 5px; /* Jarak antara ID dan Saldo */
+        display: inline-block; /* Agar bisa menerapkan padding dan background */
+        padding: 8px 15px; /* Padding lebih besar untuk background */
+        background: rgba(0, 0, 0, 0.9); /* Background transparan untuk setiap span */
+        border-radius: 8px; /* Sudut membulat */
+        border: 1px solid rgba(0, 255, 255, 0.5); /* Border cyan */
+        margin-bottom: 0; /* Pastikan tidak ada margin-bottom */
         font-size: 0.9em;
-        white-space: nowrap; /* Jangan wrap teks */
-        overflow: hidden; /* Sembunyikan jika terlalu panjang */
-        text-overflow: ellipsis; /* Tampilkan ... jika terlalu panjang */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        box-shadow: 0 0 8px rgba(0, 255, 255, 0.5); /* Tambahkan shadow untuk efek glow */
     }
     .player-info-container #player-id {
         font-weight: bold;
         font-size: 1em;
-        color: #ffff00; /* ID Pemain bisa kuning */
+        color: #fff; /* ID Pemain bisa kuning */
         text-shadow: 0 0 8px rgba(255, 255, 0, 0.7);
+        border-color: rgba(255, 255, 0, 0.5); /* Border kuning untuk ID */
+        box-shadow: 0 0 8px rgba(255, 255, 0, 0.5); /* Shadow kuning untuk ID */
     }
     .player-info-container #saldo-display-top {
         font-family: 'Orbitron', sans-serif;
-        font-size: 1em;
-        font-weight: 700;
-        background: linear-gradient(90deg, #00ff00 0%, #ffff00 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        border: none; /* Hilangkan border karena sudah ada background clip */
-        box-shadow: none; /* Hilangkan shadow karena sudah ada text-shadow */
-        padding: 0; /* Hilangkan padding */
-        margin-bottom: 0;
+        font-size: 0.8em;
+        font-weight: 100;
+        width: 170px;
+        /* Hapus background clip untuk memudahkan aplikasi background solid */
+        /* background: linear-gradient(90deg, #00ff00 0%, #ffff00 100%); */
+        /* -webkit-background-clip: text; */
+        /* -webkit-text-fill-color: transparent; */
+
+        color: #fff; /* Warna teks saldo hijau neon */
+        text-shadow: 0 0 8px rgba(0, 255, 0, 0.7); /* Shadow hijau */
+        border: 1px solid rgba(0, 255, 0, 0.5); /* Border hijau untuk saldo */
+        background: rgba(0, 0, 0, 0.7); /* Background transparan hitam untuk saldo */
+        box-shadow: 0 0 8px rgba(0, 255, 0, 0.5); /* Shadow hijau untuk saldo */
+        padding: 8px 15px; /* Padding konsisten dengan span lain */
+        border-radius: 8px; /* Sudut membulat */
     }
 
 
@@ -580,26 +590,26 @@
 
 
     /* Responsive Adjustments */
-    @media (max-width: 550px) {
-      .container, .game-grid-section {
-        margin: 20px 10px;
-        padding: 25px 25px;
-        width: calc(100% - 20px);
-      }
+  @media (max-width: 380px) {
+      /* ... properti lain ... */
       .player-info-container {
-        top: 15px;
-        left: 15px;
+        top: 10px;
+        left: 10px;
       }
       .player-info-container span {
-        font-size: 0.8em;
-        padding: 4px 8px;
+        font-size: 0.75em;
+        padding: 3px 6px;
       }
       .player-info-container #saldo-display-top {
-          font-size: 1em;
+          font-size: 0.9em;
+          padding: 3px 6px; /* Sesuaikan padding juga */
       }
+      /* ... properti lain ... */
+    }
+
 
       h1 {
-        font-size: 45px;
+        font-size: 30px;
         letter-spacing: 5px;
       }
       .saldo {
@@ -667,7 +677,7 @@
         letter-spacing: 3px;
       }
       .saldo {
-        font-size: 20px;
+        font-size: 15px;
       }
       .btn {
         font-size: 13px; /* Perkecil lagi untuk layar sangat kecil */
@@ -702,7 +712,7 @@
   <div class="container">
     <div class="player-info-container">
         <span id="player-id">ID Pemain: Loading...</span>
-        <span id="saldo-display-top">Saldo: Rp0</span>
+        <span id="saldo-display-top">Saldo: Rp.0</span>
     </div>
     <h1>GAME ZONE</h1>
     <div class="btn-group">
@@ -915,7 +925,7 @@
   async function loadProfile() {
     if (!uid) {
         console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
-        document.getElementById('saldo-display-top').textContent = 'Saldo: Rp0 (Harap Login)'; // Update saldo di pojok kiri atas
+        document.getElementById('saldo-display-top').textContent = 'Saldo: Rp.0 (Harap Login)'; // Update saldo di pojok kiri atas
         document.getElementById('player-id').textContent = 'ID Pemain: N/A'; // Update ID Pemain
         document.querySelector('#riwayat-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
         document.querySelector('#riwayat-penarikan tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
@@ -939,7 +949,7 @@
       return;
     } else if (userError && userError.code === 'PGRST116') {
         console.warn('Pengguna baru, membuat entri saldo awal...');
-        document.getElementById('saldo-display-top').textContent = `Saldo: Rp0 (Baru)`; // Update saldo di pojok kiri atas
+        document.getElementById('saldo-display-top').textContent = `Saldo: Rp.0 (Baru)`; // Update saldo di pojok kiri atas
         const { error: insertError } = await supabase
             .from('users_data')
             .insert([{ user_id: uid, saldo: 0 }]);
@@ -947,10 +957,10 @@
         if (insertError) {
             console.error('Error saat membuat entri saldo awal:', insertError.message);
             showNotificationModal('Error Inisialisasi Saldo', 'Gagal membuat entri saldo awal. Cek log konsol.');
-            document.getElementById('saldo-display-top').textContent = `Saldo: Rp0 (Error Inisialisasi)`; // Update saldo di pojok kiri atas
+            document.getElementById('saldo-display-top').textContent = `Saldo: Rp.0 (Error Inisialisasi)`; // Update saldo di pojok kiri atas
         }
     } else {
-        document.getElementById('saldo-display-top').textContent = `Saldo: Rp${(userData.saldo ?? 0).toLocaleString('id-ID')}`; // Update saldo di pojok kiri atas
+        document.getElementById('saldo-display-top').textContent = `Saldo: Rp.${(userData.saldo ?? 0).toLocaleString('id-ID')}`; // Update saldo di pojok kiri atas
     }
 
     // Load Deposit History
