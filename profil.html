@@ -1,1224 +1,1104 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profil Pemain - GameZone</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Zone One - Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* General Styling */
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #0d1a26;
+            color: #39ff14; /* Neon green */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
 
-    /* Reset dan Dasar */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        .container {
+            max-width: 90%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #1a2a3a;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.5);
+            border: 1px solid #39ff14;
+            flex-grow: 1;
+        }
 
-    body, html {
-      min-height: 100vh;
-      /* Background lebih gelap untuk kontras neon */
-      background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.0);
-  background-blend-mode: overlay;
-}
-      font-family: 'Poppins', sans-serif;
-      color: #e0e0e0; /* Warna teks umum */
-      overflow-x: hidden;
-      display: flex; /* Untuk memusatkan konten secara vertikal jika perlu */
-      justify-content: center;
-      align-items: center;
-    }
+        header {
+            background-color: #112233;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 2px solid #39ff14;
+            box-shadow: 0 2px 15px rgba(57, 255, 20, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
-    /* Kontainer Utama */
-    .container {
-      width: 95%;
-      max-width: 650px; /* Sedikit lebih lebar untuk tampilan modern */
-      margin: 20px auto 80px;
-      background: rgba(0,0,0,0.85); /* Hampir hitam transparan */
-      border-radius: 25px; /* Lebih membulat */
-      padding: 35px; /* Padding yang lebih besar */
-      /* Bayangan dengan glow neon */
-      box-shadow: 0 0 40px rgba(0, 255, 255, 0.0), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
-      position: relative;
-      border: 2px solid rgba(0, 255, 255, 0.6); /* Border neon */
-      animation: neon-border-pulse 3s infinite alternate; /* Animasi border */
-    }
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+        }
 
-    /* Animasi Border Neon */
-    @keyframes neon-border-pulse {
-        from { border-color: rgba(0, 255, 255, 0.6); box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
-        to { border-color: rgba(0, 200, 200, 0.8); box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), 0 0 100px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0, 255, 255, 0.2); }
-    }
+        .profile-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #0d1a26;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.3);
+        }
 
+        .saldo-info {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
 
-    /* Saldo di Pojok Kiri Atas */
-    .saldo {
-      position: absolute;
-      top: 28px; /* Jarak dari atas */
-      left: 25px; /* Jarak dari kiri */
-      font-family: 'Orbitron', sans-serif; /* Font futuristik */
-      font-size: 1em;
-      font-weight: 700;
-      color: #f986; /* Neon hijau terang */
-      background: rgba(10, 10, 30, 0.8); /* Background gelap */
-      padding: 10px 18px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(57, 255, 20, 0.6); /* Glow neon hijau */
-      z-index: 10;
-      border: 1px solid rgba(57, 255, 20, 0.4);
-    }
+        .saldo-info span {
+            color: #fff;
+            text-shadow: 0 0 8px #39ff14;
+        }
 
-    /* Judul Utama */
-    h1 {
-      text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      color: #ffd700;
-    text-shadow: 0 0 10px #ffeb3b,
-                 0 0 20px #ffeb3b,
-                 0 0 30px #ffeb3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-  }
+        .btn-logout {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.5);
+        }
 
-  @keyframes neon-glow {
-    from {
-      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
-      color: #ffd700;
-    }
-    to {
-      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
-                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
-      color: red;
-    }
-    }
+        .btn-logout:hover {
+            background-color: #e60000;
+            box-shadow: 0 0 15px rgba(255, 77, 77, 0.8);
+        }
 
-    /* Grup Tombol (Deposit, Penarikan, Riwayat) */
-    .btn-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px; /* Jarak antar tombol yang lebih kecil */
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
 
-    /* Tombol Umum */
-    .btn {
-      background: #00bcd4; /* Biru terang */
-      border: none;
-      border-radius: 25px; /* Lebih kecil, ramping */
-      padding: 10px 20px; /* Padding lebih kecil */
-      font-size: 0.95em; /* Ukuran font sedikit lebih kecil */
-      font-weight: 700;
-      cursor: pointer;
-      color: #0d0d1a; /* Warna teks gelap */
-      box-shadow: 0 0 15px rgba(0, 188, 212, 0.6), 0 0 25px rgba(0, 188, 212, 0.4); /* Glow neon biru */
-      transition: all 0.3s ease;
-      flex: 1;
-      min-width: 100px; /* Ukuran minimum tombol yang lebih kecil */
-      max-width: 160px; /* Batasi lebar agar tetap sejajar */
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid rgba(0, 188, 212, 0.8);
-    }
+        .action-buttons .btn {
+            background-color: #2a4058;
+            color: #39ff14;
+            border: 1px solid #39ff14;
+            padding: 15px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .btn:hover {
-      background: #39ff14; /* Neon hijau saat hover */
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.5);
-      color: #0d0d1a;
-      border-color: rgba(57, 255, 20, 1);
-    }
+        .action-buttons .btn:hover {
+            background-color: #35506b;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+            transform: translateY(-3px);
+        }
 
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
-    }
+        .action-buttons .btn i {
+            font-size: 1.5em;
+            margin-bottom: 8px;
+            color: #39ff14;
+        }
 
-    /* Judul Bagian */
-    h2 {
-      font-family: 'Orbitron', sans-serif;
-      border-bottom: 2px solid #e000ff; /* Border bawah neon ungu */
-      padding-bottom: 12px;
-      margin-top: 40px; /* Jarak dari atas */
-      margin-bottom: 25px;
-  color: #ffd700;
-    text-shadow: 0 0 10px #00bcd4
-                 0 0 20px #ffeb,
-                 0 0 30px #ff3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-      text-align: center; /* Pusatkan judul */
-      background: #ffeb;
-      padding: 1px 10px;
-      border-radius: 10px;
-    }
+        .game-display-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+            justify-content: center;
+        }
 
-    /* Tabel */
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-bottom: 30px;
-      background: rgba(10, 10, 30, 0.7); /* Background tabel lebih gelap */
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-    }
+        .game-item {
+            background-color: #1a2a3a;
+            border: 1px solid #39ff14;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
 
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 255, 255, 0.1); /* Garis pemisah neon halus */
-      color: #c0c0c0; /* Teks lebih terang */
-    }
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.8);
+        }
 
-    th {
-      background: #00bcd4; /* Header biru neon */
-      color: #0d0d1a;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.9em;
-      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-    }
+        .game-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+            border-bottom: 1px solid #39ff14;
+        }
 
-    tr:last-child td {
-      border-bottom: none;
-    }
+        .game-item a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
 
-    .empty {
-      color: #888;
-      font-style: italic;
-      text-align: center;
-      padding: 20px 0;
-    }
+        .game-item h3 {
+            margin: 10px 0;
+            font-size: 1em;
+            color: #fff;
+            text-shadow: 0 0 5px #39ff14;
+        }
 
-    /* Status dalam Tabel */
-    .status-pending { color: #ffeb3b; /* Kuning neon */ font-weight: bold; }
-    .status-approved { color: #39ff14; /* Hijau neon */ font-weight: bold; }
-    .status-rejected { color: #ff4d4d; /* Merah neon */ font-weight: bold; }
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
 
-    /* Efek Loading Tombol */
-    .btn.loading {
-      position: relative;
-      color: transparent;
-      pointer-events: none;
-      background: #00bcd4;
-    }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
 
-    .btn.loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      margin-top: -10px;
-      margin-left: -10px;
-      border: 3px solid #e000ff; /* Warna loading neon ungu */
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+        .modal-content {
+            background-color: #1a2a3a;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.6);
+            border: 1px solid #39ff14;
+            max-width: 90%;
+            width: 400px;
+            color: #eee;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
 
-    /* --- Modal Kustom (Popup) --- */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9); /* Overlay lebih gelap */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
-    }
+        .modal-content h2 {
+            font-size: 1.5em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #39ff14;
+            text-shadow: 0 0 10px rgba(57, 255, 20, 0.8);
+        }
 
-    .modal-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.9em;
+        }
 
-    .modal-content {
-        background: #1a0a2e; /* Ungu gelap */
-        color: #e0e0e0;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 0 30px rgba(224, 0, 255, 0.7), inset 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu */
-        width: 90%;
-        max-width: 480px; /* Sedikit lebih lebar */
-        transform: translateY(-50px) scale(0.9); /* Efek masuk lebih dramatis */
-        opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-out; /* Animasi bounce */
-        position: relative;
-        border: 2px solid rgba(224, 0, 255, 0.8);
-    }
+        .modal-content input[type="text"],
+        .modal-content input[type="number"],
+        .modal-content select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #39ff14;
+            border-radius: 5px;
+            background-color: #0d1a26;
+            color: #39ff14;
+            font-family: 'Orbitron', sans-serif;
+            box-shadow: inset 0 0 8px rgba(57, 255, 20, 0.3);
+        }
 
-    .modal-overlay.active .modal-content {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
+        .modal-content input::placeholder {
+            color: #666;
+        }
 
-    .modal-content h2 {
-        font-family: 'Orbitron', sans-serif;
-        color: #39ff14; /* Hijau neon untuk judul modal */
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2em;
-        text-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
-        border-bottom: none;
-        padding-bottom: 0;
-    }
+        .modal-content input:focus,
+        .modal-content select:focus {
+            outline: none;
+            border-color: #66ff33;
+            box-shadow: inset 0 0 12px rgba(102, 255, 51, 0.5), 0 0 10px rgba(102, 255, 51, 0.8);
+        }
 
-.modal-content label {
-    display: block;
-    margin-bottom: 8px;
-    color: #00bcd4; /* Label biru neon */
-    font-size: 0.95em;
-    text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
-}
+        .modal-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
 
-.modal-content input[type="text"],
-.modal-content input[type="email"],
-.modal-content input[type="number"],
-.modal-content select {
-    width: 100%;
-    padding: 12px 18px;
-    margin-bottom: 20px; /* Jarak antar input lebih besar */
-    border-radius: 10px;
-    border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
-    background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
-    color: #e0e0e0;
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
+        .modal-buttons .primary,
+        .modal-buttons .secondary {
+            background-color: #39ff14;
+            color: #0d1a26;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+            margin: 0 5px;
+        }
 
-.modal-content input:focus,
-.modal-content select:focus {
-    outline: none;
-    border-color: #39ff14; /* Border hijau neon saat fokus */
-    box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
-    background-color: rgba(0, 0, 0, 0.8);
-}
+        .modal-buttons .primary:hover {
+            background-color: #66ff33;
+            box-shadow: 0 0 20px rgba(102, 255, 51, 0.8);
+        }
 
-.modal-content input::placeholder {
-    color: #888;
-}
+        .modal-buttons .secondary {
+            background-color: #2a4058;
+            color: #39ff14;
+            border: 1px solid #39ff14;
+            box-shadow: none;
+        }
 
-.modal-content input[readonly] {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-color: rgba(0, 255, 255, 0.2);
-    cursor: default;
-}
+        .modal-buttons .secondary:hover {
+            background-color: #35506b;
+            color: #fff;
+        }
 
-/* --- Penyesuaian Baru/Modifikasi --- */
-.input-group-with-copy { /* Kelas baru untuk membungkus label, input, dan button copy */
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px; /* Jarak antar grup */
-    gap: 10px; /* Jarak antara input dan button */
-}
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: #aaa;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
 
-.input-group-with-copy label {
-    margin-bottom: 0; /* Hapus margin-bottom default */
-    flex-shrink: 0; /* Pastikan label tidak menyusut */
-    white-space: nowrap; /* Pastikan teks label tidak pecah baris */
-    padding-right: 5px; /* Sedikit padding agar tidak terlalu mepet */
-}
+        .modal-close-btn:hover {
+            color: #fff;
+        }
 
-.input-group-with-copy input[type="text"] {
-    flex-grow: 1; /* Biarkan input mengambil sisa ruang yang tersedia */
-    margin-bottom: 0; /* Hapus margin-bottom default */
-}
+        /* QRIS specific styles */
+        #form-qris {
+            text-align: center;
+            margin-top: 20px;
+            border: 1px dashed #39ff14;
+            padding: 15px;
+            border-radius: 8px;
+            display: none; /* Hidden by default */
+        }
 
-.btn-copy {
-    background: #e000ff !important;
-    color: white !important;
-    border-radius: 8px !important;
-    padding: 8px 15px !important;
-    font-size: 0.9em !important;
-    /* margin-left: 10px; <--- HAPUS ATAU KOMENTARI INI */
-    box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
-    flex-shrink: 0; /* Penting: mencegah button menyusut */
-    border: 1px solid rgba(224, 0, 255, 0.8);
-    /* Lebar tetap, bisa disesuaikan jika perlu */
-    min-width: 80px; /* Minimum width untuk tombol Salin */
-    text-align: center;
-    display: flex; /* Untuk ikon dan teks sejajar */
-    align-items: center;
-    justify-content: center;
-    gap: 5px; /* Jarak antara ikon dan teks */
-}
+        #form-qris img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.5);
+        }
 
-.btn-copy:hover {
-    background: #39ff14 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
-    border-color: rgba(57, 255, 20, 1);
-}
+        .btn-copy {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+        .btn-copy:hover {
+            background-color: #777;
+        }
 
-/* Media Queries untuk Responsif */
-@media (max-width: 480px) {
-    .input-group-with-copy {
-        flex-direction: column; /* Ubah ke kolom pada layar sangat kecil */
-        align-items: flex-start; /* Sejajarkan ke kiri */
-        gap: 5px; /* Kurangi gap */
-    }
-    .input-group-with-copy label {
-        width: 100%; /* Label ambil penuh lebar */
-    }
-    .input-group-with-copy input[type="text"] {
-        width: 100%; /* Input ambil penuh lebar */
-    }
-    .btn-copy {
-        width: 100%; /* Tombol salin ambil penuh lebar juga */
-        min-width: unset; /* Hapus min-width */
-        padding: 10px 15px !important; /* Sesuaikan padding */
-    }
-}
+        .input-with-copy {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .input-with-copy input {
+            flex-grow: 1;
+            margin-bottom: 0; /* Remove margin from input here */
+        }
+        .input-with-copy .btn-copy {
+            height: fit-content;
+            margin-bottom: 0;
+        }
 
-    #form-qris {
-        text-align: center;
-        margin: 25px 0;
-    }
+        /* History Modal Table */
+        .history-table-container {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            border: 1px solid #39ff14;
+            border-radius: 8px;
+            box-shadow: inset 0 0 10px rgba(57, 255, 20, 0.3);
+        }
 
-    #gambar-qris {
-        max-width: 100%;
-        height: auto;
-        border-radius: 15px;
-        border: 3px solid #39ff14; /* Border hijau neon */
-        box-shadow: 0 0 25px rgba(57, 255, 20, 0.7); /* Glow hijau */
-    }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9em;
+            color: #eee;
+        }
 
-    /* --- Game Grid --- */
-    .game-grid-section {
-        margin-top: 50px;
-    }
+        .history-table th,
+        .history-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #2a4058;
+        }
 
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Ukuran lebih kecil: min 100px */
-        gap: 15px; /* Jarak antar game lebih kecil */
-        padding: 10px;
-        border-radius: 15px;
-        background: rgba(0,0,0,0.6);
-        box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-    }
+        .history-table th {
+            background-color: #2a4058;
+            color: #39ff14;
+            text-transform: uppercase;
+            font-size: 0.8em;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
 
-    .game-item {
-        background: rgba(10, 10, 30, 0.8); /* Background item game lebih gelap */
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: block;
-        position: relative;
-        padding-top: 100%; /* Rasio aspek 1:1, untuk gambar persegi */
-        height: 0;
-        border: 1px solid rgba(224, 0, 255, 0.2);
-    }
+        .history-table tbody tr:last-child td {
+            border-bottom: none;
+        }
 
-    .game-item:hover {
-        transform: translateY(-5px) scale(1.05); /* Efek hover lebih menonjol */
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4); /* Glow biru kuat */
-        border-color: rgba(0, 255, 255, 0.8);
-    }
+        .history-table .status-pending {
+            color: #ffeb3b; /* Yellow */
+            font-weight: bold;
+        }
 
-    .game-item a {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: block; /* Penting untuk link */
-        text-decoration: none;
-    }
+        .history-table .status-approved {
+            color: #39ff14; /* Green */
+            font-weight: bold;
+        }
 
-    .game-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px; /* Ikuti border radius parent */
-        transition: transform 0.3s ease; /* Transisi untuk gambar saat hover */
-    }
+        .history-table .status-rejected {
+            color: #ff4d4d; /* Red */
+            font-weight: bold;
+        }
 
-    .game-item:hover img {
-        transform: scale(1.05); /* Gambar sedikit membesar saat hover */
-    }
+        .history-table .empty {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+        }
 
-
-    /* Responsif untuk Mobile */
-    @media (max-width: 768px) {
-      .container {
-        margin: 15px 10px 50px;
-        padding: 25px;
-        border-radius: 20px;
-      }
-      .saldo {
-        font-size: 1.1em;
-        top: 15px;
-        left: 15px;
-        padding: 8px 15px;
-        border-radius: 12px;
-      }
-      h1 {
-        font-size: 2em;
-        margin-bottom: 35px;
-        padding-top: 10px;
-      }
-      .btn-group {
-        flex-direction: row; /* Tetap sejajar di sini */
-        justify-content: space-around; /* Lebih merata */
-        gap: 8px; /* Jarak lebih kecil */
-      }
-      .btn {
-        width: auto; /* Biarkan konten menentukan lebar */
-        flex-grow: 1; /* Agak memanjang */
-        padding: 9px 15px;
-        font-size: 0.9em;
-        border-radius: 20px;
-        max-width: 140px; /* Batasi lagi di tablet */
-      }
-      h2 {
-        font-size: 1.6em;
-        margin-top: 30px;
-        margin-bottom: 20px;
-      }
-      th, td {
-        padding: 10px;
-        font-size: 0.85em;
-      }
-      .modal-content {
-        padding: 25px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.8em;
-      }
-      .modal-content button {
-        padding: 10px 20px;
-        font-size: 0.9em;
-      }
-      .btn-copy {
-        font-size: 0.5em !important;
-        padding: 5px 5px !important;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Lebih kecil lagi untuk tablet */
-        gap: 10px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px 5px 40px;
-        padding: 20px;
-        border-radius: 18px;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 255, 0.4);
-      }
-      .saldo {
-        font-size: 1em;
-        top: 10px;
-        left: 10px;
-        padding: 6px 12px;
-        border-radius: 10px;
-      }
-      h1 {
-        font-size: 2em; /* Tetap besar agar menarik */
-        margin-bottom: 30px;
-      }
-      .btn-group {
-        flex-wrap: wrap; /* Pastikan membungkus */
-        justify-content: center; /* Pusat tombol */
-        gap: 8px; /* Jarak antar tombol */
-      }
-      .btn {
-        width: 48%; /* Dua kolom per baris */
-        padding: 8px 12px;
-        font-size: 0.85em;
-        max-width: none; /* Biarkan 48% yang mengatur */
-      }
-      h2 {
-        font-size: 1.4em;
-        margin-top: 25px;
-        margin-bottom: 15px;
-      }
-      .modal-content {
-        padding: 20px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.6em;
-      }
-      .modal-content input,
-      .modal-content select {
-        font-size: 0.9em;
-        padding: 10px 15px;
-      }
-      .modal-content button {
-        padding: 10px 18px;
-        font-size: 0.85em;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Paling kecil untuk ponsel */
-        gap: 8px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-    }
-    .marquee{
-      color: #fff;
-      margin: 10px;
-    }
-    }
-  </style>
+        /* Utility classes */
+        .hidden {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
-  <audio id="background-music" loop autoplay>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <audio id="background-music" loop>
+        <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/music%20(1).mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="click-sound">
+        <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/mouse-click-153941.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-  <audio id="click-sound">
-    <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <header>
+        <h1>Game Zone One</h1>
+    </header>
 
-  <div class="container">
-    <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
-    <h1>PROFIL PEMAIN</h1>
-  <div class="marquee">
- <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee><hr>
-
-    <div class="btn-group">
-      <button class="btn" id="btn-deposit">Deposit</button>
-      <button class="btn" id="btn-withdraw">Penarikan</button>
-      <button class="btn" id="btn-history">Riwayat</button> </div>
-
-    <div id="section-deposit-history" style="display:none;">
-      <h2>Riwayat Deposit</h2>
-      <table id="riwayat-deposit">
-        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div id="section-withdraw-history" style="display:none;">
-      <h2>Riwayat Penarikan</h2>
-      <table id="riwayat-penarikan">
-        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div class="game-grid-section">
-      <h2>PILIH GAME</h2>
-      <div class="game-grid" id="game-display-grid">
+    <div class="container">
+        <div class="profile-section">
+            <div class="saldo-info" id="saldo-display">Saldo: Rp.0</div>
+            <button class="btn-logout" id="btn-logout">Logout</button>
         </div>
+
+        <div class="action-buttons">
+            <button class="btn" id="btn-deposit">
+                <i class="fas fa-wallet"></i>
+                Deposit
+            </button>
+            <button class="btn" id="btn-withdraw">
+                <i class="fas fa-exchange-alt"></i>
+                Withdraw
+            </button>
+            <button class="btn" id="btn-history">
+                <i class="fas fa-history"></i>
+                Riwayat
+            </button>
+            <button class="btn" id="btn-share">
+                <i class="fas fa-share-alt"></i>
+                Share
+            </button>
+        </div>
+
+        <div class="game-display-grid" id="game-display-grid">
+            </div>
     </div>
-  </div>
 
     <div id="modal-deposit" class="modal-overlay">
-    <div class="modal-content">
-      <h2>DEPOSIT VIA DANA</h2>
-      <label for="dep-nama">Nama Penerima:</label>
-      <input type="text" id="dep-nama" placeholder="Nama" readonly />
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-deposit')">&times;</button>
+            <h2>Deposit</h2>
+            <div class="input-with-copy">
+                <label for="dep-nama">Nama Penerima</label>
+                <input type="text" id="dep-nama" readonly>
+                <button class="btn-copy" data-target="dep-nama">Salin</button>
+            </div>
+            <label for="dep-email">Email Anda</label>
+            <input type="text" id="dep-email" readonly>
+            <div class="input-with-copy">
+                <label for="dep-nomor">Nomor HP/E-Wallet</label>
+                <input type="text" id="dep-nomor" readonly>
+                <button class="btn-copy" data-target="dep-nomor">Salin</button>
+            </div>
+            <label for="dep-jumlah">Jumlah Deposit (Rp)</label>
+            <input type="number" id="dep-jumlah" placeholder="Min. Rp 20.000">
 
-      <label for="dep-email">Email Pemain:</label>
-      <input type="email" id="dep-email" placeholder="Email" readonly />
+            <div id="form-qris">
+                <img id="gambar-qris" src="" alt="QRIS Code">
+            </div>
 
-      <div class="input-group-with-copy"> <label for="dep-nomor">Nomor Tujuan:</label> <input type="text" id="dep-nomor" placeholder="Nomor" readonly /> <button class="btn-copy" data-target="dep-nomor">
-          <i class="fas fa-copy"></i> Salin
-        </button>
-      </div>
-
-      <div style="text-align:center; margin: 25px 0;">
-        <button class="secondary" id="btn-qris">QRIS</button>
-        <button class="secondary" id="btn-kembali-ewallet" style="display:none;">Kembali eWallet</button>
-      </div>
-
-      <div id="form-qris" style="display:none;">
-        <img src="" alt="QRIS" id="gambar-qris" />
-      </div>
-
-      <label for="dep-jumlah">Jumlah (Rp):</label>
-      <input type="number" id="dep-jumlah" placeholder="Contoh: 50000" />
-
-  <button class="primary" id="dep-submit">Kirim</button>
-  <button class="secondary" onclick="closeModal('modal-deposit')">Batal</button>
-</div>
- </div>
-     
-  <div id="modal-withdraw" class="modal-overlay">
-    <div class="modal-content">
-      <h2>PENARIKAN DANA</h2>
-      <label for="with-nama">Nama Penerima:</label>
-      <input type="text" id="with-nama" placeholder="Nama Lengkap" />
-
-      <label for="with-email">Email:</label>
-      <input type="email" id="with-email" placeholder="Email" readonly />
-
-      <label for="with-metode">Metode Penarikan:</label>
-      <select id="with-metode">
-        <option value="">Pilih e-Wallet/Bank</option>
-        <option value="DANA">DANA</option>
-        <option value="OVO">OVO</option>
-        <option value="GoPay">GoPay</option>
-        <option value="Bank">Transfer Bank</option>
-      </select>
-
-      <label for="with-nomor">No. Rekening/Ponsel:</label>
-      <input type="text" id="with-nomor" placeholder="Nomor Rekening/Ponsel" />
-
-      <label for="with-bank" id="label-bank" style="display:none;">Nama Bank:</label>
-      <input type="text" id="with-bank" placeholder="Contoh: BCA / Mandiri" style="display:none;" />
-
-      <label for="with-jumlah">Jumlah (Rp):</label>
-      <input type="number" id="with-jumlah" placeholder="Contoh: 100000" />
-
-
-  <button class="primary" id="with-submit">Kirim</button>
-  <button class="secondary" onclick="closeModal('modal-withdraw')">Batal</button>
-     </div>
+            <div class="modal-buttons">
+                <button class="primary" id="dep-submit">Kirim Deposit</button>
+                <button class="secondary" id="btn-qris">QRIS</button>
+                <button class="secondary" id="btn-kembali-ewallet" style="display: none;">Kembali</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="modal-history" class="modal-overlay">
-    <div class="modal-content">
-      <h2>RIWAYAT TRANSAKSI</h2>
-      <div id="history-content">
-        <h3>Riwayat Deposit</h3>
-        <table id="riwayat-deposit-modal">
-          <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-          <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-        </table>
+    <div id="modal-withdraw" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-withdraw')">&times;</button>
+            <h2>Penarikan</h2>
+            <label for="with-nama">Nama Lengkap</label>
+            <input type="text" id="with-nama" placeholder="Nama Lengkap Sesuai Rekening">
 
-        <h3>Riwayat Penarikan</h3>
-        <table id="riwayat-penarikan-modal">
-          <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-          <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-        </table>
-      </div>
-      <div class="modal-buttons">
-        <button class="secondary" onclick="closeModal('modal-history')">Tutup</button>
-      </div>
+            <label for="with-email">Email Anda</label>
+            <input type="text" id="with-email" readonly>
+
+            <label for="with-metode">Metode Penarikan</label>
+            <select id="with-metode">
+                <option value="">Pilih Metode</option>
+                <option value="Dana">Dana</option>
+                <option value="OVO">OVO</option>
+                <option value="Gopay">Gopay</option>
+                <option value="Bank">Transfer Bank</option>
+            </select>
+
+            <label for="with-bank" id="label-bank" style="display: none;">Nama Bank</label>
+            <input type="text" id="with-bank" placeholder="Contoh: BCA / BRI / BNI" style="display: none;">
+
+            <label for="with-nomor">Nomor Rekening / E-Wallet</label>
+            <input type="text" id="with-nomor" placeholder="Nomor Rekening/Nomor HP E-Wallet">
+
+            <label for="with-jumlah">Jumlah Penarikan (Rp)</label>
+            <input type="number" id="with-jumlah" placeholder="Min. Rp 50.000">
+
+            <div class="modal-buttons">
+                <button class="primary" id="with-submit">Ajukan Penarikan</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-<a href="https://wa.me/628892l3707993" target="_blank" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
-       alt="WhatsApp" 
-       style="width:30px; height:30px;">
-</a>
+    <div id="modal-history" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-history')">&times;</button>
+            <h2>Riwayat Transaksi</h2>
+            <h3>Riwayat Deposit</h3>
+            <div class="history-table-container">
+                <table class="history-table" id="riwayat-deposit-modal">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <h3>Riwayat Penarikan</h3>
+            <div class="history-table-container">
+                <table class="history-table" id="riwayat-penarikan-modal">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        </tbody>
+                </table>
+            </div>
+            <div class="modal-buttons">
+                <button class="primary" onclick="closeModal('modal-history')">Tutup</button>
+            </div>
+        </div>
+    </div>
 
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // GANTI DENGAN URL SUPABASE ANDA DAN ANON KEY ANDA!
-        const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co'; // Contoh: 'https://vqmfachxnjyxwuavpgds.supabase.co'
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
+    // GANTI DENGAN URL SUPABASE ANDA DAN ANON KEY ANDA!
+    const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
 
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let uid = localStorage.getItem('uid');
+    let uid = localStorage.getItem('uid');
 
-        const backgroundMusic = document.getElementById('background-music');
-        const clickSound = document.getElementById('click-sound');
+    const backgroundMusic = document.getElementById('background-music');
+    const clickSound = document.getElementById('click-sound');
 
-        // Autoplay background music on first user interaction
-        document.addEventListener('click', () => {
-            if (backgroundMusic.paused) {
-                backgroundMusic.play().catch(e => console.log("Autoplay blocked:", e));
-            }
-        }, { once: true });
-
-        // Play click sound on button clicks
-        document.querySelectorAll('.btn, .modal-content button, .game-item').forEach(button => {
-            button.addEventListener('click', () => {
-                clickSound.currentTime = 0;
-                clickSound.play().catch(e => console.log("Click sound play blocked:", e));
-            });
-        });
-
-        async function getCurrentUserEmail() {
-          const { data: { user }, error } = await supabase.auth.getUser();
-          if (error) {
-            console.error('Error fetching user from Supabase auth:', error.message);
-            return null;
-          }
-
-          if (user && uid !== user.id) {
-              uid = user.id;
-              localStorage.setItem('uid', user.id);
-          }
-          return user ? user.email : null;
+    // Autoplay background music on first user interaction
+    document.addEventListener('click', () => {
+        if (backgroundMusic.paused) {
+            backgroundMusic.play().catch(e => console.log("Autoplay blocked:", e));
         }
+    }, { once: true });
 
-        document.addEventListener('DOMContentLoaded', () => {
-          getCurrentUserEmail().then(() => {
-            loadProfile();
-            loadGames();
-          }).catch(err => {
-            console.error("Failed to initialize user session:", err);
-            showModal('alert-modal', 'Sesi Pengguna Tidak Valid', 'Sesi pengguna tidak valid. Silakan login kembali.', () => {
-              window.location.href = 'login.html';
-            });
-          });
+    // Play click sound on button clicks
+    document.querySelectorAll('.btn, .modal-content button, .game-item').forEach(button => {
+        button.addEventListener('click', () => {
+            clickSound.currentTime = 0;
+            clickSound.play().catch(e => console.log("Click sound play blocked:", e));
+        });
+    });
 
-          // Copy button functionality
-          document.querySelectorAll('.btn-copy').forEach(button => {
-            button.addEventListener('click', (event) => {
-              const targetId = event.currentTarget.dataset.target;
-              const inputElement = document.getElementById(targetId);
-              if (inputElement) {
-                inputElement.select();
-                inputElement.setSelectionRange(0, 99999);
-                try {
-                  navigator.clipboard.writeText(inputElement.value)
-                    .then(() => {
-                      showModal('success-modal', 'Berhasil Disalin!', 'Nomor berhasil disalin: ' + inputElement.value);
-                    })
-                    .catch(err => {
-                      console.error('Gagal menyalin teks: ', err);
-                      showModal('error-modal', 'Gagal!', 'Gagal menyalin nomor. Silakan salin manual.');
-                    });
-                } catch (err) {
-                  // Fallback for older browsers
-                  document.execCommand('copy');
+    async function getCurrentUserEmail() {
+      const { data: { user }, error } = await supabase.auth.getUser();
+      if (error) {
+        console.error('Error fetching user from Supabase auth:', error.message);
+        return null;
+      }
+
+      if (user && uid !== user.id) {
+          uid = user.id;
+          localStorage.setItem('uid', user.id);
+      }
+      return user ? user.email : null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      getCurrentUserEmail().then(() => {
+        loadProfile();
+        loadGames();
+      }).catch(err => {
+        console.error("Failed to initialize user session:", err);
+        showModal('alert-modal', 'Sesi Pengguna Tidak Valid', 'Sesi pengguna tidak valid. Silakan login kembali.', () => {
+          window.location.href = 'login.html';
+        });
+      });
+
+      // Copy button functionality
+      document.querySelectorAll('.btn-copy').forEach(button => {
+        button.addEventListener('click', (event) => {
+          const targetId = event.currentTarget.dataset.target;
+          const inputElement = document.getElementById(targetId);
+          if (inputElement) {
+            inputElement.select();
+            inputElement.setSelectionRange(0, 99999);
+            try {
+              navigator.clipboard.writeText(inputElement.value)
+                .then(() => {
                   showModal('success-modal', 'Berhasil Disalin!', 'Nomor berhasil disalin: ' + inputElement.value);
-                }
-              }
-            });
-          });
-
-          // Withdraw method change listener
-          document.getElementById('with-metode').addEventListener('change', function() {
-            const selectedMethod = this.value;
-            const bankInput = document.getElementById('with-bank');
-            const bankLabel = document.getElementById('label-bank');
-            if (selectedMethod === 'Bank') {
-              bankInput.style.display = 'block';
-              bankLabel.style.display = 'block';
-              bankInput.setAttribute('required', 'true');
-            } else {
-              bankInput.style.display = 'none';
-              bankLabel.style.display = 'none';
-              bankInput.removeAttribute('required');
-              bankInput.value = '';
+                })
+                .catch(err => {
+                  console.error('Gagal menyalin teks: ', err);
+                  showModal('error-modal', 'Gagal!', 'Gagal menyalin nomor. Silakan salin manual.');
+                });
+            } catch (err) {
+              // Fallback for older browsers
+              document.execCommand('copy');
+              showModal('success-modal', 'Berhasil Disalin!', 'Nomor berhasil disalin: ' + inputElement.value);
             }
-          });
+          }
         });
+      });
 
-        // Load user profile data (saldo, total_deposit, first_deposit)
-        async function loadProfile() {
-          if (!uid) {
-              console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
-              document.getElementById('saldo-display').textContent = 'Saldo: Rp.0 (Harap Login)';
-              document.querySelector('#riwayat-deposit-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
-              document.querySelector('#riwayat-penarikan-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
-              return;
-          }
-
-          // Fetch all necessary user data for profile display
-          const { data: userData, error: userError } = await supabase
-            .from('users_data')
-            .select('saldo, total_deposit, first_deposit') // Select first_deposit here
-            .eq('user_id', uid)
-            .single();
-
-          if (userError && userError.code !== 'PGRST116') {
-            console.error('Error memuat data profil:', userError.message);
-            showModal('error-modal', 'Error', 'Gagal memuat data profil: ' + userError.message);
-            document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error)`;
-            return;
-          } else if (userError && userError.code === 'PGRST116') {
-              console.warn('Pengguna baru, membuat entri saldo awal...');
-              document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Baru)`;
-              const { error: insertError } = await supabase
-                  .from('users_data')
-                  .insert([{ user_id: uid, saldo: 0, total_deposit: 0, first_deposit: false }]); // Initialize new columns
-
-              if (insertError) {
-                  console.error('Error saat membuat entri saldo awal:', insertError.message);
-                  showModal('error-modal', 'Error Inisialisasi', 'Gagal membuat entri saldo awal. Cek log.');
-                  document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error Inisialisasi)`;
-              }
-
-          } else {
-              document.getElementById('saldo-display').textContent = `Saldo: Rp.${(userData.saldo ?? 0).toLocaleString('id-ID')}`;
-              // Optional: Display first_deposit status to user
-              // Example: if (userData.first_deposit) { /* show message */ } else { /* show message */ }
-          }
+      // Withdraw method change listener
+      document.getElementById('with-metode').addEventListener('change', function() {
+        const selectedMethod = this.value;
+        const bankInput = document.getElementById('with-bank');
+        const bankLabel = document.getElementById('label-bank');
+        if (selectedMethod === 'Bank') {
+          bankInput.style.display = 'block';
+          bankLabel.style.display = 'block';
+          bankInput.setAttribute('required', 'true');
+        } else {
+          bankInput.style.display = 'none';
+          bankLabel.style.display = 'none';
+          bankInput.removeAttribute('required');
+          bankInput.value = '';
         }
-         // Load deposit/withdrawal history
-        async function loadHistory(tableId, tableName) {
-          const isDeposit = tableName === 'deposit_requests';
-          const tableBody = document.querySelector(`#${tableId} tbody`);
-          tableBody.innerHTML = '<tr><td colspan="3" class="empty">Memuat data...</td></tr>';
+      });
 
-          const { data, error } = await supabase
-            .from(tableName)
-            .select('created_at, amount, status')
-            .eq('user_id', uid)
-            .order('created_at', { ascending: false });
-
+      // Logout button logic
+      document.getElementById('btn-logout').addEventListener('click', async () => {
+          const { error } = await supabase.auth.signOut();
           if (error) {
-              console.error(`Error fetching ${tableName} history:`, error.message);
-              tableBody.innerHTML = `<tr><td colspan="3" class="empty">Gagal memuat riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
-          } else if (!data || data.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="3" class="empty">Belum ada riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
+              console.error('Error logging out:', error.message);
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Gagal Logout',
+                  text: error.message
+              });
           } else {
-            tableBody.innerHTML = '';
-            data.forEach(row => {
-              const date = new Date(row.created_at).toLocaleString('id-ID');
-              const statusClass = `status-${row.status}`;
-              tableBody.innerHTML += `<tr><td>${date}</td><td>Rp${row.amount.toLocaleString('id-ID')}</td><td class="${statusClass}">${row.status.charAt(0).toUpperCase() + row.status.slice(1)}</td></tr>`;
-            });
+              localStorage.removeItem('uid'); // Clear UID on logout
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Berhasil Logout',
+                  text: 'Anda telah berhasil keluar.',
+                  showConfirmButton: false,
+                  timer: 1500
+              }).then(() => {
+                  window.location.href = 'login.html'; // Redirect to login page
+              });
           }
-        }
+      });
+    });
+      // Load user profile data (saldo, total_deposit, first_deposit)
+    async function loadProfile() {
+      if (!uid) {
+          console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
+          document.getElementById('saldo-display').textContent = 'Saldo: Rp.0 (Harap Login)';
+          document.querySelector('#riwayat-deposit-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+          document.querySelector('#riwayat-penarikan-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+          return;
+      }
 
-        // Generic modal handler
-        function showModal(modalId, title, message, callback = null) {
-            let modalElement;
+      const { data: userData, error: userError } = await supabase
+        .from('users_data')
+        .select('saldo, total_deposit, first_deposit')
+        .eq('user_id', uid)
+        .single();
 
-            if (!document.getElementById('custom-alert-modal') && (modalId === 'alert-modal' || modalId === 'success-modal' || modalId === 'error-modal')) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = `
-                    <div id="custom-alert-modal" class="modal-overlay">
-                        <div class="modal-content">
-                            <h2 id="custom-alert-title" style="font-family: 'Orbitron', sans-serif;"></h2>
-                            <p id="custom-alert-message" style="text-align: center; margin-bottom: 25px; color: #ccc;"></p>
-                            <div class="modal-buttons">
-                                <button class="primary" id="custom-alert-ok-btn">OK</button>
-                            </div>
+      if (userError && userError.code !== 'PGRST116') {
+        console.error('Error memuat data profil:', userError.message);
+        showModal('error-modal', 'Error', 'Gagal memuat data profil: ' + userError.message);
+        document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error)`;
+        return;
+      } else if (userError && userError.code === 'PGRST116') {
+          console.warn('Pengguna baru, membuat entri saldo awal...');
+          document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Baru)`;
+          const { error: insertError } = await supabase
+              .from('users_data')
+              .insert([{ user_id: uid, saldo: 0, total_deposit: 0, first_deposit: false }]);
+
+          if (insertError) {
+              console.error('Error saat membuat entri saldo awal:', insertError.message);
+              showModal('error-modal', 'Error Inisialisasi', 'Gagal membuat entri saldo awal. Cek log.');
+              document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error Inisialisasi)`;
+          }
+
+      } else {
+          document.getElementById('saldo-display').textContent = `Saldo: Rp.${(userData.saldo ?? 0).toLocaleString('id-ID')}`;
+      }
+    }
+     // Load deposit/withdrawal history
+    async function loadHistory(tableId, tableName) {
+      const isDeposit = tableName === 'deposit_requests';
+      const tableBody = document.querySelector(`#${tableId} tbody`);
+      tableBody.innerHTML = '<tr><td colspan="3" class="empty">Memuat data...</td></tr>';
+
+      const { data, error } = await supabase
+        .from(tableName)
+        .select('created_at, amount, status')
+        .eq('user_id', uid)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+          console.error(`Error fetching ${tableName} history:`, error.message);
+          tableBody.innerHTML = `<tr><td colspan="3" class="empty">Gagal memuat riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
+      } else if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="3" class="empty">Belum ada riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
+      } else {
+        tableBody.innerHTML = '';
+        data.forEach(row => {
+          const date = new Date(row.created_at).toLocaleString('id-ID');
+          const statusClass = `status-${row.status}`;
+          tableBody.innerHTML += `<tr><td>${date}</td><td>Rp${row.amount.toLocaleString('id-ID')}</td><td class="${statusClass}">${row.status.charAt(0).toUpperCase() + row.status.slice(1)}</td></tr>`;
+        });
+      }
+    }
+
+    // Generic modal handler
+    function showModal(modalId, title, message, callback = null) {
+        let modalElement;
+
+        if (!document.getElementById('custom-alert-modal') && (modalId === 'alert-modal' || modalId === 'success-modal' || modalId === 'error-modal')) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = `
+                <div id="custom-alert-modal" class="modal-overlay">
+                    <div class="modal-content">
+                        <h2 id="custom-alert-title" style="font-family: 'Orbitron', sans-serif;"></h2>
+                        <p id="custom-alert-message" style="text-align: center; margin-bottom: 25px; color: #ccc;"></p>
+                        <div class="modal-buttons">
+                            <button class="primary" id="custom-alert-ok-btn">OK</button>
                         </div>
                     </div>
-                `;
-                document.body.appendChild(tempDiv.firstElementChild);
-            }
-
-            if (modalId === 'alert-modal' || modalId === 'success-modal' || modalId === 'error-modal') {
-                modalElement = document.getElementById('custom-alert-modal');
-                document.getElementById('custom-alert-title').textContent = title;
-                document.getElementById('custom-alert-message').textContent = message;
-                const okBtn = document.getElementById('custom-alert-ok-btn');
-                okBtn.onclick = () => {
-                    closeModal('custom-alert-modal');
-                    if (callback) callback();
-                };
-                if (modalId === 'success-modal') {
-                    document.getElementById('custom-alert-title').style.color = '#39ff14';
-                    document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(57, 255, 20, 0.6)';
-                } else if (modalId === 'error-modal') {
-                    document.getElementById('custom-alert-title').style.color = '#ff4d4d';
-                    document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(255, 77, 77, 0.6)';
-                } else {
-                    document.getElementById('custom-alert-title').style.color = '#ffeb3b';
-                    document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(255, 235, 59, 0.6)';
-                }
-
-            } else {
-                modalElement = document.getElementById(modalId);
-            }
-
-            if (modalElement) {
-                modalElement.classList.add('active');
-            }
+                </div>
+            `;
+            document.body.appendChild(tempDiv.firstElementChild);
         }
-        
-        // Close modal handler
-        function closeModal(modalId) {
-            const modalElement = document.getElementById(modalId);
-            if (modalElement) {
-                modalElement.classList.remove('active');
-                if (modalId === 'modal-deposit') {
-                    document.getElementById('dep-jumlah').value = '';
-                    document.getElementById('form-qris').style.display = 'none';
-                    document.getElementById('btn-kembali-ewallet').style.display = 'none';
-                } else if (modalId === 'modal-withdraw') {
-                    document.getElementById('with-nama').value = '';
-                    document.getElementById('with-metode').value = '';
-                    document.getElementById('with-nomor').value = '';
-                    document.getElementById('with-jumlah').value = '';
-                    document.getElementById('with-bank').style.display = 'none';
-                    document.getElementById('label-bank').style.display = 'none';
-                }
-            }
-        }
-        // Deposit button logic
-        document.getElementById('btn-deposit').onclick = async () => {
-          if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan deposit.'); return; }
-          showModal('modal-deposit');
-          const userEmail = await getCurrentUserEmail();
-          if (userEmail) {
-            document.getElementById('dep-email').value = userEmail;
-          }
 
-          const { data, error } = await supabase
-            .from('deposit_config')
-            .select('*')
-            .eq('metode', 'eWallet')
-            .single();
-
-          if (error || !data) {
-            showModal('error-modal', 'Error', 'Gagal mengambil data eWallet.');
-            return;
-          }
-
-          document.getElementById('dep-nama').value = data.nama;
-          document.getElementById('dep-nomor').value = data.nomor;
-          document.getElementById('dep-submit').dataset.metode = 'eWallet';
-        };
-
-        document.getElementById('btn-qris').onclick = async () => {
-          const { data, error } = await supabase
-            .from('deposit_config')
-            .select('*')
-            .eq('metode', 'QRIS')
-            .single();
-
-          if (error || !data) {
-            showModal('error-modal', 'Error', 'Gagal mengambil data QRIS.');
-            return;
-          }
-
-          document.getElementById('form-qris').style.display = 'block';
-          document.getElementById('gambar-qris').src = data.qris_url;
-          document.getElementById('dep-submit').dataset.metode = 'QRIS';
-          document.getElementById('btn-kembali-ewallet').style.display = 'inline-block';
-        };
-
-        document.getElementById('btn-kembali-ewallet').onclick = async () => {
-          const { data, error } = await supabase
-            .from('deposit_config')
-            .select('*')
-            .eq('metode', 'eWallet')
-            .single();
-
-          if (error || !data) {
-            showModal('error-modal', 'Error', 'Gagal mengambil data eWallet.');
-            return;
-          }
-
-          document.getElementById('form-qris').style.display = 'none';
-          document.getElementById('dep-nama').value = data.nama;
-          document.getElementById('dep-nomor').value = data.nomor;
-          document.getElementById('dep-submit').dataset.metode = 'eWallet';
-          document.getElementById('btn-kembali-ewallet').style.display = 'none';
-        };
-
-        document.getElementById('dep-submit').onclick = async () => {
-          if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan deposit.'); return; }
-          const nama = document.getElementById('dep-nama').value;
-          const email = document.getElementById('dep-email').value;
-          const nomor = document.getElementById('dep-nomor').value;
-          const jumlah = document.getElementById('dep-jumlah').value;
-          const metode = document.getElementById('dep-submit').dataset.metode;
-
-          if (!nama || !nomor || !jumlah || !email) {
-            showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom.');
-            return;
-          }
-          const depositTableBody = document.querySelector('#riwayat-deposit-modal tbody');
-          const now = new Date();
-          const dateString = now.toLocaleString('id-ID');
-          const tempId = `temp-${Date.now()}`;
-          const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${parseInt(jumlah).toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
-
-          if (depositTableBody.querySelector('.empty')) {
-            depositTableBody.innerHTML = '';
-          }
-          depositTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
-
-
-          const { error } = await supabase.from('deposit_requests').insert([
-            { user_id: uid, nama, metode, amount: parseInt(jumlah), status: 'pending', email: email }
-          ]);
-
-          if (error) {
-            console.error(error);
-            showModal('error-modal', 'Gagal!', 'Gagal kirim deposit. Silakan coba lagi.');
-            const tempRow = depositTableBody.querySelector(`[data-id="${tempId}"]`);
-            if (tempRow) {
-                tempRow.remove();
-            }
-          } else {
-            showModal('success-modal', 'Berhasil!', 'Permintaan deposit dikirim.');
-            closeModal('modal-deposit');
-            loadProfile(); // Reload profile to update saldo
-            loadHistory('riwayat-deposit-modal', 'deposit_requests');
-          }
-        };
-
-        // Withdraw button logic (MODIFIED FOR SECURITY)
-        document.getElementById('btn-withdraw').onclick = async () => {
-          if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan penarikan.'); return; }
-          showModal('modal-withdraw');
-          const userEmail = await getCurrentUserEmail();
-          if (userEmail) {
-            document.getElementById('with-email').value = userEmail;
-          }
-        };
-
-        // Submit withdrawal request (CALLS EDGE FUNCTION)
-        document.getElementById('with-submit').onclick = async () => {
-            if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan penarikan.'); return; }
-
-            const nama = document.getElementById('with-nama').value;
-            const email = document.getElementById('with-email').value;
-            const metode = document.getElementById('with-metode').value;
-            const nomor = document.getElementById('with-nomor').value;
-            const bank = document.getElementById('with-bank').value;
-            const jumlah = parseInt(document.getElementById('with-jumlah').value);
-
-            // Frontend validation (basic checks before sending to secure backend)
-            if (!nama || !metode || !nomor || !jumlah) {
-                showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom.');
-                return;
-            }
-            if (metode === 'Bank' && !bank) {
-                showModal('alert-modal', 'Peringatan', 'Nama Bank harus diisi untuk metode Transfer Bank.');
-                return;
-            }
-            if (isNaN(jumlah) || jumlah <= 0) {
-                showModal('alert-modal', 'Peringatan', 'Jumlah penarikan harus angka positif.');
-                return;
-            }
-
-            // Prepare bank account info for the Edge Function
-            const bankAccountInfo = {
-                bank_name: metode === 'Bank' ? bank : metode,
-                account_number: nomor,
-                account_holder: nama,
-                email: email
+        if (modalId === 'alert-modal' || modalId === 'success-modal' || modalId === 'error-modal') {
+            modalElement = document.getElementById('custom-alert-modal');
+            document.getElementById('custom-alert-title').textContent = title;
+            document.getElementById('custom-alert-message').textContent = message;
+            const okBtn = document.getElementById('custom-alert-ok-btn');
+            okBtn.onclick = () => {
+                closeModal('custom-alert-modal');
+                if (callback) callback();
             };
-
-            const withdrawTableBody = document.querySelector('#riwayat-penarikan-modal tbody');
-            const now = new Date();
-            const dateString = now.toLocaleString('id-ID');
-            const tempId = `temp-${Date.now()}`;
-            const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
-
-            // Add pending row to history display immediately
-            if (withdrawTableBody.querySelector('.empty')) {
-                withdrawTableBody.innerHTML = '';
+            if (modalId === 'success-modal') {
+                document.getElementById('custom-alert-title').style.color = '#39ff14';
+                document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(57, 255, 20, 0.6)';
+            } else if (modalId === 'error-modal') {
+                document.getElementById('custom-alert-title').style.color = '#ff4d4d';
+                document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(255, 77, 77, 0.6)';
+            } else {
+                document.getElementById('custom-alert-title').style.color = '#ffeb3b';
+                document.getElementById('custom-alert-title').style.textShadow = '0 0 10px rgba(255, 235, 59, 0.6)';
             }
-            withdrawTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
 
-            try {
-                // Get current user session for authentication token
-                const session = await supabase.auth.getSession();
-                if (!session.data.session) {
-                    showModal('alert-modal', 'Sesi Tidak Valid', 'Sesi pengguna tidak valid. Silakan login kembali.');
-                    // Remove pending row if session is invalid
-                    const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
-                    if (tempRow) { tempRow.remove(); }
-                    throw new Error('No active session.');
-                }
-                const accessToken = session.data.session.access_token;
+        } else {
+            modalElement = document.getElementById(modalId);
+        }
 
-                const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawal`;
+        if (modalElement) {
+            modalElement.classList.add('active');
+        }
+    }
+    
+    // Close modal handler
+    function closeModal(modalId) {
+        const modalElement = document.getElementById(modalId);
+        if (modalElement) {
+            modalElement.classList.remove('active');
+            if (modalId === 'modal-deposit') {
+                document.getElementById('dep-jumlah').value = '';
+                document.getElementById('form-qris').style.display = 'none';
+                document.getElementById('btn-kembali-ewallet').style.display = 'none';
+            } else if (modalId === 'modal-withdraw') {
+                document.getElementById('with-nama').value = '';
+                document.getElementById('with-metode').value = '';
+                document.getElementById('with-nomor').value = '';
+                document.getElementById('with-jumlah').value = '';
+                document.getElementById('with-bank').style.display = 'none';
+                document.getElementById('label-bank').style.display = 'none';
+                document.getElementById('with-bank').value = ''; // Clear bank input
+            }
+        }
+    }
+    // Deposit button logic
+    document.getElementById('btn-deposit').onclick = async () => {
+      if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan deposit.'); return; }
+      showModal('modal-deposit');
+      const userEmail = await getCurrentUserEmail();
+      if (userEmail) {
+        document.getElementById('dep-email').value = userEmail;
+      }
 
-                const response = await fetch(edgeFunctionUrl, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}` 
-                    },
-                    body: JSON.stringify({
-                        amount: jumlah,
-                        bank_account_info: bankAccountInfo
-                    })
-                });
+      const { data, error } = await supabase
+        .from('deposit_config')
+        .select('*')
+        .eq('metode', 'eWallet')
+        .single();
 
-                const data = await response.json(); // Parse response from Edge Function
+      if (error || !data) {
+        showModal('error-modal', 'Error', 'Gagal mengambil data eWallet.');
+        return;
+      }
 
-                if (response.ok) { // If Edge Function returned a success status (HTTP 2xx)
-                    showModal('success-modal', 'Berhasil!', data.message);
+      document.getElementById('dep-nama').value = data.nama;
+      document.getElementById('dep-nomor').value = data.nomor;
+      document.getElementById('dep-submit').dataset.metode = 'eWallet';
+    };
+
+    document.getElementById('btn-qris').onclick = async () => {
+      const { data, error } = await supabase
+        .from('deposit_config')
+        .select('*')
+        .eq('metode', 'QRIS')
+        .single();
+
+      if (error || !data) {
+        showModal('error-modal', 'Error', 'Gagal mengambil data QRIS.');
+        return;
+      }
+
+      document.getElementById('form-qris').style.display = 'block';
+      document.getElementById('gambar-qris').src = data.qris_url;
+      document.getElementById('dep-submit').dataset.metode = 'QRIS';
+      document.getElementById('btn-kembali-ewallet').style.display = 'inline-block';
+    };
+
+    document.getElementById('btn-kembali-ewallet').onclick = async () => {
+      const { data, error } = await supabase
+        .from('deposit_config')
+        .select('*')
+        .eq('metode', 'eWallet')
+        .single();
+
+      if (error || !data) {
+        showModal('error-modal', 'Error', 'Gagal mengambil data eWallet.');
+        return;
+      }
+
+      document.getElementById('form-qris').style.display = 'none';
+      document.getElementById('dep-nama').value = data.nama;
+      document.getElementById('dep-nomor').value = data.nomor;
+      document.getElementById('dep-submit').dataset.metode = 'eWallet';
+      document.getElementById('btn-kembali-ewallet').style.display = 'none';
+    };
+
+    document.getElementById('dep-submit').onclick = async () => {
+      if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan deposit.'); return; }
+      const nama = document.getElementById('dep-nama').value;
+      const email = document.getElementById('dep-email').value;
+      const nomor = document.getElementById('dep-nomor').value;
+      const jumlah = document.getElementById('dep-jumlah').value;
+      const metode = document.getElementById('dep-submit').dataset.metode;
+
+      if (!nama || !nomor || !jumlah || !email) {
+        showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom.');
+        return;
+      }
+      const parsedJumlah = parseInt(jumlah);
+      if (isNaN(parsedJumlah) || parsedJumlah <= 0) {
+          showModal('alert-modal', 'Peringatan', 'Jumlah deposit harus angka positif.');
+          return;
+      }
+
+      const depositTableBody = document.querySelector('#riwayat-deposit-modal tbody');
+      const now = new Date();
+      const dateString = now.toLocaleString('id-ID');
+      const tempId = `temp-${Date.now()}`;
+      const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${parsedJumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
+
+      if (depositTableBody.querySelector('.empty')) {
+        depositTableBody.innerHTML = '';
+      }
+      depositTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+      const { error } = await supabase.from('deposit_requests').insert([
+        { user_id: uid, nama, metode, amount: parsedJumlah, status: 'pending', email: email }
+      ]);
+
+      if (error) {
+        console.error(error);
+        showModal('error-modal', 'Gagal!', 'Gagal kirim deposit. Silakan coba lagi. Detail: ' + error.message);
+        const tempRow = depositTableBody.querySelector(`[data-id="${tempId}"]`);
+        if (tempRow) {
+            tempRow.remove();
+        }
+      } else {
+        showModal('success-modal', 'Berhasil!', 'Permintaan deposit dikirim. Silakan tunggu konfirmasi admin.');
+        closeModal('modal-deposit');
+        loadProfile(); // Reload profile to update saldo
+        loadHistory('riwayat-deposit-modal', 'deposit_requests');
+      }
+    };
+
+    // Withdraw button logic
+    document.getElementById('btn-withdraw').onclick = async () => {
+      if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan penarikan.'); return; }
+      showModal('modal-withdraw');
+      const userEmail = await getCurrentUserEmail();
+      if (userEmail) {
+        document.getElementById('with-email').value = userEmail;
+      }
+      // Reset form fields when opening modal
+      document.getElementById('with-nama').value = '';
+      document.getElementById('with-metode').value = '';
+      document.getElementById('with-nomor').value = '';
+      document.getElementById('with-jumlah').value = '';
+      document.getElementById('with-bank').style.display = 'none';
+      document.getElementById('label-bank').style.display = 'none';
+      document.getElementById('with-bank').value = '';
+    };
+
+    // Submit withdrawal request (CALLS EDGE FUNCTION)
+    document.getElementById('with-submit').onclick = async () => {
+        if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan penarikan.'); return; }
+
+        const nama = document.getElementById('with-nama').value.trim();
+        const email = document.getElementById('with-email').value.trim(); // Email dari profil
+        const metode = document.getElementById('with-metode').value; // Dana, OVO, Gopay, Bank
+        const nomor = document.getElementById('with-nomor').value.trim();
+        const bank = document.getElementById('with-bank').value.trim(); // Hanya jika metode 'Bank'
+        const jumlah = parseInt(document.getElementById('with-jumlah').value);
+
+        // Frontend validation (basic checks before sending to secure backend)
+        if (!nama || !metode || !nomor || isNaN(jumlah) || jumlah <= 0) {
+            showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom dan pastikan jumlah penarikan valid.');
+            return;
+        }
+        if (metode === 'Bank' && !bank) {
+            showModal('alert-modal', 'Peringatan', 'Nama Bank harus diisi untuk metode Transfer Bank.');
+            return;
+        }
+
+        // Prepare bank account info for the Edge Function
+        // Ini akan dipetakan ke kolom 'nama', 'email', 'metode', 'nomor', 'bank' di tabel withdrawal_requests
+        const bankAccountInfo = {
+            bank_name: metode === 'Bank' ? bank : metode, // 'Bank' atau 'Dana'/'OVO'/'Gopay'
+            account_number: nomor,
+            account_holder: nama,
+            email: email // Sertakan email jika ingin disimpan di log bank_account_info di Edge Function
+        };
+
+        const withdrawTableBody = document.querySelector('#riwayat-penarikan-modal tbody');
+        const now = new Date();
+        const dateString = now.toLocaleString('id-ID');
+        const tempId = `temp-${Date.now()}`;
+        const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
+
+        // Add pending row to history display immediately
+        if (withdrawTableBody.querySelector('.empty')) {
+            withdrawTableBody.innerHTML = '';
+        }
+        withdrawTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+        try {
+            // Get current user session for authentication token
+            const session = await supabase.auth.getSession();
+            if (!session.data.session) {
+                showModal('alert-modal', 'Sesi Tidak Valid', 'Sesi pengguna tidak valid. Silakan login kembali.');
+                const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+                if (tempRow) { tempRow.remove(); }
+                return; // Stop execution if no session
+            }
+            const accessToken = session.data.session.access_token;
+
+            const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawal`;
+
+            const response = await fetch(edgeFunctionUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${accessToken}` 
+                },
+                body: JSON.stringify({
+                    amount: jumlah,
+                    bank_account_info: bankAccountInfo // Ini yang akan dikirim ke Edge Function
+                })
+            });
+
+            // Selalu coba parsing JSON, bahkan jika statusnya bukan 200 OK
+            const result = await response.json(); 
+
+            if (response.ok) { // Jika status HTTP 200 OK (berarti Edge Function tidak crash dan mengembalikan 200)
+                if (result.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: result.message
+                    });
                     closeModal('modal-withdraw');
-                    // Update saldo display with the new saldo returned by the Edge Function
-                    if (data.new_saldo !== undefined) {
-                        document.getElementById('saldo-display').textContent = `Saldo: Rp.${data.new_saldo.toLocaleString('id-ID')}`;
+                    if (result.new_saldo !== undefined) {
+                        document.getElementById('saldo-display').textContent = `Saldo: Rp.${result.new_saldo.toLocaleString('id-ID')}`;
                     } else {
-                        // Fallback: if new_saldo is not in response, refresh profile to get latest saldo
-                        loadProfile();
+                        loadProfile(); // Fallback: refresh profile to get latest saldo
                     }
-                    loadHistory('riwayat-penarikan-modal', 'withdraw_requests'); // Refresh withdrawal history
-                } else { // If Edge Function returned an error status
-                    showModal('error-modal', 'Gagal!', data.message || 'Terjadi kesalahan tidak dikenal.');
-                    // Remove pending row as request failed
+                    loadHistory('riwayat-penarikan-modal', 'withdrawal_requests'); // Refresh withdrawal history
+                } else {
+                    // Jika status HTTP 200 OK, tapi Edge Function mengembalikan status: 'error' (validasi internal)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: result.message || 'Terjadi kesalahan tidak dikenal dari server.'
+                    });
+                    console.error('Edge Function returned error status:', result.message);
                     const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
                     if (tempRow) { tempRow.remove(); }
                 }
-            } catch (error) {
-                console.error('Error calling withdrawal API:', error);
-                showModal('error-modal', 'Error Jaringan', 'Gagal terhubung ke server. Silakan coba lagi.');
-                // Remove pending row if network error
+            } else {
+                // Jika status HTTP bukan 200 OK (misal 400, 401, 500)
+                Swal.fire({
+                    icon: 'error',
+                    title: `Gagal! HTTP Status: ${response.status}`,
+                    text: result.error || result.message || 'Gagal terhubung ke server. Silakan coba lagi.'
+                });
+                console.error('HTTP Error from Edge Function:', response.status, result);
                 const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
                 if (tempRow) { tempRow.remove(); }
             }
-        };
 
-        // History button logic
-        document.getElementById('btn-history').onclick = async () => {
-            if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melihat riwayat transaksi.'); return; }
-            showModal('modal-history');
-            await loadHistory('riwayat-deposit-modal', 'deposit_requests');
-            await loadHistory('riwayat-penarikan-modal', 'withdraw_requests');
-        };
-
-        // Game list data
-        const games = [
-          { name: 'SLOT 77', url: 'slot.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//Slot77.jpeg' },
-          { name: 'POKER', url: 'poker1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download.jpeg' },
-          { name: 'TEBAK DADU', url: 'tebakdadu.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1)%20(1).png' },
-          { name: 'SAMGONG', url: 'samgong1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png' },
-          { name: 'SUSUN BALOK', url: 'susunbalok99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg' },
-          { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
-        ];
-
-        // Load game list into display grid
-        function loadGames() {
-          const gameGridContainer = document.getElementById('game-display-grid');
-          gameGridContainer.innerHTML = '';
-          games.forEach(game => {
-            const gameItem = document.createElement('div');
-            gameItem.classList.add('game-item');
-            gameItem.innerHTML = `
-              <a href="${game.url}">
-                <img src="${game.imageUrl}" alt="${game.name}">
-              </a>
-            `;
-            gameGridContainer.appendChild(gameItem);
-          });
+        } catch (error) {
+            console.error('Error calling withdrawal API:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error Jaringan',
+                text: `Gagal terhubung ke server. Silakan coba lagi. Detail: ${error.message}`
+            });
+            const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+            if (tempRow) { tempRow.remove(); }
         }
-    
-  </script>
+    };
+
+    // History button logic
+    document.getElementById('btn-history').onclick = async () => {
+        if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melihat riwayat transaksi.'); return; }
+        showModal('modal-history');
+        await loadHistory('riwayat-deposit-modal', 'deposit_requests');
+        await loadHistory('riwayat-penarikan-modal', 'withdrawal_requests');
+    };
+
+    // Game list data
+    const games = [
+      { name: 'SLOT 77', url: 'slot.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//Slot77.jpeg' },
+      { name: 'POKER', url: 'poker1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download.jpeg' },
+      { name: 'TEBAK DADU', url: 'tebakdadu.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1)%20(1).png' },
+      { name: 'SAMGONG', url: 'samgong1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png' },
+      { name: 'SUSUN BALOK', url: 'susunbalok99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg' },
+      { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
+    ];
+
+  // Load game list into display grid
+    function loadGames() {
+      const gameGridContainer = document.getElementById('game-display-grid');
+      gameGridContainer.innerHTML = '';
+      games.forEach(game => {
+        const gameItem = document.createElement('div');
+        gameItem.classList.add('game-item');
+        gameItem.innerHTML = `
+          <a href="${game.url}">
+            <img src="${game.imageUrl}" alt="${game.name}">
+          </a>
+        `;
+        gameGridContainer.appendChild(gameItem);
+      });
+    }
+
+</script>
 </body>
 </html>
