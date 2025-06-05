@@ -257,10 +257,11 @@
         margin-left: auto;
         margin-right: auto;
     }
-    .guess-options-grid input[type="radio"] {
+    /* Ganti input radio menjadi checkbox, sesuaikan selector */
+    .guess-options-grid input[type="checkbox"] {
         display: none;
     }
-    .guess-options-grid label.guess-box {
+     .guess-options-grid label.guess-box {
         cursor: pointer;
         background: rgba(0, 0, 0, 0.6); /* Background gelap */
         border: 2px solid var(--neon-blue); /* Border biru neon */
@@ -282,7 +283,8 @@
         transform: translateY(-3px); /* Angkat lebih tinggi saat hover */
         box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
     }
-    .guess-options-grid input[type="radio"]:checked + label.guess-box {
+    /* Ganti input radio menjadi checkbox, sesuaikan selector */
+    .guess-options-grid input[type="checkbox"]:checked + label.guess-box {
         background: var(--neon-blue); /* Warna biru neon saat dipilih */
         border-color: var(--neon-green); /* Border hijau neon saat dipilih */
         color: #000; /* Warna teks gelap agar kontras */
@@ -305,7 +307,8 @@
       line-height: 1;
       box-shadow: 0 0 8px rgba(255, 0, 255, 0.3);
     }
-    .guess-options-grid input[type="radio"]:checked + label.guess-box.animal-guess-box {
+    /* Ganti input radio menjadi checkbox, sesuaikan selector */
+    .guess-options-grid input[type="checkbox"]:checked + label.guess-box.animal-guess-box {
         background: var(--neon-purple); /* Warna ungu neon saat dipilih */
         border-color: var(--neon-green); /* Border hijau neon saat dipilih */
         color: #000; /* Emojis will likely ignore this, but good practice */
@@ -512,7 +515,7 @@
         }
         .guess-options-grid {
             gap: 6px;
-            max-width: 170px; /* 3 x 50px + 2 x 6px */
+            max-width: 170px; /* 3 x_ 50px + 2 x 6px */
             margin-bottom: 12px;
         }
         .guess-options-grid label.guess-box {
@@ -550,7 +553,7 @@
       <div class="dice animal" id="animal-die">❓</div> </div>
 
     <div class="bet-section">
-        <label>Jumlah Taruhan:</label>
+        <label>Jumlah Taruhan per Tebakan:</label>
         <div class="bet-control">
          <button class="btn-bet-adjust" id="decrease-bet">-</button>
             <span id="display-bet-amount">Rp100</span> <button class="btn-bet-adjust" id="increase-bet">+</button>
@@ -558,29 +561,29 @@
     </div>
 
     <div class="guess-section">
-      <label>Tebakan Angka Dadu (1-6)</label>
+      <label>Pilih Tebakan Angka Dadu (1-6)</label>
       <div class="guess-options-grid">
-        <input type="radio" id="guess-num-1" name="number-guess" value="1">
+        <input type="checkbox" id="guess-num-1" name="number-guess" value="1">
         <label for="guess-num-1" class="guess-box number-guess-box" data-value="1">
             <span class="dot"></span>
         </label>
-        <input type="radio" id="guess-num-2" name="number-guess" value="2">
+        <input type="checkbox" id="guess-num-2" name="number-guess" value="2">
         <label for="guess-num-2" class="guess-box number-guess-box" data-value="2">
             <span class="dot"></span><span class="dot"></span>
         </label>
-        <input type="radio" id="guess-num-3" name="number-guess" value="3">
+        <input type="checkbox" id="guess-num-3" name="number-guess" value="3">
         <label for="guess-num-3" class="guess-box number-guess-box" data-value="3">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </label>
-        <input type="radio" id="guess-num-4" name="number-guess" value="4">
+        <input type="checkbox" id="guess-num-4" name="number-guess" value="4">
         <label for="guess-num-4" class="guess-box number-guess-box" data-value="4">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </label>
-        <input type="radio" id="guess-num-5" name="number-guess" value="5">
+        <input type="checkbox" id="guess-num-5" name="number-guess" value="5">
         <label for="guess-num-5" class="guess-box number-guess-box" data-value="5">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </label>
-        <input type="radio" id="guess-num-6" name="number-guess" value="6">
+        <input type="checkbox" id="guess-num-6" name="number-guess" value="6">
         <label for="guess-num-6" class="guess-box number-guess-box" data-value="6">
             <span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </label>
@@ -588,19 +591,19 @@
     </div>
 
     <div class="guess-section">
-      <label> Tebakan Simbol Hewan (x4)</label>
+      <label>Pilih Tebakan Simbol Hewan (x4)</label>
       <div class="guess-options-grid">
-        <input type="radio" id="guess-gajah" name="animal-guess" value="gajah">
+        <input type="checkbox" id="guess-gajah" name="animal-guess" value="gajah">
         <label for="guess-gajah" class="guess-box animal-guess-box">🐘</label>
-        <input type="radio" id="guess-singa" name="animal-guess" value="singa">
+        <input type="checkbox" id="guess-singa" name="animal-guess" value="singa">
         <label for="guess-singa" class="guess-box animal-guess-box">🦁</label>
-        <input type="radio" id="guess-monyet" name="animal-guess" value="monyet">
+        <input type="checkbox" id="guess-monyet" name="animal-guess" value="monyet">
         <label for="guess-monyet" class="guess-box animal-guess-box">🐒</label>
-        <input type="radio" id="guess-ular" name="animal-guess" value="ular">
+        <input type="checkbox" id="guess-ular" name="animal-guess" value="ular">
         <label for="guess-ular" class="guess-box animal-guess-box">🐍</label>
-        <input type="radio" id="guess-burung" name="animal-guess" value="burung">
+        <input type="checkbox" id="guess-burung" name="animal-guess" value="burung">
         <label for="guess-burung" class="guess-box animal-guess-box">🐦</label>
-        <input type="radio" id="guess-ikan" name="animal-guess" value="ikan">
+        <input type="checkbox" id="guess-ikan" name="animal-guess" value="ikan">
         <label for="guess-ikan" class="guess-box animal-guess-box">🐠</label>
       </div>
     </div>
@@ -626,7 +629,7 @@
   </audio>
   <audio id="win-sound">
     <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
+    Your browser doent support the audio element.
   </audio>
   <audio id="lose-sound">
     <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-player-losing-or-failing-2042.mp3" type="audio/mp3">
@@ -648,8 +651,9 @@
     let currentSaldo = 0;
 
     const saldoDisplay = document.getElementById('saldo-display');
-    const numberGuessOptions = document.querySelectorAll('input[name="number-guess"]');
-    const animalGuessOptions = document.querySelectorAll('input[name="animal-guess"]');
+    // Ambil semua input checkbox untuk angka dan hewan
+    const numberGuessCheckboxes = document.querySelectorAll('input[name="number-guess"]');
+    const animalGuessCheckboxes = document.querySelectorAll('input[name="animal-guess"]');
     const rollDiceBtn = document.getElementById('roll-dice-btn');
     const die1Display = document.getElementById('die1');
     const die2Display = document.getElementById('die2');
@@ -663,7 +667,7 @@
 
     const MIN_BET_UNIT = 200;
     const BET_STEP = 100;
-    let currentManualBet = MIN_BET_UNIT;
+    let currentManualBet = MIN_BET_UNIT; // Ini adalah taruhan per TEBAKAN
 
     // Audio Elements
     const bgMusic = document.getElementById('bg-music');
@@ -692,7 +696,6 @@
     document.addEventListener('DOMContentLoaded', async () => {
       await loadUserProfile();
       rollDiceBtn.addEventListener('click', playDiceGame);
-      
       decreaseBetBtn.addEventListener('click', () => {
           if (currentManualBet > MIN_BET_UNIT) {
               currentManualBet -= BET_STEP;
@@ -824,34 +827,28 @@
     async function playDiceGame() {
       clickSound.play();
 
-      let betAmount = 0;
-      let selectedNumberGuess = null;
-      for (const radio of numberGuessOptions) {
-        if (radio.checked) {
-          selectedNumberGuess = radio.value;
-          break;
-        }
-      }
+      // Dapatkan semua tebakan angka yang dipilih
+      const selectedNumberGuesses = Array.from(numberGuessCheckboxes)
+                                        .filter(checkbox => checkbox.checked)
+                                        .map(checkbox => parseInt(checkbox.value));
+      
+      // Dapatkan semua tebakan hewan yang dipilih
+      const selectedAnimalGuesses = Array.from(animalGuessCheckboxes)
+                                         .filter(checkbox => checkbox.checked)
+                                         .map(checkbox => checkbox.value);
 
-      let selectedAnimalGuess = null;
-      for (const radio of animalGuessOptions) {
-        if (radio.checked) {
-          selectedAnimalGuess = radio.value;
-          break;
-        }
-      }
+      // Hitung total taruhan
+      const totalNumberBets = selectedNumberGuesses.length * currentManualBet;
+      const totalAnimalBets = selectedAnimalGuesses.length * currentManualBet;
+      const totalBetAmount = totalNumberBets + totalAnimalBets;
 
-      if (selectedNumberGuess && selectedAnimalGuess) {
-          betAmount = currentManualBet * 2;
-      } else if (selectedNumberGuess || selectedAnimalGuess) {
-          betAmount = currentManualBet;
-      } else {
-          showNotificationModal('Perhatian!', 'Pilih tebakan Angka (1-6) atau tebakan Simbol Hewan.');
+      if (totalBetAmount === 0) {
+          showNotificationModal('Perhatian!', 'Pilih setidaknya satu tebakan Angka (1-6) atau satu tebakan Simbol Hewan.');
           return;
       }
 
-      if (currentSaldo < betAmount) {
-        showNotificationModal('Saldo Tidak Cukup!', `Saldo Anda tidak cukup untuk taruhan ini! Diperlukan <b>Rp.${betAmount.toLocaleString('id-ID')}</b>.`);
+      if (currentSaldo < totalBetAmount) {
+        showNotificationModal('Saldo Tidak Cukup!', `Saldo Anda tidak cukup untuk total taruhan ini! Diperlukan <b>Rp.${totalBetAmount.toLocaleString('id-ID')}</b>.`);
         return;
       }
 
@@ -859,20 +856,20 @@
       rollDiceBtn.disabled = true;
       decreaseBetBtn.disabled = true;
       increaseBetBtn.disabled = true;
-      numberGuessOptions.forEach(radio => radio.disabled = true);
-      animalGuessOptions.forEach(radio => radio.disabled = true);
+      numberGuessCheckboxes.forEach(checkbox => checkbox.disabled = true);
+      animalGuessCheckboxes.forEach(checkbox => checkbox.disabled = true);
 
       // Deduct bet immediately
-      currentSaldo -= betAmount;
+      currentSaldo -= totalBetAmount;
       const successDeduct = await updateSaldoInSupabase(currentSaldo);
       if (!successDeduct) {
-        currentSaldo += betAmount;
+        currentSaldo += totalBetAmount; // Kembalikan saldo jika gagal update
         saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
         rollDiceBtn.disabled = false;
         decreaseBetBtn.disabled = false;
         increaseBetBtn.disabled = false;
-        numberGuessOptions.forEach(radio => radio.disabled = false);
-        animalGuessOptions.forEach(radio => radio.disabled = false);
+        numberGuessCheckboxes.forEach(checkbox => checkbox.disabled = false);
+        animalGuessCheckboxes.forEach(checkbox => checkbox.disabled = false);
         return;
       }
       saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
@@ -907,67 +904,76 @@
         renderDiceDots(die3Display, die3);
         animalDieDisplay.innerHTML = animalResultEmoji;
 
-        let totalProfit = 0;
+        let totalProfitFromWins = 0; // Hanya profit, tanpa modal awal
         let winDetails = [];
         let isAnyWin = false;
+        let totalWinningsAmount = 0; // Total uang yang didapat (modal + profit)
 
-        // Check Animal Guess
-        if (selectedAnimalGuess) {
-            if (selectedAnimalGuess === animalResultKey) {
-                const winMultiplier = 4;
-                const animalWinAmount = currentManualBet * winMultiplier;
-                totalProfit += currentManualBet * (winMultiplier - 1);
-                winDetails.push(`Tebakan Hewan: <b>${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})</b> tepat! Anda memenangkan <b>Rp.${animalWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp.${currentManualBet.toLocaleString('id-ID')} x${winMultiplier}).`);
+        // Check Animal Guesses
+        for (const guessedAnimal of selectedAnimalGuesses) {
+            const betForThisAnimal = currentManualBet;
+            if (guessedAnimal === animalResultKey) {
+                const winMultiplier = 4; // Pengali untuk tebakan hewan
+                const animalWinAmount = betForThisAnimal * winMultiplier;
+                totalProfitFromWins += betForThisAnimal * (winMultiplier - 1); // Profit = (multiplier - 1) * bet
+                totalWinningsAmount += animalWinAmount;
+                winDetails.push(`✅ Tebakan Hewan: <b>${animals[guessedAnimal]} (${guessedAnimal.charAt(0).toUpperCase() + guessedAnimal.slice(1)})</b> tepat! Anda memenangkan <b>Rp.${animalWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp.${betForThisAnimal.toLocaleString('id-ID')} x${winMultiplier}).`);
                 isAnyWin = true;
             } else {
-                winDetails.push(`Tebakan Hewan: <b>${animals[selectedAnimalGuess]} (${selectedAnimalGuess.charAt(0).toUpperCase() + selectedAnimalGuess.slice(1)})</b> salah. Hasil: <b>${animals[animalResultKey]} (${animalResultKey.charAt(0).toUpperCase() + animalResultKey.slice(1)})</b>.`);
+                winDetails.push(`❌ Tebakan Hewan: <b>${animals[guessedAnimal]} (${guessedAnimal.charAt(0).toUpperCase() + guessedAnimal.slice(1)})</b> salah. Hasil: <b>${animals[animalResultKey]} (${animalResultKey.charAt(0).toUpperCase() + animalResultKey.slice(1)})</b>.`);
             }
         }
 
-        // Check Number Guess
-        if (selectedNumberGuess) {
-            const guessedNumber = parseInt(selectedNumberGuess);
+        // Check Number Guesses
+        for (const guessedNumber of selectedNumberGuesses) {
+            const betForThisNumber = currentManualBet;
             let numberMatches = 0;
             if (die1 === guessedNumber) { numberMatches++; }
             if (die2 === guessedNumber) { numberMatches++; }
             if (die3 === guessedNumber) { numberMatches++; }
 
             if (numberMatches > 0) {
-                const multiplier = numberMatches;
-                const numberWinAmount = currentManualBet * (multiplier + 1);
-                totalProfit += currentManualBet * multiplier;
-                winDetails.push(`Tebakan Angka: <b>${guessedNumber}</b> tepat (${numberMatches} kali)! Anda memenangkan <b>Rp${numberWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp${currentManualBet.toLocaleString('id-ID')} x${multiplier+1}).`);
+                const multiplier = numberMatches + 1; // Jika 1 match = x2, 2 match = x3, dst.
+                const numberWinAmount = betForThisNumber * multiplier;
+                totalProfitFromWins += betForThisNumber * (multiplier - 1);
+                totalWinningsAmount += numberWinAmount;
+                winDetails.push(`✅ Tebakan Angka: <b>${guessedNumber}</b> tepat (${numberMatches} kali)! Anda memenangkan <b>Rp.${numberWinAmount.toLocaleString('id-ID')}</b> (taruhan Rp.${betForThisNumber.toLocaleString('id-ID')} x${multiplier}).`);
                 isAnyWin = true;
             } else {
-                winDetails.push(`Tebakan Angka: <b>${guessedNumber}</b> salah. Tidak ada dadu angka yang menunjukkan ${guessedNumber}.`);
+                winDetails.push(`❌ Tebakan Angka: <b>${guessedNumber}</b> salah. Tidak ada dadu angka yang menunjukkan ${guessedNumber}.`);
             }
         }
 
         let messageTitle = "";
         let messageBody = "";
+        
+        // Total saldo sekarang = saldo sebelum game + total kemenangan yang didapat dari taruhan (modal + profit)
+        // Yang disimpan di currentSaldo saat ini adalah saldo awal dikurangi totalBetAmount.
+        // Maka saldo akhir = currentSaldo (setelah dikurangi bet awal) + totalWinningsAmount
+        currentSaldo += totalWinningsAmount;
 
         if (isAnyWin) {
-            currentSaldo += betAmount + totalProfit;
-            messageTitle = "Selamat! Anda Menang!";
-            messageBody = `Total kemenangan Anda: <b>Rp.${(betAmount + totalProfit).toLocaleString('id-ID')}</b>.<br><br>` + winDetails.join('<br>');
+            messageTitle = "Hasil Guliran Dadu!";
+            messageBody = `<b>Total Taruhan: Rp.${totalBetAmount.toLocaleString('id-ID')}</b><br>
+                           <b>Total Kemenangan: Rp.${totalWinningsAmount.toLocaleString('id-ID')}</b><br>
+                           <b>Total Profit Bersih: Rp.${totalProfitFromWins.toLocaleString('id-ID')}</b><br><br>` + winDetails.join('<br>');
             winSound.play();
         } else {
             messageTitle = "Anda Kalah!";
-            messageBody = `Taruhan Anda <b>Rp.${betAmount.toLocaleString('id-ID')}</b> hangus.<br><br>` + winDetails.join('<br>');
+            messageBody = `<b>Total Taruhan: Rp.${totalBetAmount.toLocaleString('id-ID')}</b> hangus.<br><br>` + winDetails.join('<br>');
             loseSound.play();
         }
-
+        
         await updateSaldoInSupabase(currentSaldo);
         saldoDisplay.textContent = `Saldo: Rp.${currentSaldo.toLocaleString('id-ID')}`;
 
-        // Menggunakan showNotificationModal yang sudah disesuaikan
         showNotificationModal(messageTitle, messageBody);
 
         rollDiceBtn.disabled = false;
         decreaseBetBtn.disabled = false;
         increaseBetBtn.disabled = false;
-        numberGuessOptions.forEach(radio => radio.disabled = false);
-        animalGuessOptions.forEach(radio => radio.disabled = false);
+        numberGuessCheckboxes.forEach(checkbox => checkbox.disabled = false);
+        animalGuessCheckboxes.forEach(checkbox => checkbox.disabled = false);
 
       }, 2500);
     }
