@@ -1145,7 +1145,8 @@
                 const accessToken = session.data.session.access_token;
 
                 
-                const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/super-action';
+                const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/processed_withdrawal';
+
 
                 // Send withdrawal request to the secure Edge Function
                 const response = await fetch(edgeFunctionUrl, {
