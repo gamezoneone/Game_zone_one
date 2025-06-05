@@ -43,7 +43,7 @@
       border-radius: 25px; /* Lebih membulat */
       padding: 35px; /* Padding yang lebih besar */
       /* Bayangan dengan glow neon */
-      box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
+      box-shadow: 0 0 40px rgba(0, 255, 255, 0.0), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
       position: relative;
       border: 2px solid rgba(0, 255, 255, 0.6); /* Border neon */
       animation: neon-border-pulse 3s infinite alternate; /* Animasi border */
@@ -64,7 +64,7 @@
       font-family: 'Orbitron', sans-serif; /* Font futuristik */
       font-size: 1em;
       font-weight: 700;
-      color: #fff; /* Neon hijau terang */
+      color: #f986; /* Neon hijau terang */
       background: rgba(10, 10, 30, 0.8); /* Background gelap */
       padding: 10px 18px;
       border-radius: 15px;
@@ -591,9 +591,10 @@
       }
       .game-item {
         padding-top: 100%; /* Pertahankan rasio aspek */
-    
     }
-    
+    .marquee{
+      color: gold;
+    }
   </style>
 </head>
 <body>
@@ -610,6 +611,8 @@
   <div class="container">
     <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
     <h1>PROFIL PEMAIN</h1>
+  <div class="marquee">
+ <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee>
 
     <div class="btn-group">
       <button class="btn" id="btn-deposit">Deposit</button>
