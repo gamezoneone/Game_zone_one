@@ -956,7 +956,7 @@
         const nomor = document.getElementById('with-nomor').value.trim();
         const bank = document.getElementById('with-bank').value.trim(); // Hanya jika metode 'Bank'
         const jumlah = parseInt(document.getElementById('with-jumlah').value);
-
+        
         // Frontend validation (basic checks before sending to secure backend)
         if (!nama || !metode || !nomor || isNaN(jumlah) || jumlah <= 0) {
             showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom dan pastikan jumlah penarikan valid.');
@@ -969,11 +969,11 @@
 
         // Prepare bank account info for the Edge Function
         // Ini akan dipetakan ke kolom 'nama', 'email', 'metode', 'nomor', 'bank' di tabel withdrawal_requests
-        const bankAccountInfo = {
-            bank_name: metode === 'Bank' ? bank : metode, // 'Bank' atau 'Dana'/'OVO'/'Gopay'
-            account_number: nomor,
-            account_holder: nama,
-            email: email // Sertakan email jika ingin disimpan di log bank_account_info di Edge Function
+        const bank_account_info = {
+    account_holder: accountHolder,
+    account_number: accountNumber,
+    bank_name: bankName,
+    email: email // Sertakan email jika ingin disimpan di log bank_account_info di Edge Function
         };
 
         const withdrawTableBody = document.querySelector('#riwayat-penarikan-modal tbody');
