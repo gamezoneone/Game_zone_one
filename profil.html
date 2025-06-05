@@ -741,7 +741,7 @@
   
         const supabase = window.supabase.createClient(
           'https://vqmfachxnjyxwuavpgds.supabase.co',
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bz8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
         );
 
         let uid = localStorage.getItem('uid');
@@ -1144,9 +1144,8 @@
                 }
                 const accessToken = session.data.session.access_token;
 
-                // *** PENTING: GANTI URL INI DENGAN URL EDGE FUNCTION ANDA YANG SEBENARNYA ***
-                // Anda mendapatkan URL ini setelah deploy Edge Function di Supabase
-                const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/super-action'; // <--- GANTI URL INI!
+                
+                const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/super-action';
 
                 // Send withdrawal request to the secure Edge Function
                 const response = await fetch(edgeFunctionUrl, {
