@@ -44,10 +44,10 @@
     background: rgba(0, 0, 0, 0.7); /* Lebih transparan agar efek neon lebih menonjol */
     border-radius: 15px;
     padding: 30px 40px;
-    box-shadow: 0 0 20px rgba(102, 0, 255, 0.6), /* Ungu neon */
-                0 0 40px rgba(102, 0, 255, 0.4),
-                0 0 60px rgba(102, 0, 255, 0.2);
-    border: 3px solid #ff00ff; /* Border utama ungu/magenta */
+    box-shadow: 0 0 20px rgba(102, 0, 255, 0.0), /* Ungu neon */
+                0 0 40px rgba(102, 0, 255, 0.0),
+                0 0 60px rgba(102, 0, 255, 0.0);
+    border: 0px solid #ff00ff; /* Border utama ungu/magenta */
     animation: fadeIn 1s ease-out;
     display: flex;
     flex-direction: column;
@@ -59,8 +59,8 @@
     content: '';
     position: absolute;
     top: -5px; bottom: -5px; left: -5px; right: -5px; /* Border luar */
-    border: 5px solid #00ffff; /* Warna cyan/biru neon */
-    border-radius: 20px;
+    border: 0px solid #00ffff; /* Warna cyan/biru neon */
+    border-radius: 0px;
     box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff;
     z-index: -1;
     pointer-events: none;
@@ -349,7 +349,6 @@
         font-size: 1.1em;
         padding: 12px 25px;
     }
-  }
 
   @media (max-width: 380px) {
     h1 {
@@ -366,6 +365,24 @@
       font-size: 18px;
       padding: 14px;
     }
+    .image-wrapper { /* Kontainer untuk gambar statis */
+    width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
+    height: 100px;  /* Tinggi kotak gambar (sesuaikan jika perlu) */
+    background-color: transparent; /* Warna latar belakang kotak (opsional, jika gambar transparan) */
+    border-radius: 2px; /* Sudut melengkung untuk kotak */
+    overflow: hidden; /* Penting jika gambar Anda sedikit lebih besar */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Untuk memusatkan gambar di dalam kotak */
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.0); /* Efek neon border seperti yang Anda inginkan */
+}
+
+.static-image {
+    width: 100%; /* Gambar mengisi seluruh lebar kotak */
+    height: 100%; /* Gambar mengisi seluruh tinggi kotak */
+    object-fit: cover; /* Pastikan gambar mengisi kotak tanpa terdistorsi */
+    display: block; /* Menghilangkan spasi ekstra di bawah gambar */
+}
   }
 </style>
 </head>
@@ -373,12 +390,15 @@
 
 <div class="container">
   <h1>Game Zone</h1>
-     <marquee><strong>Selamat datang di GAME ZONE. situs resmi terbaru dengan game terbaru.deposit/penarikan tanpa minimum.ayo daftar dan menangkan jutaan rupiah sekarang juga! tunggu apa lagi?! minimum deposit maximum withdraw.© 2025 GAME ZONE dilindungi HAK CIPTA.</strong></marquee>
+   <marquee><strong>Selamat datang di GAME ZONE. situs resmi terbaru dengan game terbaru.deposit/penarikan tanpa minimum.ayo daftar dan menangkan jutaan rupiah sekarang juga! tunggu apa lagi?! minimum deposit maximum withdraw.© 2025 GAME ZONE dilindungi HAK CIPTA.</strong></marquee>
   <div class="tabs">
     <button class="tab-btn active" data-tab="login">Login</button>
     <button class="tab-btn" data-tab="register">Daftar</button>
   </div>
-
+ <div class="image-wrapper">
+            <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//daftar-disini-cwkbet.gif" alt="Dekorasi Login" class="static-image">
+        </div>
+ 
   <form id="login" class="active">
     <label for="login-email">Email</label>
     <input type="email" id="login-email" placeholder="Masukkan email Anda" required /> <label for="login-password">Password</label>
@@ -415,48 +435,13 @@
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // Inisialisasi SupabaseClient kamu
-  // Ganti URL dan anon key ini dengan yang dari project Supabase kamu
+
   const supabase = window.supabase.createClient(
     'https://vqmfachxnjyxwuavpgds.supabase.co',
     
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
   );
-  
-     const loginForm = document.getElementById('login');
-const registerForm = document.getElementById('register');
-const tabsContainer = document.querySelector('.tabs');
-loginForm.style.display = 'none';
-registerForm.style.display = 'none';
-tabsContainer.style.display = 'none';
 
-async function checkSupabaseSession() {
-    const { data: { session }, error } = await supabase.auth.getSession();
-
-    if (session) {
-        console.log('Sesi Supabase ditemukan:', session);
-      
-        window.location.href = 'profil.html';
-    } else {
-      
-        console.log('Tidak ada sesi Supabase aktif. Tampilkan formulir login.');
-      
-        loginForm.style.display = 'flex';
-        tabsContainer.style.display = 'flex';
-        document.querySelector('.tab-btn[data-tab="login"]').classList.add('active');
-        document.getElementById('login').classList.add('active');
-    }
-
-    if (error) {
-        console.error('Error fetching session:', error.message);
-      
-        loginForm.style.display = 'flex';
-        tabsContainer.style.display = 'flex';
-    }
-}
-
-document.addEventListener('DOMContentLoaded', checkSupabaseSession);
-  
   const tabs = document.querySelectorAll('.tab-btn');
   const forms = document.querySelectorAll('form');
   const notificationModal = document.getElementById('notificationModal');
