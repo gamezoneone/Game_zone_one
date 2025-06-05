@@ -1,748 +1,470 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Profil Pemain - GameZone</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;700&display=swap');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna - GameZone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Gaya Umum */
+        body, html {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+        }
 
-    /* Reset dan Dasar */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        .container {
+            width: 95%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 30px rgba(57, 255, 20, 0.4);
+            animation: glow 1.5s infinite alternate;
+        }
 
-    body, html {
-      min-height: 100vh;
-      /* Background lebih gelap untuk kontras neon */
-      background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.0);
-  background-blend-mode: overlay;
-}
-      font-family: 'Poppins', sans-serif;
-      color: #e0e0e0; /* Warna teks umum */
-      overflow-x: hidden;
-      display: flex; /* Untuk memusatkan konten secara vertikal jika perlu */
-      justify-content: center;
-      align-items: center;
-    }
+        @keyframes glow {
+            from { box-shadow: 0 0 20px rgba(57, 255, 20, 0.4); }
+            to { box-shadow: 0 0 35px rgba(57, 255, 20, 0.7); }
+        }
 
-    /* Kontainer Utama */
-    .container {
-      width: 95%;
-      max-width: 650px; /* Sedikit lebih lebar untuk tampilan modern */
-      margin: 20px auto 80px;
-      background: rgba(0,0,0,0.85); /* Hampir hitam transparan */
-      border-radius: 25px; /* Lebih membulat */
-      padding: 35px; /* Padding yang lebih besar */
-      /* Bayangan dengan glow neon */
-      box-shadow: 0 0 40px rgba(0, 255, 255, 0.0), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
-      position: relative;
-      border: 2px solid rgba(0, 255, 255, 0.6); /* Border neon */
-      animation: neon-border-pulse 3s infinite alternate; /* Animasi border */
-    }
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            color: #39ff14;
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.7);
+            margin-bottom: 25px;
+        }
 
-    /* Animasi Border Neon */
-    @keyframes neon-border-pulse {
-        from { border-color: rgba(0, 255, 255, 0.6); box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
-        to { border-color: rgba(0, 200, 200, 0.8); box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), 0 0 100px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0, 255, 255, 0.2); }
-    }
+        h1 { font-size: 2.2em; }
+        h2 { font-size: 1.6em; border-bottom: 2px solid #39ff14; padding-bottom: 10px; margin-top: 30px;}
 
+        /* Saldo dan Tombol */
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        #saldo-display {
+            font-size: 1.8em;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            background: linear-gradient(45deg, #007bff, #00c7ff);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.4);
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .btn:hover {
+            background: linear-gradient(45deg, #0056b3, #0099e6);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.6);
+        }
+        .btn-history {
+            background: linear-gradient(45deg, #28a745, #218838);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        .btn-history:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
 
-    /* Saldo di Pojok Kiri Atas */
-    .saldo {
-      position: absolute;
-      top: 28px; /* Jarak dari atas */
-      left: 25px; /* Jarak dari kiri */
-      font-family: 'Orbitron', sans-serif; /* Font futuristik */
-      font-size: 1em;
-      font-weight: 700;
-      color: #f986; /* Neon hijau terang */
-      background: rgba(10, 10, 30, 0.8); /* Background gelap */
-      padding: 10px 18px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(57, 255, 20, 0.6); /* Glow neon hijau */
-      z-index: 10;
-      border: 1px solid rgba(57, 255, 20, 0.4);
-    }
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background: linear-gradient(135deg, #2a004a, #4a006a);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(255, 0, 255, 0.6);
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .modal-content h2 {
+            color: #ff00ff;
+            text-shadow: 0 0 10px #ff00ff;
+            margin-bottom: 20px;
+        }
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #e0e0e0;
+            text-align: left;
+            font-weight: bold;
+        }
+        .modal-content input, .modal-content select {
+            width: calc(100% - 20px);
+            padding: 12px;
+            margin-bottom: 18px;
+            border: 1px solid #6a006a;
+            border-radius: 8px;
+            background-color: #3a005a;
+            color: #e0e0e0;
+            font-size: 1em;
+        }
+        .modal-content input::placeholder {
+            color: #b0b0b0;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .modal-buttons button {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.0em;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+        .modal-buttons .primary {
+            background: linear-gradient(45deg, #ff00ff, #8a2be2);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 0, 255, 0.4);
+        }
+        .modal-buttons .primary:hover {
+            background: linear-gradient(45deg, #cc00cc, #6a1aae);
+            transform: translateY(-2px);
+        }
+        .modal-buttons .secondary {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            color: white;
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+        .modal-buttons .secondary:hover {
+            background: linear-gradient(45deg, #5a6268, #3a4046);
+            transform: translateY(-2px);
+        }
 
-    /* Judul Utama */
-    h1 {
-      text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      color: #ffd700;
-    text-shadow: 0 0 10px #ffeb3b,
-                 0 0 20px #ffeb3b,
-                 0 0 30px #ffeb3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-  }
+        /* Histori Transaksi */
+        .history-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .history-section th, .history-section td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+            font-size: 0.95em;
+        }
+        .history-section th {
+            background: #39ff14;
+            color: #1a1a2e;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .history-section tr:last-child td {
+            border-bottom: none;
+        }
+        .history-section .empty {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            padding: 20px;
+        }
+        .status-pending { color: #ffa500; font-weight: bold; } /* Orange */
+        .status-approved { color: #39ff14; font-weight: bold; } /* Green */
+        .status-rejected { color: #ff4d4d; font-weight: bold; } /* Red */
 
-  @keyframes neon-glow {
-    from {
-      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
-      color: #ffd700;
-    }
-    to {
-      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
-                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
-      color: red;
-    }
-    }
+        /* Game Display */
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+            padding: 10px;
+        }
+        .game-item {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            cursor: pointer;
+        }
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(57, 255, 20, 0.5);
+        }
+        .game-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            border-radius: 10px; /* Adjust if needed for full image border-radius */
+        }
+        .game-item a {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
 
-    /* Grup Tombol (Deposit, Penarikan, Riwayat) */
-    .btn-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px; /* Jarak antar tombol yang lebih kecil */
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
+        /* Utility */
+        .hidden { display: none; }
+        .btn-copy {
+            background: #00bcd4; /* Cyan */
+            color: white;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 0.85em;
+            transition: background-color 0.3s ease;
+        }
+        .btn-copy:hover {
+            background: #0097a7;
+        }
+        .copy-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+        .copy-group input {
+            flex-grow: 1;
+            margin-bottom: 0; /* Override default margin */
+        }
+        #form-qris {
+            text-align: center;
+            margin-top: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        #gambar-qris {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.4);
+            margin-bottom: 15px;
+        }
+        #btn-kembali-ewallet {
+            background: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            display: none; /* Hidden by default */
+        }
+        #btn-kembali-ewallet:hover {
+            background: #d32f2f;
+        }
 
-    /* Tombol Umum */
-    .btn {
-      background: #00bcd4; /* Biru terang */
-      border: none;
-      border-radius: 25px; /* Lebih kecil, ramping */
-      padding: 10px 20px; /* Padding lebih kecil */
-      font-size: 0.95em; /* Ukuran font sedikit lebih kecil */
-      font-weight: 700;
-      cursor: pointer;
-      color: #0d0d1a; /* Warna teks gelap */
-      box-shadow: 0 0 15px rgba(0, 188, 212, 0.6), 0 0 25px rgba(0, 188, 212, 0.4); /* Glow neon biru */
-      transition: all 0.3s ease;
-      flex: 1;
-      min-width: 100px; /* Ukuran minimum tombol yang lebih kecil */
-      max-width: 160px; /* Batasi lebar agar tetap sejajar */
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid rgba(0, 188, 212, 0.8);
-    }
-
-    .btn:hover {
-      background: #39ff14; /* Neon hijau saat hover */
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.5);
-      color: #0d0d1a;
-      border-color: rgba(57, 255, 20, 1);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
-    }
-
-    /* Judul Bagian */
-    h2 {
-      font-family: 'Orbitron', sans-serif;
-      border-bottom: 2px solid #e000ff; /* Border bawah neon ungu */
-      padding-bottom: 12px;
-      margin-top: 40px; /* Jarak dari atas */
-      margin-bottom: 25px;
-  color: #ffd700;
-    text-shadow: 0 0 10px #00bcd4
-                 0 0 20px #ffeb,
-                 0 0 30px #ff3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-      text-align: center; /* Pusatkan judul */
-      background: #ffeb;
-      padding: 1px 10px;
-      border-radius: 10px;
-    }
-
-    /* Tabel */
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-bottom: 30px;
-      background: rgba(10, 10, 30, 0.7); /* Background tabel lebih gelap */
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-    }
-
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 255, 255, 0.1); /* Garis pemisah neon halus */
-      color: #c0c0c0; /* Teks lebih terang */
-    }
-
-    th {
-      background: #00bcd4; /* Header biru neon */
-      color: #0d0d1a;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.9em;
-      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .empty {
-      color: #888;
-      font-style: italic;
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    /* Status dalam Tabel */
-    .status-pending { color: #ffeb3b; /* Kuning neon */ font-weight: bold; }
-    .status-approved { color: #39ff14; /* Hijau neon */ font-weight: bold; }
-    .status-rejected { color: #ff4d4d; /* Merah neon */ font-weight: bold; }
-
-    /* Efek Loading Tombol */
-    .btn.loading {
-      position: relative;
-      color: transparent;
-      pointer-events: none;
-      background: #00bcd4;
-    }
-
-    .btn.loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      margin-top: -10px;
-      margin-left: -10px;
-      border: 3px solid #e000ff; /* Warna loading neon ungu */
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* --- Modal Kustom (Popup) --- */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9); /* Overlay lebih gelap */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
-    }
-
-    .modal-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .modal-content {
-        background: #1a0a2e; /* Ungu gelap */
-        color: #e0e0e0;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 0 30px rgba(224, 0, 255, 0.7), inset 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu */
-        width: 90%;
-        max-width: 480px; /* Sedikit lebih lebar */
-        transform: translateY(-50px) scale(0.9); /* Efek masuk lebih dramatis */
-        opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-out; /* Animasi bounce */
-        position: relative;
-        border: 2px solid rgba(224, 0, 255, 0.8);
-    }
-
-    .modal-overlay.active .modal-content {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-
-    .modal-content h2 {
-        font-family: 'Orbitron', sans-serif;
-        color: #39ff14; /* Hijau neon untuk judul modal */
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2em;
-        text-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-.modal-content label {
-    display: block;
-    margin-bottom: 8px;
-    color: #00bcd4; /* Label biru neon */
-    font-size: 0.95em;
-    text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
-}
-
-.modal-content input[type="text"],
-.modal-content input[type="email"],
-.modal-content input[type="number"],
-.modal-content select {
-    width: 100%;
-    padding: 12px 18px;
-    margin-bottom: 20px; /* Jarak antar input lebih besar */
-    border-radius: 10px;
-    border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
-    background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
-    color: #e0e0e0;
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.modal-content input:focus,
-.modal-content select:focus {
-    outline: none;
-    border-color: #39ff14; /* Border hijau neon saat fokus */
-    box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content input::placeholder {
-    color: #888;
-}
-
-.modal-content input[readonly] {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-color: rgba(0, 255, 255, 0.2);
-    cursor: default;
-}
-
-/* --- Penyesuaian Baru/Modifikasi --- */
-.input-group-with-copy { /* Kelas baru untuk membungkus label, input, dan button copy */
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px; /* Jarak antar grup */
-    gap: 10px; /* Jarak antara input dan button */
-}
-
-.input-group-with-copy label {
-    margin-bottom: 0; /* Hapus margin-bottom default */
-    flex-shrink: 0; /* Pastikan label tidak menyusut */
-    white-space: nowrap; /* Pastikan teks label tidak pecah baris */
-    padding-right: 5px; /* Sedikit padding agar tidak terlalu mepet */
-}
-
-.input-group-with-copy input[type="text"] {
-    flex-grow: 1; /* Biarkan input mengambil sisa ruang yang tersedia */
-    margin-bottom: 0; /* Hapus margin-bottom default */
-}
-
-.btn-copy {
-    background: #e000ff !important;
-    color: white !important;
-    border-radius: 8px !important;
-    padding: 8px 15px !important;
-    font-size: 0.9em !important;
-    /* margin-left: 10px; <--- HAPUS ATAU KOMENTARI INI */
-    box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
-    flex-shrink: 0; /* Penting: mencegah button menyusut */
-    border: 1px solid rgba(224, 0, 255, 0.8);
-    /* Lebar tetap, bisa disesuaikan jika perlu */
-    min-width: 80px; /* Minimum width untuk tombol Salin */
-    text-align: center;
-    display: flex; /* Untuk ikon dan teks sejajar */
-    align-items: center;
-    justify-content: center;
-    gap: 5px; /* Jarak antara ikon dan teks */
-}
-
-.btn-copy:hover {
-    background: #39ff14 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
-    border-color: rgba(57, 255, 20, 1);
-}
-
-/* Media Queries untuk Responsif */
-@media (max-width: 480px) {
-    .input-group-with-copy {
-        flex-direction: column; /* Ubah ke kolom pada layar sangat kecil */
-        align-items: flex-start; /* Sejajarkan ke kiri */
-        gap: 5px; /* Kurangi gap */
-    }
-    .input-group-with-copy label {
-        width: 100%; /* Label ambil penuh lebar */
-    }
-    .input-group-with-copy input[type="text"] {
-        width: 100%; /* Input ambil penuh lebar */
-    }
-    .btn-copy {
-        width: 100%; /* Tombol salin ambil penuh lebar juga */
-        min-width: unset; /* Hapus min-width */
-        padding: 10px 15px !important; /* Sesuaikan padding */
-    }
-}
-
-    #form-qris {
-        text-align: center;
-        margin: 25px 0;
-    }
-
-    #gambar-qris {
-        max-width: 100%;
-        height: auto;
-        border-radius: 15px;
-        border: 3px solid #39ff14; /* Border hijau neon */
-        box-shadow: 0 0 25px rgba(57, 255, 20, 0.7); /* Glow hijau */
-    }
-
-    /* --- Game Grid --- */
-    .game-grid-section {
-        margin-top: 50px;
-    }
-
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Ukuran lebih kecil: min 100px */
-        gap: 15px; /* Jarak antar game lebih kecil */
-        padding: 10px;
-        border-radius: 15px;
-        background: rgba(0,0,0,0.6);
-        box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-    }
-
-    .game-item {
-        background: rgba(10, 10, 30, 0.8); /* Background item game lebih gelap */
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: block;
-        position: relative;
-        padding-top: 100%; /* Rasio aspek 1:1, untuk gambar persegi */
-        height: 0;
-        border: 1px solid rgba(224, 0, 255, 0.2);
-    }
-
-    .game-item:hover {
-        transform: translateY(-5px) scale(1.05); /* Efek hover lebih menonjol */
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4); /* Glow biru kuat */
-        border-color: rgba(0, 255, 255, 0.8);
-    }
-
-    .game-item a {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: block; /* Penting untuk link */
-        text-decoration: none;
-    }
-
-    .game-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px; /* Ikuti border radius parent */
-        transition: transform 0.3s ease; /* Transisi untuk gambar saat hover */
-    }
-
-    .game-item:hover img {
-        transform: scale(1.05); /* Gambar sedikit membesar saat hover */
-    }
-
-
-    /* Responsif untuk Mobile */
-    @media (max-width: 768px) {
-      .container {
-        margin: 15px 10px 50px;
-        padding: 25px;
-        border-radius: 20px;
-      }
-      .saldo {
-        font-size: 1.1em;
-        top: 15px;
-        left: 15px;
-        padding: 8px 15px;
-        border-radius: 12px;
-      }
-      h1 {
-        font-size: 2em;
-        margin-bottom: 35px;
-        padding-top: 10px;
-      }
-      .btn-group {
-        flex-direction: row; /* Tetap sejajar di sini */
-        justify-content: space-around; /* Lebih merata */
-        gap: 8px; /* Jarak lebih kecil */
-      }
-      .btn {
-        width: auto; /* Biarkan konten menentukan lebar */
-        flex-grow: 1; /* Agak memanjang */
-        padding: 9px 15px;
-        font-size: 0.9em;
-        border-radius: 20px;
-        max-width: 140px; /* Batasi lagi di tablet */
-      }
-      h2 {
-        font-size: 1.6em;
-        margin-top: 30px;
-        margin-bottom: 20px;
-      }
-      th, td {
-        padding: 10px;
-        font-size: 0.85em;
-      }
-      .modal-content {
-        padding: 25px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.8em;
-      }
-      .modal-content button {
-        padding: 10px 20px;
-        font-size: 0.9em;
-      }
-      .btn-copy {
-        font-size: 0.5em !important;
-        padding: 5px 5px !important;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Lebih kecil lagi untuk tablet */
-        gap: 10px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px 5px 40px;
-        padding: 20px;
-        border-radius: 18px;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 255, 0.4);
-      }
-      .saldo {
-        font-size: 1em;
-        top: 10px;
-        left: 10px;
-        padding: 6px 12px;
-        border-radius: 10px;
-      }
-      h1 {
-        font-size: 2em; /* Tetap besar agar menarik */
-        margin-bottom: 30px;
-      }
-      .btn-group {
-        flex-wrap: wrap; /* Pastikan membungkus */
-        justify-content: center; /* Pusat tombol */
-        gap: 8px; /* Jarak antar tombol */
-      }
-      .btn {
-        width: 48%; /* Dua kolom per baris */
-        padding: 8px 12px;
-        font-size: 0.85em;
-        max-width: none; /* Biarkan 48% yang mengatur */
-      }
-      h2 {
-        font-size: 1.4em;
-        margin-top: 25px;
-        margin-bottom: 15px;
-      }
-      .modal-content {
-        padding: 20px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.6em;
-      }
-      .modal-content input,
-      .modal-content select {
-        font-size: 0.9em;
-        padding: 10px 15px;
-      }
-      .modal-content button {
-        padding: 10px 18px;
-        font-size: 0.85em;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Paling kecil untuk ponsel */
-        gap: 8px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-    }
-    .marquee{
-      color: gold;
-    }
-  </style>
+        /* Audio Controls (Optional) */
+        audio {
+            display: none; /* Hide default audio player */
+        }
+        .audio-controls {
+            position: fixed;
+            bottom: 15px;
+            right: 15px;
+            z-index: 1001;
+        }
+        .audio-toggle {
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid #39ff14;
+            color: #39ff14;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+            transition: all 0.3s ease;
+        }
+        .audio-toggle:hover {
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+        }
+    </style>
 </head>
 <body>
-  <audio id="background-music" loop autoplay>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <audio id="background-music" loop>
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-futuristic-software-interface-tone-2537.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="click-sound">
+        <source src="https://assets.mixkit.co/sfx/preview/mixkit-button-click-1122.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-  <audio id="click-sound">
-    <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
+    <div class="container">
+        <h1>GameZone</h1>
 
-  <div class="container">
-    <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
-    <h1>PROFIL PEMAIN</h1>
-  <div class="marquee">
- <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee>
-
-    <div class="btn-group">
-      <button class="btn" id="btn-deposit">Deposit</button>
-      <button class="btn" id="btn-withdraw">Penarikan</button>
-      <button class="btn" id="btn-history">Riwayat</button> </div>
-
-    <div id="section-deposit-history" style="display:none;">
-      <h2>Riwayat Deposit</h2>
-      <table id="riwayat-deposit">
-        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div id="section-withdraw-history" style="display:none;">
-      <h2>Riwayat Penarikan</h2>
-      <table id="riwayat-penarikan">
-        <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-        <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-      </table>
-    </div>
-
-    <div class="game-grid-section">
-      <h2>PILIH GAME</h2>
-      <div class="game-grid" id="game-display-grid">
+        <div class="profile-header">
+            <p id="saldo-display">Saldo: Rp.0</p>
+            <div class="action-buttons">
+                <button class="btn" id="btn-deposit">Deposit</button>
+                <button class="btn" id="btn-withdraw">Penarikan</button>
+                <button class="btn btn-history" id="btn-history">Riwayat</button>
+            </div>
         </div>
+
+        <h2>Daftar Game</h2>
+        <div class="game-grid" id="game-display-grid">
+            </div>
+
     </div>
-  </div>
 
     <div id="modal-deposit" class="modal-overlay">
-    <div class="modal-content">
-      <h2>DEPOSIT VIA DANA</h2>
-      <label for="dep-nama">Nama Penerima:</label>
-      <input type="text" id="dep-nama" placeholder="Nama" readonly />
+        <div class="modal-content">
+            <h2>Deposit</h2>
+            <label for="dep-nama">Nama Pengirim:</label>
+            <input type="text" id="dep-nama" placeholder="Nama Anda" readonly>
 
-      <label for="dep-email">Email Pemain:</label>
-      <input type="email" id="dep-email" placeholder="Email" readonly />
+            <label for="dep-email">Email Pengguna:</label>
+            <input type="email" id="dep-email" placeholder="Email Anda" readonly>
 
-      <div class="input-group-with-copy"> <label for="dep-nomor">Nomor Tujuan:</label> <input type="text" id="dep-nomor" placeholder="Nomor" readonly /> <button class="btn-copy" data-target="dep-nomor">
-          <i class="fas fa-copy"></i> Salin
-        </button>
-      </div>
+            <label for="dep-nomor">Nomor Tujuan:</label>
+            <div class="copy-group">
+                <input type="text" id="dep-nomor" placeholder="Nomor E-Wallet/Bank Tujuan" readonly>
+                <button class="btn-copy" data-target="dep-nomor">Salin</button>
+            </div>
 
-      <div style="text-align:center; margin: 25px 0;">
-        <button class="secondary" id="btn-qris">QRIS</button>
-        <button class="secondary" id="btn-kembali-ewallet" style="display:none;">Kembali eWallet</button>
-      </div>
+            <label for="dep-jumlah">Jumlah Deposit (Rp):</label>
+            <input type="number" id="dep-jumlah" placeholder="Contoh: 50000" required>
 
-      <div id="form-qris" style="display:none;">
-        <img src="" alt="QRIS" id="gambar-qris" />
-      </div>
+            <div id="form-qris" style="display: none;">
+                <label>Scan QRIS ini:</label>
+                <img id="gambar-qris" src="" alt="QRIS Code">
+            </div>
 
-      <label for="dep-jumlah">Jumlah (Rp):</label>
-      <input type="number" id="dep-jumlah" placeholder="Contoh: 50000" />
-
-  <button class="primary" id="dep-submit">Kirim</button>
-  <button class="secondary" onclick="closeModal('modal-deposit')">Batal</button>
-</div>
- </div>
-     
-  <div id="modal-withdraw" class="modal-overlay">
-    <div class="modal-content">
-      <h2>PENARIKAN DANA</h2>
-      <label for="with-nama">Nama Penerima:</label>
-      <input type="text" id="with-nama" placeholder="Nama Lengkap" />
-
-      <label for="with-email">Email:</label>
-      <input type="email" id="with-email" placeholder="Email" readonly />
-
-      <label for="with-metode">Metode Penarikan:</label>
-      <select id="with-metode">
-        <option value="">Pilih e-Wallet/Bank</option>
-        <option value="DANA">DANA</option>
-        <option value="OVO">OVO</option>
-        <option value="GoPay">GoPay</option>
-        <option value="Bank">Transfer Bank</option>
-      </select>
-
-      <label for="with-nomor">No. Rekening/Ponsel:</label>
-      <input type="text" id="with-nomor" placeholder="Nomor Rekening/Ponsel" />
-
-      <label for="with-bank" id="label-bank" style="display:none;">Nama Bank:</label>
-      <input type="text" id="with-bank" placeholder="Contoh: BCA / Mandiri" style="display:none;" />
-
-      <label for="with-jumlah">Jumlah (Rp):</label>
-      <input type="number" id="with-jumlah" placeholder="Contoh: 100000" />
-
-
-  <button class="primary" id="with-submit">Kirim</button>
-  <button class="secondary" onclick="closeModal('modal-withdraw')">Batal</button>
-     </div>
+            <div class="modal-buttons">
+                <button class="primary" id="dep-submit" data-metode="eWallet">Kirim</button>
+                <button class="secondary" onclick="closeModal('modal-deposit')">Batal</button>
+                <button class="secondary" id="btn-qris">QRIS</button>
+                <button class="secondary" id="btn-kembali-ewallet">Kembali ke E-Wallet</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <div id="modal-history" class="modal-overlay">
-    <div class="modal-content">
-      <h2>RIWAYAT TRANSAKSI</h2>
-      <div id="history-content">
-        <h3>Riwayat Deposit</h3>
-        <table id="riwayat-deposit-modal">
-          <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-          <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-        </table>
+    <div id="modal-withdraw" class="modal-overlay">
+        <div class="modal-content">
+            <h2>Penarikan Dana</h2>
+            <label for="with-nama">Nama Penerima:</label>
+            <input type="text" id="with-nama" placeholder="Nama Lengkap Anda" required>
 
-        <h3>Riwayat Penarikan</h3>
-        <table id="riwayat-penarikan-modal">
-          <thead><tr><th>Tanggal</th><th>Jumlah (Rp)</th><th>Status</th></tr></thead>
-          <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
-        </table>
-      </div>
-      <div class="modal-buttons">
-        <button class="secondary" onclick="closeModal('modal-history')">Tutup</button>
-      </div>
+            <label for="with-email">Email Pengguna:</label>
+            <input type="email" id="with-email" placeholder="Email Anda" readonly>
+
+            <label for="with-metode">Metode Penarikan:</label>
+            <select id="with-metode" required>
+                <option value="">Pilih Metode</option>
+                <option value="OVO">OVO</option>
+                <option value="DANA">DANA</option>
+                <option value="Gopay">Gopay</option>
+                <option value="Bank">Transfer Bank</option>
+            </select>
+
+            <label for="with-bank" id="label-bank" style="display: none;">Nama Bank:</label>
+            <input type="text" id="with-bank" placeholder="Contoh: BCA / Mandiri" style="display: none;">
+
+            <label for="with-nomor">Nomor Rekening/Ponsel:</label>
+            <input type="text" id="with-nomor" placeholder="Nomor Rekening / Nomor Ponsel E-Wallet" required>
+
+            <label for="with-jumlah">Jumlah Penarikan (Rp):</label>
+            <input type="number" id="with-jumlah" placeholder="Minimum 50000" required>
+
+            <div class="modal-buttons">
+                <button class="primary" id="with-submit">Kirim</button>
+                <button class="secondary" onclick="closeModal('modal-withdraw')">Batal</button>
+            </div>
+        </div>
     </div>
-  </div>
 
-<a href="https://wa.me/628892l3707993" target="_blank" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
-       alt="WhatsApp" 
-       style="width:30px; height:30px;">
-</a>
+    <div id="modal-history" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2>Riwayat Transaksi</h2>
+            <h3>Deposit</h3>
+            <div class="history-section">
+                <table id="riwayat-deposit-modal">
+                    <thead><tr><th>Tanggal</th><th>Jumlah</th><th>Status</th></tr></thead>
+                    <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
+                </table>
+            </div>
+            <h3>Penarikan</h3>
+            <div class="history-section">
+                <table id="riwayat-penarikan-modal">
+                    <thead><tr><th>Tanggal</th><th>Jumlah</th><th>Status</th></tr></thead>
+                    <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
+                </table>
+            </div>
+            <div class="modal-buttons">
+                <button class="primary" onclick="closeModal('modal-history')">Tutup</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // GANTI DENGAN URL SUPABASE ANDA DAN ANON KEY ANDA!
+        const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co'; // Contoh: 'https://vqmfachxnjyxwuavpgds.supabase.co'
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'; // Contoh: 'eyJhbGciOiJIUzI1NiI...'
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-  
-        const supabase = window.supabase.createClient(
-          'https://vqmfachxnjyxwuavpgds.supabase.co',
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
-        );
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         let uid = localStorage.getItem('uid');
 
@@ -838,8 +560,8 @@
           if (!uid) {
               console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
               document.getElementById('saldo-display').textContent = 'Saldo: Rp.0 (Harap Login)';
-              document.querySelector('#riwayat-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
-              document.querySelector('#riwayat-penarikan tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+              document.querySelector('#riwayat-deposit-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+              document.querySelector('#riwayat-penarikan-modal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
               return;
           }
 
@@ -874,8 +596,7 @@
               // Example: if (userData.first_deposit) { /* show message */ } else { /* show message */ }
           }
         }
-
-        // Load deposit/withdrawal history
+         // Load deposit/withdrawal history
         async function loadHistory(tableId, tableName) {
           const isDeposit = tableName === 'deposit_requests';
           const tableBody = document.querySelector(`#${tableId} tbody`);
@@ -970,7 +691,6 @@
                 }
             }
         }
-
         // Deposit button logic
         document.getElementById('btn-deposit').onclick = async () => {
           if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan deposit.'); return; }
@@ -1144,11 +864,11 @@
                 }
                 const accessToken = session.data.session.access_token;
 
-                
-                const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/processed_withdrawal';
+                // GANTI DENGAN URL SUPABASE ANDA DAN NAMA EDGE FUNCTION PENARIKAN ANDA!
+                // Pastikan nama Edge Function sesuai dengan yang Anda deploy (misal: 'processed_withdrawal')
+                const edgeFunctionUrl = `${SUPABASE_URL}https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/processed_withdrawal`; // Contoh: 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/processed_withdrawal'
 
-
-                
+                // Send withdrawal request to the secure Edge Function
                 const response = await fetch(edgeFunctionUrl, {
                     method: 'POST',
                     headers: {
