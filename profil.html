@@ -1144,7 +1144,10 @@
                 }
                 const accessToken = session.data.session.access_token;
 
+                
                 const edgeFunctionUrl = 'https://vqmfachxnjyxwuavpgds.supabase.co/functions/v1/processed_withdrawal';
+
+
                 
                 const response = await fetch(edgeFunctionUrl, {
                     method: 'POST',
