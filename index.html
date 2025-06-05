@@ -38,12 +38,12 @@
   .container {
     position: relative;
     z-index: 1;
-    width: 90%;
+    width: 100%;
     max-width: 450px; /* Lebar maksimum seperti di gambar */
-    margin: 20px auto; /* Margin atas bawah agar tidak terlalu mepet */
+    margin: 0px auto; /* Margin atas bawah agar tidak terlalu mepet */
     background: rgba(0, 0, 0, 0.7); /* Lebih transparan agar efek neon lebih menonjol */
     border-radius: 15px;
-    padding: 30px 40px;
+    padding: 0px 0px;
     box-shadow: 0 0 20px rgba(102, 0, 255, 0.0), /* Ungu neon */
                 0 0 40px rgba(102, 0, 255, 0.0),
                 0 0 60px rgba(102, 0, 255, 0.0);
@@ -51,7 +51,7 @@
     animation: fadeIn 1s ease-out;
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Jarak antar elemen utama */
+    gap: 2px; /* Jarak antar elemen utama */
   }
 
   /* Inner Neon Border for container */
@@ -87,7 +87,7 @@
     animation: neon-glow-yellow 1.5s ease-in-out infinite alternate;
     margin-top: 0;
     line-height: 1.2;
-    padding-bottom: 10px;
+    padding-bottom: 0px;
     border-bottom: 2px solid #ff00ff; /* Garis bawah magenta */
   }
 
@@ -106,7 +106,7 @@
   .tabs {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 30px;
+    margin-bottom: 0px;
     background: rgba(255, 255, 255, 0.05); /* Sedikit transparan */
     border-radius: 15px; /* Lebih membulat */
     overflow: hidden;
@@ -155,7 +155,7 @@
     display: none;
     flex-direction: column;
     animation: slideIn 0.5s ease-out;
-    gap: 15px; /* Jarak antar elemen form */
+    gap: 10px; /* Jarak antar elemen form */
   }
 
   @keyframes slideIn {
@@ -383,6 +383,16 @@
     object-fit: cover; /* Pastikan gambar mengisi kotak tanpa terdistorsi */
     display: block; /* Menghilangkan spasi ekstra di bawah gambar */
 }
+    .image-wrapper1 { /* Kontainer untuk gambar statis */
+    width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
+    height: 70px;  /* Tinggi kotak gambar (sesuaikan jika perlu) */
+    background-color: transparent; /* Warna latar belakang kotak (opsional, jika gambar transparan) */
+    border-radius: 2px; /* Sudut melengkung untuk kotak */
+    overflow: hidden; /* Penting jika gambar Anda sedikit lebih besar */
+    display: flex;
+    justify-content: center;
+    align-items: center; /* Untuk memusatkan gambar di dalam kotak */
+    box-shadow: 0 0 10px rgba(255, 0, 255, 0.9); /* Efek neon border seperti yang Anda inginkan */
   }
 </style>
 </head>
@@ -395,6 +405,11 @@
     <button class="tab-btn active" data-tab="login">Login</button>
     <button class="tab-btn" data-tab="register">Daftar</button>
   </div>
+  <div class="image-wrapper1">
+            <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images.jpeg" alt="Dekorasi Login" class="static-image">
+            
+        </div>
+  
  <div class="image-wrapper">
             <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//daftar-disini-cwkbet.gif" alt="Dekorasi Login" class="static-image">
         </div>
