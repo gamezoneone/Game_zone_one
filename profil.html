@@ -608,7 +608,7 @@
   </audio>
 
   <div class="container">
-    <div class="saldo" id="saldo-display">Saldo: Rp0</div>
+    <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
     <h1>PROFIL PEMAIN</h1>
 
     <div class="btn-group">
@@ -827,7 +827,7 @@
     async function loadProfile() {
       if (!uid) {
           console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
-          document.getElementById('saldo-display').textContent = 'Saldo: Rp0 (Harap Login)';
+          document.getElementById('saldo-display').textContent = 'Saldo: Rp.0 (Harap Login)';
           document.querySelector('#riwayat-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
           document.querySelector('#riwayat-penarikan tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
           return;
@@ -842,11 +842,11 @@
       if (userError && userError.code !== 'PGRST116') {
         console.error('Error memuat data saldo:', userError.message);
         showModal('error-modal', 'Error', 'Gagal memuat data saldo: ' + userError.message);
-        document.getElementById('saldo-display').textContent = `Saldo: Rp0 (Error)`;
+        document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error)`;
         return;
       } else if (userError && userError.code === 'PGRST116') {
           console.warn('Pengguna baru, membuat entri saldo awal...');
-          document.getElementById('saldo-display').textContent = `Saldo: Rp0 (Baru)`;
+          document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Baru)`;
           const { error: insertError } = await supabase
               .from('users_data')
               .insert([{ user_id: uid, saldo: 0 }]);
@@ -854,11 +854,11 @@
           if (insertError) {
               console.error('Error saat membuat entri saldo awal:', insertError.message);
               showModal('error-modal', 'Error Inisialisasi', 'Gagal membuat entri saldo awal. Cek log.');
-              document.getElementById('saldo-display').textContent = `Saldo: Rp0 (Error Inisialisasi)`;
+              document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error Inisialisasi)`;
           }
 
       } else {
-          document.getElementById('saldo-display').textContent = `Saldo: Rp${(userData.saldo ?? 0).toLocaleString('id-ID')}`;
+          document.getElementById('saldo-display').textContent = `Saldo: Rp.${(userData.saldo ?? 0).toLocaleString('id-ID')}`;
       }
     }
     async function loadHistory(tableId, tableName) {
