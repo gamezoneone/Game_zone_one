@@ -1177,7 +1177,7 @@
             }
             const accessToken = session.data.session.access_token;
 
-            const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawa`;
+            const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawal`;
 
             const response = await fetch(edgeFunctionUrl, {
                 method: 'POST',
