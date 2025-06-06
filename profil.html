@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Pengguna - Game Zone One</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background-color: #0d1a26; /* Darker blue-black */
+            color: #39ff14; /* Neon green */
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden; /* Prevent horizontal scroll */
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/background%20(1).jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header {
+            background-color: rgba(13, 26, 38, 0.8); /* Semi-transparent header */
+            padding: 15px 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ffff; /* Cyberpunk blue accent */
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            color: #00ffff;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 20px; /* Add padding-top to account for fixed header */
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .profile-card, .game-grid {
+            background-color: rgba(13, 26, 38, 0.9); /* Darker semi-transparent */
+            border: 2px solid #39ff14; /* Neon green border */
+            border-radius: 10px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.5), inset 0 0 10px rgba(57, 255, 20, 0.3);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 25px rgba(57, 255, 20, 0.5), inset 0 0 10px rgba(57, 255, 20, 0.3);
+            }
+            to {
+                box-shadow: 0 0 35px rgba(57, 255, 20, 0.8), inset 0 0 15px rgba(57, 255, 20, 0.5);
+            }
+        }
+
+        h1, h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.7);
+            margin-bottom: 20px;
+        }
+
+        .saldo-info {
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            color: #39ff14;
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.6);
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: #00ffff; /* Cyber blue */
+            color: #0d1a26; /* Dark text for contrast */
+            border: 2px solid #00ffff;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.6);
+            flex-basis: calc(50% - 15px); /* Two columns on larger screens */
+            max-width: 200px; /* Limit individual button width */
+        }
+
+        .btn:hover {
+            background-color: #39ff14; /* Neon green on hover */
+            color: #0d1a26;
+            border-color: #39ff14;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .btn-logout {
+            background-color: #ff4d4d; /* Red for logout */
+            border-color: #ff4d4d;
+            box-shadow: 0 0 10px rgba(255, 77, 77, 0.6);
+        }
+
+        .btn-logout:hover {
+            background-color: #ff1a1a;
+            border-color: #ff1a1a;
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.8);
+        }
+
+        .game-grid {
+            max-width: 800px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            text-align: center;
+        }
+
+        .game-item {
+            background-color: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            padding: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+        }
+
+        .game-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            border: 1px solid #39ff14;
+        }
+
+        .game-item a {
+            color: #00ffff;
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            margin-top: 10px;
+            display: block;
+        }
+
+        /* --- Modal Styles --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 2000;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: #0d1a26;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), inset 0 0 10px rgba(0, 255, 255, 0.4);
+            transform: translateY(-50px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #39ff14;
+            text-shadow: 0 0 8px rgba(57, 255, 20, 0.7);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00ffff;
+            font-size: 0.9em;
+        }
+
+        .modal-content input, .modal-content select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: 1px solid #39ff14;
+            border-radius: 5px;
+            color: #39ff14;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 1em;
+            box-shadow: inset 0 0 5px rgba(57, 255, 20, 0.4);
+        }
+
+        .modal-content input::placeholder {
+            color: rgba(57, 255, 20, 0.6);
+        }
+        .modal-content select option {
+            background-color: #0d1a26;
+            color: #39ff14;
+        }
+
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            background-color: #00ffff;
+            color: #0d1a26;
+            border: 2px solid #00ffff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(0, 255, 255, 0.6);
+        }
+
+        .modal-buttons button:hover {
+            background-color: #39ff14;
+            border-color: #39ff14;
+            box-shadow: 0 0 12px rgba(57, 255, 20, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .modal-buttons .secondary {
+            background-color: #555;
+            border-color: #555;
+            color: #eee;
+            box-shadow: none;
+        }
+
+        .modal-buttons .secondary:hover {
+            background-color: #777;
+            border-color: #777;
+            color: #fff;
+            box-shadow: none;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: #ff4d4d;
+            cursor: pointer;
+            transition: color 0.2s;
+            text-shadow: 0 0 5px rgba(255, 77, 77, 0.7);
+        }
+
+        .modal-close-btn:hover {
+            color: #ff1a1a;
+            text-shadow: 0 0 8px rgba(255, 26, 26, 0.9);
+        }
+
+        #form-qris {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #gambar-qris {
+            max-width: 80%;
+            height: auto;
+            border: 2px solid #00ffff;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .copy-input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .copy-input-group input {
+            flex-grow: 1;
+            margin-bottom: 0; /* Remove bottom margin from input in group */
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .btn-copy {
+            background-color: #39ff14;
+            color: #0d1a26;
+            border: 2px solid #39ff14;
+            padding: 10px 15px;
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
+            margin-left: -2px; /* Overlap border */
+        }
+
+        .btn-copy:hover {
+            background-color: #00ffff;
+            border-color: #00ffff;
+            box-shadow: 0 0 12px rgba(0, 255, 255, 0.8);
+        }
+
+        #riwayat-modal table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+
+        #riwayat-modal th, #riwayat-modal td {
+            border: 1px solid #00ffff;
+            padding: 10px;
+            text-align: left;
+            color: #39ff14;
+        }
+
+        #riwayat-modal th {
+            background-color: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+            font-family: 'Orbitron', sans-serif;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        #riwayat-modal tbody tr:nth-child(even) {
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        #riwayat-modal tbody tr:nth-child(odd) {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #riwayat-modal .status-pending { color: #ffeb3b; } /* Yellow */
+        #riwayat-modal .status-approved { color: #39ff14; } /* Green */
+        #riwayat-modal .status-rejected { color: #ff4d4d; } /* Red */
+        #riwayat-modal .empty {
+            text-align: center;
+            font-style: italic;
+            color: #aaa;
+            padding: 15px;
+        }
+
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tab-buttons button {
+            background-color: rgba(0, 255, 255, 0.2);
+            border: 1px solid #00ffff;
+            color: #00ffff;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .tab-buttons button.active {
+            background-color: #00ffff;
+            color: #0d1a26;
+            box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Audio Player Styling */
+        audio {
+            width: 100%;
+            max-width: 300px;
+            margin-top: 20px;
+            display: none; /* Hide default controls */
+        }
+
+        .music-control-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(13, 26, 38, 0.9);
+            border: 1px solid #00ffff;
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+            z-index: 1500;
+        }
+
+        .music-control-panel button {
+            background: none;
+            border: none;
+            color: #39ff14;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: color 0.2s, text-shadow 0.2s;
+            text-shadow: 0 0 5px rgba(57, 255, 20, 0.5);
+        }
+
+        .music-control-panel button:hover {
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+        }
+
+        .music-control-panel span {
+            color: #ccc;
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            .header {
+                font-size: 1.5em;
+                padding: 10px;
+            }
+            .profile-card, .game-grid {
+                padding: 20px;
+                margin: 15px 0;
+            }
+            .btn {
+                flex-basis: 100%; /* Stack buttons on small screens */
+                max-width: none;
+                padding: 10px 20px;
+            }
+            .modal-content {
+                padding: 20px;
+            }
+            .modal-content h2 {
+                font-size: 1.2em;
+            }
+            .modal-content input, .modal-content select {
+                font-size: 0.9em;
+            }
+            .music-control-panel {
+                bottom: 10px;
+                padding: 8px 10px;
+                gap: 5px;
+            }
+            .music-control-panel button {
+                font-size: 1.2em;
+            }
+        }
+    </style>
+</head>
+<body>
+   <audio id="background-music" loop>
+        <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/Music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+    <audio id="click-sound">
+        <source src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/button-21.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <header class="header">
+        Game Zone One
+    </header>
+
+    <div class="container">
+        <div class="profile-card">
+            <h2>Profil Pengguna</h2>
+            <p id="saldo-display" class="saldo-info">Saldo: Rp.0 (Memuat...)</p>
+            <div class="btn-group">
+                <button class="btn" id="btn-deposit">Deposit</button>
+                <button class="btn" id="btn-withdraw">Penarikan</button>
+                <button class="btn" id="btn-history">Riwayat Transaksi</button>
+                <button class="btn btn-logout" id="btn-logout">Logout</button>
+            </div>
+        </div>
+
+        <div class="game-grid" id="game-display-grid">
+            <h2>Pilihan Game</h2>
+            </div>
+    </div>
+
+    <div id="modal-deposit" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-deposit')">&times;</button>
+            <h2>Deposit Dana</h2>
+            <div class="copy-input-group">
+                <label for="dep-nama">Nama Pemilik E-Wallet:</label>
+                <input type="text" id="dep-nama" readonly>
+                <button class="btn-copy" data-target="dep-nama">Salin</button>
+            </div>
+            <div class="copy-input-group">
+                <label for="dep-nomor">Nomor E-Wallet / Rekening Tujuan:</label>
+                <input type="text" id="dep-nomor" readonly>
+                <button class="btn-copy" data-target="dep-nomor">Salin</button>
+            </div>
+            <label for="dep-email">Email Anda:</label>
+            <input type="email" id="dep-email" readonly required>
+            <label for="dep-jumlah">Jumlah Deposit (Rp):</label>
+            <input type="number" id="dep-jumlah" placeholder="Minimal Rp. 10.000" min="10000" required>
+
+            <div id="form-qris">
+                <h3>Scan QRIS untuk Pembayaran</h3>
+                <img id="gambar-qris" src="" alt="QRIS Code">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn" id="dep-submit">Kirim Permintaan Deposit</button>
+                <button class="btn secondary" id="btn-qris">Bayar Via QRIS</button>
+                <button class="btn secondary" id="btn-kembali-ewallet" style="display:none;">Kembali ke E-Wallet</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-withdraw" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-withdraw')">&times;</button>
+            <h2>Penarikan Dana</h2>
+            <label for="with-nama">Nama Pemilik Rekening:</label>
+            <input type="text" id="with-nama" placeholder="Nama Lengkap Pemilik Rekening/E-Wallet" required>
+            <label for="with-email">Email Anda:</label>
+            <input type="email" id="with-email" readonly required>
+            <label for="with-metode">Metode Penarikan:</label>
+            <select id="with-metode" required>
+                <option value="">Pilih Metode</option>
+                <option value="Bank">Transfer Bank</option>
+                <option value="Dana">DANA</option>
+                <option value="OVO">OVO</option>
+                <option value="Gopay">Gopay</option>
+            </select>
+            <label for="with-bank" id="label-bank" style="display:none;">Nama Bank (jika Transfer Bank):</label>
+            <input type="text" id="with-bank" placeholder="Contoh: BCA, BRI" style="display:none;">
+            <label for="with-nomor">Nomor Rekening / E-Wallet:</label>
+            <input type="text" id="with-nomor" placeholder="Nomor Rekening atau Nomor E-Wallet" required>
+            <label for="with-jumlah">Jumlah Penarikan (Rp):</label>
+            <input type="number" id="with-jumlah" placeholder="Jumlah yang ingin ditarik" min="10000" required>
+            <div class="modal-buttons">
+                <button class="btn" id="with-submit">Ajukan Penarikan</button>
+                <button class="btn secondary" onclick="closeModal('modal-withdraw')">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-history" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-btn" onclick="closeModal('modal-history')">&times;</button>
+            <h2>Riwayat Transaksi</h2>
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="deposit">Deposit</button>
+                <button class="tab-btn" data-tab="withdraw">Penarikan</button>
+            </div>
+
+            <div id="tab-deposit" class="tab-content active">
+                <h3>Riwayat Deposit</h3>
+                <table id="riwayat-deposit-modal">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" class="empty">Memuat riwayat deposit...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="tab-withdraw" class="tab-content">
+                <h3>Riwayat Penarikan</h3>
+                <table id="riwayat-penarikan-modal">
+                    <thead>
+                        <tr>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="3" class="empty">Memuat riwayat penarikan...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn primary" onclick="closeModal('modal-history')">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="music-control-panel">
+        <button id="play-pause-music">
+            <span id="music-icon">&#9658;</span> </button>
+        <span id="music-status">Music: Playing</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co'; 
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'; 
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let uid = localStorage.getItem('uid');
+
+const backgroundMusic = document.getElementById('background-music');
+const clickSound = document.getElementById('click-sound');
+const playPauseMusicButton = document.getElementById('play-pause-music');
+const musicIcon = document.getElementById('music-icon');
+const musicStatus = document.getElementById('music-status');
+
+let isMusicPlaying = false; 
+
+document.addEventListener('click', () => {
+    if (!isMusicPlaying && backgroundMusic.paused) {
+        backgroundMusic.play().then(() => {
+            isMusicPlaying = true;
+            musicIcon.textContent = '⏸'; 
+            musicStatus.textContent = 'Music: Playing';
+        }).catch(e => console.log("Autoplay blocked:", e));
+    }
+}, { once: true });
+
+playPauseMusicButton.addEventListener('click', () => {
+    if (backgroundMusic.paused) {
+        backgroundMusic.play().then(() => {
+            isMusicPlaying = true;
+            musicIcon.textContent = '⏸'; 
+            musicStatus.textContent = 'Music: Playing';
+        }).catch(e => console.log("Manual play blocked:", e));
+    } else {
+        backgroundMusic.pause();
+        isMusicPlaying = false;
+        musicIcon.textContent = '🔇'; 
+        musicStatus.textContent = 'Music: Paused';
+    }
+});
+
+document.querySelectorAll('.btn, .modal-content button, .game-item').forEach(button => {
+    button.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(e => console.log("Click sound play blocked:", e));
+    });
+});
+
+async function getCurrentUserEmail() {
+  const { data: { user }, error } = await supabase.auth.getUser();
+  if (error) {
+    console.error('Error fetching user from Supabase auth:', error.message);
+    return null;
+  }
+
+  if (user && uid !== user.id) {
+      uid = user.id;
+      localStorage.setItem('uid', user.id);
+  }
+  return user ? user.email : null;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await getCurrentUserEmail(); 
+
+  if (!uid) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Sesi Habis',
+          text: 'Sesi Anda telah berakhir. Silakan login kembali.',
+          showConfirmButton: false,
+          timer: 2000
+      }).then(() => {
+          window.location.href = 'login.html';
+      });
+      return; 
+  }
+  
+  loadProfile();
+  loadGames(); 
+
+  document.querySelectorAll('.btn-copy').forEach(button => {
+    button.addEventListener('click', (event) => {
+      const targetId = event.currentTarget.dataset.target;
+      const inputElement = document.getElementById(targetId);
+      if (inputElement) {
+        inputElement.select();
+        inputElement.setSelectionRange(0, 99999);
+        try {
+          navigator.clipboard.writeText(inputElement.value)
+            .then(() => {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Berhasil Disalin!',
+                  text: 'Nomor berhasil disalin: ' + inputElement.value
+              });
+            })
+            .catch(err => {
+              console.error('Gagal menyalin teks: ', err);
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Gagal!',
+                  text: 'Gagal menyalin nomor. Silakan salin manual.'
+              });
+            });
+        } catch (err) {
+          document.execCommand('copy');
+          Swal.fire({
+              icon: 'success',
+              title: 'Berhasil Disalin!',
+              text: 'Nomor berhasil disalin: ' + inputElement.value
+          });
+        }
+      }
+    });
+  });
+
+  document.getElementById('with-metode').addEventListener('change', function() {
+    const selectedMethod = this.value;
+    const bankInput = document.getElementById('with-bank');
+    const bankLabel = document.getElementById('label-bank');
+    if (selectedMethod === 'Bank') {
+      bankInput.style.display = 'block';
+      bankLabel.style.display = 'block';
+      bankInput.setAttribute('required', 'true');
+    } else {
+      bankInput.style.display = 'none';
+      bankLabel.style.display = 'none';
+      bankInput.removeAttribute('required');
+      bankInput.value = '';
+    }
+  });
+
+  document.getElementById('btn-logout').addEventListener('click', async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+          console.error('Error logging out:', error.message);
+          Swal.fire({
+              icon: 'error',
+              title: 'Gagal Logout',
+              text: error.message
+          });
+      } else {
+          localStorage.removeItem('uid'); 
+          Swal.fire({
+              icon: 'success',
+              title: 'Berhasil Logout',
+              text: 'Anda telah berhasil keluar.',
+              showConfirmButton: false,
+              timer: 1500
+          }).then(() => {
+              window.location.href = 'login.html'; 
+          });
+      }
+  });
+
+  document.querySelectorAll('.tab-btn').forEach(button => {
+      button.addEventListener('click', function() {
+          document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+
+          document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+          document.getElementById(`tab-${this.dataset.tab}`).classList.add('active');
+      });
+  });
+});
+
+async function loadProfile() {
+  if (!uid) {
+      console.warn('UID tidak ditemukan. Tidak dapat memuat profil pengguna.');
+      document.getElementById('saldo-display').textContent = 'Saldo: Rp.0 (Harap Login)';
+      document.getElementById('saldo-display-main').textContent = 'Saldo: Rp.0 (Harap Login)';
+      document.getElementById('username-display').textContent = 'Nama Pengguna: N/A';
+      document.getElementById('email-display').textContent = 'Email: N/A';
+      document.querySelector('#tab-deposit tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+      document.querySelector('#tab-withdrawal tbody').innerHTML = '<tr><td colspan="3" class="empty">Silakan login untuk melihat riwayat.</td></tr>';
+      return;
+  }
+
+  const { data: userAuthData, error: userAuthError } = await supabase.auth.getUser();
+  if (userAuthError || !userAuthData.user) {
+      console.error('Error fetching authenticated user:', userAuthError?.message);
+      Swal.fire({
+          icon: 'error',
+          title: 'Sesi Tidak Valid',
+          text: 'Sesi pengguna tidak valid. Silakan login kembali.',
+          showConfirmButton: false,
+          timer: 2000
+      }).then(() => {
+          window.location.href = 'login.html';
+      });
+      return;
+  }
+  document.getElementById('username-display').textContent = `Nama Pengguna: ${userAuthData.user.user_metadata?.username || 'Pengguna'}`;
+  document.getElementById('email-display').textContent = `Email: ${userAuthData.user.email}`;
+
+  const { data: userData, error: userError } = await supabase
+    .from('users_data')
+    .select('saldo, total_deposit, first_deposit')
+    .eq('user_id', uid)
+    .single();
+
+  if (userError && userError.code !== 'PGRST116') { 
+    console.error('Error memuat data profil:', userError.message);
+    Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Gagal memuat data profil: ' + userError.message
+    });
+    document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error)`;
+    document.getElementById('saldo-display-main').textContent = `Saldo: Rp.0 (Error)`;
+    return;
+  } else if (userError && userError.code === 'PGRST116') {
+      console.warn('Pengguna baru, membuat entri saldo awal...');
+      document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Baru)`;
+      document.getElementById('saldo-display-main').textContent = `Saldo: Rp.0 (Baru)`;
+      const { error: insertError } = await supabase
+          .from('users_data')
+          .insert([{ user_id: uid, saldo: 0, total_deposit: 0, first_deposit: false }]);
+
+      if (insertError) {
+          console.error('Error saat membuat entri saldo awal:', insertError.message);
+          Swal.fire({
+              icon: 'error',
+              title: 'Error Inisialisasi',
+              text: 'Gagal membuat entri saldo awal. Cek log.'
+          });
+          document.getElementById('saldo-display').textContent = `Saldo: Rp.0 (Error Inisialisasi)`;
+          document.getElementById('saldo-display-main').textContent = `Saldo: Rp.0 (Error Inisialisasi)`;
+      }
+
+  } else {
+      const formattedSaldo = (userData.saldo ?? 0).toLocaleString('id-ID');
+      document.getElementById('saldo-display').textContent = `Rp.${formattedSaldo}`;
+      document.getElementById('saldo-display-main').textContent = `Saldo: Rp.${formattedSaldo}`;
+  }
+}
+async function loadHistory(tableId, tableName) {
+  if (!uid) return; 
+
+  const isDeposit = tableName === 'deposit_requests';
+  const tableBody = document.querySelector(`#${tableId} tbody`);
+  tableBody.innerHTML = '<tr><td colspan="3" class="empty">Memuat data...</td></tr>';
+
+  const { data, error } = await supabase
+    .from(tableName)
+    .select('created_at, amount, status, metode') 
+    .eq('user_id', uid)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+      console.error(`Error fetching ${tableName} history:`, error.message);
+      tableBody.innerHTML = `<tr><td colspan="3" class="empty">Gagal memuat riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
+  } else if (!data || data.length === 0) {
+    tableBody.innerHTML = `<tr><td colspan="3" class="empty">Belum ada riwayat ${isDeposit ? 'deposit' : 'penarikan'}.</td></tr>`;
+  } else {
+    tableBody.innerHTML = '';
+    data.forEach(row => {
+      const date = new Date(row.created_at).toLocaleString('id-ID');
+      const statusClass = `status-${row.status}`;
+      // Hanya tambahkan kolom metode jika ini riwayat penarikan
+      const methodCell = isDeposit ? '' : `<td>${row.metode || '-'}</td>`; 
+      tableBody.innerHTML += `<tr><td>${date}</td><td>Rp${row.amount.toLocaleString('id-ID')}</td>${methodCell}<td class="${statusClass}">${row.status.charAt(0).toUpperCase() + row.status.slice(1)}</td></tr>`;
+    });
+  }
+}
+
+function showModal(modalId) {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+        modalElement.classList.add('active');
+    }
+}
+
+function closeModal(modalId) {
+    const modalElement = document.getElementById(modalId);
+    if (modalElement) {
+        modalElement.classList.remove('active');
+        if (modalId === 'modal-deposit') {
+            document.getElementById('dep-jumlah').value = '';
+            document.getElementById('form-qris').style.display = 'none';
+            document.getElementById('btn-kembali-ewallet').style.display = 'none';
+        } else if (modalId === 'modal-withdraw') {
+            document.getElementById('with-nama').value = '';
+            document.getElementById('with-metode').value = '';
+            document.getElementById('with-nomor').value = '';
+            document.getElementById('with-jumlah').value = '';
+            document.getElementById('with-bank').style.display = 'none';
+            document.getElementById('label-bank').style.display = 'none';
+            document.getElementById('with-bank').value = ''; 
+        }
+    }
+}
+document.getElementById('btn-deposit').onclick = async () => {
+  if (!uid) { 
+      Swal.fire({ icon: 'warning', title: 'Login Diperlukan', text: 'Anda harus login untuk melakukan deposit.' }); 
+      return; 
+  }
+  showModal('modal-deposit');
+  const userEmail = await getCurrentUserEmail();
+  if (userEmail) {
+    document.getElementById('dep-email').value = userEmail;
+  }
+
+  const { data, error } = await supabase
+    .from('deposit_config')
+    .select('*')
+    .eq('metode', 'eWallet')
+    .single();
+
+  if (error || !data) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal mengambil data eWallet.' });
+    return;
+  }
+
+  document.getElementById('dep-nama').value = data.nama;
+  document.getElementById('dep-nomor').value = data.nomor;
+  document.getElementById('dep-submit').dataset.metode = 'eWallet';
+};
+
+document.getElementById('btn-qris').onclick = async () => {
+  const { data, error } = await supabase
+    .from('deposit_config')
+    .select('*')
+    .eq('metode', 'QRIS')
+    .single();
+
+  if (error || !data) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal mengambil data QRIS.' });
+    return;
+  }
+
+  document.getElementById('form-qris').style.display = 'block';
+  document.getElementById('gambar-qris').src = data.qris_url;
+  document.getElementById('dep-submit').dataset.metode = 'QRIS';
+  document.getElementById('btn-kembali-ewallet').style.display = 'inline-block';
+};
+
+document.getElementById('btn-kembali-ewallet').onclick = async () => {
+  const { data, error } = await supabase
+    .from('deposit_config')
+    .select('*')
+    .eq('metode', 'eWallet')
+    .single();
+
+  if (error || !data) {
+    Swal.fire({ icon: 'error', title: 'Error', text: 'Gagal mengambil data eWallet.' });
+    return;
+  }
+
+  document.getElementById('form-qris').style.display = 'none';
+  document.getElementById('dep-nama').value = data.nama;
+  document.getElementById('dep-nomor').value = data.nomor;
+  document.getElementById('dep-submit').dataset.metode = 'eWallet';
+  document.getElementById('btn-kembali-ewallet').style.display = 'none';
+};
+
+document.getElementById('dep-submit').onclick = async () => {
+  if (!uid) { 
+      Swal.fire({ icon: 'warning', title: 'Login Diperlukan', text: 'Anda harus login untuk melakukan deposit.' }); 
+      return; 
+  }
+  const nama = document.getElementById('dep-nama').value.trim();
+  const email = document.getElementById('dep-email').value.trim();
+  const nomor = document.getElementById('dep-nomor').value.trim();
+  const jumlah = document.getElementById('dep-jumlah').value.trim(); 
+  const metode = document.getElementById('dep-submit').dataset.metode;
+
+  if (!nama || !nomor || !jumlah || !email) {
+    Swal.fire({ icon: 'warning', title: 'Peringatan', text: 'Lengkapi semua kolom.' });
+    return;
+  }
+  const parsedJumlah = parseInt(jumlah);
+  if (isNaN(parsedJumlah) || parsedJumlah <= 0) {
+      Swal.fire({ icon: 'warning', title: 'Peringatan', text: 'Jumlah deposit harus angka positif.' });
+      return;
+  }
+  const depositTableBody = document.querySelector('#tab-deposit tbody'); 
+  const now = new Date();
+  const dateString = now.toLocaleString('id-ID');
+  const tempId = `temp-${Date.now()}`;
+  const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${parsedJumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
+
+  if (depositTableBody.querySelector('.empty')) {
+    depositTableBody.innerHTML = '';
+  }
+  depositTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+  const { error } = await supabase.from('deposit_requests').insert([
+    { user_id: uid, nama, metode, amount: parsedJumlah, status: 'pending', email: email }
+  ]);
+
+  if (error) {
+    console.error(error);
+    Swal.fire({ icon: 'error', title: 'Gagal!', text: 'Gagal kirim deposit. Silakan coba lagi. Detail: ' + error.message });
+    const tempRow = depositTableBody.querySelector(`[data-id="${tempId}"]`);
+    if (tempRow) {
+        tempRow.remove();
+    }
+  } else {
+    Swal.fire({ icon: 'success', title: 'Berhasil!', text: 'Permintaan deposit dikirim. Silakan tunggu konfirmasi admin.' });
+    closeModal('modal-deposit');
+    loadProfile(); 
+    loadHistory('tab-deposit', 'deposit_requests');
+  }
+};
+
+document.getElementById('btn-withdraw').onclick = async () => {
+  if (!uid) { 
+      Swal.fire({ icon: 'warning', title: 'Login Diperlukan', text: 'Anda harus login untuk melakukan penarikan.' }); 
+      return; 
+  }
+  showModal('modal-withdraw');
+  const userEmail = await getCurrentUserEmail();
+  if (userEmail) {
+    document.getElementById('with-email').value = userEmail;
+  }
+  // Clear fields on open
+  document.getElementById('with-nama').value = '';
+  document.getElementById('with-metode').value = '';
+  document.getElementById('with-nomor').value = '';
+  document.getElementById('with-jumlah').value = '';
+  document.getElementById('with-bank').style.display = 'none';
+  document.getElementById('label-bank').style.display = 'none';
+  document.getElementById('with-bank').value = '';
+};
+
+document.getElementById('with-submit').onclick = async () => {
+    if (!uid) { 
+        Swal.fire({ icon: 'warning', title: 'Login Diperlukan', text: 'Anda harus login untuk melakukan penarikan.' }); 
+        return; 
+    }
+
+    const nama = document.getElementById('with-nama').value.trim();
+    const email = document.getElementById('with-email').value.trim();
+    const metode = document.getElementById('with-metode').value; 
+    const nomor = document.getElementById('with-nomor').value.trim();
+    const bank = document.getElementById('with-bank').value.trim(); 
+    const jumlah = parseInt(document.getElementById('with-jumlah').value);
+
+    // Validasi input
+    if (!nama || !metode || !nomor || isNaN(jumlah) || jumlah <= 0 || !email) {
+        Swal.fire({ icon: 'warning', title: 'Peringatan', text: 'Lengkapi semua kolom dan pastikan jumlah penarikan valid.' });
+        return;
+    }
+    // Validasi khusus untuk metode Bank
+    if (metode === 'Bank' && !bank) {
+        Swal.fire({ icon: 'warning', title: 'Peringatan', text: 'Nama Bank harus diisi untuk metode Bank.' });
+        return;
+    }
+
+    const bankAccountInfo = {
+        account_holder: nama,
+        account_number: nomor,
+        // Gunakan nilai 'bank' jika metode Bank, jika tidak gunakan nilai 'metode' (misal: "Dana", "OVO")
+        bank_name: (metode === 'Bank' && bank) ? bank : metode, 
+        email: email 
+    };
+
+    const withdrawTableBody = document.querySelector('#tab-withdrawal tbody'); 
+    const now = new Date();
+    const dateString = now.toLocaleString('id-ID');
+    const tempId = `temp-${Date.now()}`;
+    const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td>${metode}</td><td class="status-pending">Pending</td></tr>`; 
+
+    if (withdrawTableBody.querySelector('.empty')) {
+        withdrawTableBody.innerHTML = '';
+    }
+    withdrawTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
+
+    try {
+        const session = await supabase.auth.getSession();
+        if (!session.data.session) {
+            Swal.fire({ icon: 'warning', title: 'Sesi Tidak Valid', text: 'Sesi pengguna tidak valid. Silakan login kembali.' });
+            const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+            if (tempRow) { tempRow.remove(); }
+            return;
+        }
+        const accessToken = session.data.session.access_token;
+
+        // Pastikan URL Edge Function ini sudah benar
+        const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawal`; 
+
+        const response = await fetch(edgeFunctionUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${accessToken}`
+            },
+            body: JSON.stringify({
+                amount: jumlah,
+                bank_account_info: bankAccountInfo // Ini adalah objek yang akan diterima oleh Edge Function
+            })
+        });
+
+        // Debugging: Periksa apakah respons dari Edge Function adalah JSON
+        if (!response.headers.get('content-type')?.includes('application/json')) {
+            const errorText = await response.text();
+            console.error('Non-JSON response from Edge Function (Mungkin crash):', errorText);
+            Swal.fire({
+                icon: 'error',
+                title: 'Server Error! (Non-JSON Response)',
+                text: `Terjadi kesalahan di server. Detail: ${response.status} - ${errorText.substring(0, 200)}...` 
+            });
+            const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+            if (tempRow) { tempRow.remove(); }
+            return; 
+        }
+
+        const result = await response.json();
+
+        if (response.ok) { // Jika status HTTP 2xx
+            if (result.status === 'success') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: result.message
+                });
+                closeModal('modal-withdraw');
+                if (result.new_saldo !== undefined) {
+                    document.getElementById('saldo-display').textContent = `Rp.${result.new_saldo.toLocaleString('id-ID')}`;
+                    document.getElementById('saldo-display-main').textContent = `Saldo: Rp.${result.new_saldo.toLocaleString('id-ID')}`;
+                } else {
+                    loadProfile(); // Fallback jika new_saldo tidak ada di respons
+                }
+                loadHistory('tab-withdrawal', 'withdrawal_requests');
+            } else {
+                // Respons OK (misal 200), tapi logika internal Edge Function menghasilkan status error
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal! (Dari Server)',
+                    text: result.message || 'Terjadi kesalahan tidak dikenal dari server.'
+                });
+                console.error('Edge Function returned error status:', result.message);
+                const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+                if (tempRow) { tempRow.remove(); }
+            }
+        } else { // Jika status HTTP bukan 2xx (misal 400, 500)
+            Swal.fire({
+                icon: 'error',
+                title: `Gagal! HTTP Status: ${response.status}`,
+                text: result.error || result.message || 'Gagal terhubung ke server. Silakan coba lagi.'
+            });
+            console.error('HTTP Error from Edge Function:', response.status, result);
+            const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+            if (tempRow) { tempRow.remove(); }
+        }
+
+    } catch (error) {
+        console.error('Error calling withdrawal API (Jaringan/Client-side):', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error Jaringan',
+            text: `Gagal terhubung ke server. Silakan coba lagi. Detail: ${error.message}`
+        });
+        const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
+        if (tempRow) { tempRow.remove(); }
+    }
+};
+
+document.getElementById('btn-history').onclick = async () => {
+    if (!uid) { 
+        Swal.fire({ icon: 'warning', title: 'Login Diperlukan', text: 'Anda harus login untuk melihat riwayat transaksi.' }); 
+        return; 
+    }
+    showModal('modal-history');
+    await loadHistory('tab-deposit', 'deposit_requests');
+    await loadHistory('tab-withdrawal', 'withdrawal_requests');
+};
+
+const games = [
+  { name: 'SLOT 77', url: 'slot.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//Slot77.jpeg' },
+  { name: 'POKER', url: 'poker1.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download.jpeg' },
+  { name: 'TEBAK DADU', url: 'tebakdadu.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1)%20(1).png' },
+  { name: 'SAMGONG', url: 'samgong1.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png' },
+  { name: 'SUSUN BALOK', url: 'susunbalok99.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg' },
+  { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vgmffachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
+];
+
+function loadGames() {
+  const gameGridContainer = document.getElementById('game-display-grid');
+  gameGridContainer.innerHTML = '';
+  games.forEach(game => {
+    const gameItem = document.createElement('div');
+    gameItem.classList.add('game-item');
+    gameItem.innerHTML = `
+      <a href="${game.url}">
+        <img src="${game.imageUrl}" alt="${game.name}">
+      </a>
+    `;
+    gameGridContainer.appendChild(gameItem);
+  });
+}
+
+const menuIcon = document.querySelector('.menu-icon');
+const sidebar = document.querySelector('.sidebar');
+
+menuIcon.addEventListener('click', () => {
+    sidebar.classList.toggle('active');
+});
+
+document.addEventListener('click', (event) => {
+    if (!sidebar.contains(event.target) && !menuIcon.contains(event.target)) {
+        sidebar.classList.remove('active');
+    }
+});
+
+    </script>
+</body>
+</html>
+
