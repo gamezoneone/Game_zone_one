@@ -968,11 +968,12 @@
 
         // Prepare bank account info for the Edge Function
         // Ini akan dipetakan ke kolom 'nama', 'email', 'metode', 'nomor', 'bank' di tabel withdrawal_requests
-        const bankAccountInfo = { // Variabel sudah diganti ke camelCase agar konsisten
-            account_holder: nama,       // Menggunakan variabel 'nama' yang sudah diambil dari input 'with-nama'
-            account_number: nomor,      // Menggunakan variabel 'nomor' yang sudah diambil dari input 'with-nomor'
-            bank_name: bank,            // Menggunakan variabel 'bank' yang sudah diambil dari input 'with-bank'
-            email: email                // Sudah benar
+        const bankAccountInfo = {
+            account_holder: nama,
+            account_number: nomor,
+            bank_name: bank,
+            email: email,
+            metode: metode // <-- PASTIKAN INI SUDAH ADA DI PROFIL.HTML ANDA
         };
 
         const withdrawTableBody = document.querySelector('#riwayat-penarikan-modal tbody');
