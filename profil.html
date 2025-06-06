@@ -1159,7 +1159,7 @@
                 }
                 const accessToken = session.data.session.access_token;
 
-                const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/processed_withdrawal`; // Pastikan ini URL Edge Function yang benar
+                const edgeFunctionUrl = `${SUPABASE_URL}/functions/v1/super-responder`; // Pastikan ini URL Edge Function yang benar
 
                 const response = await fetch(edgeFunctionUrl, {
                     method: 'POST',
