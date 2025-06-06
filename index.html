@@ -522,7 +522,7 @@
       showNotificationModal('Login Berhasil!', 'Namun, gagal mengambil data saldo pengguna. Silakan coba lagi nanti.');
       // Tetap alihkan jika login berhasil, meskipun data saldo tidak terambil
       setTimeout(() => {
-        window.location.href = 'profil1.html';
+        window.location.href = 'profil.html';
       }, 2000);
       return;
     }
@@ -531,7 +531,7 @@
     showNotificationModal('Login Berhasil!', `Selamat datang! Saldo Anda: Rp${userData.saldo.toLocaleString('id-ID') ?? 0}`);
     
     setTimeout(() => {
-      window.location.href = 'profil1.html';
+      window.location.href = 'profil.html';
     }, 2000); // Redirect setelah 2 detik
   });
 
