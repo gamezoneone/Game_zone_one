@@ -1070,30 +1070,26 @@
         document.getElementById('with-submit').onclick = async () => {
             if (!uid) { showModal('alert-modal', 'Login Diperlukan', 'Anda harus login untuk melakukan penarikan.'); return; }
 
-            const nama = document.getElementById('with-nama').value.trim(); // Ini adalah nama pemegang rekening
-            const email = document.getElementById('with-email').value.trim(); // Email dari profil
-            const metode = document.getElementById('with-metode').value; // Dana, OVO, Gopay, Bank
-            const nomor = document.getElementById('with-nomor').value.trim(); // Ini adalah nomor rekening / e-wallet
-            const bank = document.getElementById('with-bank').value.trim(); // Hanya jika metode 'Bank'
+            const nama = document.getElementById('with-nama').value.trim();
+            const email = document.getElementById('with-email').value.trim();
+            const metode = document.getElementById('with-metode').value;
+            const nomor = document.getElementById('with-nomor').value.trim();
+            const bank = document.getElementById('with-bank').value.trim(); // Akan kosong jika bukan metode 'Bank'
             const jumlah = parseInt(document.getElementById('with-jumlah').value);
 
-            // Frontend validation (basic checks before sending to secure backend)
+            // Minimal Frontend validation
             if (!nama || !metode || !nomor || isNaN(jumlah) || jumlah <= 0) {
                 showModal('alert-modal', 'Peringatan', 'Lengkapi semua kolom dan pastikan jumlah penarikan valid.');
                 return;
             }
-            if (metode === 'Bank' && !bank) {
-                showModal('alert-modal', 'Peringatan', 'Nama Bank harus diisi untuk metode Transfer Bank.');
-                return;
-            }
 
-            // Prepare bank account info for the Edge Function
+            // Data yang akan dikirim ke Edge Function
             const bankAccountInfo = {
                 account_holder: nama,
                 account_number: nomor,
-                bank_name: bank,
+                bank_name: bank, // Akan berisi string kosong jika bukan Bank, tapi Edge Function akan menangani null
                 email: email,
-                metode: metode // <--- PENTING: Mengirim metode ke Edge Function
+                metode: metode
             };
 
             const withdrawTableBody = document.querySelector('#riwayat-penarikan-modal tbody');
@@ -1102,20 +1098,18 @@
             const tempId = `temp-${Date.now()}`;
             const newRowHTML = `<tr class="pending-item" data-id="${tempId}"><td>${dateString}</td><td>Rp${jumlah.toLocaleString('id-ID')}</td><td class="status-pending">Pending</td></tr>`;
 
-            // Add pending row to history display immediately
             if (withdrawTableBody.querySelector('.empty')) {
                 withdrawTableBody.innerHTML = '';
             }
             withdrawTableBody.insertAdjacentHTML('afterbegin', newRowHTML);
 
             try {
-                // Get current user session for authentication token
                 const session = await supabase.auth.getSession();
                 if (!session.data.session) {
                     showModal('alert-modal', 'Sesi Tidak Valid', 'Sesi pengguna tidak valid. Silakan login kembali.');
                     const tempRow = withdrawTableBody.querySelector(`[data-id="${tempId}"]`);
                     if (tempRow) { tempRow.remove(); }
-                    return; // Stop execution if no session
+                    return;
                 }
                 const accessToken = session.data.session.access_token;
 
@@ -1129,13 +1123,13 @@
                     },
                     body: JSON.stringify({
                         amount: jumlah,
-                        bank_account_info: bankAccountInfo // Ini yang akan dikirim ke Edge Function
+                        bank_account_info: bankAccountInfo
                     })
                 });
 
                 const result = await response.json();
 
-                if (response.ok) { // Jika status HTTP 200 OK
+                if (response.ok) {
                     if (result.status === 'success') {
                         Swal.fire({
                             icon: 'success',
@@ -1146,11 +1140,10 @@
                         if (result.new_saldo !== undefined) {
                             document.getElementById('saldo-display').textContent = `Saldo: Rp.${result.new_saldo.toLocaleString('id-ID')}`;
                         } else {
-                            loadProfile(); // Fallback: refresh profile to get latest saldo
+                            loadProfile();
                         }
-                        loadHistory('riwayat-penarikan-modal', 'withdrawal_requests'); // Refresh withdrawal history
+                        loadHistory('riwayat-penarikan-modal', 'withdrawal_requests');
                     } else {
-                        // Jika status HTTP 200 OK, tapi Edge Function mengembalikan status: 'error' (validasi internal)
                         Swal.fire({
                             icon: 'error',
                             title: 'Gagal!',
@@ -1161,7 +1154,6 @@
                         if (tempRow) { tempRow.remove(); }
                     }
                 } else {
-                    // Jika status HTTP bukan 200 OK (misal 400, 401, 500)
                     Swal.fire({
                         icon: 'error',
                         title: `Gagal! HTTP Status: ${response.status}`,
