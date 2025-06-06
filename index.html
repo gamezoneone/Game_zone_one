@@ -7,393 +7,434 @@
 <link rel="icon" href="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus/SLOT77.png" type="image/png">
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
-  /* Font Orbitron untuk judul, Share Tech Mono untuk teks lainnya agar terkesan digital/game */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+        /* Font Orbitron untuk judul, Share Tech Mono untuk teks lainnya agar terkesan digital/game */
 
-  * {
-    box-sizing: border-box;
-  }
-  body, html {
-    margin: 0; padding: 0; height: 100%;
-    font-family: 'Share Tech Mono', monospace; /* Menggunakan font techy */
-    background: #000000; /* Latar belakang hitam pekat */
-    overflow-x: hidden;
-    color: #f0f0f0; /* Warna teks umum */
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-  }
+        * {
+            box-sizing: border-box;
+        }
 
-  /* Neon Border Effect for Body/Main Container */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: #000; /* Pastikan background hitam */
-    z-index: 0;
-  }
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%; /* Menambahkan lebar 100% */
+            font-family: 'Share Tech Mono', monospace; /* Menggunakan font techy */
+            background: #000000; /* Latar belakang hitam pekat */
+            overflow-x: hidden;
+            color: #f0f0f0; /* Warna teks umum */
+            position: relative;
+            /* display: flex; */ /* Dihapus agar konten mulai dari atas */
+            /* justify-content: center; */ /* Dihapus */
+            /* align-items: center; */ /* Dihapus */
+            min-height: 100vh;
+        }
 
-  .container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 450px; /* Lebar maksimum seperti di gambar */
-    margin: 0px auto; /* Margin atas bawah agar tidak terlalu mepet */
-    background: rgba(0, 0, 0, 0.7); /* Lebih transparan agar efek neon lebih menonjol */
-    border-radius: 15px;
-    padding: 0px 0px;
-    box-shadow: 0 0 20px rgba(102, 0, 255, 0.0), /* Ungu neon */
-                0 0 40px rgba(102, 0, 255, 0.0),
-                0 0 60px rgba(102, 0, 255, 0.0);
-    border: 0px solid #ff00ff; /* Border utama ungu/magenta */
-    animation: fadeIn 1s ease-out;
-    display: flex;
-    flex-direction: column;
-    gap: 2px; /* Jarak antar elemen utama */
-  }
+        /* Neon Border Effect for Body/Main Container */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #000; /* Pastikan background hitam */
+            z-index: 0;
+            /* Menambahkan border biru neon di sekitar layar */
+            border: 5px solid #00ffff; /* Warna cyan/biru neon */
+            box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff, 0 0 40px #00ffff; /* Efek glow */
+        }
 
-  /* Inner Neon Border for container */
-  .container::before {
-    content: '';
-    position: absolute;
-    top: -5px; bottom: -5px; left: -5px; right: -5px; /* Border luar */
-    border: 0px solid #00ffff; /* Warna cyan/biru neon */
-    border-radius: 0px;
-    box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff;
-    z-index: -1;
-    pointer-events: none;
-  }
+        .container {
+            position: relative;
+            z-index: 1;
+            width: 100%; /* Melebar sesuai layar */
+            /* max-width: 450px; */ /* Dihilangkan */
+            margin: 0; /* Menghilangkan margin auto, menempel ke sisi */
+            background: rgba(0, 0, 0, 0.9); /* Lebih transparan agar efek neon lebih menonjol */
+            border-radius: 0; /* Menghilangkan border-radius agar menempel */
+            padding: 0; /* Menghilangkan padding agar konten menempel */
+            box-shadow: none; /* Menghilangkan box-shadow pada container utama */
+            border: none; /* Menghilangkan border utama */
+            animation: fadeIn 1s ease-out;
+            display: flex;
+            flex-direction: column;
+            gap: 0px; /* Jarak antar elemen utama */
+        }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+        /* Inner Neon Border for container - Dihilangkan atau disesuaikan jika tidak diperlukan */
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -2px; bottom: -2px; left: -2px; right: -2px; /* Border luar */
+            border: 0px solid #00ffff; /* Warna cyan/biru neon */
+            border-radius: 0px;
+            box-shadow: none; /* Dihilangkan */
+            z-index: -1;
+            pointer-events: none;
+        }
 
-  h1 {
-    font-family: 'Orbitron', sans-serif; /* Font khusus untuk judul */
-    text-align: center;
-    font-size: 55px; /* Lebih besar */
-    margin-bottom: 20px;
-    letter-spacing: 8px; /* Lebih renggang */
-    color: #ffff00; /* Kuning terang */
-    text-shadow: 0 0 10px #ffff00,
-                 0 0 20px #ffff00,
-                 0 0 30px #ffff00,
-                 0 0 40px #ffff00,
-                 0 0 50px #ffff00,
-                 0 0 60px #ffff00;
-    animation: neon-glow-yellow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-    padding-bottom: 0px;
-    border-bottom: 2px solid #ff00ff; /* Garis bawah magenta */
-  }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  @keyframes neon-glow-yellow {
-    from {
-      text-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00, 0 0 15px #ffff00;
-      color: #ffff00;
-    }
-    to {
-      text-shadow: 0 0 15px #ffff00, 0 0 25px #ffff00, 0 0 35px #ffff00,
-                   0 0 45px #ffff00, 0 0 55px #ffff00, 0 0 65px #ffff00;
-      color: #fff;
-    }
-  }
+        h1 {
+            font-family: 'Orbitron', sans-serif; /* Font khusus untuk judul */
+            text-align: center;
+            font-size: 55px; /* Lebih besar */
+            margin-bottom: 0px; /* Disesuaikan agar lebih rapat */
+            letter-spacing: 8px; /* Lebih renggang */
+            color: #ffff00; /* Kuning terang */
+            text-shadow: 0 0 10px #ffff00,
+                         0 0 20px #ffff00,
+                         0 0 30px #ffff00,
+                         0 0 40px #ffff00,
+                         0 0 50px #ffff00,
+                         0 0 60px #ffff00;
+            animation: neon-glow-yellow 1.5s ease-in-out infinite alternate;
+            margin-top: 0;
+            line-height: 1.2;
+            padding-bottom: 0px;
+            border-bottom: 2px solid #ff00ff; /* Garis bawah magenta */
+            padding-top: 20px; /* Menambahkan padding atas untuk judul */
+        }
 
-  .tabs {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 0px;
-    background: rgba(255, 255, 255, 0.05); /* Sedikit transparan */
-    border-radius: 15px; /* Lebih membulat */
-    overflow: hidden;
-    border: 2px solid #00ff00; /* Border hijau neon */
-    box-shadow: 0 0 10px #00ff00;
-  }
-  .tab-btn {
-    flex: 1;
-    padding: 15px 0; /* Padding lebih besar */
-    cursor: pointer;
-    font-weight: 700;
-    border: none;
-    background: transparent;
-    color: #888; /* Warna teks tidak aktif lebih gelap */
-    font-size: 20px; /* Ukuran font lebih besar */
-    transition: all 0.3s ease;
-    position: relative;
-    text-transform: uppercase; /* Huruf kapital */
-    letter-spacing: 2px;
-  }
-  .tab-btn::after {
-    content: '';
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    height: 4px; /* Lebih tebal */
-    background: #ff00ff; /* Warna ungu neon */
-    transform: scaleX(0);
-    transition: transform 0.3s ease;
-  }
-  .tab-btn.active {
-    color: #ffff00; /* Kuning terang */
-    font-size: 22px; /* Lebih besar saat aktif */
-    background: rgba(255, 255, 255, 0.08);
-  }
-  .tab-btn.active::after {
-    transform: scaleX(1);
-    background: #ffff00; /* Kuning saat aktif */
-  }
-  .tab-btn:hover:not(.active) {
-    color: #00ffff; /* Cyan saat hover */
-  }
+        @keyframes neon-glow-yellow {
+            from {
+                text-shadow: 0 0 5px #ffff00, 0 0 10px #ffff00, 0 0 15px #ffff00;
+                color: #ffff00;
+            }
+            to {
+                text-shadow: 0 0 15px #ffff00, 0 0 25px #ffff00, 0 0 35px #ffff00,
+                             0 0 45px #ffff00, 0 0 55px #ffff00, 0 0 65px #ffff00;
+                color: #fff;
+            }
+        }
 
-  form {
-    display: none;
-    flex-direction: column;
-    animation: slideIn 0.5s ease-out;
-    gap: 10px; /* Jarak antar elemen form */
-  }
+        marquee {
+            width: 100%;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.5); /* Background gelap transparan untuk marquee */
+            color: #00ff00; /* Hijau neon */
+            font-size: 1em;
+            text-align: center;
+            border-bottom: 2px solid #ff00ff; /* Border bawah */
+            border-top: 2px solid #ff00ff; /* Border atas */
+            box-shadow: 0 0 10px #00ff00; /* Glow hijau */
+            margin-bottom: 10px; /* Jarak dengan elemen berikutnya */
+        }
 
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
 
-  form.active {
-    display: flex;
-  }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 0px;
+            background: rgba(255, 255, 255, 0.05); /* Sedikit transparan */
+            border-radius: 0px; /* Menghilangkan border-radius */
+            overflow: hidden;
+            border: 2px solid #00ff00; /* Border hijau neon */
+            box-shadow: 0 0 10px #00ff00;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 15px 0; /* Padding lebih besar */
+            cursor: pointer;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: #888; /* Warna teks tidak aktif lebih gelap */
+            font-size: 20px; /* Ukuran font lebih besar */
+            transition: all 0.3s ease;
+            position: relative;
+            text-transform: uppercase; /* Huruf kapital */
+            letter-spacing: 2px;
+        }
+        .tab-btn::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 4px; /* Lebih tebal */
+            background: #ff00ff; /* Warna ungu neon */
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+        .tab-btn.active {
+            color: #ffff00; /* Kuning terang */
+            font-size: 22px; /* Lebih besar saat aktif */
+            background: rgba(255, 255, 255, 0.08);
+        }
+        .tab-btn.active::after {
+            transform: scaleX(1);
+            background: #ffff00; /* Kuning saat aktif */
+        }
+        .tab-btn:hover:not(.active) {
+            color: #00ffff; /* Cyan saat hover */
+        }
 
-  label {
-    margin-bottom: 5px;
-    font-weight: 600;
-    color: #00ff00; /* Hijau neon */
-    text-shadow: 0 0 5px #00ff00;
-    letter-spacing: 1px;
-    font-size: 1.1em;
-  }
-  input, select {
-    padding: 14px 20px; /* Padding lebih besar */
-    border-radius: 30px; /* Lebih membulat */
-    border: 2px solid #ff00ff; /* Border ungu */
-    outline: none;
-    font-size: 18px; /* Font lebih besar */
-    background: rgba(255, 255, 255, 0.08); /* Background gelap transparan */
-    color: #fff;
-    transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-  }
-  input[type="text"]:focus,
-  input[type="email"]:focus,
-  input[type="password"]:focus,
-  select:focus {
-    border-color: #ffff00; /* Kuning saat fokus */
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 15px rgba(255, 255, 0, 0.7); /* Glow kuning */
-  }
-  input::placeholder {
-    color: #aaa;
-    opacity: 0.7;
-  }
+        form {
+            display: none;
+            flex-direction: column;
+            animation: slideIn 0.5s ease-out;
+            gap: 10px; /* Jarak antar elemen form lebih besar */
+            padding: 20px; /* Menambahkan padding ke form */
+            background: rgba(0, 0, 0, 0.5); /* Background untuk area form */
+        }
 
-  button.submit-btn {
-    background: linear-gradient(90deg, #ff00ff 0%, #ffff00 100%); /* Gradien ungu ke kuning */
-    border: 3px solid #00ffff; /* Border cyan */
-    padding: 18px; /* Padding lebih besar */
-    border-radius: 35px; /* Lebih membulat */
-    color: #fff;
-    font-weight: 900; /* Lebih tebal */
-    font-size: 22px; /* Lebih besar */
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 20px rgba(255, 0, 255, 0.7); /* Shadow ungu */
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-  button.submit-btn:hover {
-    background: linear-gradient(90deg, #ffff00 0%, #ff00ff 100%); /* Gradien terbalik */
-    transform: translateY(-5px) scale(1.02); /* Sedikit naik dan membesar */
-    box-shadow: 0 0 30px rgba(255, 255, 0, 0.9), 0 0 40px rgba(255, 0, 255, 0.9); /* Glow lebih kuat */
-  }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .small-text {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 16px;
-    color: #bbb;
-  }
-  .link-text {
-    color: #00ffff; /* Cyan */
-    cursor: pointer;
-    text-decoration: underline;
-    transition: color 0.3s;
-    text-shadow: 0 0 5px #00ffff;
-  }
-  .link-text:hover {
-    color: #ff00ff; /* Ungu saat hover */
-    text-shadow: 0 0 8px #ff00ff;
-  }
+        form.active {
+            display: flex;
+        }
 
-  /* Custom Modal for Notifications */
-  #notificationModal {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85); /* Latar belakang lebih gelap */
-    z-index: 9999;
-    justify-content: center;
-    align-items: center;
-    animation: modalFadeIn 0.3s ease-out;
-    backdrop-filter: blur(8px);
-  }
+        label {
+            margin-bottom: -5px; /* Menyesuaikan jarak label dengan input */
+            font-weight: 600;
+            color: #00ff00; /* Hijau neon */
+            text-shadow: 0 0 5px #00ff00;
+            letter-spacing: 1px;
+            font-size: 1.1em;
+        }
+        input, select {
+            padding: 14px 20px; /* Padding lebih besar */
+            border-radius: 30px; /* Lebih membulat */
+            border: 2px solid #ff00ff; /* Border ungu */
+            outline: none;
+            font-size: 18px; /* Font lebih besar */
+            background: rgba(255, 255, 255, 0.08); /* Background gelap transparan */
+            color: #fff;
+            transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            width: 100%; /* Memastikan input melebar penuh */
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus,
+        select:focus {
+            border-color: #ffff00; /* Kuning saat fokus */
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 15px rgba(255, 255, 0, 0.7); /* Glow kuning */
+        }
+        input::placeholder {
+            color: #aaa;
+            opacity: 0.7;
+        }
 
-  #notificationModal > div {
-    background: #111; /* Background modal lebih gelap */
-    padding: 40px; /* Padding lebih besar */
-    border-radius: 20px; /* Lebih membulat */
-    text-align: center;
-    box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), /* Cyan glow */
-                0 0 50px rgba(0, 255, 255, 0.5);
-    color: #fff;
-    transform: scale(0.9);
-    animation: modalPopUp 0.4s ease-out forwards;
-    border: 3px solid #00ffff; /* Border cyan */
-    max-width: 90%;
-    position: relative;
-  }
+        button.submit-btn {
+            background: linear-gradient(90deg, #ff00ff 0%, #ffff00 100%); /* Gradien ungu ke kuning */
+            border: 3px solid #00ffff; /* Border cyan */
+            padding: 18px; /* Padding lebih besar */
+            border-radius: 35px; /* Lebih membulat */
+            color: #fff;
+            font-weight: 900; /* Lebih tebal */
+            font-size: 22px; /* Lebih besar */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7); /* Shadow ungu */
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            width: 100%; /* Memastikan tombol melebar penuh */
+        }
+        button.submit-btn:hover {
+            background: linear-gradient(90deg, #ffff00 0%, #ff00ff 100%); /* Gradien terbalik */
+            transform: translateY(-5px) scale(1.02); /* Sedikit naik dan membesar */
+            box-shadow: 0 0 30px rgba(255, 255, 0, 0.9), 0 0 40px rgba(255, 0, 255, 0.9); /* Glow lebih kuat */
+        }
 
-  #notificationModal h2 {
-    font-family: 'Orbitron', sans-serif;
-    color: #ffff00; /* Kuning */
-    text-shadow: 0 0 10px #ffff00;
-    margin-bottom: 25px;
-    font-size: 2.5em;
-  }
+        .small-text {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 16px;
+            color: #bbb;
+        }
+        .link-text {
+            color: #00ffff; /* Cyan */
+            cursor: pointer;
+            text-decoration: underline;
+            transition: color 0.3s;
+            text-shadow: 0 0 5px #00ffff;
+        }
+        .link-text:hover {
+            color: #ff00ff; /* Ungu saat hover */
+            text-shadow: 0 0 8px #ff00ff;
+        }
 
-  #notificationModal p {
-      font-size: 1.3em;
-      margin-bottom: 25px;
-      color: #eee;
-  }
+        /* Custom Modal for Notifications */
+        #notificationModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); /* Latar belakang lebih gelap */
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            animation: modalFadeIn 0.3s ease-out;
+            backdrop-filter: blur(8px);
+        }
 
-  #notificationModal button {
-    background: linear-gradient(90deg, #ff00ff, #00ffff); /* Gradien ungu ke cyan */
-    border: 2px solid #ffff00; /* Border kuning */
-    padding: 15px 30px;
-    border-radius: 30px;
-    color: #fff;
-    font-weight: bold;
-    font-size: 1.2em;
-    margin-top: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-  }
-  #notificationModal button:hover {
-    background: linear-gradient(90deg, #00ffff, #ff00ff);
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
-  }
+        #notificationModal > div {
+            background: #111; /* Background modal lebih gelap */
+            padding: 40px; /* Padding lebih besar */
+            border-radius: 20px; /* Lebih membulat */
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.8), /* Cyan glow */
+                        0 0 50px rgba(0, 255, 255, 0.5);
+            color: #fff;
+            transform: scale(0.9);
+            animation: modalPopUp 0.4s ease-out forwards;
+            border: 3px solid #00ffff; /* Border cyan */
+            max-width: 90%;
+            position: relative;
+        }
 
-  @keyframes modalFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
+        #notificationModal h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #ffff00; /* Kuning */
+            text-shadow: 0 0 10px #ffff00;
+            margin-bottom: 25px;
+            font-size: 2.5em;
+        }
 
-  @keyframes modalPopUp {
-    from { transform: scale(0.7); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
+        #notificationModal p {
+            font-size: 1.3em;
+            margin-bottom: 25px;
+            color: #eee;
+        }
 
-  /* Responsive Adjustments */
-  @media (max-width: 550px) {
-    .container {
-      margin: 20px 10px;
-      padding: 25px 25px;
-      width: calc(100% - 20px);
-    }
-    h1 {
-      font-size: 45px;
-      letter-spacing: 5px;
-    }
-    .tab-btn {
-      font-size: 18px;
-      padding: 12px 0;
-    }
-    input, select {
-      font-size: 16px;
-      padding: 12px 15px;
-    }
-    button.submit-btn {
-      font-size: 20px;
-      padding: 16px;
-    }
-    #notificationModal > div {
-        padding: 30px;
-    }
-    #notificationModal h2 {
-        font-size: 2em;
-    }
-    #notificationModal p {
-        font-size: 1.1em;
-    }
-    #notificationModal button {
-        font-size: 1.1em;
-        padding: 12px 25px;
-    }
+        #notificationModal button {
+            background: linear-gradient(90deg, #ff00ff, #00ffff); /* Gradien ungu ke cyan */
+            border: 2px solid #ffff00; /* Border kuning */
+            padding: 15px 30px;
+            border-radius: 30px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        #notificationModal button:hover {
+            background: linear-gradient(90deg, #00ffff, #ff00ff);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+        }
 
-  @media (max-width: 380px) {
-    h1 {
-      font-size: 38px;
-      letter-spacing: 3px;
-    }
-    .tab-btn {
-      font-size: 16px;
-    }
-    input, select {
-      font-size: 15px;
-    }
-    button.submit-btn {
-      font-size: 18px;
-      padding: 14px;
-    }
-    .image-wrapper { /* Kontainer untuk gambar statis */
-    width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
-    height: 100px;  /* Tinggi kotak gambar (sesuaikan jika perlu) */
-    background-color: transparent; /* Warna latar belakang kotak (opsional, jika gambar transparan) */
-    border-radius: 2px; /* Sudut melengkung untuk kotak */
-    overflow: hidden; /* Penting jika gambar Anda sedikit lebih besar */
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Untuk memusatkan gambar di dalam kotak */
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.0); /* Efek neon border seperti yang Anda inginkan */
-}
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
-.static-image {
-    width: 100%; /* Gambar mengisi seluruh lebar kotak */
-    height: 100%; /* Gambar mengisi seluruh tinggi kotak */
-    object-fit: cover; /* Pastikan gambar mengisi kotak tanpa terdistorsi */
-    display: block; /* Menghilangkan spasi ekstra di bawah gambar */
-}
-    .image-wrapper1 { /* Kontainer untuk gambar statis */
-    width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
-    height: 70px;  /* Tinggi kotak gambar (sesuaikan jika perlu) */
-    background-color: transparent; /* Warna latar belakang kotak (opsional, jika gambar transparan) */
-    border-radius: 2px; /* Sudut melengkung untuk kotak */
-    overflow: hidden; /* Penting jika gambar Anda sedikit lebih besar */
-    display: flex;
-    justify-content: center;
-    align-items: center; /* Untuk memusatkan gambar di dalam kotak */
-    box-shadow: 0 0 10px rgba(255, 0, 255, 0.9); /* Efek neon border seperti yang Anda inginkan */
-  }
+        @keyframes modalPopUp {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+
+        .image-wrapper { /* Kontainer untuk gambar statis */
+            width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
+            height: 20%;  /* Tinggi disesuaikan dengan konten */
+            background-color: transparent;
+            border-radius: 0px; /* Tidak ada border-radius */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0; /* Menghilangkan padding */
+            margin-bottom: 0px; /* Jarak ke elemen berikutnya */
+           /* border-top: 1px solid #ff00ff; /* Border atas ungu */
+           /* border-bottom: 2px solid #ff00ff; /* Border bawah ungu */
+           /* box-shadow: 0 0 10px #ff00ff; /* Efek neon border ungu */
+        }
+        .image-wrapper1 { /* Kontainer untuk gambar statis */
+            width: 100%;   /* Lebar kotak gambar (sesuaikan jika perlu) */
+            height: auto;  /* Tinggi disesuaikan dengan konten */
+            background-color: transparent;
+            border-radius: 0px; /* Tidak ada border-radius */
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0; /* Menghilangkan padding */
+            margin-bottom: 0px; /* Jarak ke elemen berikutnya */
+            border-top: 1px solid #ff00ff; /* Border atas ungu */
+            border-bottom: 2px solid #ff00ff; /* Border bawah ungu */
+            box-shadow: 0 0 10px #ff00ff; /* Efek neon border ungu */
+        }
+
+
+        .static-image {
+            width: 95%; /* Gambar mengisi seluruh lebar kotak */
+            height: auto; /* Mempertahankan rasio aspek */
+            display: block; /* Menghilangkan spasi ekstra di bawah gambar */
+            max-width: 95%; /* Pastikan gambar tidak melebihi lebar kontainer */
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 550px) {
+            .container {
+                margin: 0; /* Menghilangkan margin pada layar kecil */
+                padding: 0; /* Menghilangkan padding */
+                width: 100%;
+            }
+            h1 {
+                font-size: 45px;
+                letter-spacing: 5px;
+            }
+            .tab-btn {
+                font-size: 18px;
+                padding: 12px 0;
+            }
+            input, select {
+                font-size: 16px;
+                padding: 12px 15px;
+            }
+            button.submit-btn {
+                font-size: 20px;
+                padding: 16px;
+            }
+            #notificationModal > div {
+                padding: 30px;
+            }
+            #notificationModal h2 {
+                font-size: 2em;
+            }
+            #notificationModal p {
+                font-size: 1.1em;
+            }
+            #notificationModal button {
+                font-size: 1.1em;
+                padding: 12px 25px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            h1 {
+                font-size: 38px;
+                letter-spacing: 3px;
+            }
+            .tab-btn {
+                font-size: 16px;
+            }
+            input, select {
+                font-size: 15px;
+            }
+            button.submit-btn {
+                font-size: 18px;
+                padding: 14px;
+            }
+        }
+  
 </style>
 </head>
 <body>
@@ -403,15 +444,20 @@
    <marquee><strong>Selamat datang di GAME ZONE. situs resmi terbaru dengan game terbaru.deposit/penarikan tanpa minimum.ayo daftar dan menangkan jutaan rupiah sekarang juga! tunggu apa lagi?! minimum deposit maximum withdraw.© 2025 GAME ZONE dilindungi HAK CIPTA.</strong></marquee>
   <div class="tabs">
     <button class="tab-btn active" data-tab="login">Login</button>
-    <button class="tab-btn" data-tab="register">Daftar</button>
+<button class="tab-btn register-image-btn" data-tab="register">
+ <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//daftar-disini-cwkbet.gif" alt="Dekorasi Login" class="static-image" alt="Daftar">
+</button>
+
   </div>
+  
+  
   <div class="image-wrapper1">
             <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images.jpeg" alt="Dekorasi Login" class="static-image">
             
         </div>
   
- <div class="image-wrapper">
-            <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//daftar-disini-cwkbet.gif" alt="Dekorasi Login" class="static-image">
+   <div class="image-wrapper">
+            <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//cuan77.gif" alt="Dekorasi Login" class="static-image">
         </div>
  
   <form id="login" class="active">
