@@ -787,9 +787,8 @@ button#spin-button:disabled {
 
 
         setTimeout(async () => {
-            stopSpinSound(); // Hentikan efek suara roda berputar
-
-            // Generate winning number (adjust range as needed, 1-36 for roulette)
+            stopSpinSound();
+            
             const winningNumberObj = rouletteNumbers[Math.floor(Math.random() * rouletteNumbers.length)];
             const winningNumber = winningNumberObj.number;
             const winningColor = winningNumberObj.color;
@@ -798,13 +797,13 @@ button#spin-button:disabled {
             currentResultDisplay.style.color = winningColor;
             currentResultDisplay.style.textShadow = `0 0 10px ${winningColor}, 0 0 20px ${winningColor}`;
 
-            await checkWin(winningNumber, winningColor, currentBet.amount); // Kirim jumlah taruhan ke checkWin
+            await checkWin(winningNumber, winningColor, currentBet.amount);
 
             isSpinning = false;
             spinButton.disabled = false;
             resetBet();
 
-            // Reset wheel and ball position for next spin
+          
             rouletteWheel.style.transition = 'none';
             rouletteWheel.style.transform = 'rotate(0deg)';
             rouletteBall.style.transition = 'none';
@@ -833,7 +832,7 @@ button#spin-button:disabled {
                     payoutMultiplier = 2;
                 }
                 break;
-            case 'range': // 1-18 or 19-36
+            case 'range':
                 if (currentBet.value === 'low' && winningNumber >= 1 && winningNumber <= 18) {
                     win = true;
                     payoutMultiplier = 2;
@@ -854,11 +853,11 @@ button#spin-button:disabled {
         if (win) {
             winnings = amountBet * payoutMultiplier;
             message = `SELAMAT! Angka ${winningNumber} (${winningColor.toUpperCase()})! Anda memenangkan Rp.${winnings.toFixed(2)}!`;
-            playerBalance += winnings; // Tambahkan kemenangan ke saldo lokal
+            playerBalance += winnings;
             playWinSound();
         } else {
-            // Saldo sudah dipotong di awal spinRoulette, jadi tidak perlu dipotong lagi di sini
-            message = `MAAF! Angka ${winningNumber} (${winningColor.toUpperCase()}). Anda kalah Rp.${amountBet.toFixed(2)}.`;
+            
+            message = `${winningNumber} (${winningColor.toUpperCase()}). Anda kalah Rp.${amountBet.toFixed(2)}.`;
             playLoseSound();
         }
 
@@ -866,11 +865,8 @@ button#spin-button:disabled {
         await updatePlayerBalanceInDB(playerBalance); // Simpan saldo akhir ke DB
     }
 
-    // --- Initial Setup and Event Listeners ---
-
-    // Fungsi initializeGame (dari kode Anda, disesuaikan untuk Roulette)
     async function initializeGame() {
-        loadingOverlay.classList.remove('hidden'); // Tampilkan loading
+        loadingOverlay.classList.remove('hidden');
         gameStatusElement.textContent = 'Memuat sesi pengguna...';
 
         const { data: { user } } = await supabase.auth.getUser();
@@ -878,25 +874,22 @@ button#spin-button:disabled {
         if (user) {
             currentUser = user;
             gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
-            await loadUserData(user.id); // Memuat saldo dan data lain dari DB
-            gameSection.classList.remove('hidden'); // Tampilkan game
-            loadingOverlay.classList.add('hidden'); // Sembunyikan loading
+            await loadUserData(user.id);
+            gameSection.classList.remove('hidden');
+            loadingOverlay.classList.add('hidden');
             updateStatus('Selamat datang! Pilih taruhan Anda.');
-            playBgMusic(); // Mainkan musik latar
-            spinButton.disabled = false; // Aktifkan tombol spin
+            playBgMusic();
+            spinButton.disabled = false;
         } else {
-            // Jika tidak ada user, arahkan ke halaman login
-            window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
+            window.location.href = 'index.html';
         }
     }
 
     logoutButton.addEventListener('click', handleLogout);
     spinButton.addEventListener('click', spinRoulette);
 
-    populateNumberGrid(); // Populate the number grid with 1-36
-    
-    // Check user session on load and play music
-    await initializeGame(); // Panggil initializeGame saat DOMContentLoaded
+    populateNumberGrid();
+    await initializeGame();
 });
 </script>
 </body>
