@@ -19,9 +19,10 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden; /* Mencegah scroll horizontal body */
     position: relative;
     font-size: 16px; /* Default font size */
+    box-sizing: border-box; /* Penting untuk perhitungan lebar */
 }
 
 /* Fallback for Press Start 2P if not loaded */
@@ -34,45 +35,49 @@ body {
     border: 3px solid #6a059f; /* Purple neon border */
     box-shadow: 0 0 15px #6a059f, 0 0 30px #6a059f, 0 0 45px #6a059f;
     border-radius: 15px;
-    padding: 30px;
-    width: 90%; /* Lebih responsif */
+    padding: 20px; /* Sedikit lebih kecil untuk ruang layar */
+    width: 95%; /* Lebih responsif */
     max-width: 800px;
     box-sizing: border-box;
     position: relative;
     z-index: 10;
+    margin: 20px auto; /* Tambahkan margin atas/bawah untuk perangkat yang sangat pendek */
 }
 
 h1 {
     color: #00ffcc; /* Neon green */
     text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
     margin-bottom: 20px;
-    font-size: 2.5em; /* Ukuran font adaptif */
+    font-size: 2em; /* Ukuran font adaptif */
 }
 
 .header-info {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 25px;
-    font-size: 1.2em;
+    margin-bottom: 20px;
+    font-size: 1em;
     color: #ffcc00; /* Neon yellow */
     text-shadow: 0 0 5px #ffcc00;
     flex-wrap: wrap; /* Izinkan wrap pada layar kecil */
     gap: 10px; /* Jarak antar elemen */
 }
 
-.dashboard-link {
+.dashboard-link, #logout-button {
     color: #00ffff; /* Cyan neon */
     text-decoration: none;
-    font-size: 0.9em;
-    padding: 8px 15px;
+    font-family: 'Press Start 2P', cursive;
+    font-size: 0.8em;
+    padding: 8px 12px;
     border: 1px solid #00ffff;
     border-radius: 5px;
     transition: all 0.2s ease;
     box-shadow: 0 0 5px #00ffff;
+    background: none;
+    cursor: pointer;
 }
 
-.dashboard-link:hover {
+.dashboard-link:hover, #logout-button:hover {
     background-color: #00ffff;
     color: #0a0a1a;
     box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
@@ -80,9 +85,9 @@ h1 {
 
 
 .roulette-wheel-area {
-    margin: 30px auto;
-    width: 250px;
-    height: 250px;
+    margin: 20px auto;
+    width: 200px; /* Ukuran roda default lebih kecil */
+    height: 200px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -105,7 +110,7 @@ h1 {
     width: 80%;
     height: 80%;
     border-radius: 50%;
-    background-color: #0d0;
+    background-color: #0d0d;
     border: 3px solid #00ffcc; /* Neon green inner border */
     box-shadow: inset 0 0 10px #00ffcc, 0 0 20px #00ffcc;
     position: relative;
@@ -116,7 +121,7 @@ h1 {
 }
 
 .current-result {
-    font-size: 4em;
+    font-size: 3.5em; /* Ukuran hasil lebih kecil */
     font-weight: bold;
     color: #ff00ff; /* Neon pink */
     text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
@@ -142,22 +147,22 @@ h1 {
 }
 
 .betting-area {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 h2 {
     color: #ff6600; /* Neon orange */
     text-shadow: 0 0 8px #ff6600;
     margin-bottom: 15px;
-    font-size: 1.8em;
+    font-size: 1.6em; /* Ukuran H2 lebih kecil */
 }
 
 .bet-input {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
 .bet-input label {
-    font-size: 1.1em;
+    font-size: 1em;
     color: #aaffff; /* Light cyan */
     text-shadow: 0 0 3px #aaffff;
     margin-right: 10px;
@@ -167,10 +172,10 @@ h2 {
     background-color: #0d0d1a;
     border: 2px solid #00ffff; /* Cyan neon */
     color: #00ffcc;
-    padding: 8px 12px;
+    padding: 6px 10px; /* Padding lebih kecil */
     border-radius: 5px;
-    font-size: 1em;
-    width: 100px;
+    font-size: 0.9em;
+    width: 90px; /* Lebar input lebih kecil */
     text-align: center;
     box-shadow: 0 0 5px #00ffff;
     outline: none;
@@ -180,28 +185,31 @@ h2 {
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
-/* Grid untuk Simple Chances */
+/* --- GRID UNTUK SIMPLE CHANCES --- */
 .bet-group.simple-chances {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 2-3 kolom di desktop, 1 di mobile */
-    gap: 10px;
+    /* 3 kolom untuk desktop, 2 untuk tablet, 1 untuk ponsel sangat kecil */
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 8px; /* Jarak antar chip */
     max-width: 600px;
     margin: 0 auto;
 }
 
 .bet-chip {
-    padding: 12px 18px;
+    padding: 10px 15px; /* Padding sedikit lebih kecil */
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     border: 2px solid;
-    font-size: 0.9em;
-    user-select: none; /* Prevent text selection */
-    text-align: center; /* Pastikan teks di tengah */
+    font-size: 0.85em; /* Ukuran font sedikit lebih kecil */
+    user-select: none;
+    text-align: center;
+    min-width: 80px; /* Minimal lebar chip */
+    box-sizing: border-box; /* Pastikan padding masuk hitungan lebar */
 }
 
 /* Neon colors for bet chips */
@@ -232,7 +240,7 @@ h2 {
 
 .bet-chip:hover {
     transform: translateY(-3px);
-    box-shadow: 0 0 15px var(--bet-chip-shadow-hover); /* Dynamic shadow for hover */
+    box-shadow: 0 0 15px var(--bet-chip-shadow-hover);
 }
 
 .bet-chip.red:hover { --bet-chip-shadow-hover: #ff0000; }
@@ -248,40 +256,41 @@ h2 {
     background-color: #550055; /* Slightly different background when active */
 }
 
+/* --- GRID UNTUK ANGKA 1-36 --- */
 .number-bet-grid {
     display: grid;
-    /* Atur kolom agar rapi. 12 kolom untuk desktop, adaptif untuk mobile */
-    grid-template-columns: repeat(12, 1fr);
+    /* 12 kolom untuk desktop, adaptif untuk mobile */
+    grid-template-columns: repeat(auto-fit, minmax(28px, 1fr)); /* Auto-fit agar adaptif */
     gap: 4px; /* Jarak antar chip angka */
-    max-width: 600px; /* Batasi lebar grid */
+    max-width: 600px;
     margin: 0 auto;
+    /* overflow-x: auto;  Tidak perlu jika grid benar-benar adaptif */
 }
 
 .number-bet-grid .bet-chip {
-    padding: 8px 5px;
-    font-size: 0.75em; /* Sedikit lebih kecil untuk angka */
-    width: auto; /* Biarkan grid menentukan lebar */
-    min-width: 28px; /* Minimal lebar */
-    max-width: 45px; /* Maksimal lebar */
-    height: 35px; /* Tinggi tetap agar seragam */
+    padding: 6px 3px; /* Padding lebih kecil untuk angka */
+    font-size: 0.7em; /* Lebih kecil untuk angka */
+    min-width: 28px;
+    height: 30px; /* Tinggi tetap agar seragam */
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+    white-space: nowrap; /* Mencegah angka pecah baris */
 }
 
 button#spin-button {
     background-color: #00ffff; /* Cyan neon */
     color: #0d0d1a; /* Dark text */
     border: none;
-    padding: 15px 30px;
-    font-size: 1.5em;
+    padding: 12px 25px; /* Padding sedikit lebih kecil */
+    font-size: 1.3em; /* Ukuran font lebih kecil */
     font-weight: bold;
     border-radius: 10px;
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
-    margin-top: 30px;
+    margin-top: 25px;
 }
 
 button#spin-button:hover {
@@ -336,82 +345,122 @@ button#spin-button:disabled {
 }
 
 
-/* Responsiveness */
+/* --- RESPONSIVENESS ADJUSTMENTS --- */
 @media (max-width: 768px) {
+    .game-container {
+        padding: 15px;
+    }
     h1 {
-        font-size: 1.8em;
+        font-size: 1.5em;
     }
     .header-info {
-        font-size: 1em;
-        flex-direction: column;
-        gap: 10px;
+        font-size: 0.9em;
     }
     .roulette-wheel-area {
-        width: 180px; /* Lebih kecil di tablet/mobile */
-        height: 180px;
-    }
-    .current-result {
-        font-size: 2.8em;
-    }
-    h2 {
-        font-size: 1.5em;
-    }
-    /* Grid untuk Simple Chances pada layar kecil */
-    .bet-group.simple-chances {
-        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Lebih besar agar mudah disentuh */
-    }
-    .bet-chip {
-        padding: 10px 15px;
-        font-size: 0.8em;
-    }
-    /* Grid untuk angka pada layar kecil */
-    .number-bet-grid {
-        grid-template-columns: repeat(auto-fit, minmax(28px, 1fr)); /* Lebih ringkas pada layar kecil */
-        gap: 3px;
-    }
-    .number-bet-grid .bet-chip {
-        min-width: 28px;
-        max-width: 40px;
-        height: 32px; /* Tinggi angka tetap */
-        font-size: 0.7em;
-    }
-    button#spin-button {
-        font-size: 1.2em;
-        padding: 12px 25px;
-    }
-}
-
-@media (max-width: 480px) {
-    .game-container {
-        padding: 20px;
-    }
-    h1 {
-        font-size: 1.5em;
-    }
-    .bet-group.simple-chances {
-        grid-template-columns: 1fr; /* Satu kolom di ponsel sangat kecil */
-    }
-    .bet-chip {
-        width: 90%; /* Penuhi lebar */
-        margin: 0 auto; /* Tengah */
-    }
-    .number-bet-grid {
-        grid-template-columns: repeat(auto-fit, minmax(25px, 1fr)); /* Lebih ringkas lagi */
-        gap: 2px;
-    }
-    .number-bet-grid .bet-chip {
-        min-width: 25px;
-        max-width: 35px;
-        height: 30px;
-        font-size: 0.65em;
-    }
-    .roulette-wheel-area {
-        width: 160px;
+        width: 160px; /* Lebih kecil di tablet/mobile */
         height: 160px;
     }
     .current-result {
         font-size: 2.5em;
     }
+    h2 {
+        font-size: 1.3em;
+    }
+    .bet-input label {
+        font-size: 0.9em;
+    }
+    .bet-input input[type="number"] {
+        width: 80px;
+        font-size: 0.85em;
+    }
+
+    /* Simple chances grid for smaller screens */
+    .bet-group.simple-chances {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 2 kolom di ponsel medium */
+        gap: 6px;
+    }
+    .bet-chip {
+        padding: 8px 12px;
+        font-size: 0.8em;
+    }
+
+    /* Number grid for smaller screens */
+    .number-bet-grid {
+        grid-template-columns: repeat(auto-fit, minmax(26px, 1fr)); /* Lebih ringkas pada layar kecil */
+        gap: 3px;
+    }
+    .number-bet-grid .bet-chip {
+        min-width: 26px;
+        height: 28px;
+        font-size: 0.65em;
+    }
+    button#spin-button {
+        font-size: 1.1em;
+        padding: 10px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 10px;
+    }
+    h1 {
+        font-size: 1.3em;
+    }
+    .header-info {
+        font-size: 0.8em;
+        flex-direction: column; /* Stack info vertically */
+        gap: 5px;
+    }
+    .dashboard-link, #logout-button {
+        font-size: 0.7em;
+        padding: 6px 10px;
+    }
+    .roulette-wheel-area {
+        width: 140px;
+        height: 140px;
+    }
+    .current-result {
+        font-size: 2em;
+    }
+    h2 {
+        font-size: 1.1em;
+    }
+
+    /* Simple chances grid for very small phones */
+    .bet-group.simple-chances {
+        grid-template-columns: 1fr; /* Satu kolom agar lebih mudah disentuh */
+        gap: 5px;
+    }
+    .bet-chip {
+        width: 95%; /* Penuhi lebar */
+        margin: 0 auto; /* Tengah */
+        padding: 10px 15px; /* Kembali ke padding awal agar mudah disentuh */
+        font-size: 0.8em;
+    }
+
+    /* Number grid for very small phones */
+    .number-bet-grid {
+        grid-template-columns: repeat(auto-fit, minmax(24px, 1fr)); /* Paling ringkas */
+        gap: 2px;
+    }
+    .number-bet-grid .bet-chip {
+        min-width: 24px;
+        height: 26px;
+        font-size: 0.6em;
+        padding: 4px 2px;
+    }
+    button#spin-button {
+        font-size: 1em;
+        padding: 8px 15px;
+    }
+}
+
+/* Ensure all elements within game-container respect its padding */
+.game-container > * {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 100%; /* Ensure no child element causes overflow */
 }
 
     </style>
@@ -594,12 +643,12 @@ button#spin-button:disabled {
         }
         const { data, error } = await supabase
             .from('users_data')
-            .select('balance')
+            .select('saldo')
             .eq('id', currentPlayerId)
             .single();
 
         if (error) {
-            console.error('Error fetching balance:', error.message);
+            console.error('Error fetching saldo:', error.message);
             updateStatus('Gagal mengambil saldo dari database.');
             playerBalance = 0;
         } else {
@@ -615,11 +664,11 @@ button#spin-button:disabled {
         }
         const { error } = await supabase
             .from('users_data')
-            .update({ balance: newBalance })
+            .update({ saldo: newBalance })
             .eq('id', currentPlayerId);
 
         if (error) {
-            console.error('Error updating balance:', error.message);
+            console.error('Error updating saldo:', error.message);
             updateStatus('Gagal menyimpan saldo ke database. Saldo lokal mungkin tidak sinkron.');
         } else {
             playerBalance = newBalance;
