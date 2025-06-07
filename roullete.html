@@ -517,8 +517,7 @@ button#spin-button:disabled {
     <audio id="win-sound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3"></audio>
     <audio id="lose-sound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-player-losing-or-failing-2042.mp3"></audio>
 
-    <script>
-      document.addEventListener('DOMContentLoaded', async () => {
+    <script>document.addEventListener('DOMContentLoaded', async () => {
     // --- KONFIGURASI SUPABASE (DARI KODE ANDA) ---
     const supabase = window.supabase.createClient(
         'https://vqmfachxnjyxwuavpgds.supabase.co',
@@ -548,6 +547,9 @@ button#spin-button:disabled {
     const spinSound = document.getElementById('spin-sound');
     const winSound = document.getElementById('win-sound');
     const loseSound = document.getElementById('lose-sound');
+    // const drawSound = document.getElementById('drawSound'); // Tidak relevan untuk roulette
+    // const dealCardSound = document.getElementById('dealCardSound'); // Tidak relevan untuk roulette
+
     let currentBet = { type: null, value: null, amount: 0 };
     let isSpinning = false;
 
@@ -607,46 +609,45 @@ button#spin-button:disabled {
     }
 
     // --- Supabase Functions (Diadaptasi dari kode Anda) ---
-    async function initializeGame() {
-        loadingOverlay.classList.remove('hidden'); // Tampilkan loading
-        gameStatusElement.textContent = 'Memuat sesi pengguna...';
-
-        const { data: { user } } = await supabase.auth.getUser();
-
-        if (user) {
-            currentUser = user;
-            gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
-            await loadUserData(user.id); // Memuat saldo dan data lain dari DB
-            gameSection.classList.remove('hidden'); // Tampilkan game
-            loadingOverlay.classList.add('hidden'); // Sembunyikan loading
-            updateStatus('Selamat datang! Pilih taruhan Anda.');
-            playBgMusic(); // Mainkan musik latar
-            spinButton.disabled = false; // Aktifkan tombol spin
+    async function handleLogout() {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            console.error('Logout error:', error.message);
+            updateStatus('Gagal logout. Coba lagi.');
         } else {
-            // Jika tidak ada user, arahkan ke halaman login
-            window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
+            currentUser = null; // Reset user
+            playerBalance = 0; // Reset saldo lokal
+            updateBalanceDisplay();
+            updateStatus('Anda telah logout. Silakan login kembali untuk bermain.');
+            spinButton.disabled = true; // Disable controls after logout
+            // Tidak ada pengalihan langsung ke index.html, biarkan pengguna melihat pesan logout
+            // Atau Anda bisa tambahkan: window.location.href = 'index.html';
         }
+    }
 
-  
+    // Fungsi untuk memuat data pengguna, termasuk saldo (diambil dari `loadUserData` Anda)
     async function loadUserData(userId) {
         const { data, error } = await supabase
             .from('users_data')
-            .select('saldo, username')
-            .eq('user_id', userId)
+            .select('saldo, username') // Hanya ambil saldo dan username yang relevan
+            .eq('user_id', userId) // Menggunakan 'user_id' seperti di kode Anda
             .single();
 
-        if (error && error.code !== 'PGRST116') {
+        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
             console.error('Error loading user data:', error.message);
             updateStatus('Error loading user data. Please refresh or contact support.');
-            spinButton.disabled = true;
+            spinButton.disabled = true; // Disable controls on error
             return;
         }
 
         if (data) {
             playerBalance = data.saldo;
+            // Jika Anda memiliki elemen untuk menampilkan username, perbarui juga
+            // Misalnya: document.getElementById('usernameDisplay').textContent = data.username || currentUser.email.split('@')[0];
             updateStatus('Data pemain dimuat.');
-            spinButton.disabled = false;
+            spinButton.disabled = false; // Enable controls
         } else {
+            // Jika data tidak ditemukan, inisialisasi saldo baru (sesuai logika Anda)
             const initialBalance = 1000;
             const defaultUsername = currentUser.email ? currentUser.email.split('@')[0] : 'Pemain Baru';
             const { data: newUserData, error: insertError } = await supabase
@@ -668,6 +669,7 @@ button#spin-button:disabled {
         updateBalanceDisplay();
     }
 
+    // Fungsi untuk memperbarui saldo di database (diambil dari `updateUserData` Anda)
     async function updatePlayerBalanceInDB(newBalance) {
         if (!currentUser) {
             console.error('No current user to update data for.');
@@ -869,7 +871,7 @@ button#spin-button:disabled {
     // --- Initial Setup and Event Listeners ---
 
     // Fungsi initializeGame (dari kode Anda, disesuaikan untuk Roulette)
-async function initializeGame() {
+    async function initializeGame() {
         loadingOverlay.classList.remove('hidden'); // Tampilkan loading
         gameStatusElement.textContent = 'Memuat sesi pengguna...';
 
@@ -890,7 +892,6 @@ async function initializeGame() {
         }
     }
 
-
     logoutButton.addEventListener('click', handleLogout);
     spinButton.addEventListener('click', spinRoulette);
 
@@ -899,7 +900,6 @@ async function initializeGame() {
     // Check user session on load and play music
     await initializeGame(); // Panggil initializeGame saat DOMContentLoaded
 });
-
-    </script>
+</script>
 </body>
 </html>
