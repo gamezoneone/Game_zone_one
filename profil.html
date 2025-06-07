@@ -6,600 +6,751 @@
   <title>Profil Pemain - GameZone</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@400;700&display=swap');
 
-    /* Reset dan Dasar */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+        /* Reset dan Dasar */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    body, html {
-      min-height: 100vh;
-      /* Background lebih gelap untuk kontras neon */
-      background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
-  background-size: cover;
-  background-position: center center;
-  background-attachment: fixed;
-  background-repeat: no-repeat;
-  background-color: rgba(0, 0, 0, 0.0);
-  background-blend-mode: overlay;
+        body, html {
+            width: 100%; /* Penting: Pastikan lebar 100% */
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            color: #e0e0e0; /* Warna teks umum */
+            overflow-x: hidden; /* Mencegah scroll horizontal */
+            position: relative; /* Untuk border neon body */
+
+            /* Background lebih gelap untuk kontras neon */
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//E%20vamos%20de%20arte!!!.jpeg');
+            background-size: cover; /* Memastikan gambar menutupi seluruh area */
+            background-position: center center;
+            background-attachment: fixed; /* Gambar tidak ikut discroll */
+            background-repeat: no-repeat;
+           /* background-color: #000000; /* Warna fallback jika gambar gagal dimuat */
+            background-blend-mode: overlay; /* Menambahkan efek overlay gelap */
+        }
+
+        /* Neon Border Effect for Body/Main Container */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9); /* Background transparan agar gambar terlihat */
+            z-index: -1; /* Pindahkan ke belakang konten */
+            border: 2px solid #00ffff; /* Warna cyan/biru neon */
+            box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff, 0 0 40px #00ffff; /* Efek glow */
+        }
+
+        /* Kontainer Utama */
+        .container {
+            width: 100%; /* MELEBAR PENUH SESUAI LAYAR */
+            max-width: none; /* MENGHILANGKAN BATAS LEBAR */
+            margin: 0; /* MENEMPEL PADA SISI ATAS DAN SAMPING */
+            background: rgba(0,0,0,0.0); /* Hampir hitam transparan */
+            border-radius: 0; /* Menghilangkan border-radius agar menempel */
+            padding: 0; /* Menghilangkan padding utama agar konten menempel */
+            box-shadow: none; /* Menghilangkan bayangan kontainer utama */
+            border: none; /* Menghilangkan border utama */
+            position: relative;
+            animation: fadeIn 1s ease-out; /* Animasi masuk */
+            display: flex; /* Untuk layout flex-direction column */
+            flex-direction: column;
+            min-height: 100vh; /* Pastikan container mengisi tinggi viewport */
+            padding-bottom: 70px; /* Padding bawah untuk tombol WA dan refresh */
+        }
+
+        /* Animasi Fade In (jika diperlukan) */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animasi Border Neon */
+        @keyframes neon-border-pulse {
+            from { border-color: rgba(0, 255, 255, 0.6); box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
+            to { border-color: rgba(0, 200, 200, 0.8); box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), 0 0 100px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0, 255, 255, 0.2); }
+        }
+
+
+        /* Saldo di Pojok Kiri Atas - Akan disesuaikan agar tetap di dalam container */
+        .saldo {
+            position: absolute; /* Tetap absolut relatif terhadap container */
+            top: 20px; /* Jarak dari atas container */
+            left: 20px; /* Jarak dari kiri container */
+            font-family: 'Orbitron', sans-serif; /* Font futuristik */
+            font-size: 1em;
+            font-weight: 700;
+            color: gold; /* Neon hijau terang */
+            background: linear-gradient(90deg, black 0%, #00bc 100%);
+            padding: 10px 18px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.6); /* Glow neon hijau */
+            z-index: 10;
+            border: 1px solid rgba(57, 255, 20, 0.4);
+        }
+
+        /* Judul Utama */
+        h2 {
+            text-align: center;
+            font-family: 'Orbitron', sans-serif;
+            color: #ffd700;
+            
+            animation: neon-glow 1.5s ease-in-out infinite alternate;
+            margin-top: 30px; /* Jarak dari atas container */
+            margin-bottom: 20px;
+            line-height: 1.2;
+            font-size: 3em; /* Ukuran default lebih besar */
+        }
+        .marquee-container {
+            width: 100%;
+            padding: 10px 0;
+            background: linear-gradient(90deg, #222 0%, #00bc 100%);
+            color: gold; /* Hijau neon */
+            font-size: 1em;
+            text-align: center;
+            border-bottom: 2px solid #ff00ff; /* Border bawah */
+            border-top: 2px solid #ff00ff; /* Border atas */
+            box-shadow: 0 0 10px #00ff00; /* Glow hijau */
+            margin-bottom: 2px; /* Jarak dengan elemen berikutnya */
+        }
+        .marquee-container marquee {
+            padding: 0 10px; /* Padding di dalam marquee untuk menghindari teks menempel sisi */
+        }
+
+        /* Grup Tombol (Deposit, Penarikan, Riwayat) */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Jarak antar tombol yang lebih kecil */
+            margin-bottom: 2px;
+            flex-wrap: wrap;
+            padding: 0 20px; /* Padding agar tidak menempel sisi layar */
+        }
+
+        /* Tombol Umum */
+        .btn {
+         background: linear-gradient(90deg, #e000ff 0%, #00bcd4 100%);
+            border: none;
+            border-radius: 25px; /* Lebih kecil, ramping */
+            padding: 10px 20px; /* Padding lebih kecil */
+            font-size: 0.95em; /* Ukuran font sedikit lebih kecil */
+            font-weight: 700;
+            cursor: pointer;
+            color: #0d0d1a; /* Warna teks gelap */
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.6), 0 0 25px rgba(0, 188, 212, 0.4); /* Glow neon biru */
+            transition: all 0.3s ease;
+            flex: 1;
+            min-width: 100px; /* Ukuran minimum tombol yang lebih kecil */
+            max-width: 160px; /* Batasi lebar agar tetap sejajar */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border: 1px solid gold;
+        }
+
+        .btn:hover {
+            background: #39ff14; /* Neon hijau saat hover */
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.5);
+            color: #0d0d1a;
+            border-color: rgba(57, 255, 20, 1);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
+        }
+
+        /* Tabel */
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 20px;
+            background: rgba(10, 10, 30, 0.7); /* Background tabel lebih gelap */
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 255, 0.3);
+            margin-left: 20px; /* Padding kiri-kanan untuk tabel */
+            margin-right: 20px;
+            width: calc(100% - 40px); /* Sesuaikan lebar dengan padding */
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.1); /* Garis pemisah neon halus */
+            color: #c0c0c0; /* Teks lebih terang */
+        }
+
+        th {
+            background: #00bcd4; /* Header biru neon */
+            color: #0d0d1a;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .empty {
+            color: #888;
+            font-style: italic;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        /* Status dalam Tabel */
+        .status-pending { color: #ffeb3b; /* Kuning neon */ font-weight: bold; }
+        .status-approved { color: #39ff14; /* Hijau neon */ font-weight: bold; }
+        .status-rejected { color: #ff4d4d; /* Merah neon */ font-weight: bold; }
+
+        /* Efek Loading Tombol */
+        .btn.loading {
+            position: relative;
+            color: transparent;
+            pointer-events: none;
+            background: #00bcd4;
+        }
+
+        .btn.loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin-top: -10px;
+            margin-left: -10px;
+            border: 3px solid #e000ff; /* Warna loading neon ungu */
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- Modal Kustom (Popup) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9); /* Overlay lebih gelap */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #1a0a2e; /* Ungu gelap */
+            color: #e0e0e0;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(224, 0, 255, 0.7), inset 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu */
+            width: 90%;
+            max-width: 480px; /* Sedikit lebih lebar */
+            transform: translateY(-50px) scale(0.9); /* Efek masuk lebih dramatis */
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-out; /* Animasi bounce */
+            position: relative;
+            border: 2px solid rgba(224, 0, 255, 0.8);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+
+        .modal-content h2 {
+            font-family: 'Orbitron', sans-serif;
+            color: #39ff14; /* Hijau neon untuk judul modal */
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2em;
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
+            border-bottom: none;
+            padding-bottom: 0;
+            background: none; /* Hapus background dari h2 di modal */
+            margin-left: 0; /* Reset margin h2 di modal */
+            margin-right: 0;
+            padding: 0;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 8px;
+            color: #00bcd4; /* Label biru neon */
+            font-size: 0.95em;
+            text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+        }
+
+        .modal-content input[type="text"],
+        .modal-content input[type="email"],
+        .modal-content input[type="number"],
+        .modal-content select {
+            width: 100%;
+            padding: 12px 18px;
+            margin-bottom: 20px; /* Jarak antar input lebih besar */
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
+            background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
+            color: #e0e0e0;
+            font-size: 1em;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .modal-content input:focus,
+        .modal-content select:focus {
+            outline: none;
+            border-color: #39ff14; /* Border hijau neon saat fokus */
+            box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .modal-content input::placeholder {
+            color: #888;
+        }
+
+        .modal-content input[readonly] {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 255, 255, 0.2);
+            cursor: default;
+        }
+
+        /* --- Penyesuaian Baru/Modifikasi --- */
+        .input-group-with-copy { /* Kelas baru untuk membungkus label, input, dan button copy */
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px; /* Jarak antar grup */
+            gap: 10px; /* Jarak antara input dan button */
+        }
+
+        .input-group-with-copy label {
+            margin-bottom: 0; /* Hapus margin-bottom default */
+            flex-shrink: 0; /* Pastikan label tidak menyusut */
+            white-space: nowrap; /* Pastikan teks label tidak pecah baris */
+            padding-right: 5px; /* Sedikit padding agar tidak terlalu mepet */
+        }
+        .input-group-with-copy input[type="text"] {
+            flex-grow: 1; /* Biarkan input mengambil sisa ruang yang tersedia */
+            margin-bottom: 0; /* Hapus margin-bottom default */
+        }
+
+        .btn-copy {
+            background: #e000ff !important;
+            color: white !important;
+            border-radius: 8px !important;
+            padding: 8px 15px !important;
+            font-size: 0.9em !important;
+            box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
+            flex-shrink: 0; /* Penting: mencegah button menyusut */
+            border: 1px solid rgba(224, 0, 255, 0.8);
+            min-width: 80px; /* Minimum width untuk tombol Salin */
+            text-align: center;
+            display: flex; /* Untuk ikon dan teks sejajar */
+            align-items: center;
+            justify-content: center;
+            gap: 5px; /* Jarak antara ikon dan teks */
+        }
+        .btn-copy:hover {
+            background: #39ff14 !important;
+            transform: translateY(-2px) !important;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
+            border-color: rgba(57, 255, 20, 1);
+        }
+
+        /* Tombol Primary dan Secondary dalam Modal */
+        .modal-content button.primary {
+            background: linear-gradient(90deg, #39ff14 0%, #00bcd4 100%); /* Gradien hijau ke biru */
+            border: 2px solid #fff;
+            padding: 12px 25px;
+            border-radius: 10px;
+            color: #0d0d1a;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(57, 255, 20, 0.6);
+            margin-top: 15px; /* Jarak dari input terakhir */
+            width: 100%; /* Memastikan tombol modal melebar penuh */
+        }
+
+        .modal-content button.primary:hover {
+            background: linear-gradient(90deg, #00bcd4 0%, #39ff14 100%);
+            box-shadow: 0 0 20px rgba(57, 255, 20, 0.8);
+            transform: translateY(-2px) scale(1.01);
+        }
+
+        .modal-content button.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #e0e0e0;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px; /* Jarak dari tombol di atasnya */
+            width: 100%; /* Memastikan tombol modal melebar penuh */
+        }
+
+        .modal-content button.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #39ff14;
+            border-color: #39ff14;
+        }
+
+        #form-qris {
+            text-align: center;
+            margin: 25px 0;
+        }
+
+        #gambar-qris {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+            border: 3px solid #39ff14; /* Border hijau neon */
+            box-shadow: 0 0 25px rgba(57, 255, 20, 0.7); /* Glow hijau */
+        }
+
+        /* --- Game Grid --- */
+        .game-grid-section {
+            margin-top: -10px;
+            padding: 0 20px; /* Padding agar tidak menempel sisi layar */
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Ukuran lebih kecil: min 100px */
+            gap: 15px; /* Jarak antar game lebih kecil */
+            padding: 10px;
+            border-radius: 15px;
+            background: rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
+            border: 1px solid gold;
+        }
+
+        .game-item {
+            background: rgba(10, 10, 30, 0.8); /* Background item game lebih gelap */
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: block;
+            position: relative;
+            padding-top: 100%; /* Rasio aspek 1:1, untuk gambar persegi */
+            height: 0;
+            border: 1px solid gold;
+        }
+
+        .game-item:hover {
+            transform: translateY(-5px) scale(1.05); /* Efek hover lebih menonjol */
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4); /* Glow biru kuat */
+            border-color: rgba(0, 255, 255, 0.8);
+        }
+
+        .game-item a {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block; /* Penting untuk link */
+            text-decoration: none;
+        }
+
+        .game-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 12px; /* Ikuti border radius parent */
+            transition: transform 0.3s ease; /* Transisi untuk gambar saat hover */
+        }
+
+        .game-item:hover img {
+            transform: scale(1.05); /* Gambar sedikit membesar saat hover */
+        }
+
+        /* Tombol refresh di bawah */
+        .refresh-btn-wrapper {
+            position: fixed;
+            bottom: 10px;
+            left: 71%;
+            transform: translateX(-50%);
+            z-index: 999; /* Di atas elemen lain tapi di bawah WA */
+            width: 100%;
+            padding: 0 20px; /* Padding agar tidak menempel sisi */
+        }
+
+        .refresh-btn-wrapper button {
+            background: linear-gradient(90deg, #e000ff 0%, #00bcd4 100%);
+            border: 2px solid #39ff14;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(224, 0, 255, 0.6);
+            width: 50%;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .refresh-btn-wrapper button:hover {
+            background: linear-gradient(90deg, #00bcd4 0%, #e000ff 100%);
+            box-shadow: 0 0 30px rgba(224, 0, 255, 0.8), 0 0 40px rgba(0, 188, 212, 0.8);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        /* WhatsApp Button */
+        .whatsapp-button {
+            position: fixed;
+            bottom: 50px;
+            right: 15px;
+            z-index: 1; /* Pastikan di atas semua */
+        }
+        .whatsapp-button img {
+          im
+            width: 30px; /* Ukuran ikon WA */
+            height: 30px;
+            border-radius: 100%;
+            box-shadow: 0 0 99px rgba(37, 211, 102, 0.8), 0 0 25px rgba(37, 211, 102, 0.5); /* Glow hijau WA */
+            transition: transform 0s ease;
+        }
+        .whatsapp-button img:hover {
+            transform: scale(1.1);
+        }
+
+
+        /* Responsif untuk Mobile */
+        @media (max-width: 768px) {
+            .container {
+                padding-bottom: 0px; /* Sesuaikan padding bawah untuk tombol di mobile */
+            }
+            .saldo {
+                font-size: 0.9em;
+                top: 15px;
+                left: 15px;
+                padding: 8px 15px;
+                border-radius: 12px;
+            }
+            h1 {
+                font-size: 2.2em; /* Sesuaikan ukuran judul utama */
+                margin-top: 25px;
+            }
+            .marquee-container {
+                padding: 8px 0;
+                font-size: 0.9em;
+            }
+            .btn-group {
+                gap: 8px; /* Jarak lebih kecil */
+                padding: 0 15px;
+            }
+            .btn {
+                padding: 9px 15px;
+                font-size: 0.85em;
+                border-radius: 5px;
+                max-width: 140px; /* Batasi lagi di tablet */
+            }
+            
+            table {
+                padding: 0 15px;
+                width: calc(100% - 30px); /* Sesuaikan lebar dengan padding */
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+            th, td {
+                padding: 10px;
+                font-size: 0.8em;
+            }
+            .modal-content {
+                padding: 25px;
+                border-radius: 15px;
+            }
+            .modal-content h2 {
+                font-size: 1.8em;
+            }
+            .modal-content button {
+                padding: 10px 20px;
+                font-size: 0.9em;
+            }
+            .btn-copy {
+                font-size: 0.8em !important; /* Ukuran font lebih kecil untuk salin */
+                padding: 6px 10px !important; /* Padding lebih kecil */
+                min-width: 60px;
+            }
+            .input-group-with-copy {
+                flex-direction: column; /* Ubah ke kolom pada layar yang lebih sempit */
+                align-items: flex-start;
+                gap: 5px;
+            }
+            .input-group-with-copy label,
+            .input-group-with-copy input[type="text"],
+            .btn-copy {
+                width: 100%; /* Lebar penuh */
+            }
+
+            .game-grid-section {
+                padding: 0 15px; /* Padding agar tidak menempel sisi layar */
+            }
+            .game-grid {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Lebih kecil lagi untuk tablet */
+                gap: 10px;
+            }
+            .refresh-btn-wrapper {
+                padding: 0 15px;
+            }
+            .refresh-btn-wrapper button {
+                max-width: 250px;
+            }
+            .whatsapp-button img {
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding-bottom: 0px; /* Sesuaikan padding bawah untuk tombol di mobile sangat kecil */
+            }
+            .saldo {
+                font-size: 0.8em;
+                top: 0px;
+                left: 10px;
+                padding: 6px 12px;
+            }
+            h1 {
+                font-size: 0.8em; /* Lebih kecil lagi */
+                margin-top: 20px;
+            }
+            .marquee-container {
+                padding: 6px 0;
+                font-size: 0.8em;
+            }
+            .btn-group {
+                gap: 6px;
+                padding: 0 10px;
+            }
+            .btn {
+                width: 48%; /* Dua kolom per baris */
+                padding: 7px 10px;
+                font-size: 0.75em;
+            }
+
+            table {
+                padding: 0 10px;
+                width: calc(100% - 20px);
+                margin-left: 10px;
+                margin-right: 10px;
+            }
+            th, td {
+                padding: 8px;
+                font-size: 0.75em;
+            }
+            .modal-content {
+                padding: 20px;
+                border-radius: 12px;
+            }
+            .modal-content h2 {
+                font-size: 1.5em;
+            }
+            .modal-content input,
+            .modal-content select {
+                font-size: 0.85em;
+                padding: 10px 12px;
+            }
+            .modal-content button {
+                padding: 8px 15px;
+                font-size: 0.8em;
+            }
+            .btn-copy {
+                font-size: 0.7em !important;
+                padding: 5px 8px !important;
+                min-width: 50px;
+            }
+            .game-grid {
+                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Paling kecil untuk ponsel */
+                gap: 6px;
+            }
+            .refresh-btn-wrapper {
+                padding: 0 10px;
+            }
+            .refresh-btn-wrapper button {
+                max-width: 200px;
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+            .whatsapp-button img {
+                width: 35px;
+                height: 35px;
+            }
+            /* Gaya untuk Gambar Judul "PILIH GAME" */
+.game-section-title-image {
+    display: block; /* Agar gambar mengambil baris penuh */
+    max-width: 90%; /* Batasi lebar gambar agar tidak terlalu besar */
+    height: auto;
+    margin: 20px auto 25px auto; /* Pusatkan gambar dan berikan margin atas/bawah */
+    border-radius: 10px; /* Sudut sedikit membulat */
+    border: 2px solid #00ffff; /* Border neon biru */
+    box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff, 0 0 40px #00ffff; /* Efek glow neon */
+    animation: neon-glow-image 1.5s ease-in-out infinite alternate; /* Animasi glow */
 }
-      font-family: 'Poppins', sans-serif;
-      color: #e0e0e0; /* Warna teks umum */
-      overflow-x: hidden;
-      display: flex; /* Untuk memusatkan konten secara vertikal jika perlu */
-      justify-content: center;
-      align-items: center;
-    }
 
-    /* Kontainer Utama */
-    .container {
-      width: 95%;
-      max-width: 650px; /* Sedikit lebih lebar untuk tampilan modern */
-      margin: 20px auto 80px;
-      background: rgba(0,0,0,0.85); /* Hampir hitam transparan */
-      border-radius: 25px; /* Lebih membulat */
-      padding: 35px; /* Padding yang lebih besar */
-      /* Bayangan dengan glow neon */
-      box-shadow: 0 0 40px rgba(0, 255, 255, 0.0), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1);
-      position: relative;
-      border: 2px solid rgba(0, 255, 255, 0.6); /* Border neon */
-      animation: neon-border-pulse 3s infinite alternate; /* Animasi border */
-    }
-
-    /* Animasi Border Neon */
-    @keyframes neon-border-pulse {
-        from { border-color: rgba(0, 255, 255, 0.6); box-shadow: 0 0 40px rgba(0, 255, 255, 0.4), 0 0 80px rgba(0, 255, 255, 0.2), inset 0 0 20px rgba(0, 255, 255, 0.1); }
-        to { border-color: rgba(0, 200, 200, 0.8); box-shadow: 0 0 50px rgba(0, 255, 255, 0.6), 0 0 100px rgba(0, 255, 255, 0.3), inset 0 0 25px rgba(0, 255, 255, 0.2); }
-    }
-
-
-    /* Saldo di Pojok Kiri Atas */
-    .saldo {
-      position: absolute;
-      top: 28px; /* Jarak dari atas */
-      left: 25px; /* Jarak dari kiri */
-      font-family: 'Orbitron', sans-serif; /* Font futuristik */
-      font-size: 1em;
-      font-weight: 700;
-      color: #f986; /* Neon hijau terang */
-      background: rgba(10, 10, 30, 0.8); /* Background gelap */
-      padding: 10px 18px;
-      border-radius: 15px;
-      box-shadow: 0 0 15px rgba(57, 255, 20, 0.6); /* Glow neon hijau */
-      z-index: 10;
-      border: 1px solid rgba(57, 255, 20, 0.4);
-    }
-
-    /* Judul Utama */
-    h1 {
-      text-align: center;
-      font-family: 'Orbitron', sans-serif;
-      color: #ffd700;
-    text-shadow: 0 0 10px #ffeb3b,
-                 0 0 20px #ffeb3b,
-                 0 0 30px #ffeb3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-  }
-
-  @keyframes neon-glow {
+@keyframes neon-glow-image {
     from {
-      text-shadow: 0 0 5px #ffeb3b, 0 0 10px #ffeb3b, 0 0 15px #ffeb3b;
-      color: #ffd700;
+        box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+        border-color: rgba(0, 255, 255, 0.7);
     }
     to {
-      text-shadow: 0 0 15px #ffd700, 0 0 25px #ffd700, 0 0 35px #ffd700,
-                   0 0 45px #ffd700, 0 0 55px #ffd700, 0 0 65px #ffd700;
-      color: red;
+        box-shadow: 0 0 20px #00ffff, 0 0 5px #00ffff, 0 0 0px #00ffff;
+        border-color: #00ffff;
     }
-    }
-
-    /* Grup Tombol (Deposit, Penarikan, Riwayat) */
-    .btn-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px; /* Jarak antar tombol yang lebih kecil */
-      margin-bottom: 40px;
-      flex-wrap: wrap;
-    }
-
-    /* Tombol Umum */
-    .btn {
-      background: #00bcd4; /* Biru terang */
-      border: none;
-      border-radius: 25px; /* Lebih kecil, ramping */
-      padding: 10px 20px; /* Padding lebih kecil */
-      font-size: 0.95em; /* Ukuran font sedikit lebih kecil */
-      font-weight: 700;
-      cursor: pointer;
-      color: #0d0d1a; /* Warna teks gelap */
-      box-shadow: 0 0 15px rgba(0, 188, 212, 0.6), 0 0 25px rgba(0, 188, 212, 0.4); /* Glow neon biru */
-      transition: all 0.3s ease;
-      flex: 1;
-      min-width: 100px; /* Ukuran minimum tombol yang lebih kecil */
-      max-width: 160px; /* Batasi lebar agar tetap sejajar */
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      border: 1px solid rgba(0, 188, 212, 0.8);
-    }
-
-    .btn:hover {
-      background: #39ff14; /* Neon hijau saat hover */
-      transform: translateY(-3px) scale(1.03);
-      box-shadow: 0 0 20px rgba(57, 255, 20, 0.8), 0 0 30px rgba(57, 255, 20, 0.5);
-      color: #0d0d1a;
-      border-color: rgba(57, 255, 20, 1);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-      box-shadow: 0 0 10px rgba(0, 188, 212, 0.4);
-    }
-
-    /* Judul Bagian */
-    h2 {
-      font-family: 'Orbitron', sans-serif;
-      border-bottom: 2px solid #e000ff; /* Border bawah neon ungu */
-      padding-bottom: 12px;
-      margin-top: 40px; /* Jarak dari atas */
-      margin-bottom: 25px;
-  color: #ffd700;
-    text-shadow: 0 0 10px #00bcd4
-                 0 0 20px #ffeb,
-                 0 0 30px #ff3b,
-                 0 0 40px #ffeb3b,
-                 0 0 50px #ffeb3b,
-                 0 0 60px #ffeb3b;
-    animation: neon-glow 1.5s ease-in-out infinite alternate;
-    margin-top: 0;
-    line-height: 1.2;
-      text-align: center; /* Pusatkan judul */
-      background: #ffeb;
-      padding: 1px 10px;
-      border-radius: 10px;
-    }
-
-    /* Tabel */
-    table {
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0;
-      margin-bottom: 30px;
-      background: rgba(10, 10, 30, 0.7); /* Background tabel lebih gelap */
-      border-radius: 15px;
-      overflow: hidden;
-      box-shadow: 0 0 20px rgba(0, 255, 255, 0.2), inset 0 0 10px rgba(0, 255, 255, 0.1);
-      border: 1px solid rgba(0, 255, 255, 0.3);
-    }
-
-    th, td {
-      padding: 12px 15px;
-      text-align: left;
-      border-bottom: 1px solid rgba(0, 255, 255, 0.1); /* Garis pemisah neon halus */
-      color: #c0c0c0; /* Teks lebih terang */
-    }
-
-    th {
-      background: #00bcd4; /* Header biru neon */
-      color: #0d0d1a;
-      font-weight: 700;
-      text-transform: uppercase;
-      font-size: 0.9em;
-      text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-
-    .empty {
-      color: #888;
-      font-style: italic;
-      text-align: center;
-      padding: 20px 0;
-    }
-
-    /* Status dalam Tabel */
-    .status-pending { color: #ffeb3b; /* Kuning neon */ font-weight: bold; }
-    .status-approved { color: #39ff14; /* Hijau neon */ font-weight: bold; }
-    .status-rejected { color: #ff4d4d; /* Merah neon */ font-weight: bold; }
-
-    /* Efek Loading Tombol */
-    .btn.loading {
-      position: relative;
-      color: transparent;
-      pointer-events: none;
-      background: #00bcd4;
-    }
-
-    .btn.loading::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 20px;
-      height: 20px;
-      margin-top: -10px;
-      margin-left: -10px;
-      border: 3px solid #e000ff; /* Warna loading neon ungu */
-      border-top-color: transparent;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    /* --- Modal Kustom (Popup) --- */
-    .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9); /* Overlay lebih gelap */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
-    }
-
-    .modal-overlay.active {
-        opacity: 1;
-        visibility: visible;
-    }
-
-    .modal-content {
-        background: #1a0a2e; /* Ungu gelap */
-        color: #e0e0e0;
-        padding: 35px;
-        border-radius: 20px;
-        box-shadow: 0 0 30px rgba(224, 0, 255, 0.7), inset 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu */
-        width: 90%;
-        max-width: 480px; /* Sedikit lebih lebar */
-        transform: translateY(-50px) scale(0.9); /* Efek masuk lebih dramatis */
-        opacity: 0;
-        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.4s ease-out; /* Animasi bounce */
-        position: relative;
-        border: 2px solid rgba(224, 0, 255, 0.8);
-    }
-
-    .modal-overlay.active .modal-content {
-        transform: translateY(0) scale(1);
-        opacity: 1;
-    }
-
-    .modal-content h2 {
-        font-family: 'Orbitron', sans-serif;
-        color: #39ff14; /* Hijau neon untuk judul modal */
-        text-align: center;
-        margin-bottom: 30px;
-        font-size: 2em;
-        text-shadow: 0 0 15px rgba(57, 255, 20, 0.8);
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
-.modal-content label {
-    display: block;
-    margin-bottom: 8px;
-    color: #00bcd4; /* Label biru neon */
-    font-size: 0.95em;
-    text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
 }
 
-.modal-content input[type="text"],
-.modal-content input[type="email"],
-.modal-content input[type="number"],
-.modal-content select {
-    width: 100%;
-    padding: 12px 18px;
-    margin-bottom: 20px; /* Jarak antar input lebih besar */
-    border-radius: 10px;
-    border: 1px solid rgba(0, 255, 255, 0.4); /* Border neon transparan */
-    background-color: rgba(0, 0, 0, 0.6); /* Background input lebih gelap */
-    color: #e0e0e0;
-    font-size: 1em;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+/* Sesuaikan media queries jika perlu untuk ukuran gambar */
+@media (max-width: 768px) {
+    .game-section-title-image {
+        max-width: 95%; /* Lebih lebar sedikit di mobile */
+        margin: 15px auto 20px auto;
+        box-shadow: 0 0 10px #00ffff, 0 0 15px #00ffff;
+    }
 }
 
-.modal-content input:focus,
-.modal-content select:focus {
-    outline: none;
-    border-color: #39ff14; /* Border hijau neon saat fokus */
-    box-shadow: 0 0 0 4px rgba(57, 255, 20, 0.3), 0 0 15px rgba(57, 255, 20, 0.5);
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content input::placeholder {
-    color: #888;
-}
-
-.modal-content input[readonly] {
-    background-color: rgba(0, 0, 0, 0.4);
-    border-color: rgba(0, 255, 255, 0.2);
-    cursor: default;
-}
-
-/* --- Penyesuaian Baru/Modifikasi --- */
-.input-group-with-copy { /* Kelas baru untuk membungkus label, input, dan button copy */
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px; /* Jarak antar grup */
-    gap: 10px; /* Jarak antara input dan button */
-}
-
-.input-group-with-copy label {
-    margin-bottom: 0; /* Hapus margin-bottom default */
-    flex-shrink: 0; /* Pastikan label tidak menyusut */
-    white-space: nowrap; /* Pastikan teks label tidak pecah baris */
-    padding-right: 5px; /* Sedikit padding agar tidak terlalu mepet */
-}
-
-.input-group-with-copy input[type="text"] {
-    flex-grow: 1; /* Biarkan input mengambil sisa ruang yang tersedia */
-    margin-bottom: 0; /* Hapus margin-bottom default */
-}
-
-.btn-copy {
-    background: #e000ff !important;
-    color: white !important;
-    border-radius: 8px !important;
-    padding: 8px 15px !important;
-    font-size: 0.9em !important;
-    /* margin-left: 10px; <--- HAPUS ATAU KOMENTARI INI */
-    box-shadow: 0 0 10px rgba(224, 0, 255, 0.6) !important;
-    flex-shrink: 0; /* Penting: mencegah button menyusut */
-    border: 1px solid rgba(224, 0, 255, 0.8);
-    /* Lebar tetap, bisa disesuaikan jika perlu */
-    min-width: 80px; /* Minimum width untuk tombol Salin */
-    text-align: center;
-    display: flex; /* Untuk ikon dan teks sejajar */
-    align-items: center;
-    justify-content: center;
-    gap: 5px; /* Jarak antara ikon dan teks */
-}
-.btn-copy:hover {
-    background: #39ff14 !important;
-    transform: translateY(-2px) !important;
-    box-shadow: 0 0 15px rgba(57, 255, 20, 0.8) !important;
-    border-color: rgba(57, 255, 20, 1);
-}
-
-/* Media Queries untuk Responsif */
 @media (max-width: 480px) {
-    .input-group-with-copy {
-        flex-direction: column; /* Ubah ke kolom pada layar sangat kecil */
-        align-items: flex-start; /* Sejajarkan ke kiri */
-        gap: 5px; /* Kurangi gap */
-    }
-    .input-group-with-copy label {
-        width: 100%; /* Label ambil penuh lebar */
-    }
-    .input-group-with-copy input[type="text"] {
-        width: 100%; /* Input ambil penuh lebar */
-    }
-    .btn-copy {
-        width: 100%; /* Tombol salin ambil penuh lebar juga */
-        min-width: unset; /* Hapus min-width */
-        padding: 10px 15px !important; /* Sesuaikan padding */
+    .game-section-title-image {
+        max-width: 98%; /* Hampir penuh di layar sangat kecil */
+        margin: 10px auto 15px auto;
+        box-shadow: 0 0 8px #00ffff, 0 0 12px #00ffff;
     }
 }
-
-    #form-qris {
-        text-align: center;
-        margin: 25px 0;
-    }
-
-    #gambar-qris {
-        max-width: 100%;
-        height: auto;
-        border-radius: 15px;
-        border: 3px solid #39ff14; /* Border hijau neon */
-        box-shadow: 0 0 25px rgba(57, 255, 20, 0.7); /* Glow hijau */
-    }
-
-    /* --- Game Grid --- */
-    .game-grid-section {
-        margin-top: 50px;
-    }
-
-    .game-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Ukuran lebih kecil: min 100px */
-        gap: 15px; /* Jarak antar game lebih kecil */
-        padding: 10px;
-        border-radius: 15px;
-        background: rgba(0,0,0,0.6);
-        box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
-        border: 1px solid rgba(0, 255, 255, 0.2);
-    }
-
-    .game-item {
-        background: rgba(10, 10, 30, 0.8); /* Background item game lebih gelap */
-        border-radius: 12px;
-        overflow: hidden;
-        box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        display: block;
-        position: relative;
-        padding-top: 100%; /* Rasio aspek 1:1, untuk gambar persegi */
-        height: 0;
-        border: 1px solid rgba(224, 0, 255, 0.2);
-    }
-
-    .game-item:hover {
-        transform: translateY(-5px) scale(1.05); /* Efek hover lebih menonjol */
-        box-shadow: 0 0 25px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4); /* Glow biru kuat */
-        border-color: rgba(0, 255, 255, 0.8);
-    }
-
-    .game-item a {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        display: block; /* Penting untuk link */
-        text-decoration: none;
-    }
-
-    .game-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 12px; /* Ikuti border radius parent */
-        transition: transform 0.3s ease; /* Transisi untuk gambar saat hover */
-    }
-
-    .game-item:hover img {
-        transform: scale(1.05); /* Gambar sedikit membesar saat hover */
-    }
-
-
-    /* Responsif untuk Mobile */
-    @media (max-width: 768px) {
-      .container {
-        margin: 15px 10px 50px;
-        padding: 25px;
-        border-radius: 20px;
-      }
-      .saldo {
-        font-size: 1.1em;
-        top: 15px;
-        left: 15px;
-        padding: 8px 15px;
-        border-radius: 12px;
-      }
-      h1 {
-        font-size: 2em;
-        margin-bottom: 35px;
-        padding-top: 10px;
-      }
-      .btn-group {
-        flex-direction: row; /* Tetap sejajar di sini */
-        justify-content: space-around; /* Lebih merata */
-        gap: 8px; /* Jarak lebih kecil */
-      }
-      .btn {
-        width: auto; /* Biarkan konten menentukan lebar */
-        flex-grow: 1; /* Agak memanjang */
-        padding: 9px 15px;
-        font-size: 0.9em;
-        border-radius: 20px;
-        max-width: 140px; /* Batasi lagi di tablet */
-      }
-      h2 {
-        font-size: 1.6em;
-        margin-top: 30px;
-        margin-bottom: 20px;
-      }
-      th, td {
-        padding: 10px;
-        font-size: 0.85em;
-      }
-      .modal-content {
-        padding: 25px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.8em;
-      }
-      .modal-content button {
-        padding: 10px 20px;
-        font-size: 0.9em;
-      }
-      .btn-copy {
-        font-size: 0.5em !important;
-        padding: 5px 5px !important;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Lebih kecil lagi untuk tablet */
-        gap: 10px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        margin: 10px 5px 40px;
-        padding: 20px;
-        border-radius: 18px;
-        box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 15px rgba(0, 255, 255, 0.05);
-        border: 1px solid rgba(0, 255, 255, 0.4);
-      }
-      .saldo {
-        font-size: 1em;
-        top: 10px;
-        left: 10px;
-        padding: 6px 12px;
-        border-radius: 10px;
-      }
-      h1 {
-        font-size: 2em; /* Tetap besar agar menarik */
-        margin-bottom: 30px;
-      }
-      .btn-group {
-        flex-wrap: wrap; /* Pastikan membungkus */
-        justify-content: center; /* Pusat tombol */
-        gap: 8px; /* Jarak antar tombol */
-      }
-      .btn {
-        width: 48%; /* Dua kolom per baris */
-        padding: 8px 12px;
-        font-size: 0.85em;
-        max-width: none; /* Biarkan 48% yang mengatur */
-      }
-      h2 {
-        font-size: 1.4em;
-        margin-top: 25px;
-        margin-bottom: 15px;
-      }
-      .modal-content {
-        padding: 20px;
-        border-radius: 15px;
-      }
-      .modal-content h2 {
-        font-size: 1.6em;
-      }
-      .modal-content input,
-      .modal-content select {
-        font-size: 0.9em;
-        padding: 10px 15px;
-      }
-      .modal-content button {
-        padding: 10px 18px;
-        font-size: 0.85em;
-      }
-      .game-grid {
-        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr)); /* Paling kecil untuk ponsel */
-        gap: 8px;
-      }
-      .game-item {
-        padding-top: 100%; /* Pertahankan rasio aspek */
-    }
-    .marquee{
-      color: #fff;
-      margin: 10px;
-    }
-    }
-  </style>
+ </style>
 </head>
 <body>
-  <audio id="background-music" loop autoplay>
+<audio id="background-music" loop autoplay>
     <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
   </audio>
@@ -611,9 +762,10 @@
 
   <div class="container">
     <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
-    <h1>PROFIL PEMAIN</h1>
-  <div class="marquee">
- <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee><hr>
+    <h1></h1>
+  <div class="marquee-container">
+ <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee>
+    </div>
 
     <div class="btn-group">
       <button class="btn" id="btn-deposit">Deposit</button>
@@ -636,14 +788,16 @@
       </table>
     </div>
     
-    <div class="game-grid-section">
-      <h2>PILIH GAME</h2>
-      <div class="game-grid" id="game-display-grid">
-        </div>
+<div class="game-grid-section">
+  <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//wso138-jackpot.gif" alt="__" class="game-section-title-image">
+  <div class="game-grid" id="game-display-grid">
     </div>
-  </div>
-
-    <button onclick="location.reload();">🔁 refresh</button>
+</div>
+     
+    <div class="refresh-btn-wrapper">
+        <button onclick="location.reload();">Refresh</button>
+    </div>
+     
         <div id="modal-deposit" class="modal-overlay">
     <div class="modal-content">
       <h2>DEPOSIT VIA DANA</h2>
@@ -730,11 +884,10 @@
       </div>
     </div>
   </div>
-
-<a href="https://wa.me/628892l3707993" target="_blank" style="position: fixed; bottom: 10px; right: 10px; z-index: 1000;">
+  
+<a href="https://wa.me/628892l37079" target="_blank" class="whatsapp-button">
   <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" 
-       alt="WhatsApp" 
-       style="width:30px; height:30px;">
+       alt="WhatsApp">
 </a>
 
 
@@ -1259,10 +1412,16 @@
     const games = [
         { name: 'SLOT 77', url: 'slot.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//Slot77.jpeg' },
         { name: 'POKER', url: 'poker1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download.jpeg' },
-        { name: 'TEBAK DADU', url: 'tebakdadu.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed%20(1)%20(1)%20(1).png' },
+        { name: 'TEBAK DADU', url: 'tebakdadu.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//tebakdadu%20(1).png' },
         { name: 'SAMGONG', url: 'samgong1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png' },
         { name: 'SUSUN BALOK', url: 'susunbalok99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg' },
         { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '***' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '***' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '***' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '****' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '***' },
+        { name: 'QIU QIU', url: 'qiu99.html', imageUrl: '***' },
     ];
 
     // Load game list into display grid
