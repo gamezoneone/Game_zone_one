@@ -261,7 +261,7 @@ h2 {
     display: grid;
     /* 12 kolom untuk desktop, adaptif untuk mobile */
     grid-template-columns: repeat(auto-fit, minmax(28px, 1fr)); /* Auto-fit agar adaptif */
-    gap: 4px; /* Jarak antar chip angka */
+    gap: 2px; /* Jarak antar chip angka */
     max-width: 600px;
     margin: 0 auto;
     /* overflow-x: auto;  Tidak perlu jika grid benar-benar adaptif */
@@ -387,7 +387,7 @@ button#spin-button:disabled {
     /* Number grid for smaller screens */
     .number-bet-grid {
         grid-template-columns: repeat(auto-fit, minmax(26px, 1fr)); /* Lebih ringkas pada layar kecil */
-        gap: 3px;
+        gap: 2px;
     }
     .number-bet-grid .bet-chip {
         min-width: 26px;
@@ -529,7 +529,7 @@ button#spin-button:disabled {
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-    // --- DOM Elements ---
+// --- DOM Elements ---
     const loadingOverlay = document.getElementById('loading-overlay');
     const gameSection = document.getElementById('game-section');
     const logoutButton = document.getElementById('logout-button');
@@ -550,7 +550,7 @@ button#spin-button:disabled {
     const loseSound = document.getElementById('lose-sound');
 
     let currentPlayerId = null;
-    let playerBalance = 0;
+    let playerBalance = 0; // Ini adalah representasi lokal dari saldo
     let currentBet = { type: null, value: null, amount: 0 };
     let isSpinning = false;
 
@@ -626,7 +626,7 @@ button#spin-button:disabled {
 
         if (user) {
             currentPlayerId = user.id;
-            await fetchPlayerBalance(); // Fetch balance from DB
+            await fetchPlayerBalance(); // Ambil saldo dari DB
             gameSection.classList.remove('hidden'); // Show game
             loadingOverlay.classList.add('hidden'); // Hide loading
             updateStatus('Selamat datang! Pilih taruhan Anda.');
@@ -643,16 +643,18 @@ button#spin-button:disabled {
         }
         const { data, error } = await supabase
             .from('users_data')
+            // *** PERUBAHAN UTAMA DI SINI: MENGAMBIL 'saldo' BUKAN 'balance' ***
             .select('saldo')
             .eq('id', currentPlayerId)
             .single();
 
         if (error) {
-            console.error('Error fetching saldo:', error.message);
+            console.error('Error fetching balance:', error.message);
             updateStatus('Gagal mengambil saldo dari database.');
-            playerBalance = 0;
+            playerBalance = 0; // Default to 0 if balance cannot be fetched
         } else {
-            playerBalance = parseFloat(data.balance);
+            // *** PERUBAHAN UTAMA DI SINI: MENGGUNAKAN data.saldo BUKAN data.balance ***
+            playerBalance = parseFloat(data.saldo);
         }
         updateBalanceDisplay();
     }
@@ -664,14 +666,15 @@ button#spin-button:disabled {
         }
         const { error } = await supabase
             .from('users_data')
+            // *** PERUBAHAN UTAMA DI SINI: MENGUPDATE KOLOM 'saldo' BUKAN 'balance' ***
             .update({ saldo: newBalance })
             .eq('id', currentPlayerId);
 
         if (error) {
-            console.error('Error updating saldo:', error.message);
+            console.error('Error updating balance:', error.message);
             updateStatus('Gagal menyimpan saldo ke database. Saldo lokal mungkin tidak sinkron.');
         } else {
-            playerBalance = newBalance;
+            playerBalance = newBalance; // Update local state after successful DB update
             updateBalanceDisplay();
         }
     }
@@ -853,6 +856,7 @@ button#spin-button:disabled {
     // Check user session on load and play music
     await checkUserAndLoadGame();
 });
+
 
 // Helper function for Supabase
 function createClient(supabaseUrl, supabaseKey) {
