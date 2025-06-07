@@ -870,51 +870,25 @@ button#spin-button:disabled {
 
     // Fungsi initializeGame (dari kode Anda, disesuaikan untuk Roulette)
 async function initializeGame() {
-    loadingOverlay.classList.remove('hidden'); // Tetap tampilkan loading sebentar
+        loadingOverlay.classList.remove('hidden'); // Tampilkan loading
+        gameStatusElement.textContent = 'Memuat sesi pengguna...';
 
-    // --- BAGIAN INI SEMENTARA DIUBAH UNTUK PENGEMBANGAN TAMPILAN ---
-    // Komentar atau hapus baris yang berinteraksi dengan Supabase.auth.getUser()
-    // dan logic pengalihan ke index.html.
+        const { data: { user } } = await supabase.auth.getUser();
 
-    // Simulasikan pengguna sudah login
-    currentUser = { id: 'dummy-user-id', email: 'dummy@example.com' }; // Buat objek user dummy
-    playerBalance = 5000; // Berikan saldo dummy
-    updateBalanceDisplay(); // Perbarui tampilan saldo dengan dummy data
-
-    gameStatusElement.textContent = 'Mode Desain: Pengguna dimuat secara dummy.';
-    gameSection.classList.remove('hidden'); // Tampilkan game
-    loadingOverlay.classList.add('hidden'); // Sembunyikan loading
-
-    // Nonaktifkan tombol spin/deal sementara jika Anda tidak ingin fungsi game berjalan
-    // spinButton.disabled = false; // Aktifkan tombol spin jika ingin coba interaksi
-    // Jika Anda hanya ingin fokus pada tampilan, biarkan tombol ini dalam keadaan disabled
-
-    playBgMusic(); // Tetap mainkan musik latar jika diinginkan
-
-    // HIDE LOGOUT BUTTON in design mode if it causes issues
-    // logoutButton.style.display = 'none';
-
-    // --- AKHIR BAGIAN PERUBAHAN SEMENTARA ---
-
-    /*
-    // KODE ASLI SEBELUMNYA (JANGAN HAPUS, CUKUP KOMENTARI SAJA)
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (user) {
-        currentUser = user;
-        gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
-        await loadUserData(user.id); // Memuat saldo dan data lain dari DB
-        gameSection.classList.remove('hidden'); // Tampilkan game
-        loadingOverlay.classList.add('hidden'); // Sembunyikan loading
-        updateStatus('Selamat datang! Pilih taruhan Anda.');
-        playBgMusic(); // Mainkan musik latar
-        spinButton.disabled = false; // Aktifkan tombol spin
-    } else {
-        // Jika tidak ada user, arahkan ke halaman login
-        window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
+        if (user) {
+            currentUser = user;
+            gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
+            await loadUserData(user.id); // Memuat saldo dan data lain dari DB
+            gameSection.classList.remove('hidden'); // Tampilkan game
+            loadingOverlay.classList.add('hidden'); // Sembunyikan loading
+            updateStatus('Selamat datang! Pilih taruhan Anda.');
+            playBgMusic(); // Mainkan musik latar
+            spinButton.disabled = false; // Aktifkan tombol spin
+        } else {
+            // Jika tidak ada user, arahkan ke halaman login
+            window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
+        }
     }
-    */
-}
 
 
     logoutButton.addEventListener('click', handleLogout);
