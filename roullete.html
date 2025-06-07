@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roulette Neon - Mainkan Sekarang!</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+      body {
+    margin: 0;
+    padding: 0;
+    background-color: #0a0a1a; /* Dark background */
+    color: #e0f2f7; /* Light text */
+    font-family: 'Press Start 2P', cursive; /* Contoh font retro-futuristic */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    position: relative;
+    font-size: 16px; /* Default font size */
+}
+
+/* Fallback for Press Start 2P if not loaded */
+body {
+    font-family: 'Arial Black', Gadget, sans-serif;
+}
+
+.game-container {
+    background-color: #1a0a2a; /* Darker purple-ish */
+    border: 3px solid #6a059f; /* Purple neon border */
+    box-shadow: 0 0 15px #6a059f, 0 0 30px #6a059f, 0 0 45px #6a059f;
+    border-radius: 15px;
+    padding: 30px;
+    width: 90%; /* Lebih responsif */
+    max-width: 800px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 10;
+}
+
+h1 {
+    color: #00ffcc; /* Neon green */
+    text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
+    margin-bottom: 20px;
+    font-size: 2.5em; /* Ukuran font adaptif */
+}
+
+.header-info {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 25px;
+    font-size: 1.2em;
+    color: #ffcc00; /* Neon yellow */
+    text-shadow: 0 0 5px #ffcc00;
+    flex-wrap: wrap; /* Izinkan wrap pada layar kecil */
+    gap: 10px; /* Jarak antar elemen */
+}
+
+.dashboard-link {
+    color: #00ffff; /* Cyan neon */
+    text-decoration: none;
+    font-size: 0.9em;
+    padding: 8px 15px;
+    border: 1px solid #00ffff;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    box-shadow: 0 0 5px #00ffff;
+}
+
+.dashboard-link:hover {
+    background-color: #00ffff;
+    color: #0a0a1a;
+    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+
+.roulette-wheel-area {
+    margin: 30px auto;
+    width: 250px;
+    height: 250px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wheel-outer {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #330033 0%, #0d0d1a 100%);
+    border: 5px solid #ff00ff; /* Neon pink */
+    box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.wheel-inner {
+    width: 80%;
+    height: 80%;
+    border-radius: 50%;
+    background-color: #0d0d;
+    border: 3px solid #00ffcc; /* Neon green inner border */
+    box-shadow: inset 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Hide overflow for ball */
+}
+
+.current-result {
+    font-size: 4em;
+    font-weight: bold;
+    color: #ff00ff; /* Neon pink */
+    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+    position: absolute;
+    z-index: 5;
+    background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background for readability */
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+
+.ball {
+    width: 15px;
+    height: 15px;
+    background-color: #ffffff; /* White ball */
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: transform 3s ease-out; /* Smooth transition for ball movement */
+    z-index: 10;
+}
+
+.betting-area {
+    margin-top: 30px;
+}
+
+h2 {
+    color: #ff6600; /* Neon orange */
+    text-shadow: 0 0 8px #ff6600;
+    margin-bottom: 15px;
+    font-size: 1.8em;
+}
+
+.bet-input {
+    margin-bottom: 20px;
+}
+
+.bet-input label {
+    font-size: 1.1em;
+    color: #aaffff; /* Light cyan */
+    text-shadow: 0 0 3px #aaffff;
+    margin-right: 10px;
+}
+
+.bet-input input[type="number"] {
+    background-color: #0d0d1a;
+    border: 2px solid #00ffff; /* Cyan neon */
+    color: #00ffcc;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100px;
+    text-align: center;
+    box-shadow: 0 0 5px #00ffff;
+    outline: none;
+}
+
+.bet-options {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.bet-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.bet-chip {
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid;
+    font-size: 0.9em;
+    user-select: none; /* Prevent text selection */
+}
+
+/* Neon colors for bet chips */
+.bet-chip.red {
+    background-color: #8b0000;
+    border-color: #ff0000;
+    color: white;
+    box-shadow: 0 0 8px #ff0000;
+}
+.bet-chip.black {
+    background-color: #000000;
+    border-color: #444444;
+    color: white;
+    box-shadow: 0 0 8px #444444;
+}
+.bet-chip.green { /* This class will only be used for the '0' if it were present, or other elements */
+    background-color: #006400;
+    border-color: #00ff00;
+    color: white;
+    box-shadow: 0 0 8px #00ff00;
+}
+.bet-chip.even, .bet-chip.odd, .bet-chip.low, .bet-chip.high {
+    background-color: #330066;
+    border-color: #cc00ff;
+    color: white;
+    box-shadow: 0 0 8px #cc00ff;
+}
+
+.bet-chip:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0 15px var(--bet-chip-shadow-hover); /* Dynamic shadow for hover */
+}
+
+.bet-chip.red:hover { --bet-chip-shadow-hover: #ff0000; }
+.bet-chip.black:hover { --bet-chip-shadow-hover: #444444; }
+.bet-chip.green:hover { --bet-chip-shadow-hover: #00ff00; }
+.bet-chip.even:hover, .bet-chip.odd:hover, .bet-chip.low:hover, .bet-chip.high:hover { --bet-chip-shadow-hover: #cc00ff; }
+
+/* Active bet chip */
+.bet-chip.active {
+    border-color: #fff000; /* Yellow glow */
+    box-shadow: 0 0 15px #fff000, 0 0 25px #fff000;
+    transform: scale(1.05);
+    background-color: #550055; /* Slightly different background when active */
+}
+
+.number-bet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(30px, 1fr)); /* Adaptif berdasarkan lebar layar */
+    gap: 5px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.number-bet-grid .bet-chip {
+    padding: 8px 5px;
+    font-size: 0.8em;
+    min-width: 30px; /* Fixed width for numbers */
+    max-width: 50px;
+    box-sizing: border-box;
+}
+
+button#spin-button {
+    background-color: #00ffff; /* Cyan neon */
+    color: #0d0d1a; /* Dark text */
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+    margin-top: 30px;
+}
+
+button#spin-button:hover {
+    background-color: #00ccdd;
+    box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
+    transform: translateY(-3px);
+}
+
+button#spin-button:disabled {
+    background-color: #333;
+    box-shadow: none;
+    cursor: not-allowed;
+    color: #888;
+    transform: none;
+}
+
+/* Hidden Utility Class */
+.hidden {
+    display: none !important;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    color: #00ffcc;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5em;
+    z-index: 9999;
+}
+
+.spinner {
+    border: 8px solid rgba(0, 255, 204, 0.3);
+    border-top: 8px solid #00ffcc;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-top: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Responsiveness */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 1.8em;
+    }
+    .header-info {
+        font-size: 1em;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .roulette-wheel-area {
+        width: 200px;
+        height: 200px;
+    }
+    .current-result {
+        font-size: 3em;
+    }
+    h2 {
+        font-size: 1.5em;
+    }
+    .bet-chip {
+        padding: 10px 15px;
+        font-size: 0.8em;
+    }
+    .number-bet-grid {
+        grid-template-columns: repeat(auto-fit, minmax(25px, 1fr)); /* Lebih ringkas pada layar kecil */
+        gap: 4px;
+    }
+    .number-bet-grid .bet-chip {
+        min-width: 25px;
+        max-width: 40px;
+        padding: 6px 3px;
+    }
+    button#spin-button {
+        font-size: 1.2em;
+        padding: 12px 25px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 20px;
+    }
+    h1 {
+        font-size: 1.5em;
+    }
+    .bet-group {
+        flex-direction: column;
+        align-items: center;
+    }
+    .bet-chip {
+        width: 80%; /* Make simple chances wider */
+    }
+    .number-bet-grid {
+        grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+        gap: 3px;
+    }
+    .number-bet-grid .bet-chip {
+        min-width: 20px;
+        max-width: 35px;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="loading-overlay" id="loading-overlay">
+        <p>Memuat game... Memeriksa sesi...</p>
+        <div class="spinner"></div>
+    </div>
+
+    <div class="game-container hidden" id="game-section">
+        <h1>ROULETTE NEON</h1>
+
+        <div class="header-info">
+            <p>Saldo Anda: <span id="player-balance">$0</span></p>
+            <p>Status: <span id="game-status"></span></p>
+            <button id="logout-button">Logout</button>
+            <a href="profil.html" class="dashboard-link">Dashboard Profil</a>
+        </div>
+
+        <div class="roulette-wheel-area">
+            <div class="wheel-outer">
+                <div class="wheel-inner" id="roulette-wheel">
+                    <span class="ball" id="roulette-ball"></span>
+                    <div class="current-result" id="current-result-display">?</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="betting-area">
+            <h2>Pasang Taruhan Anda</h2>
+
+            <div class="bet-input">
+                <label for="bet-amount">Jumlah Taruhan:</label>
+                <input type="number" id="bet-amount" value="10" min="1" step="1">
+            </div>
+
+            <div class="bet-options">
+                <div class="bet-group simple-chances">
+                    <div class="bet-chip red" data-bet-type="color" data-bet-value="red">MERAH</div>
+                    <div class="bet-chip black" data-bet-type="color" data-bet-value="black">HITAM</div>
+                    <div class="bet-chip even" data-bet-type="parity" data-bet-value="even">GENAP</div>
+                    <div class="bet-chip odd" data-bet-type="parity" data-bet-value="odd">GANJIL</div>
+                    <div class="bet-chip low" data-bet-type="range" data-bet-value="low">1-18</div>
+                    <div class="bet-chip high" data-bet-type="range" data-bet-value="high">19-36</div>
+                </div>
+
+                <h3>Pilih Angka (Straight Up)</h3>
+                <div class="number-bet-grid" id="number-bet-grid">
+                    </div>
+            </div>
+
+            <button id="spin-button">PUTAR RODA!</button>
+        </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+    const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const loadingOverlay = document.getElementById('loading-overlay');
+    const gameSection = document.getElementById('game-section');
+    const logoutButton = document.getElementById('logout-button');
+
+    const playerBalanceElement = document.getElementById('player-balance');
+    const gameStatusElement = document.getElementById('game-status');
+    const betAmountInput = document.getElementById('bet-amount');
+    const spinButton = document.getElementById('spin-button');
+    const currentResultDisplay = document.getElementById('current-result-display');
+    const rouletteBall = document.getElementById('roulette-ball');
+    const rouletteWheel = document.getElementById('roulette-wheel');
+    const numberBetGrid = document.getElementById('number-bet-grid');
+
+    let currentPlayerId = null;
+    let playerBalance = 0;
+    let currentBet = { type: null, value: null, amount: 0 };
+    let isSpinning = false;
+
+    // Define roulette numbers with their colors (European Roulette tanpa 0)
+    // Angka 0 dihilangkan dari roda dan logika
+    const rouletteNumbers = [
+        { number: 32, color: 'red' }, { number: 15, color: 'black' }, { number: 19, color: 'red' }, { number: 4, color: 'black' },
+        { number: 21, color: 'red' }, { number: 2, color: 'black' }, { number: 25, color: 'red' }, { number: 17, 'color': 'black' },
+        { number: 34, color: 'red' }, { number: 6, color: 'black' }, { number: 27, color: 'red' }, { number: 13, color: 'black' },
+        { number: 36, color: 'red' }, { number: 11, color: 'black' }, { number: 30, color: 'red' }, { number: 8, 'color': 'black' },
+        { number: 23, color: 'red' }, { number: 10, color: 'black' }, { number: 5, color: 'red' }, { number: 24, 'color': 'black' },
+        { number: 16, color: 'red' }, { number: 33, color: 'black' }, { number: 1, color: 'red' }, { number: 20, 'color': 'black' },
+        { number: 14, color: 'red' }, { number: 31, color: 'black' }, { number: 9, color: 'red' }, { number: 22, 'color': 'black' },
+        { number: 18, color: 'red' }, { number: 29, color: 'black' }, { number: 7, color: 'red' }, { number: 28, 'color': 'black' },
+        { number: 12, color: 'red' }, { number: 35, color: 'black' }, { number: 3, color: 'red' }, { number: 26, 'color': 'black' }
+    ];
+
+    // Peta warna angka (tanpa 0)
+    const numberColorsMap = {
+        1: 'red', 2: 'black', 3: 'red', 4: 'black', 5: 'red', 6: 'black',
+        7: 'red', 8: 'black', 9: 'red', 10: 'black', 11: 'black', 12: 'red', 13: 'black',
+        14: 'red', 15: 'black', 16: 'red', 17: 'black', 18: 'red', 19: 'red', 20: 'black',
+        21: 'red', 22: 'black', 23: 'red', 24: 'black', 25: 'red', 26: 'black', 27: 'red',
+        28: 'black', 29: 'black', 30: 'red', 31: 'black', 32: 'red', 33: 'black',
+        34: 'red', 35: 'black', 36: 'red'
+    };
+
+    // --- Functions ---
+
+    // Populate number bet grid (tanpa angka 0)
+    function populateNumberGrid() {
+        numberBetGrid.innerHTML = ''; // Pastikan bersih dari angka 0 statis
+        for (let i = 1; i <= 36; i++) {
+            const div = document.createElement('div');
+            div.className = `bet-chip ${numberColorsMap[i]}`;
+            div.dataset.betType = "number";
+            div.dataset.betValue = i;
+            div.textContent = i;
+            numberBetGrid.appendChild(div);
+        }
+        setupBetChipListeners(); // Re-select all bet chips after populating
+    }
+
+    // This function will be called once after all bet chips are in DOM
+    function setupBetChipListeners() {
+        document.querySelectorAll('.bet-chip').forEach(chip => {
+            chip.addEventListener('click', () => {
+                if (isSpinning) {
+                    updateStatus('Tunggu putaran selesai!');
+                    return;
+                }
+                // Remove active class from previous bet
+                document.querySelectorAll('.bet-chip').forEach(c => c.classList.remove('active'));
+
+                // Set current bet
+                chip.classList.add('active');
+                currentBet.type = chip.dataset.betType;
+                currentBet.value = chip.dataset.betValue;
+                updateStatus(`Anda memilih taruhan pada ${chip.textContent}.`);
+            });
+        });
+    }
+
+    async function handleLogout() {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+            console.error('Logout error:', error.message);
+            updateStatus('Gagal logout. Coba lagi.');
+        } else {
+            // Redirect to login page or main index
+            window.location.href = 'index.html'; // Ganti dengan halaman login Anda
+        }
+    }
+
+    // Supabase user check and game load
+    async function checkUserAndLoadGame() {
+        loadingOverlay.classList.remove('hidden'); // Show loading
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+            currentPlayerId = user.id;
+            await fetchPlayerBalance(); // Ambil saldo dari DB
+            gameSection.classList.remove('hidden'); // Show game
+            loadingOverlay.classList.add('hidden'); // Hide loading
+            updateStatus('Selamat datang! Pilih taruhan Anda.');
+        } else {
+            // User not logged in, redirect to login page
+            window.location.href = 'index.html'; // Ganti dengan halaman login Anda
+        }
+    }
+
+    async function fetchPlayerBalance() {
+        if (!currentPlayerId) {
+            console.error('No current player ID to fetch balance.');
+            return;
+        }
+        const { data, error } = await supabase
+            .from('users_data')
+            .select('balance')
+            .eq('id', currentPlayerId) // Menggunakan kolom 'id' sesuai dengan struktur tabel Anda
+            .single();
+
+        if (error) {
+            console.error('Error fetching balance:', error.message);
+            updateStatus('Gagal mengambil saldo dari database.');
+            playerBalance = 0; // Set to 0 if balance cannot be fetched
+        } else {
+            playerBalance = parseFloat(data.balance);
+        }
+        updateBalanceDisplay();
+    }
+
+    async function updatePlayerBalanceInDB(newBalance) {
+        if (!currentPlayerId) {
+            console.error('No current player ID to update balance.');
+            return;
+        }
+        const { error } = await supabase
+            .from('users_data')
+            .update({ balance: newBalance })
+            .eq('id', currentPlayerId); // Menggunakan kolom 'id'
+
+        if (error) {
+            console.error('Error updating balance:', error.message);
+            updateStatus('Gagal menyimpan saldo ke database. Saldo lokal mungkin tidak sinkron.');
+        } else {
+            playerBalance = newBalance; // Update local state after successful DB update
+            updateBalanceDisplay();
+        }
+    }
+
+    function updateBalanceDisplay() {
+        playerBalanceElement.textContent = `$${playerBalance.toFixed(2)}`; // Format to 2 decimal places
+    }
+
+    function updateStatus(message) {
+        gameStatusElement.textContent = message;
+    }
+
+    function resetBet() {
+        currentBet = { type: null, value: null, amount: 0 };
+        document.querySelectorAll('.bet-chip').forEach(c => c.classList.remove('active'));
+    }
+
+    // --- Game Logic ---
+    async function spinRoulette() {
+        if (isSpinning) return;
+
+        currentBet.amount = parseFloat(betAmountInput.value);
+
+        if (currentBet.type === null || currentBet.value === null) {
+            updateStatus('Pilih jenis taruhan Anda terlebih dahulu!');
+            return;
+        }
+
+        if (isNaN(currentBet.amount) || currentBet.amount <= 0) {
+            updateStatus('Jumlah taruhan tidak valid!');
+            return;
+        }
+
+        if (currentBet.amount > playerBalance) {
+            updateStatus('Saldo tidak cukup untuk taruhan ini!');
+            return;
+        }
+
+        // Deduct bet amount (locally first, then sync with DB after spin)
+        const balanceBeforeSpin = playerBalance; // Store balance before deduction for win/loss calculation
+        playerBalance -= currentBet.amount;
+        updateBalanceDisplay();
+        updateStatus(`Roda berputar dengan taruhan $${currentBet.amount} pada ${currentBet.value}.`);
+        isSpinning = true;
+        spinButton.disabled = true;
+
+        // Simulate wheel spin animation (CSS transform)
+        const totalSpinDegrees = (Math.floor(Math.random() * 6) + 5) * 360 + Math.random() * 360;
+        rouletteWheel.style.transition = 'transform 4s ease-out';
+        rouletteWheel.style.transform = `rotate(${totalSpinDegrees}deg)`;
+        rouletteBall.style.transition = 'transform 3.5s ease-out';
+        // Simple ball animation - doesn't precisely land on number visually
+        const ballTargetOffset = Math.random() * 100 - 50; // Offset from center of wheel
+        rouletteBall.style.transform = `translate(${ballTargetOffset}px, ${ballTargetOffset}px) scale(0.8)`;
+
+
+        setTimeout(async () => {
+            // Determine the winning number after the "spin" animation is done
+            const winningNumberObj = rouletteNumbers[Math.floor(Math.random() * rouletteNumbers.length)];
+            const winningNumber = winningNumberObj.number;
+            const winningColor = winningNumberObj.color;
+
+            currentResultDisplay.textContent = winningNumber;
+            currentResultDisplay.style.color = winningColor;
+            currentResultDisplay.style.textShadow = `0 0 10px ${winningColor}, 0 0 20px ${winningColor}`;
+
+            await checkWin(winningNumber, winningColor, balanceBeforeSpin); // Pass balance before spin
+
+            isSpinning = false;
+            spinButton.disabled = false;
+            resetBet();
+
+            // Reset wheel and ball for next spin
+            rouletteWheel.style.transition = 'none';
+            rouletteWheel.style.transform = 'rotate(0deg)';
+            rouletteBall.style.transition = 'none';
+            rouletteBall.style.transform = 'translate(-50%, -50%)'; // Reset ball to center
+        }, 4000); // Wait for 4 seconds (spin duration)
+    }
+
+    async function checkWin(winningNumber, winningColor, initialBalance) {
+        let win = false;
+        let payoutMultiplier = 0; // How many times the bet amount is paid
+
+        switch (currentBet.type) {
+            case 'color':
+                if (currentBet.value === winningColor) {
+                    win = true;
+                    payoutMultiplier = 2; // 1:1 odds (returns original bet + 1 unit)
+                }
+                break;
+            case 'parity': // Even/Odd
+                // Tidak perlu cek winningNumber !== 0 karena 0 sudah dihilangkan
+                if (currentBet.value === 'even' && winningNumber % 2 === 0) {
+                    win = true;
+                    payoutMultiplier = 2;
+                } else if (currentBet.value === 'odd' && winningNumber % 2 !== 0) {
+                    win = true;
+                    payoutMultiplier = 2;
+                }
+                break;
+            case 'range': // 1-18 or 19-36
+                // Tidak perlu cek winningNumber !== 0
+                if (currentBet.value === 'low' && winningNumber >= 1 && winningNumber <= 18) {
+                    win = true;
+                    payoutMultiplier = 2;
+                } else if (currentBet.value === 'high' && winningNumber >= 19 && winningNumber <= 36) {
+                    win = true;
+                    payoutMultiplier = 2;
+                }
+                break;
+            case 'number': // Straight Up
+                if (parseInt(currentBet.value) === winningNumber) {
+                    win = true;
+                    payoutMultiplier = 36; // 35:1 odds (returns original bet + 35 units)
+                }
+                break;
+        }
+
+        let newBalance;
+        if (win) {
+            const winnings = currentBet.amount * payoutMultiplier;
+            newBalance = initialBalance - currentBet.amount + winnings; // Initial - bet + winnings
+            updateStatus(`SELAMAT! Angka ${winningNumber} (${winningColor.toUpperCase()})! Anda memenangkan $${winnings - currentBet.amount} bersih!`);
+        } else {
+            newBalance = initialBalance - currentBet.amount; // Initial - bet
+            updateStatus(`MAAF! Angka ${winningNumber} (${winningColor.toUpperCase()}). Anda kalah $${currentBet.amount}.`);
+        }
+        await updatePlayerBalanceInDB(newBalance);
+    }
+
+    // --- Initial Setup and Event Listeners ---
+    logoutButton.addEventListener('click', handleLogout);
+    spinButton.addEventListener('click', spinRoulette);
+
+    // Populate number grid and set up listeners
+    populateNumberGrid();
+    
+    // Check user session on load
+    await checkUserAndLoadGame();
+});
+
+// Helper function for Supabase
+function createClient(supabaseUrl, supabaseKey) {
+    return window.supabase.createClient(supabaseUrl, supabaseKey);
+}
+
+ </script>
+</body>
+</html>
