@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-            body {
+   body {
     margin: 0;
     padding: 0;
     background-color: #0a0a1a; /* Dark background */
@@ -31,23 +31,23 @@ body {
 }
 
 .game-container {
-    background-color: #1a0a2a; /* Darker purple-ish */
-    border: 3px solid #6a059f; /* Purple neon border */
+    background-color: #1a0a2a;
+    border: 1px solid #6a059f;
     box-shadow: 0 0 15px #6a059f, 0 0 30px #6a059f, 0 0 45px #6a059f;
     border-radius: 15px;
-    padding: 20px; /* Sedikit lebih kecil untuk ruang layar */
-    width: 95%; /* Lebih responsif */
+    padding: 0px;
+    width: 95%;
     max-width: 800px;
     box-sizing: border-box;
     position: relative;
     z-index: 10;
-    margin: auto; /* Tambahkan margin atas/bawah untuk perangkat yang sangat pendek */
+    margin: auto; 
 }
 
 h1 {
     color: #00ffcc; /* Neon green */
     text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
-    margin-bottom: 5px;
+    margin-bottom: 0px;
     font-size: 3em; /* Ukuran font adaptif */
 }
 
@@ -55,19 +55,19 @@ h1 {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     font-size: 1em;
-    color: #ffcc00; /* Neon yellow */
+    color: #ffcc00;
     text-shadow: 0 0 5px #ffcc00;
-    flex-wrap: wrap; /* Izinkan wrap pada layar kecil */
-    gap: 10px; /* Jarak antar elemen */
+    flex-wrap: wrap;
+    gap: 0px;
 }
 
 .dashboard-link, #logout-button {
     color: #00ffff; /* Cyan neon */
     text-decoration: none;
     font-family: 'Press Start 2P', cursive;
-    font-size: 0.8em;
+    font-size: 0.5em;
     padding: 8px 12px;
     border: 1px solid #00ffff;
     border-radius: 5px;
@@ -85,8 +85,8 @@ h1 {
 
 
 .roulette-wheel-area {
-    margin: 20px auto;
-    width: 200px; /* Ukuran roda default lebih kecil */
+    margin: 0px auto;
+    width: 200px; 
     height: 200px;
     position: relative;
     display: flex;
@@ -123,26 +123,26 @@ h1 {
 .current-result {
     font-size: 3.5em; /* Ukuran hasil lebih kecil */
     font-weight: bold;
-    color: #ff00ff; /* Neon pink */
-    text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff, 0 0 30px #ff00ff;
+    color: #ff0f; /* Neon pink */
+    text-shadow: 0 0 10px #ffff, 0 0 20px #ffff, 0 0 30px #ffff;
     position: absolute;
     z-index: 5;
-    background-color: rgba(0, 0, 0, 0.5); /* Slightly transparent background for readability */
+    background-color: rgba(0, 0, 0, 0.2); /* Slightly transparent background for readability */
     border-radius: 10px;
     padding: 5px 15px;
 }
 
 .ball {
-    width: 8px;
-    height: 8px;
-    background-color: #ffffff; /* White ball */
+    width: 5px;
+    height: 5px;
+    background-color: red;
     border-radius: 100%;
-    box-shadow: 0 0 10px #ffffff, 0 0 20px #ffffff;
+    box-shadow: 0 0 10px red, 0 0 20px red;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    transition: transform 3s ease-out; /* Smooth transition for ball movement */
+    transition: transform 3s ease-out;
     z-index: 10;
 }
 
@@ -153,7 +153,7 @@ h1 {
 h2 {
     color: #ff6600; /* Neon orange */
     text-shadow: 0 0 8px #ff6600;
-    margin-bottom: 15px;
+    margin-bottom: 1px;
     font-size: 1.6em; /* Ukuran H2 lebih kecil */
 }
 
@@ -318,7 +318,7 @@ button#spin-button:disabled {
     align-items: center;
     font-size: 1.5em;
     z-index: 9999;
-}
+}*/
 
 .spinner {
     border: 8px solid rgba(0, 255, 204, 0.3);
@@ -342,7 +342,7 @@ button#spin-button:disabled {
         padding: 15px;
     }
     h1 {
-        font-size: 1.5em;
+        font-size: 3em;
     }
     .header-info {
         font-size: 0.9em;
@@ -396,12 +396,12 @@ button#spin-button:disabled {
         padding: 10px;
     }
     h1 {
-        font-size: 1.3em;
+        font-size: 3em;
     }
     .header-info {
         font-size: 0.8em;
         flex-direction: column; /* Stack info vertically */
-        gap: 5px;
+        gap: 1px;
     }
     .dashboard-link, #logout-button {
         font-size: 0.7em;
@@ -412,7 +412,7 @@ button#spin-button:disabled {
         height: 140px;
     }
     .current-result {
-        font-size: 2em;
+        font-size: 2.5em;
     }
     h2 {
         font-size: 1.1em;
@@ -452,7 +452,15 @@ button#spin-button:disabled {
     margin-left: auto;
     margin-right: auto; /* Ensure no child element causes overflow */
 }
-
+ #game-status {
+    color: #ff00ff; /* Warna neon pink untuk status */
+    text-shadow: 0 0 5px #ff00ff;
+    font-size: 0.9em;
+    margin-top: 1px; /* Jarak dari elemen di atasnya */
+    margin-bottom: 1px;
+    min-height: 1.5em;
+   }
+}
     </style>
 </head>
 <body>
@@ -462,6 +470,7 @@ button#spin-button:disabled {
 
         <div class="header-info">
             <p>Saldo Anda: <span id="player-balance">Rp.0</span></p>
+              <p id="game-status">Memuat...</p>
             <button id="logout-button">out</button>
         </div>
 
