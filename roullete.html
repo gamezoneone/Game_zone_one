@@ -506,9 +506,7 @@ button#spin-button:disabled {
     <audio id="lose-sound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-player-losing-or-failing-2042.mp3"></audio>
 
 
-    <script>
-      document.addEventListener('DOMContentLoaded', async () => {
-    // --- KONFIGURASI SUPABASE (DARI KODE ANDA) ---
+    <script>document.addEventListener('DOMContentLoaded', async () => {
     const supabase = window.supabase.createClient(
         'https://vqmfachxnjyxwuavpgds.supabase.co',
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
@@ -516,14 +514,10 @@ button#spin-button:disabled {
 
     let currentUser = null;
     let playerBalance = 0;
-
-    // --- DOM Elements ---
-    // const loadingOverlay = document.getElementById('loading-overlay'); // <--- Baris ini tidak lagi diperlukan
-    const gameSection = document.getElementById('game-section'); // Ini sekarang tidak memiliki class="hidden" di HTML
+    const gameSection = document.getElementById('game-section');
     const logoutButton = document.getElementById('logout-button');
-
     const playerBalanceElement = document.getElementById('player-balance');
-    const gameStatusElement = document.getElementById('game-status');
+    const gameStatusElement = document.getElementById('game-status'); // PASTIKAN ELEMEN INI ADA DI HTML!
     const betAmountInput = document.getElementById('bet-amount');
     const spinButton = document.getElementById('spin-button');
     const currentResultDisplay = document.getElementById('current-result-display');
@@ -531,7 +525,6 @@ button#spin-button:disabled {
     const rouletteWheel = document.getElementById('roulette-wheel');
     const numberBetGrid = document.getElementById('number-bet-grid');
 
-    // --- Audio Elements ---
     const bgMusic = document.getElementById('bg-music');
     const spinSound = document.getElementById('spin-sound');
     const winSound = document.getElementById('win-sound');
@@ -540,7 +533,6 @@ button#spin-button:disabled {
     let currentBet = { type: null, value: null, amount: 0 };
     let isSpinning = false;
 
-    // Define roulette numbers (1-36, tanpa 0)
     const rouletteNumbers = [
         { number: 32, color: 'red' }, { number: 15, color: 'black' }, { number: 19, color: 'red' }, { number: 4, color: 'black' },
         { number: 21, color: 'red' }, { number: 2, color: 'black' }, { number: 25, color: 'red' }, { number: 17, 'color': 'black' },
@@ -553,7 +545,6 @@ button#spin-button:disabled {
         { number: 12, color: 'red' }, { number: 35, color: 'black' }, { number: 3, color: 'red' }, { number: 26, 'color': 'black' }
     ];
 
-    // Peta warna angka (1-36, tanpa 0)
     const numberColorsMap = {
         1: 'red', 2: 'black', 3: 'red', 4: 'black', 5: 'red', 6: 'black',
         7: 'red', 8: 'black', 9: 'red', 10: 'black', 11: 'black', 12: 'red', 13: 'black',
@@ -565,6 +556,7 @@ button#spin-button:disabled {
 
     // --- Functions ---
     function populateNumberGrid() {
+        console.log('Populating number grid...');
         numberBetGrid.innerHTML = '';
         for (let i = 1; i <= 36; i++) {
             const div = document.createElement('div');
@@ -578,85 +570,97 @@ button#spin-button:disabled {
     }
 
     function setupBetChipListeners() {
-        // Selector lebih spesifik agar hanya chip di dalam number-bet-grid atau simple-chances
         document.querySelectorAll('.bet-group .bet-chip, #number-bet-grid .bet-chip').forEach(chip => {
             chip.addEventListener('click', () => {
                 if (isSpinning) {
                     updateStatus('Tunggu putaran selesai!');
                     return;
                 }
-                // Hapus kelas 'active' dari semua chip yang bisa dipilih
                 document.querySelectorAll('.bet-group .bet-chip, #number-bet-grid .bet-chip').forEach(c => c.classList.remove('active'));
                 chip.classList.add('active');
                 currentBet.type = chip.dataset.betType;
                 currentBet.value = chip.dataset.betValue;
                 updateStatus(`Anda memilih taruhan pada ${chip.textContent}.`);
+                console.log(`Current bet set: Type - ${currentBet.type}, Value - ${currentBet.value}`);
             });
         });
     }
 
     async function handleLogout() {
+        console.log('Attempting to log out...');
         const { error } = await supabase.auth.signOut();
         if (error) {
             console.error('Logout error:', error.message);
             updateStatus('Gagal logout. Coba lagi.');
         } else {
+            console.log('Logout successful.');
             currentUser = null;
             playerBalance = 0;
             updateBalanceDisplay();
             updateStatus('Anda telah logout. Silakan login kembali untuk bermain.');
             spinButton.disabled = true;
-            window.location.href = 'index.html'; // Arahkan ke halaman login setelah logout
+            window.location.href = 'index.html';
         }
     }
 
+    // Fungsi KUNCI untuk memuat saldo
     async function loadUserData(userId) {
+        updateStatus('Mencoba memuat data pengguna...');
+        console.log(`Loading user data for user ID: ${userId}`);
+
         const { data, error } = await supabase
             .from('users_data')
             .select('saldo, username')
             .eq('user_id', userId)
             .single();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
-            console.error('Error loading user data:', error.message);
-            updateStatus('Error loading user data. Please refresh or contact support.');
-            spinButton.disabled = true;
-            return;
-        }
+        if (error) {
+            if (error.code === 'PGRST116') { // PGRST116 = no rows found (User data does not exist yet)
+                console.warn('User data not found. Initializing new account.');
+                updateStatus('Data pengguna tidak ditemukan. Menginisialisasi akun baru...');
+                const initialBalance = 1000;
+                const defaultUsername = currentUser.email ? currentUser.email.split('@')[0] : 'Pemain Baru';
+                const { data: newUserData, error: insertError } = await supabase
+                    .from('users_data')
+                    .insert({ user_id: userId, saldo: initialBalance, username: defaultUsername })
+                    .select()
+                    .single();
 
-        if (data) {
-            playerBalance = data.saldo;
-            updateStatus('Data pemain dimuat.');
-            spinButton.disabled = false;
-        } else {
-            const initialBalance = 1000;
-            const defaultUsername = currentUser.email ? currentUser.email.split('@')[0] : 'Pemain Baru';
-            const { data: newUserData, error: insertError } = await supabase
-                .from('users_data')
-                .insert({ user_id: userId, saldo: initialBalance, username: defaultUsername })
-                .select()
-                .single();
-
-            if (insertError) {
-                console.error('Error initializing new user data:', insertError.message);
-                updateStatus('Error initializing your account. Please try again.');
+                if (insertError) {
+                    console.error('Error initializing new user data:', insertError.message);
+                    updateStatus('Error inisialisasi akun: ' + insertError.message);
+                    spinButton.disabled = true;
+                    return;
+                }
+                playerBalance = newUserData.saldo;
+                console.log(`New account initialized with saldo: ${playerBalance}`);
+                updateStatus(`Selamat datang, ${newUserData.username}! Anda menerima Rp.${initialBalance.toFixed(0)}!`);
+                spinButton.disabled = false;
+            } else {
+                console.error('Error loading user data:', error.message);
+                updateStatus('Error memuat data pengguna: ' + error.message);
                 spinButton.disabled = true;
                 return;
             }
-            playerBalance = newUserData.saldo;
-            updateStatus(`Selamat datang, ${newUserData.username}! Anda menerima ${initialBalance} Credits!`);
+        } else {
+            // Data pengguna ditemukan
+            playerBalance = data.saldo;
+            console.log(`User data loaded. Saldo: ${playerBalance}, Username: ${data.username}`);
+            updateStatus('Data pemain berhasil dimuat.');
             spinButton.disabled = false;
         }
-        updateBalanceDisplay();
+        updateBalanceDisplay(); // Pastikan tampilan saldo diperbarui
     }
 
+    // Fungsi KUNCI untuk memperbarui saldo di database
     async function updatePlayerBalanceInDB(newBalance) {
         if (!currentUser) {
-            console.error('No current user to update data for.');
-            updateStatus('Error: Not logged in to save saldo.');
+            console.error('Error: No current user to update data for.');
+            updateStatus('Error: Tidak login untuk menyimpan saldo.');
             return;
         }
 
+        console.log(`Attempting to update balance in DB for user ${currentUser.id} to ${newBalance}`);
         const { error } = await supabase
             .from('users_data')
             .update({ saldo: newBalance })
@@ -664,20 +668,30 @@ button#spin-button:disabled {
 
         if (error) {
             console.error('Error updating user saldo:', error.message);
-            updateStatus('Error saving saldo. Please refresh.');
+            updateStatus('Error menyimpan saldo. Silakan refresh.');
         } else {
-            console.log('Saldo updated successfully!');
-            playerBalance = newBalance;
+            console.log('Saldo updated successfully in DB!');
+            playerBalance = newBalance; // Perbarui variabel lokal setelah berhasil update DB
             updateBalanceDisplay();
         }
     }
 
     function updateBalanceDisplay() {
-        playerBalanceElement.textContent = `Rp.${playerBalance.toFixed(0)}`; // Saldo Rupiah, tanpa desimal
+        if (playerBalanceElement) { // Safety check
+            playerBalanceElement.textContent = `Rp.${playerBalance.toFixed(0)}`;
+            console.log(`Display balance updated to: Rp.${playerBalance.toFixed(0)}`);
+        } else {
+            console.error('playerBalanceElement not found!');
+        }
     }
 
     function updateStatus(message) {
-        gameStatusElement.textContent = message;
+        if (gameStatusElement) { // Safety check
+            gameStatusElement.textContent = message;
+            console.log(`Status updated: ${message}`);
+        } else {
+            console.error('gameStatusElement not found! Cannot update status.');
+        }
     }
 
     function resetBet() {
@@ -724,6 +738,7 @@ button#spin-button:disabled {
         if (isSpinning) return;
         if (!currentUser) {
             updateStatus('Silakan login untuk bermain!');
+            console.warn('Spin prevented: User not logged in.');
             return;
         }
 
@@ -731,32 +746,37 @@ button#spin-button:disabled {
 
         if (currentBet.type === null || currentBet.value === null) {
             updateStatus('Pilih jenis taruhan Anda terlebih dahulu!');
+            console.warn('Spin prevented: No bet selected.');
             return;
         }
 
         if (isNaN(currentBet.amount) || currentBet.amount <= 0) {
             updateStatus('Jumlah taruhan tidak valid!');
+            console.warn('Spin prevented: Invalid bet amount.');
             return;
         }
         
-        // Pastikan taruhan adalah kelipatan 500
         if (currentBet.amount % 500 !== 0) {
             updateStatus('Jumlah taruhan harus kelipatan 500!');
+            console.warn('Spin prevented: Bet amount not a multiple of 500.');
             return;
         }
 
         if (currentBet.amount > playerBalance) {
             updateStatus('Saldo tidak cukup untuk taruhan ini!');
+            console.warn('Spin prevented: Insufficient balance.');
             return;
         }
 
+        // Kurangi saldo sebelum spin dan update DB
         playerBalance -= currentBet.amount;
         updateBalanceDisplay();
-        await updatePlayerBalanceInDB(playerBalance);
+        await updatePlayerBalanceInDB(playerBalance); // Pastikan ini berhasil sebelum spin visual
 
         updateStatus(`Roda berputar dengan taruhan Rp.${currentBet.amount} pada ${currentBet.value}.`);
         isSpinning = true;
         spinButton.disabled = true;
+        console.log(`Spin initiated with bet: ${currentBet.amount} on ${currentBet.value}`);
 
         playSpinSound();
 
@@ -773,6 +793,7 @@ button#spin-button:disabled {
             const winningNumberObj = rouletteNumbers[Math.floor(Math.random() * rouletteNumbers.length)];
             const winningNumber = winningNumberObj.number;
             const winningColor = winningNumberObj.color;
+            console.log(`Spin ended. Winning number: ${winningNumber} (${winningColor})`);
 
             currentResultDisplay.textContent = winningNumber;
             currentResultDisplay.style.color = winningColor;
@@ -784,10 +805,12 @@ button#spin-button:disabled {
             spinButton.disabled = false;
             resetBet();
 
+            // Reset visual roda dan bola
             rouletteWheel.style.transition = 'none';
             rouletteWheel.style.transform = 'rotate(0deg)';
             rouletteBall.style.transition = 'none';
             rouletteBall.style.transform = 'translate(-50%, -50%)';
+            console.log('Roulette visual reset.');
         }, 4000);
     }
 
@@ -795,6 +818,8 @@ button#spin-button:disabled {
         let win = false;
         let payoutMultiplier = 0;
         let message = "";
+
+        console.log(`Checking win for bet type: ${currentBet.type}, value: ${currentBet.value} against winning number: ${winningNumber}, color: ${winningColor}`);
 
         switch (currentBet.type) {
             case 'color':
@@ -832,45 +857,48 @@ button#spin-button:disabled {
         let winnings = 0;
         if (win) {
             winnings = amountBet * payoutMultiplier;
-            message = `SELAMAT! Angka ${winningNumber} (${winningColor.toUpperCase()})! Anda memenangkan Rp.${winnings.toFixed(0)}!`; // Tanpa desimal
-            playerBalance += winnings;
+            message = `SELAMAT! Angka ${winningNumber} (${winningColor.toUpperCase()})! Anda memenangkan Rp.${winnings.toFixed(0)}!`;
+            playerBalance += winnings; // Perbarui saldo lokal
+            console.log(`Win! Winnings: ${winnings}, New balance: ${playerBalance}`);
             playWinSound();
         } else {
-            message = ` ${winningNumber} (${winningColor.toUpperCase()}). Anda kalah Rp.${amountBet.toFixed(0)}.`; // Tanpa desimal
+            message = `Angka ${winningNumber} (${winningColor.toUpperCase()}). Anda kalah Rp.${amountBet.toFixed(0)}.`;
+            console.log(`Lose. Lost: ${amountBet}, New balance: ${playerBalance}`);
             playLoseSound();
         }
 
         updateStatus(message);
-        await updatePlayerBalanceInDB(playerBalance);
+        await updatePlayerBalanceInDB(playerBalance); // Simpan saldo terbaru ke database
     }
 
     async function initializeGame() {
-        gameStatusElement.textContent = 'Memuat sesi pengguna...';
+        updateStatus('Memuat sesi pengguna...');
+        console.log('Initializing game...');
 
         const { data: { user } } = await supabase.auth.getUser();
+        console.log('Supabase user:', user);
 
         if (user) {
             currentUser = user;
-            gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
-            await loadUserData(user.id);
-            // gameSection.classList.remove('hidden'); // Tidak diperlukan karena sudah dihapus dari HTML
+            updateStatus('Pengguna ditemukan. Memuat data pemain...');
+            console.log(`User ${user.id} found. Loading user data...`);
+            await loadUserData(user.id); // Panggil loadUserData
             updateStatus('Selamat datang! Pilih taruhan Anda.');
             playBgMusic();
             spinButton.disabled = false;
         } else {
-            window.location.href = 'index.html'; // Arahkan ke halaman login jika tidak ada user
+            console.warn('No user found, redirecting to index.html');
+            window.location.href = 'index.html'; // Redirect jika tidak ada user
         }
     }
 
     logoutButton.addEventListener('click', handleLogout);
     spinButton.addEventListener('click', spinRoulette);
 
-    populateNumberGrid();
+    populateNumberGrid(); // Panggil ini untuk mengisi grid angka
     
-    await initializeGame();
+    await initializeGame(); // Panggil initializeGame saat DOM siap
 });
-
-      
-    </script>
+</script>
 </body>
 </html>
