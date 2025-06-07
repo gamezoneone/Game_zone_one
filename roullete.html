@@ -41,14 +41,14 @@ body {
     box-sizing: border-box;
     position: relative;
     z-index: 10;
-    margin: 20px auto; /* Tambahkan margin atas/bawah untuk perangkat yang sangat pendek */
+    margin: auto; /* Tambahkan margin atas/bawah untuk perangkat yang sangat pendek */
 }
 
 h1 {
     color: #00ffcc; /* Neon green */
     text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #00ffcc;
     margin-bottom: 20px;
-    font-size: 2em; /* Ukuran font adaptif */
+    font-size: 3em; /* Ukuran font adaptif */
 }
 
 .header-info {
@@ -183,19 +183,15 @@ h2 {
 
 .bet-options {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: 20px;
+    flex-direction:;
+    gap: 30px;
+    margin-bottom: 0px;
 }
 
 /* --- GRID UNTUK SIMPLE CHANCES --- */
 .bet-group.simple-chances {
     display: grid;
-    /* 3 kolom untuk desktop, 2 untuk tablet, 1 untuk ponsel sangat kecil */
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-    gap: 8px; /* Jarak antar chip */
-    max-width: 600px;
-    margin: 0 auto;
+    gap: 10px;
 }
 
 .bet-chip {
@@ -261,8 +257,8 @@ h2 {
     display: grid;
     /* 12 kolom untuk desktop, adaptif untuk mobile */
     grid-template-columns: repeat(auto-fit, minmax(28px, 1fr)); /* Auto-fit agar adaptif */
-    gap: 2px; /* Jarak antar chip angka */
-    max-width: 600px;
+    gap: 2px; 
+    width: 100%;;
     margin: 0 auto;
     /* overflow-x: auto;  Tidak perlu jika grid benar-benar adaptif */
 }
@@ -377,7 +373,7 @@ button#spin-button:disabled {
     /* Simple chances grid for smaller screens */
     .bet-group.simple-chances {
         grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* 2 kolom di ponsel medium */
-        gap: 6px;
+        gap: 0px;
     }
     .bet-chip {
         padding: 8px 12px;
@@ -447,20 +443,19 @@ button#spin-button:disabled {
     .number-bet-grid .bet-chip {
         min-width: 24px;
         height: 26px;
-        font-size: 0.6em;
+        font-size: 1em;
         padding: 4px 2px;
     }
     button#spin-button {
         font-size: 1em;
-        padding: 8px 15px;
+        padding: 8px 10px;
     }
 }
 
 /* Ensure all elements within game-container respect its padding */
 .game-container > * {
     margin-left: auto;
-    margin-right: auto;
-    max-width: 100%; /* Ensure no child element causes overflow */
+    margin-right: auto; /* Ensure no child element causes overflow */
 }
 
     </style>
@@ -495,7 +490,7 @@ button#spin-button:disabled {
 
             <div class="bet-input">
                 <label for="bet-amount">Jumlah Taruhan:</label>
-                <input type="number" id="bet-amount" value="10" min="1" step="1">
+                <input type="number" id="bet-amount" value="500" min="500" step="1">
             </div>
 
             <div class="bet-options">
@@ -508,7 +503,7 @@ button#spin-button:disabled {
                     <div class="bet-chip high" data-bet-type="range" data-bet-value="high">19-36</div>
                 </div>
 
-                <h3>Pilih Angka (Straight Up)</h3>
+                <h3></h3>
                 <div class="number-bet-grid" id="number-bet-grid">
                     </div>
             </div>
@@ -553,7 +548,6 @@ button#spin-button:disabled {
     const spinSound = document.getElementById('spin-sound');
     const winSound = document.getElementById('win-sound');
     const loseSound = document.getElementById('lose-sound');
-    
     let currentBet = { type: null, value: null, amount: 0 };
     let isSpinning = false;
 
@@ -613,19 +607,25 @@ button#spin-button:disabled {
     }
 
     // --- Supabase Functions (Diadaptasi dari kode Anda) ---
-    async function handleLogout() {
-        const { error } = await supabase.auth.signOut();
-        if (error) {
-            console.error('Logout error:', error.message);
-            updateStatus('Gagal logout. Coba lagi.');
+    async function initializeGame() {
+        loadingOverlay.classList.remove('hidden'); // Tampilkan loading
+        gameStatusElement.textContent = 'Memuat sesi pengguna...';
+
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+            currentUser = user;
+            gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
+            await loadUserData(user.id); // Memuat saldo dan data lain dari DB
+            gameSection.classList.remove('hidden'); // Tampilkan game
+            loadingOverlay.classList.add('hidden'); // Sembunyikan loading
+            updateStatus('Selamat datang! Pilih taruhan Anda.');
+            playBgMusic(); // Mainkan musik latar
+            spinButton.disabled = false; // Aktifkan tombol spin
         } else {
-            currentUser = null; // Reset user
-            playerBalance = 0; // Reset saldo lokal
-            updateBalanceDisplay();
-            updateStatus('Anda telah logout. Silakan login kembali untuk bermain.');
-            spinButton.disabled = true
+            // Jika tidak ada user, arahkan ke halaman login
+            window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
         }
-    }
 
   
     async function loadUserData(userId) {
@@ -869,26 +869,53 @@ button#spin-button:disabled {
     // --- Initial Setup and Event Listeners ---
 
     // Fungsi initializeGame (dari kode Anda, disesuaikan untuk Roulette)
-    async function initializeGame() {
-        loadingOverlay.classList.remove('hidden'); // Tampilkan loading
-        gameStatusElement.textContent = 'Memuat sesi pengguna...';
+async function initializeGame() {
+    loadingOverlay.classList.remove('hidden'); // Tetap tampilkan loading sebentar
 
-        const { data: { user } } = await supabase.auth.getUser();
+    // --- BAGIAN INI SEMENTARA DIUBAH UNTUK PENGEMBANGAN TAMPILAN ---
+    // Komentar atau hapus baris yang berinteraksi dengan Supabase.auth.getUser()
+    // dan logic pengalihan ke index.html.
 
-        if (user) {
-            currentUser = user;
-            gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
-            await loadUserData(user.id); // Memuat saldo dan data lain dari DB
-            gameSection.classList.remove('hidden'); // Tampilkan game
-            loadingOverlay.classList.add('hidden'); // Sembunyikan loading
-            updateStatus('Selamat datang! Pilih taruhan Anda.');
-            playBgMusic(); // Mainkan musik latar
-            spinButton.disabled = false; // Aktifkan tombol spin
-        } else {
-            // Jika tidak ada user, arahkan ke halaman login
-            window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
-        }
+    // Simulasikan pengguna sudah login
+    currentUser = { id: 'dummy-user-id', email: 'dummy@example.com' }; // Buat objek user dummy
+    playerBalance = 5000; // Berikan saldo dummy
+    updateBalanceDisplay(); // Perbarui tampilan saldo dengan dummy data
+
+    gameStatusElement.textContent = 'Mode Desain: Pengguna dimuat secara dummy.';
+    gameSection.classList.remove('hidden'); // Tampilkan game
+    loadingOverlay.classList.add('hidden'); // Sembunyikan loading
+
+    // Nonaktifkan tombol spin/deal sementara jika Anda tidak ingin fungsi game berjalan
+    // spinButton.disabled = false; // Aktifkan tombol spin jika ingin coba interaksi
+    // Jika Anda hanya ingin fokus pada tampilan, biarkan tombol ini dalam keadaan disabled
+
+    playBgMusic(); // Tetap mainkan musik latar jika diinginkan
+
+    // HIDE LOGOUT BUTTON in design mode if it causes issues
+    // logoutButton.style.display = 'none';
+
+    // --- AKHIR BAGIAN PERUBAHAN SEMENTARA ---
+
+    /*
+    // KODE ASLI SEBELUMNYA (JANGAN HAPUS, CUKUP KOMENTARI SAJA)
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (user) {
+        currentUser = user;
+        gameStatusElement.textContent = 'Pengguna ditemukan. Memuat data pemain...';
+        await loadUserData(user.id); // Memuat saldo dan data lain dari DB
+        gameSection.classList.remove('hidden'); // Tampilkan game
+        loadingOverlay.classList.add('hidden'); // Sembunyikan loading
+        updateStatus('Selamat datang! Pilih taruhan Anda.');
+        playBgMusic(); // Mainkan musik latar
+        spinButton.disabled = false; // Aktifkan tombol spin
+    } else {
+        // Jika tidak ada user, arahkan ke halaman login
+        window.location.href = 'index.html'; // Sesuaikan dengan halaman login Anda
     }
+    */
+}
+
 
     logoutButton.addEventListener('click', handleLogout);
     spinButton.addEventListener('click', spinRoulette);
