@@ -1,1299 +1,1167 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mahjong Ways Neon</title>
-    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" rel="stylesheet">
-    <style>
-        /* Neon Theme Colors */
-        :root {
-            --neon-bg-dark: #0f0a20; /* Dark purple/blue for background */
-            --neon-bg-light: #2a0050; /* Slightly lighter purple */
-            --neon-pink: #FF0077; /* Bright neon pink */
-            --neon-blue: #00FFFF; /* Electric blue */
-            --neon-green: #00FF00; /* Bright lime green */
-            --neon-yellow: #FFFF00; /* Bright yellow */
-            --text-primary: #e0e0e0;
-            --text-secondary: #aaaaaa;
-            --border-glow: #FF0077;
-            --button-primary: linear-gradient(45deg, #00FF00, #00BFFF);
-            --button-hover: linear-gradient(45deg, #00BFFF, #00FF00);
-            --info-panel-bg: rgba(255, 255, 255, 0.1); /* Slightly transparent for neon feel */
-        }
-
-        body {
-            font-family: 'Share Tech Mono', monospace; /* Lebih futuristik */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--neon-bg-dark) 0%, var(--neon-bg-light) 100%);
-            color: var(--text-primary);
-            margin: 0;
-            padding: 1.5vw; /* Responsive padding */
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        #game-container {
-            background-color: var(--neon-bg-dark);
-            border-radius: 20px;
-            box-shadow: 0 0 25px var(--border-glow), inset 0 0 10px var(--border-glow); /* Neon glow */
-            padding: 2vw; /* Responsive padding */
-            text-align: center;
-            max-width: 900px; /* Batasi lebar maksimum */
-            width: 95vw; /* Ambil 95% lebar viewport */
-            border: 4px solid var(--neon-pink);
-            position: relative;
-            animation: fadeInGlow 0.8s ease-out;
-            box-sizing: border-box;
-        }
-
-        @keyframes fadeInGlow {
-            from { opacity: 0; transform: scale(0.9); box-shadow: none; }
-            to { opacity: 1; transform: scale(1); box-shadow: 0 0 25px var(--border-glow), inset 0 0 10px var(--border-glow); }
-        }
-
-        h1 {
-            font-family: 'Audiowide', cursive; /* Font judul neon */
-            color: var(--neon-blue);
-            font-size: 8vw; /* Responsive font size */
-            margin-bottom: 3vw;
-            text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink); /* Neon text glow */
-        }
-
-        @media (min-width: 600px) { /* Adjust for larger screens */
-            h1 {
-                font-size: 3.8em;
-            }
-        }
-
-
-        .info-bar {
-            display: flex;
-            flex-wrap: wrap; /* Agar bisa wrap di layar kecil */
-            justify-content: space-around;
-            align-items: center;
-            margin-bottom: 2.5vw;
-            font-size: 3.5vw; /* Responsive font size */
-            font-weight: bold;
-            color: var(--text-primary);
-            background-color: var(--info-panel-bg);
-            border-radius: 10px;
-            padding: 1vw;
-            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.5);
-        }
-
-        @media (min-width: 600px) { /* Adjust for larger screens */
-            .info-bar {
-                font-size: 1.2em;
-                padding: 10px;
-            }
-        }
-
-        .info-item {
-            margin: 0.5vw 1vw; /* Spacing for wrap */
-        }
-
-        .info-item span {
-            color: var(--neon-yellow);
-            font-size: 1.1em;
-            text-shadow: 0 0 5px var(--neon-yellow);
-        }
-
-        #multiplier-display {
-            background-color: var(--neon-pink);
-            color: var(--text-primary);
-            padding: 1vw 2vw;
-            border-radius: 8px;
-            font-size: 1.2em;
-            font-family: 'Audiowide', cursive;
-            border: 2px solid var(--neon-blue);
-            box-shadow: 0 0 10px var(--neon-blue);
-            min-width: 15vw; /* Responsive min-width */
-        }
-        @media (min-width: 600px) {
-            #multiplier-display {
-                min-width: 80px;
-                padding: 8px 15px;
-            }
-        }
-
-
-        #game-board-wrapper {
-            overflow: hidden;
-            height: 60vw;
-            display: flex; /* Menggunakan flexbox untuk menengahkan */
-            justify-content: center;
-            align-items: center;
-        }
-
-
-        @media (orientation: landscape) and (max-height: 500px) {
-            #game-board-wrapper {
-                height: 75vh; /* In landscape, use viewport height */
-            }
-        }
-
-        #game-board {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            grid-template-rows: repeat(4, 1fr); /* Ini akan membuat 4 baris */
-            gap: 1.5vw;
-            width: 100%;
-            height: auto; /* Pastikan height 100% agar grid mengambil tinggi penuh wrapper */
-            max-width: 700px; /* Batasi lebar board agar tidak terlalu besar di desktop */
-        }
-
-
-        @media (min-width: 600px) {
-            #game-board {
-                gap: 10px;
-            }
-        }
-
-        .symbol-container {
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            height: 100%;
-            position: relative;
-        }
-
-        .reel-content {
-            display: flex;
-            flex-direction: column;
-            transition: transform 0.5s ease-out;
-        }
-
-        .symbol {
-            width: 15vw; /* Responsive width */
-            height: 15vw; /* Responsive height */
-            max-width: 90px; /* Max size for desktop */
-            max-height: 90px;
-            background-color: rgba(255, 255, 255, 0.15); /* Slightly transparent for dark bg */
-            border: 2px solid var(--neon-yellow);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 8vw; /* Responsive emoji size */
-            font-weight: bold;
-            color: var(--neon-blue);
-            box-shadow: inset 0 0 5px var(--neon-blue), 0 0 8px var(--neon-blue); /* Symbol glow */
-            position: relative;
-            box-sizing: border-box;
-            line-height: 1; /* Penting untuk penempatan emoji vertikal */
-            flex-shrink: 0;
-            text-shadow: 0 0 5px var(--neon-blue);
-        }
-
-        @media (min-width: 600px) {
-            .symbol {
-                width: 90px;
-                height: 90px;
-                font-size: 2.5em; /* Larger emoji for desktop */
-            }
-        }
-        @media (orientation: landscape) and (max-height: 500px) {
-             .symbol {
-                width: 12vh;
-                height: 12vh;
-                font-size: 6vh;
-            }
-        }
-
-
-        /* Simbol khusus untuk visualisasi */
-        .symbol.wild { background-color: rgba(255, 255, 0, 0.2); border-color: var(--neon-yellow); box-shadow: inset 0 0 5px var(--neon-yellow), 0 0 15px var(--neon-yellow); }
-        .symbol.scatter { background-color: rgba(148, 0, 211, 0.2); border-color: var(--neon-pink); color: var(--text-primary); box-shadow: inset 0 0 5px var(--neon-pink), 0 0 15px var(--neon-pink); }
-
-        .symbol.winning {
-            animation: pulseWinGlow 0.7s infinite alternate, popOut 0.3s forwards;
-            border-color: var(--neon-green);
-            box-shadow: 0 0 15px var(--neon-green), 0 0 25px var(--neon-green);
-        }
-
-        @keyframes pulseWinGlow {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(1.05); opacity: 0.9; box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green); }
-        }
-
-        @keyframes popOut {
-            from { transform: scale(1); opacity: 1; }
-            to { transform: scale(0.95); opacity: 0.8; }
-        }
-
-        .symbol.matched {
-            animation: fadeOutAndShrink 0.4s forwards;
-            pointer-events: none;
-        }
-
-        @keyframes fadeOutAndShrink {
-            0% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.1); }
-        }
-
-        .controls {
-            margin-top: 3vw;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 1.5vw; /* Responsive gap */
-        }
-        @media (min-width: 600px) {
-            .controls {
-                margin-top: 30px;
-                gap: 15px;
-            }
-        }
-
-
-        .control-group {
-            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
-            border-radius: 10px;
-            padding: 1vw 2vw;
-            box-shadow: 0 0 10px var(--neon-blue);
-            display: flex;
-            align-items: center;
-            gap: 1vw;
-            color: var(--text-primary);
-            font-weight: bold;
-            min-width: 30vw; /* Agar tidak terlalu sempit di ponsel */
-            box-sizing: border-box;
-        }
-        @media (min-width: 600px) {
-            .control-group {
-                min-width: auto;
-                padding: 10px 20px;
-                gap: 10px;
-            }
-        }
-
-
-        .control-group label {
-            font-size: 3.5vw;
-        }
-        @media (min-width: 600px) {
-            .control-group label {
-                font-size: 1.1em;
-            }
-        }
-
-
-        .control-group select, .control-group input {
-            padding: 0.8vw 1.2vw;
-            border-radius: 5px;
-            border: 1px solid var(--neon-blue);
-            background-color: rgba(0, 0, 0, 0.5);
-            color: var(--neon-green);
-            font-size: 3.5vw;
-            outline: none;
-            box-shadow: inset 0 0 5px var(--neon-green);
-            appearance: none; /* Remove default select arrow */
-            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300FF00%22%20d%3D%22M287%2069.4L146.2%20208.8%205.4%2069.4c-1.8-1.8-4.7-1.8-6.5%200l-4.8%204.8c-1.8%201.8-1.8%204.7%200%206.5l145.4%20145.4c1.8%201.8%204.7%201.8%206.5%200l145.4-145.4c1.8-1.8%201.8-4.7%200-6.5l-4.8-4.8c-1.8-1.8-4.7-1.8-6.5%200z%22%2F%3E%3C%2Fsvg%3E');
-            background-repeat: no-repeat;
-            background-position: right 0.5em top 50%;
-            background-size: 1.5em auto;
-        }
-
-        @media (min-width: 600px) {
-            .control-group select, .control-group input {
-                padding: 8px 12px;
-                font-size: 1em;
-                background-size: 1em auto;
-                background-position: right 0.7em top 50%;
-            }
-        }
-
-
-        button {
-            padding: 1.5vw 3vw;
-            border: none;
-            border-radius: 10px;
-            background: var(--button-primary); /* Gradasi neon */
-            color: var(--text-primary);
-            font-size: 4vw;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
-            box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-green); /* Shadow neon */
-            min-width: 25vw;
-        }
-
-        @media (min-width: 600px) {
-            button {
-                padding: 15px 30px;
-                font-size: 1.3em;
-                min-width: auto;
-            }
-        }
-
-
-        button:hover {
-            background: var(--button-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-green);
-        }
-
-        button:active {
-            transform: translateY(0);
-            box-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-green);
-        }
-
-        button:disabled {
-            background: #444;
-            color: #888;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        #message-display {
-            min-height: 1.5em;
-            margin-top: 3vw;
-            font-size: 4vw;
-            font-weight: bold;
-            color: var(--neon-yellow);
-            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px rgba(255, 255, 0, 0.5);
-        }
-        @media (min-width: 600px) {
-            #message-display {
-                margin-top: 20px;
-                font-size: 1.5em;
-            }
-        }
-
-
-        #game-over-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-primary);
-            z-index: 100;
-            border-radius: 20px;
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        #game-over-screen h2 {
-            font-family: 'Audiowide', cursive;
-            font-size: 8vw;
-            color: var(--neon-pink);
-            margin-bottom: 3vw;
-            text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-blue);
-        }
-        @media (min-width: 600px) {
-            #game-over-screen h2 {
-                font-size: 4em;
-                margin-bottom: 25px;
-            }
-        }
-
-
-        #final-score-display {
-            font-size: 6vw;
-            margin-bottom: 3.5vw;
-            color: var(--neon-green);
-            text-shadow: 0 0 10px var(--neon-green);
-        }
-        @media (min-width: 600px) {
-            #final-score-display {
-                font-size: 2.5em;
-                margin-bottom: 35px;
-            }
-        }
-
-
-        .free-spin-mode {
-            background: linear-gradient(135deg, #0d001a 0%, #003366 100%) !important; /* Darker blue/purple for FS */
-        }
-        #game-container.free-spin-mode {
-            border-color: var(--neon-blue); /* Brighter blue for free spin */
-            box-shadow: 0 0 25px var(--neon-blue), inset 0 0 10px var(--neon-blue);
-        }
-        #multiplier-display.free-spin-mode {
-            background-color: var(--neon-blue);
-            border-color: var(--neon-pink);
-            box-shadow: 0 0 10px var(--neon-pink);
-        }
-        body.free-spin-mode {
-            background: linear-gradient(135deg, #001f3f 0%, #005080 100%); /* Darker blue overall */
-        }
-
-    </style>
-</head>
-<body id="body-game">
-    <div id="game-container">
-        <h1>Mahjong Ways</h1>
-        <div class="info-bar">
-            <div class="info-item">Saldo: <span id="balance-display">0</span></div>
-            <div class="info-item">Taruhan: <span id="current-bet-display">10</span></div>
-            <div class="info-item">Kemenangan Terakhir: <span id="last-win-display">0</span></div>
-            <div class="info-item">Username: <span id="username-display">Tamu</span></div>
-            <div class="info-item">Multiplier: <span id="multiplier-display">1x</span></div>
-            <div class="info-item" id="free-spins-left" style="display:none;">Free Spins: <span id="free-spins-count">0</span></div>
-        </div>
-
-        <div id="game-board-wrapper">
-            <div id="game-board">
-                </div>
-            <div id="game-over-screen">
-                <h2>Game Over!</h2>
-                <div id="final-score-display">Saldo Akhir: 0</div>
-                <button id="play-again-btn">Main Lagi</button>
-            </div>
-        </div>
-
-        <div id="message-display">Loading game...</div>
-
-        <div class="controls">
-            <div class="control-group">
-                <label for="bet-amount">Taruhan:</label>
-                <select id="bet-amount">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                </select>
-            </div>
-            <button id="spin-btn">Spin</button>
-            <button id="auto-spin-btn">Auto Spin</button>
-            <button id="logout-btn" style="display:none;">Logout</button>
-        </div>
-    </div>
-    <audio id="spin-sound" src="audio/spin.mp3" preload="auto"></audio>
-    <audio id="win-sound" src="audio/win.mp3" preload="auto"></audio>
-    <audio id="tumble-sound" src="audio/tumble.mp3" preload="auto"></audio>
-    <audio id="stop-sound" src="audio/stop.mp3" preload="auto"></audio>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-    <script>
-        const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
-        
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahjong Slot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabase = window.supabase.createClient(
+      'https://vqmfachxnjyxwuavpgds.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
     );
+    const uid = localStorage.getItem('uid');
+  </script>
+  <style>
+    /* Global styles */
+    :root {
+      --neon-cyan: #00ffff;
+      --neon-pink: #ff00ff;
+      --neon-green: #00ff00;
+      --neon-yellow: #ffff00;
+      --dark-bg: #0d0d0d;
+      --darker-bg: #1a1a1a;
+      --darkest-bg: #0a0a0a;
+    }
 
-        // --- HTML Elements ---
-        const bodyGame = document.getElementById('body-game');
-        const gameContainer = document.getElementById('game-container');
-        const balanceDisplay = document.getElementById('balance-display');
-        const currentBetDisplay = document.getElementById('current-bet-display');
-        const lastWinDisplay = document.getElementById('last-win-display');
-        const usernameDisplay = document.getElementById('username-display');
-        const multiplierDisplay = document.getElementById('multiplier-display');
-        const freeSpinsLeftDiv = document.getElementById('free-spins-left');
-        const freeSpinsCountDisplay = document.getElementById('free-spins-count');
-        const gameBoardWrapper = document.getElementById('game-board-wrapper');
-        const gameBoard = document.getElementById('game-board');
-        const messageDisplay = document.getElementById('message-display');
-        const betAmountSelect = document.getElementById('bet-amount');
-        const spinBtn = document.getElementById('spin-btn');
-        const autoSpinBtn = document.getElementById('auto-spin-btn');
-        // const cashOutBtn = document.getElementById('cash-out-btn'); // Dihapus dari HTML
-        const logoutBtn = document.getElementById('logout-btn');
-        const gameOverScreen = document.getElementById('game-over-screen');
-        const finalScoreDisplay = document.getElementById('final-score-display');
-        const playAgainBtn = document.getElementById('play-again-btn');
+    * {
+      box-sizing: border-box;
+    }
 
-        // Audio Elements
-        const spinSound = document.getElementById('spin-sound');
-        const winSound = document.getElementById('win-sound');
-        const tumbleSound = document.getElementById('tumble-sound');
-        const stopSound = document.getElementById('stop-sound');
+    body {
+      background: var(--dark-bg);
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 0; /* Add some vertical padding */
+      color: var(--neon-cyan);
+      overflow-x: hidden;
+      min-height: 100vh; /* Ensure body takes full viewport height */
+      position: relative; /* For absolute positioning of fixed elements relative to body */
+    }
 
-        // --- Game State Variables ---
-        let currentUser = null; // Akan menyimpan user Supabase
-        let playerBalance = 0; // Saldo akan dimuat dari Supabase
-        let currentBet = 10;
-        let lastWinAmount = 0;
-        let isSpinning = false;
-        let autoSpinInterval = null;
-        let currentMultiplier = 1;
-        let cascadingCount = 0;
-        let freeSpinMode = false;
-        let freeSpinsLeft = 0;
+    /* Neon glow effect for elements */
+    .neon-glow {
+      text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px #00e6e6, 0 0 80px #00e6e6;
+    }
 
-        const NUM_REELS = 5;
-        const SYMBOLS_PER_REEL_VISIBLE = 4;
-        const BASE_SYMBOLS_ON_REEL = 20; // Jumlah simbol dasar di setiap reel (untuk efek spin)
-        const SPIN_DURATION_MS = 1000; // Durasi spin per reel
+    /* Marquee text */
+    marquee {
+      color: var(--neon-pink);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9em;
+      padding: 5px 0;
+      width: 100%;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
+      border-bottom: 1px solid var(--neon-pink);
+      border-top: 1px solid var(--neon-pink);
+      box-shadow: 0 0 5px var(--neon-pink);
+      margin-bottom: 20px; /* Increased margin for better spacing */
+    }
 
-        let SYMBOL_HEIGHT = 0; // Akan dihitung secara dinamis
+    /* Main title */
+    h1 {
+      background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2em; /* Adjusted font size for better readability */
+      margin-bottom: 20px;
+      text-align: center;
+      padding: 5px 20px;
+      border: 2px solid var(--neon-cyan);
+      border-radius: 15px;
+      box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-pink);
+      animation: neonPulse 1.5s infinite alternate;
+      letter-spacing: 2px;
+    }
 
-        // Multiplier Tiers (Mahjong Ways-like)
-        const BASE_MULTIPLIERS = [1, 2, 3, 5]; // After 1st, 2nd, 3rd, 4th+ cascade
-        const FREE_SPIN_MULTIPLIERS = [2, 4, 6, 10]; // After 1st, 2nd, 3rd, 4th+ cascade in FS
+    @keyframes neonPulse {
+      0% {
+        box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-pink);
+        transform: scale(1);
+      }
+      100% {
+        box-shadow: 0 0 25px var(--neon-cyan), 0 0 50px var(--neon-pink);
+        transform: scale(1.02);
+      }
+    }
 
-        // --- Symbol Definitions (menggunakan Emoji dan disesuaikan sedikit) ---
-        // Mahjong Ways PG Soft memiliki 9 simbol reguler, 1 Wild, dan 1 Scatter
-        // Untuk kesederhanaan dan visualisasi emoji, saya menggunakan 6 reguler + Wild + Scatter
-        const symbols = [
-            { id: 'tile1', name: 'Tile 1', emoji: '🀄', type: 'normal', value: 10 }, // Red Dragon
-            { id: 'tile2', name: 'Tile 2', emoji: '🀅', type: 'normal', value: 10 }, // Green Dragon
-            { id: 'tile3', name: 'Tile 3', emoji: '🀆', type: 'normal', value: 12 }, // White Dragon
-            { id: 'tile4', name: 'Tile 4', emoji: '🀀', type: 'normal', value: 12 }, // East Wind
-            { id: 'tile5', name: 'Tile 5', emoji: '🀁', type: 'normal', value: 15 }, // South Wind
-            { id: 'tile6', name: 'Tile 6', emoji: '🀂', type: 'normal', value: 15 }, // West Wind
-            { id: 'wild', name: 'Wild', emoji: '🌟', type: 'wild', value: 0 },
-            { id: 'scatter', name: 'Scatter', emoji: '💰', type: 'scatter', value: 0 }
-        ];
+    hr {
+      border-color: var(--neon-green);
+      box-shadow: 0 0 8px var(--neon-green);
+      margin-top: 10px; /* Added margin for better spacing */
+    }
 
-        // Paytable (contoh, sesuaikan dengan angka Mahjong Ways yang lebih akurat jika perlu)
-        const PAYTABLE = {
-            'tile1': { 3: 10, 4: 20, 5: 50 },
-            'tile2': { 3: 10, 4: 20, 5: 50 },
-            'tile3': { 3: 15, 4: 30, 5: 75 },
-            'tile4': { 3: 15, 4: 30, 5: 75 },
-            'tile5': { 3: 20, 4: 40, 5: 100 },
-            'tile6': { 3: 20, 4: 40, 5: 100 },
-            'scatter': { 3: 10, 4: 12, 5: 14 } // Scatter awards Free Spins based on count
-        };
+    /* Slot frame */
+    .slot-frame {
+      padding: 10px; /* Increased padding */
+      border-radius: 15px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 3px solid var(--neon-green);
+      box-shadow: 0 0 20px var(--neon-green), inset 0 0 10px rgba(0, 255, 0, 0.5);
+      margin-bottom: 20px;
+    }
 
-        // --- Supabase Functions ---
-        async function loadPlayerStats(userId) {
-            if (!userId) {
-                console.warn("No user ID provided for loading stats.");
-                usernameDisplay.textContent = 'Tamu';
-                playerBalance = 1000; // Saldo default untuk tamu
-                updateDisplay();
-                return;
-            }
-            try {
-                const { data, error } = await supabase
-                    .from('users_data') // Ganti nama tabel menjadi users_data
-                    .select('username, saldo') // Ganti nama kolom menjadi saldo
-                    .eq('id', userId)
-                    .single();
+    /* Slot grid */
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 75px);
+      grid-template-rows: repeat(5, 90px);
+      gap: 5px;
+      justify-content: center;
+      border: 5px solid var(--neon-pink);
+      border-radius: 10px;
+      box-shadow: 0 0 15px var(--neon-pink);
+      background: var(--darker-bg);
+    }
 
-                if (error) {
-                    if (error.code === 'PGRST116') { // No rows found
-                        console.log("Profile not found for user, creating new one.");
-                        await createNewProfile(userId);
-                        await loadPlayerStats(userId); // Retry loading
-                        return;
-                    }
-                    throw error;
-                }
+    /* Individual tiles */
+    .tile {
+      background: #333;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      font-weight: bold;
+      color: #fff;
+      box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.3), 0 0 5px rgba(0, 255, 255, 0.5);
+      transition: transform 0.1s linear, box-shadow 0.2s ease-in-out;
+      overflow: hidden;
+      border: 2px solid var(--neon-cyan);
+      position: relative; /* For image positioning */
+    }
 
-                playerBalance = data.saldo || 0; // Menggunakan data.saldo
-                usernameDisplay.textContent = data.username || 'Pemain';
-                console.log("Player stats loaded:", data);
-            } catch (error) {
-                console.error("Error loading player stats:", error.message);
-                messageDisplay.textContent = `Error: ${error.message}`;
-                playerBalance = 1000; // Fallback saldo
-                usernameDisplay.textContent = 'Error User';
-            } finally {
-                updateDisplay();
-            }
-        }
+    .tile:hover {
+      transform: scale(1.05);
+      box-shadow: inset 0 0 15px rgba(0, 255, 255, 0.5), 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+    }
 
-        async function createNewProfile(userId) {
-            const defaultUsername = `user_${userId.substring(0, 6)}`;
-            try {
-                const { data, error } = await supabase
-                    .from('users_data') // Ganti nama tabel menjadi users_data
-                    .insert([
-                        { id: userId, username: defaultUsername, saldo: 1000 } // Ganti nama kolom menjadi saldo
-                    ]);
+    /* Tile breaking animation */
+    .tile.break {
+      animation: breakAnim 0.8s forwards;
+      background: #ff0000;
+      box-shadow: 0 0 20px #ff0000, inset 0 0 10px #ff0000;
+    }
+    @keyframes breakAnim {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(0.5); opacity: 0.5; }
+      100% { transform: scale(0); opacity: 0; }
+    }
 
-                if (error) throw error;
-                console.log("New profile created for user:", userId);
-            } catch (error) {
-                console.error("Error creating new profile:", error.message);
-                messageDisplay.textContent = `Error creating profile: ${error.message}`;
-            }
-        }
+    /* Popup messages */
+    .popup {
+      position: fixed; /* Fixed position to overlay on top */
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--darker-bg);
+      color: var(--neon-green);
+      border: 2px solid var(--neon-green);
+      box-shadow: 0 0 15px var(--neon-green);
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-size: 1.2em;
+      font-family: 'Share Tech Mono', monospace;
+      text-align: center;
+      z-index: 1000; /* High z-index to be on top */
+      display: none; /* Hidden by default, show with JavaScript */
+    }
 
-        async function updateBalance(amount) {
-            if (!currentUser) {
-                playerBalance += amount; // Update balance locally for guests
-                updateDisplay();
-                console.log("Guest balance updated locally:", playerBalance);
-                return;
-            }
-            try {
-                const newBalance = playerBalance + amount;
-                const { error } = await supabase
-                    .from('users_data') // Ganti nama tabel menjadi users_data
-                    .update({ saldo: newBalance }) // Ganti nama kolom menjadi saldo
-                    .eq('id', currentUser.id);
+    /* Controls container - now a normal flex container for better flow */
+.controls-container {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  padding-bottom: 120px; /* Space for fixed buttons at bottom */
+  position: relative; /* Tambahkan ini agar multiplier bisa diposisikan absolut relatif terhadap kontainer ini */
+}
 
-                if (error) throw error;
+    /* Balance, Bet, Multiplier, Free Spin Displays - adjusted to be part of the flow initially */
+.balance, .bet-display, .multiplier, .free-spin-display {
+  background: var(--darkest-bg);
+  padding: 8px 12px;
+  border-radius: 100px;
+  font-size: 0.9em;
+  font-weight: bold;
+  box-shadow: 0 0 10px; /* Color inherited from individual styles */
+  z-index: 10;
+  margin: 5px; /* Add margin for spacing between elements */
+  /* Hapus properti positioning (top, left, transform) jika ada di sini,
+     karena multiplier akan diposisikan secara terpisah. */
+}
 
-                playerBalance = newBalance; // Update local state only on success
-                updateDisplay();
-                console.log("Balance updated in Supabase:", newBalance);
-            } catch (error) {
-                console.error("Error updating balance:", error.message);
-                messageDisplay.textContent = `Error updating balance: ${error.message}`;
-            }
-        }
+    .balance {
+      color: var(--neon-cyan);
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan);
+    }
 
-        async function handleLogout() {
-            try {
-                const { error } = await supabase.auth.signOut();
-                if (error) throw error;
-                console.log("User logged out successfully.");
-                window.location.href = 'index.html'; // Redirect to login page
-            } catch (error) {
-                console.error("Error during logout:", error.message);
-                messageDisplay.textContent = `Logout Error: ${error.message}`;
-            }
-        }
+    .bet-display {
+      color: var(--neon-pink);
+      border: 2px solid var(--neon-pink);
+      box-shadow: 0 0 10px var(--neon-pink);
+      font-size: 1.2em; /* Keep it larger */
+    }
 
-        // --- Authentication State Change Listener ---
-        supabase.auth.onAuthStateChange(async (event, session) => {
-            if (event === 'SIGNED_IN' && session) {
-                currentUser = session.user;
-                console.log("User signed in:", currentUser.id);
-                logoutBtn.style.display = 'inline-block';
-                await loadPlayerStats(currentUser.id);
-                initGame(); // Initialize game once user data is loaded
-            } else if (event === 'SIGNED_OUT') {
-                currentUser = null;
-                console.log("User signed out.");
-                logoutBtn.style.display = 'none';
-                usernameDisplay.textContent = 'Tamu';
-                playerBalance = 1000; // Reset balance to default for guest
-                updateDisplay();
-                initGame(); // Re-initialize game for guest mode
-            } else if (event === 'INITIAL_SESSION' && !session) {
-                // User is not signed in on initial load
-                currentUser = null;
-                console.log("No user session found on initial load.");
-                logoutBtn.style.display = 'none';
-                usernameDisplay.textContent = 'Tamu';
-                playerBalance = 1000; // Default balance for guests
-                updateDisplay();
-                initGame(); // Initialize game for guest mode
-            }
-            messageDisplay.textContent = 'Siap untuk memutar gulungan!';
-        });
+.multiplier {
+  position: absolute; /* Ubah menjadi absolute */
+  top: 0; /* Posisikan di bagian atas kontainer */
+  left: 50%; /* Posisikan di tengah horizontal */
+  transform: translateX(-50%); /* Geser ke kiri 50% dari lebarnya sendiri untuk penempatan tengah yang sempurna */
+  color: var(--neon-green);
+  border: 2px solid var(--neon-green);
+  box-shadow: 0 0 15px var(--neon-green);
+  font-size: 2em;
+  padding: 5px 15px; /* Pastikan paddingnya sesuai */
+  border-radius: 10px; /* Pastikan border-radiusnya sesuai */
+  white-space: nowrap; /* Mencegah teks terpotong jika angkanya besar */
+}
 
-        // --- Initialization ---
-        async function initGame() {
-            console.log("Game Initialization started.");
-            // Hide game over screen on init
-            gameOverScreen.style.display = 'none';
+.free-spin-display {
+  /* Pertahankan ini jika Anda ingin free spin display berada di aliran normal
+     atau posisikan secara absolut juga jika diinginkan di posisi yang spesifik. */
+  top: 50px; /* Adjusted position */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--darkest-bg);
+  padding: 5px 15px;
+  border-radius: 10px;
+  color: var(--neon-yellow);
+  border: 2px solid var(--neon-yellow);
+  font-size: 1.2em;
+  font-weight: bold;
+  box-shadow: 0 0 10px var(--neon-yellow);
+  z-index: 100;
+  display: none;
+}
 
-            // Dapatkan tinggi simbol yang sebenarnya dari DOM setelah CSS dimuat
-            const tempSymbol = document.createElement('div');
-            tempSymbol.classList.add('symbol');
-            gameBoardWrapper.appendChild(tempSymbol);
-            tempSymbol.style.visibility = 'hidden';
-            tempSymbol.style.position = 'absolute';
+    /* Spin button */
+    .spin-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--darkest-bg);
+      border: 4px solid var(--neon-cyan);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 40px;
+      font-weight: bold;
+      color: var(--neon-cyan);
+      box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+      cursor: pointer;
+      transition: all 0.2s ease-in-out;
+      z-index: 20;
+    }
+    .spin-button:hover {
+      background: var(--neon-cyan);
+      color: var(--darkest-bg);
+      box-shadow: 0 0 30px var(--neon-cyan), inset 0 0 15px var(--neon-cyan);
+      transform: translateX(-50%) scale(1.05);
+    }
+    .spin-button:active {
+      transform: translateX(-50%) scale(0.95);
+      box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 5px var(--neon-cyan);
+    }
+    .spin-button:disabled {
+      background: #333;
+      border-color: #555;
+      color: #888;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
 
-            await new Promise(resolve => setTimeout(resolve, 50)); // Give time for CSS to apply
+    /* Bet control buttons */
+    .bet-controls button, .bet-controls1 button {
+      position: fixed;
+      bottom: 40px;
+      padding: 15px;
+      background: var(--darkest-bg);
+      color: var(--neon-pink);
+      border: 2px solid var(--neon-pink);
+      border-radius: 50%;
+      font-size: 1.5em;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--neon-pink);
+      transition: all 0.2s ease-in-out;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 15;
+    }
 
-            SYMBOL_HEIGHT = tempSymbol.offsetHeight;
-            gameBoardWrapper.removeChild(tempSymbol);
+    .bet-controls button {
+      left: 20px;
+    }
 
-            if (SYMBOL_HEIGHT === 0) {
-                console.warn("SYMBOL_HEIGHT detected as 0. This may cause issues. Defaulting to 90px (CSS max-height).");
-                // Fallback to max-height defined in CSS if detection fails.
-                // This might not be perfectly accurate if scaled, but better than 0.
-                SYMBOL_HEIGHT = 90;
-            }
-            console.log("Detected SYMBOL_HEIGHT:", SYMBOL_HEIGHT);
-            
-            // Set initial board state for guest or before user data fully loaded
-            initializeBoardState();
-            updateDisplay();
-            setControlState(true);
-            messageDisplay.textContent = 'Siap untuk memutar gulungan!';
-            console.log("Game reset complete. Board children count:", gameBoard.children.length);
-        }
+    .bet-controls1 button {
+      right: 20px;
+    }
 
-        function initializeBoardState() {
-            gameBoard.innerHTML = '';
-            currentReelSymbols = Array.from({ length: NUM_REELS }, () => []);
-            for (let i = 0; i < NUM_REELS; i++) {
-                const reelContainer = document.createElement('div');
-                reelContainer.classList.add('symbol-container');
-                const reelContent = document.createElement('div');
-                reelContent.classList.add('reel-content');
-                for (let j = 0; j < SYMBOLS_PER_REEL_VISIBLE; j++) {
-                    const symbol = getRandomSymbol();
-                    reelContent.appendChild(createSymbolElement(symbol));
-                    currentReelSymbols[i].push(symbol); // Simpan state awal
-                }
-                reelContainer.appendChild(reelContent);
-                gameBoard.appendChild(reelContainer);
-            }
-        }
+    .bet-controls button:hover, .bet-controls1 button:hover {
+      background: var(--neon-pink);
+      color: var(--darkest-bg);
+      box-shadow: 0 0 20px var(--neon-pink);
+      transform: scale(1.1);
+    }
+    .bet-controls button:active, .bet-controls1 button:active {
+      transform: scale(0.9);
+      box-shadow: 0 0 5px var(--neon-pink);
+    }
 
-        function resetGame() {
-            console.log("Resetting game state.");
-            // Balance is managed by Supabase, so don't reset to 1000 directly
-            currentMultiplier = 1;
-            cascadingCount = 0;
-            freeSpinMode = false;
-            freeSpinsLeft = 0;
-            lastWinAmount = 0;
-            isSpinning = false;
-            if (autoSpinInterval) {
-                clearInterval(autoSpinInterval);
-                autoSpinInterval = null;
-                autoSpinBtn.textContent = 'Auto Spin';
-            }
+    /* Wild and Scatter symbol styling */
+    .tile.wild-symbol, .tile.scatter-symbol {
+      background: #000;
+      border: 3px solid;
+      animation: neonPulseSmall 1s infinite alternate;
+    }
 
-            updateDisplay();
-            initializeBoardState(); // Re-render the board
-            setControlState(true);
-            gameOverScreen.style.display = 'none';
-            messageDisplay.textContent = 'Siap untuk memutar gulungan?';
-            gameContainer.classList.remove('free-spin-mode');
-            bodyGame.classList.remove('free-spin-mode'); // Hapus class di body juga
-            freeSpinsLeftDiv.style.display = 'none';
-        }
+    .tile.wild-symbol {
+      border-color: var(--neon-yellow);
+      box-shadow: inset 0 0 10px rgba(255, 255, 0, 0.5), 0 0 15px var(--neon-yellow), 0 0 30px var(--neon-yellow);
+    }
 
-        // --- UI Updates ---
-        function updateDisplay() {
-            balanceDisplay.textContent = Math.floor(playerBalance).toLocaleString('id-ID'); // Format angka
-            currentBetDisplay.textContent = currentBet.toLocaleString('id-ID');
-            lastWinDisplay.textContent = lastWinAmount.toLocaleString('id-ID');
-            multiplierDisplay.textContent = `${currentMultiplier}x`;
-            freeSpinsCountDisplay.textContent = freeSpinsLeft;
-            freeSpinsLeftDiv.style.display = freeSpinMode ? 'inline-block' : 'none';
-            // Username diatur oleh auth listener
-        }
+    .tile.scatter-symbol {
+      border-color: var(--neon-pink);
+      box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.5), 0 0 15px var(--neon-pink), 0 0 30px var(--neon-pink);
+    }
 
-        function setControlState(enabled) {
-            spinBtn.disabled = !enabled;
-            betAmountSelect.disabled = !enabled;
-            // autoSpinBtn state dikelola secara terpisah
-        }
+    @keyframes neonPulseSmall {
+      0% { opacity: 0.8; }
+      100% { opacity: 1; }
+    }
 
-        // --- Reel Generation & Logic ---
-        let currentReelSymbols = []; // Menyimpan data simbol yang sedang terlihat
+    /* Images within tiles */
+    .tile img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7));
+    }
 
-        function getRandomSymbol() {
-            const normalSymbols = symbols.filter(s => s.type === 'normal');
-            const wildSymbol = symbols.find(s => s.type === 'wild');
-            const scatterSymbol = symbols.find(s => s.type === 'scatter');
+    /* Free Spin Win Animation Overlay */
+    #freeSpinWinOverlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0, 0, 0, 0.8);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+        z-index: 1001; /* Above popups */
+    }
 
-            let pool = [];
-            // Probabilitas simbol berdasarkan Mahjong Ways PG Soft
-            // Wild dan Scatter lebih jarang muncul
-            for(let i = 0; i < 15; i++) pool.push(...normalSymbols); // Normal symbols appear more often
-            if (Math.random() < 0.1) pool.push(wildSymbol); // ~10% chance for Wild
-            if (Math.random() < 0.08) pool.push(scatterSymbol); // ~8% chance for Scatter
+    #freeSpinWinOverlay.show {
+        opacity: 1;
+        visibility: visible;
+    }
 
-            // Jika pool kosong (probabilitas sangat rendah), tambahkan setidaknya 1 normal
-            if (pool.length === 0) pool.push(normalSymbols[Math.floor(Math.random() * normalSymbols.length)]);
+    .win-animation-content {
+        background: linear-gradient(45deg, var(--neon-cyan), var(--neon-green), var(--neon-pink));
+        padding: 30px 50px;
+        border-radius: 20px;
+        box-shadow: 0 0 40px var(--neon-cyan), 0 0 60px var(--neon-pink);
+        text-align: center;
+        transform: scale(0.8);
+        opacity: 0;
+        animation: winPopIn 0.8s forwards ease-out;
+        border: 3px solid var(--neon-yellow);
+    }
 
-            return pool[Math.floor(Math.random() * pool.length)];
-        }
+    @keyframes winPopIn {
+        0% { transform: scale(0.8); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .win-animation-content h2 {
+        font-size: 2.5em;
+        color: var(--darkest-bg);
+        margin-bottom: 15px;
+        text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.8);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .win-animation-content p {
+        font-size: 2em;
+        color: var(--darkest-bg);
+        font-weight: bold;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+        letter-spacing: 1px;
+    }
+
+    #freeSpinTotalWin {
+        color: #ff0000;
+        text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+    }
+
+    /* Media Queries for Responsiveness */
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5em;
+        padding: 5px 15px;
+      }
+
+      .slot-grid {
+        grid-template-columns: repeat(5, 60px); /* Smaller tiles on smaller screens */
+        grid-template-rows: repeat(5, 75px);
+      }
+
+      .tile {
+        font-size: 30px;
+      }
+
+      .spin-button {
+        width: 70px;
+        height: 70px;
+        font-size: 35px;
+      }
+
+      .bet-controls button, .bet-controls1 button {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2em;
+        bottom: 30px; /* Adjust vertical position */
+      }
+
+      .bet-controls button {
+        left: 10px;
+      }
+
+      .bet-controls1 button {
+        right: 10px;
+      }
+
+      .balance, .bet-display, .multiplier, .free-spin-display {
+        font-size: 0.8em;
+        padding: 5px 10px;
+      }
+
+      .win-animation-content h2 {
+        font-size: 1.8em;
+      }
+
+      .win-animation-content p {
+        font-size: 1.5em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.2em;
+        padding: 5px 10px;
+      }
+
+      .slot-grid {
+        grid-template-columns: repeat(5, 50px); /* Even smaller tiles */
+        grid-template-rows: repeat(5, 60px);
+        gap: 3px;
+      }
+
+      .tile {
+        font-size: 25px;
+        border-radius: 5px;
+      }
+
+      .spin-button {
+        width: 60px;
+        height: 60px;
+        font-size: 30px;
+        bottom: 15px;
+      }
+
+      .bet-controls button, .bet-controls1 button {
+        width: 40px;
+        height: 40px;
+        font-size: 1em;
+        bottom: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <audio id="rollSound" src=""></audio> <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
+  <audio id="winBigSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-final-level-bonus-2061.mp3"></audio>
+  <audio id="breakSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
+  <audio id="spinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3"></audio>
+  <audio id="bgm" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" loop></audio>
+  <audio id="freeSpinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3"></audio>
+  <audio id="freeSpinBGM" src="https://www.bensound.com/bensound-music/bensound-epic.mp3" loop></audio>
+
+  <div id="popup" class="popup"></div>
+
+  <marquee>•NIKMATI KESERUAN BERMAIN DENGAN KEMENANGAN YANG TIDAK PERNAH TERBAYANGKAN•LAKUKAN STRATEGI AGAR DAPAT MEMENANGKAN PERMAINAN DAN DAPATKAN UANG SECARA MUDAH•</marquee>
+
+  <h1>MAHJONG NEON BLAST<hr></h1>
+  <div class="slot-frame">
+    <div class="slot-grid" id="grid"></div>
+  </div>
+
+  <div class="controls-container">
+    <div class="balance neon-glow" id="balanceDisplay">Saldo: Rp0</div>
+    <div class="bet-display neon-glow" id="betDisplay">100</div>
+    <div class="multiplier neon-glow" id="multiplierDisplay">x0</div>
+    <div class="free-spin-display neon-glow" id="freeSpinDisplay">Free Spins: 0</div>
+  </div>
+
+  <div class="bet-controls">
+    <button id="betPlus">+</button>
+  </div>
+  <div class="bet-controls1">
+    <button id="betMinus">-</button>
+  </div>
+  <button class="spin-button neon-glow" id="spinButton">⚡</button>
+
+  <div id="freeSpinWinOverlay" class="win-animation-overlay">
+    <div class="win-animation-content">
+      <h2>FREE SPIN SELESAI!</h2>
+      <p>TOTAL KEMENANGAN: <span id="freeSpinTotalWin">Rp0</span></p>
+    </div>
+  </div>
+
+  <script>
+    const grid = document.getElementById('grid');
+    const spinButton = document.getElementById('spinButton');
+    const balanceDisplay = document.getElementById('balanceDisplay');
+    const betDisplay = document.getElementById('betDisplay');
+    const multiplierDisplay = document.getElementById('multiplierDisplay');
+    const rollSound = document.getElementById('rollSound');
+    const winSmallSound = document.getElementById('winSmallSound');
+    const winBigSound = document.getElementById('winBigSound');
+    const betMinusBtn = document.getElementById('betMinus');
+    const betPlusBtn = document.getElementById('betPlus');
+    const freeSpinDisplay = document.getElementById('freeSpinDisplay');
+    const freeSpinWinOverlay = document.getElementById('freeSpinWinOverlay');
+    const freeSpinTotalWinDisplay = document.getElementById('freeSpinTotalWin');
 
 
-        function createSymbolElement(symbolData) {
-            const div = document.createElement('div');
-            div.classList.add('symbol');
-            div.dataset.id = symbolData.id;
-            div.dataset.type = symbolData.type;
-            div.textContent = symbolData.emoji;
+    const symbolPayouts = {
+      '🦧': 15,
+      '🐅': 13,
+      '🦫': 12,
+      '🐥': 11,
+      '🦜': 10,
+      '🐓': 9,
+      '🕊️': 6,
+      '🐖': 4,
+      '🦕': 7,
+      '🐈': 6,
+      '🐬': 5,
+    };
 
-            if (symbolData.type === 'wild') div.classList.add('wild');
-            if (symbolData.type === 'scatter') div.classList.add('scatter');
+    const width = 5;
+    const height = 5;
+   const symbols = ['🐬', '🐈', '🦕', '🐖', '🕊️', '🐓', '🦜', '🐥', '🦫', '🐅', '🦧', '🌟', '🐉'];
+    const WILD_SYMBOL = '🌟';
+    const SCATTER_SYMBOL = '🐉';
 
-            return div;
-        }
+    let currentSymbols = [];
+    let balance = 99990;
+    let bet = 100;
+    const minBet = 100;
+    const maxBet = 1000;
+    let multiplier = 0;
+    let freeSpinCount = 0;
+    let totalFreeSpinWin = 0; // Tambahkan variabel untuk total kemenangan Free Spin
 
-        async function spinReels() {
-            console.log("Spin initiated. isSpinning:", isSpinning);
-            if (isSpinning) return; // Prevent multiple simultaneous spins
+    // AUDIO BARU DAN VARIABEL FLAG
+    const bgm = document.getElementById('bgm');
+    const freeSpinSound = document.getElementById('freeSpinSound');
+    const freeSpinBGM = document.getElementById('freeSpinBGM');
+    const breakSound = document.getElementById('breakSound'); // Dapatkan elemen audio breakSound
+    let isInFreeSpinMode = false; // Flag untuk melacak status mode Free Spin
 
-            // Pre-spin checks
-            if (!freeSpinMode && playerBalance < currentBet) {
-                messageDisplay.textContent = 'Saldo tidak cukup!';
-                setControlState(true);
-                return;
-            }
-            if (freeSpinMode && freeSpinsLeft <= 0) {
-                 messageDisplay.textContent = 'Free Spins habis!';
-                 endFreeSpinMode();
-                 return;
-            }
+async function loadSaldo() {
+  if (!uid) {
+    alert("User belum login!");
+    window.location.href = "index.html"; // redirect ke login kalau belum login
+    return;
+  }
 
-            isSpinning = true;
-            setControlState(false);
-            spinBtn.disabled = true;
-            autoSpinBtn.disabled = true;
+  const { data, error } = await supabase
+    .from('users_data')
+    .select('saldo')
+    .eq('user_id', uid)
+    .single();
 
-            // Deduct bet for base game, or decrement free spins
-            if (!freeSpinMode) {
-                await updateBalance(-currentBet); // Deduct bet via Supabase function
+  if (error || !data) {
+    alert("Gagal mengambil saldo user!");
+    return;
+  }
+
+  balance = data.saldo;
+  updateBalance(0);
+}
+
+window.onload = () => {
+  loadSaldo();
+  init(); // jalankan game
+};
+
+
+    function generateRandomSymbols() {
+      const arr = [];
+      for (let i = 0; i < width * height; i++) {
+        let randomSymbol;
+        const col = i % width; // Hitung kolom saat ini (0 hingga 4)
+
+        const rand = Math.random();
+
+        if (col === 0) { // Jika berada di kolom pertama (indeks 0)
+            // Wild TIDAK AKAN MUNCUL di kolom pertama
+            if (rand < 0.01) { // Hanya Scatter (1% probabilitas)
+                randomSymbol = SCATTER_SYMBOL;
             } else {
-                freeSpinsLeft--;
+                randomSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Simbol reguler
             }
-            lastWinAmount = 0;
-            updateDisplay();
-            messageDisplay.textContent = 'Berputar...';
-            
-            // Play sounds
-            try { spinSound.currentTime = 0; spinSound.play(); } catch (e) { console.warn("Spin sound error:", e); }
-            try { winSound.pause(); winSound.currentTime = 0; } catch (e) {}
-            try { tumbleSound.pause(); tumbleSound.currentTime = 0; } catch (e) {}
-            try { tumbleSound.pause(); tumbleSound.currentTime = 0; } catch (e) {}
+        } else { // Untuk kolom 2, 3, 4, 5 (indeks 1, 2, 3, 4)
+            if (rand < 0.10) { // 4% kemungkinan Wild
+                randomSymbol = WILD_SYMBOL;
+            } else if (rand < 0.05) { // 1% kemungkinan Scatter
+                randomSymbol = SCATTER_FLOOR_SYMBOL; // Changed to a new variable for scatter probability in subsequent reels
+            } else {
+                randomSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Simbol reguler
+            }
+        }
+        arr.push(randomSymbol);
+      }
+      return arr;
+    }
 
-            // Remove winning highlights from previous round
-            document.querySelectorAll('.symbol.winning').forEach(el => el.classList.remove('winning'));
+    function renderGrid(symbolsArr) {
+      grid.innerHTML = '';
+      symbolsArr.forEach(sym => {
+        const div = document.createElement('div');
+        div.className = 'tile';
 
-            const reelContainers = Array.from(gameBoard.children);
-            const reelContents = reelContainers.map(container => container.querySelector('.reel-content'));
+        // Logika untuk menampilkan gambar atau teks
+        if (sym === WILD_SYMBOL) {
+          const img = document.createElement('img');
+          img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//download%20(1).png'; // Ganti dengan URL gambar Wild Anda
+          img.alt = 'Wild';
+          div.appendChild(img);
+          div.classList.add('wild-symbol'); // Tambahkan kelas untuk styling
+        } else if (sym === SCATTER_SYMBOL) {
+          const img = document.createElement('img');
+          img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//2432cb49c2991c8dd62a77f44f51fb45.png'; // Ganti dengan URL gambar Scatter Anda
+          img.alt = 'Scatter';
+          div.appendChild(img);
+          div.classList.add('scatter-symbol'); // Tambahkan kelas untuk styling
+        } else {
+          div.textContent = sym; // Simbol reguler tetap berupa teks
+        }
+        grid.appendChild(div);
+      });
+    }
 
-            const finalResultMatrix = Array.from({ length: NUM_REELS }, () => []);
 
-            const spinPromises = reelContents.map((reelContent, reelIndex) => {
-                return new Promise(resolve => {
-                    const reelData = [];
-                    // Add filler symbols for spinning effect (more than visible)
-                    const numFillerSymbols = BASE_SYMBOLS_ON_REEL + Math.floor(Math.random() * 5); // 20-24 filler symbols
-                    for (let i = 0; i < numFillerSymbols; i++) {
-                        reelData.push(getRandomSymbol());
-                    }
-                    // Add final result symbols for this reel
-                    const reelFinalSymbols = [];
-                    for (let i = 0; i < SYMBOLS_PER_REEL_VISIBLE; i++) {
-                        const finalSymbol = getRandomSymbol();
-                        reelData.push(finalSymbol);
-                        reelFinalSymbols.push(finalSymbol);
-                    }
-                    finalResultMatrix[reelIndex] = reelFinalSymbols; // Store actual final result
-
-                    reelContent.innerHTML = '';
-                    reelData.forEach(sData => {
-                        reelContent.appendChild(createSymbolElement(sData));
-                    });
-
-                    // Set initial position for spin animation (above visible area)
-                    const startPosition = -(reelData.length - SYMBOLS_PER_REEL_VISIBLE) * SYMBOL_HEIGHT;
-                    reelContent.style.transition = 'none'; // Disable transition for instant jump
-                    reelContent.style.transform = `translateY(${startPosition}px)`;
-
-                    // Force reflow
-                    void reelContent.offsetWidth; 
-
-                    // Start animation after a tiny delay
-                    setTimeout(() => {
-                        reelContent.style.transition = `transform ${SPIN_DURATION_MS + (reelIndex * 150)}ms ease-out`;
-                        reelContent.style.transform = `translateY(0px)`; // Animate to visible position
-                    }, 50);
-
-                    // Resolve promise after animation
-                    setTimeout(() => {
-                        try { stopSound.currentTime = 0; stopSound.play(); } catch (e) { console.warn("Stop sound error:", e); }
-                        reelContent.style.transition = 'none'; // Disable transition for cleanup
-                        // Keep only the visible symbols in the DOM
-                        const visibleSymbolsHTML = Array.from(reelContent.children)
-                            .slice(-SYMBOLS_PER_REEL_VISIBLE)
-                            .map(el => el.outerHTML)
-                            .join('');
-                        reelContent.innerHTML = visibleSymbolsHTML;
-                        resolve();
-                    }, SPIN_DURATION_MS + (reelIndex * 150) + 100);
-                });
-            });
-
-            await Promise.all(spinPromises);
-            try { spinSound.pause(); spinSound.currentTime = 0; } catch (e) {}
-
-            currentReelSymbols = finalResultMatrix;
-            console.log("Final Board State (After Spin):", JSON.stringify(currentReelSymbols, null, 2));
-
-            cascadingCount = 0; // Reset cascade count for a new spin cycle
-            processWinCycle();
-            isSpinning = false; // Allow next spin
+    function animateReelShake(col) {
+      return new Promise(resolve => {
+        const reelSymbols = [];
+        for (let row = 0; row < height; row++) {
+          reelSymbols.push(currentSymbols[row * width + col]);
         }
 
-        async function processWinCycle() {
-            console.log("Starting win cycle. Multiplier:", currentMultiplier, "Cascading Count:", cascadingCount);
-            let currentWinAmount = 0;
-            let winningMatches = checkWins(); // Dapatkan semua jenis kemenangan
-            let freeSpinsTriggered = 0;
-            const symbolsToHighlightAndClear = []; // Simbol yang akan di-highlight dan di-cascade
+        const reelTiles = [];
+        for (let row = 0; row < height; row++) {
+          reelTiles.push(grid.children[row * width + col]);
+        }
 
-            // Pisahkan kemenangan normal dan pemicu scatter
-            winningMatches.forEach(match => {
-                if (match.type === 'scatter_trigger') {
-                    freeSpinsTriggered = match.freeSpinsAwarded;
-                    // Scatters juga perlu di-highlight jika menang
-                    symbolsToHighlightAndClear.push(...match.symbols);
-                } else if (match.type === 'normal_win') {
-                    symbolsToHighlightAndClear.push(...match.symbols);
-                    const payout = PAYTABLE[match.symbolId] ? PAYTABLE[match.symbolId][match.matchLength] : 0;
-                    currentWinAmount += payout;
-                }
-            });
+        let position = 1;
+        const tileHeight = 10;
+        const totalScrolls = 10 + col * 5;
+        let scrollCount = 0;
 
-            if (symbolsToHighlightAndClear.length > 0 || freeSpinsTriggered > 0) {
-                // Jika ada kemenangan (regular atau scatter trigger)
-                try { winSound.currentTime = 0; winSound.play(); } catch (e) { console.warn("Win sound error:", e); }
-                cascadingCount++;
-                currentMultiplier = getMultiplier();
-                multiplierDisplay.textContent = `${currentMultiplier}x`;
-                
-                let message = `Menang! Multiplier ${currentMultiplier}x!`;
-                if (freeSpinsTriggered > 0) {
-                    message += ` Free Spins +${freeSpinsTriggered}!`;
-                }
-                messageDisplay.textContent = message;
-                
-                try { tumbleSound.currentTime = 0; tumbleSound.play(); } catch (e) { console.warn("Tumble sound error:", e); }
+        const rollSoundInstance = new Audio(rollSound.src);
+        rollSoundInstance.volume = 0.5;
+        rollSoundInstance.play();
 
-                // Apply winning animation to symbols
-                symbolsToHighlightAndClear.forEach(pos => {
-                    const reelContent = gameBoard.children[pos.col] ? gameBoard.children[pos.col].querySelector('.reel-content') : null;
-                    const symbolEl = reelContent && reelContent.children[pos.row] ? reelContent.children[pos.row] : null;
-                    if (symbolEl) {
-                        symbolEl.classList.add('winning');
-                    }
-                });
+        function step() {
+          position += 5;
+          if (position >= tileHeight) {
+            position -= tileHeight;
+            scrollCount++;
 
-                // Add win amount (after multiplier)
-                const totalWinThisCascade = currentWinAmount * currentMultiplier;
-                lastWinAmount = totalWinThisCascade; // Only show win for current cascade
-                await updateBalance(totalWinThisCascade);
-                updateDisplay();
+            let newSymbol;
+            const rand = Math.random();
 
-                // Trigger Free Spin mode if scatters were hit and not already in FS
-                if (freeSpinsTriggered > 0 && !freeSpinMode) {
-                    startFreeSpinMode(freeSpinsTriggered);
-                } else if (freeSpinsTriggered > 0 && freeSpinMode) {
-                    freeSpinsLeft += freeSpinsTriggered; // Re-trigger
-                    updateDisplay();
-                    messageDisplay.textContent = `Free Spins +${freeSpinsTriggered}! Total ${freeSpinsLeft} FS!`;
-                }
-
-                await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for win animation
-                await cascadeSymbols(symbolsToHighlightAndClear); // Cascade semua simbol yang terlibat dalam kemenangan
-
-                // Wait for cascade animation to complete before checking for new wins
-                await new Promise(resolve => setTimeout(resolve, 500)); 
-                processWinCycle(); // Recursive call for next cascade
-            } else {
-                console.log("No more wins in this cycle. Resetting multiplier.");
-                messageDisplay.textContent = 'Tidak ada kemenangan. Coba lagi!';
-                currentMultiplier = 1; // Reset multiplier if no more wins
-                multiplierDisplay.textContent = `${currentMultiplier}x`;
-                updateDisplay();
-
-                // Determine next action based on game state
-                if (freeSpinMode) {
-                    if (freeSpinsLeft > 0) {
-                        spinBtn.disabled = false;
-                        autoSpinBtn.disabled = false;
-                        messageDisplay.textContent = `Free Spins tersisa: ${freeSpinsLeft}.`;
-                        // If auto-spin was active, it will trigger the next spin
-                        if (autoSpinInterval) {
-                            setTimeout(spinReels, 500); // Small delay before next auto-spin
-                        }
-                    } else {
-                        endFreeSpinMode();
-                    }
+            if (col === 0) { // Jika kolom saat ini adalah kolom pertama
+                // Wild TIDAK AKAN MUNCUL di kolom pertama
+                if (rand < 0.05) { // Hanya Scatter (1% probabilitas)
+                    newSymbol = SCATTER_SYMBOL;
                 } else {
-                    setControlState(true);
-                    spinBtn.disabled = false;
-                    autoSpinBtn.disabled = false;
-                    if (playerBalance <= 0) {
-                        gameOver();
-                    }
-                    // If auto-spin was active, it will trigger the next spin
-                    if (autoSpinInterval && playerBalance >= currentBet) {
-                        setTimeout(spinReels, 500); // Small delay before next auto-spin
-                    } else if (autoSpinInterval && playerBalance < currentBet) {
-                        // Stop auto-spin if balance is insufficient
-                        clearInterval(autoSpinInterval);
-                        autoSpinInterval = null;
-                        autoSpinBtn.textContent = 'Auto Spin';
-                        gameOver(); // Trigger game over due to no balance
-                    }
+                    newSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Simbol reguler
+                }
+            } else { // Untuk kolom lainnya
+                if (rand < 0.04) { // 4% kemungkinan Wild
+                    newSymbol = WILD_SYMBOL;
+                } else if (rand < 0.05) { // 1% kemungkinan Scatter
+                    newSymbol = SCATTER_SYMBOL;
+                } else {
+                    newSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Simbol reguler
                 }
             }
-        }
 
-        function getMultiplier() {
-            let multipliers = freeSpinMode ? FREE_SPIN_MULTIPLIERS : BASE_MULTIPLIERS;
-            // cascadingCount starts from 1 for the first win after a spin
-            // index will be 0 for 1st cascade, 1 for 2nd, etc.
-            const index = Math.min(cascadingCount - 1, multipliers.length - 1);
-            return multipliers[index];
-        }
+            reelSymbols.unshift(newSymbol);
+            reelSymbols.pop();
+            for (let r = 0; r < height; r++) {
+              // Hapus konten lama
+              reelTiles[r].innerHTML = '';
+              reelTiles[r].classList.remove('wild-symbol', 'scatter-symbol');
 
-        async function cascadeSymbols(symbolsToClear) {
-            console.log("Cascading symbols...", symbolsToClear);
-            // Clear winning symbols from the board visually
-            symbolsToClear.forEach(pos => {
-                const reelContent = gameBoard.children[pos.col] ? gameBoard.children[pos.col].querySelector('.reel-content') : null;
-                const symbolEl = reelContent && reelContent.children[pos.row] ? reelContent.children[pos.row] : null;
-                if (symbolEl) {
-                    symbolEl.classList.add('matched'); // Trigger fadeOutAndShrink animation
-                    symbolEl.classList.remove('winning'); // Remove glow
-                }
-            });
-
-            await new Promise(resolve => setTimeout(resolve, 400)); // Wait for fadeOut animation
-
-            const newBoardState = Array.from({ length: NUM_REELS }, () => []);
-
-            for (let col = 0; col < NUM_REELS; col++) {
-                // Collect existing symbols that were NOT part of the win
-                let nonWinningSymbolsInColumn = currentReelSymbols[col].filter((_, row) =>
-                    !symbolsToClear.some(p => p.row === row && p.col === col)
-                );
-
-                const numNewSymbols = SYMBOLS_PER_REEL_VISIBLE - nonWinningSymbolsInColumn.length;
-                let newFallingSymbols = [];
-                for (let i = 0; i < numNewSymbols; i++) {
-                    newFallingSymbols.push(getRandomSymbol());
-                }
-                
-                // New symbols fall from top, existing non-winning symbols remain below
-                newBoardState[col].push(...newFallingSymbols, ...nonWinningSymbolsInColumn);
+              // Tambahkan gambar atau teks sesuai simbol
+              if (reelSymbols[r] === WILD_SYMBOL) {
+                const img = document.createElement('img');
+                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//download%20(1).png'; // Ganti dengan URL gambar Wild Anda
+                img.alt = 'Wild';
+                reelTiles[r].appendChild(img);
+                reelTiles[r].classList.add('wild-symbol');
+              } else if (reelSymbols[r] === SCATTER_SYMBOL) {
+                const img = document.createElement('img');
+                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//2432cb49c2991c8dd62a77f44f51fb45.png'; // Ganti dengan URL gambar Scatter Anda
+                img.alt = 'Scatter';
+                reelTiles[r].appendChild(img);
+                reelTiles[r].classList.add('scatter-symbol');
+              } else {
+                reelTiles[r].textContent = reelSymbols[r]; // Simbol reguler tetap berupa teks
+              }
             }
+          }
 
-            // Update currentReelSymbols for the next win check
-            currentReelSymbols = newBoardState.map(reel => reel.slice(-SYMBOLS_PER_REEL_VISIBLE)); // Keep only visible 4 symbols
+          if (scrollCount >= totalScrolls) {
+            for (let r = 0; r < height; r++) {
+              reelTiles[r].style.transform = 'translateY(0)';
+            }
+            rollSoundInstance.pause();
+            rollSoundInstance.currentTime = 0;
 
-            const reelContents = Array.from(gameBoard.children).map(container => container.querySelector('.reel-content'));
+            for (let r = 0; r < height; r++) {
+              currentSymbols[r * width + col] = reelSymbols[r];
+            }
+            resolve();
+          } else {
+            requestAnimationFrame(step);
+          }
+        }
+        step();
+      });
+    }
 
-            await Promise.all(reelContents.map((reelContent, col) => {
-                return new Promise(resolve => {
-                    // Populate reelContent with all symbols needed for cascade animation
-                    const symbolsToRender = [];
-                    // Add symbols that fell from above the view
-                    const symbolsDropped = newBoardState[col].length - SYMBOLS_PER_REEL_VISIBLE;
-                    for (let i = 0; i < symbolsDropped; i++) {
-                        symbolsToRender.push(getRandomSymbol()); // Filler above
-                    }
-                    symbolsToRender.push(...newBoardState[col]); // The actual new reel content
+    function getWinningTiles(symbolsArr) {
+        const winningTiles = new Set();
+        const scatterTiles = new Set();
+        let currentRoundWin = 0;
 
-                    reelContent.innerHTML = '';
-                    symbolsToRender.forEach(sData => {
-                        reelContent.appendChild(createSymbolElement(sData));
-                    });
-
-                    // Set initial position for fall animation
-                    const startPos = -(symbolsDropped * SYMBOL_HEIGHT);
-                    reelContent.style.transition = 'none';
-                    reelContent.style.transform = `translateY(${startPos}px)`;
-
-                    void reelContent.offsetWidth; // Force reflow
-
-                    setTimeout(() => {
-                        reelContent.style.transition = `transform 0.4s ease-in`;
-                        reelContent.style.transform = `translateY(0px)`;
-                    }, 50); // Small delay to ensure instant jump takes effect
-
-                    setTimeout(() => {
-                        reelContent.style.transition = 'none';
-                        // Keep only the final visible symbols
-                        const visibleSymbolsHTML = Array.from(reelContent.children)
-                            .slice(-SYMBOLS_PER_REEL_VISIBLE)
-                            .map(el => el.outerHTML)
-                            .join('');
-                        reelContent.innerHTML = visibleSymbolsHTML;
-                        resolve();
-                    }, 450); // Transition duration + buffer
-                });
-            }));
-            console.log("Cascade complete. New Board State (after cascade):", JSON.stringify(currentReelSymbols, null, 2));
+        for (let i = 0; i < symbolsArr.length; i++) {
+            if (symbolsArr[i] === SCATTER_SYMBOL) {
+                scatterTiles.add(i);
+            }
         }
 
+        // Logic for "Ways to Win" - checking combinations from left to right reels
+        // Iterate through each unique symbol to find winning combinations
+        for (const targetSymbol of symbols) {
+            if (targetSymbol === WILD_SYMBOL || targetSymbol === SCATTER_SYMBOL) continue;
 
-        function checkWins() {
-            let allWinningMatches = []; // Collects { type, matchLength, symbols, symbolId, freeSpinsAwarded? }
-            let scatterCount = 0;
-            const scatterPositions = [];
+            // Store paths for each winning combination to calculate payout
+            let winningPaths = [];
 
-            // Transpose the board for easier row-wise (payline) checking
-            // From currentReelSymbols (column-major) to transposedBoard (row-major)
-            const transposedBoard = Array.from({ length: SYMBOLS_PER_REEL_VISIBLE }, () => Array(NUM_REELS).fill(null));
-            for (let r = 0; r < SYMBOLS_PER_REEL_VISIBLE; r++) {
-                for (let c = 0; c < NUM_REELS; c++) {
-                    transposedBoard[r][c] = currentReelSymbols[c][r];
-                    if (currentReelSymbols[c][r] && currentReelSymbols[c][r].type === 'scatter') {
-                        scatterCount++;
-                        scatterPositions.push({ row: r, col: c });
-                    }
+            // Find all instances of the target symbol (or Wild) in the first reel
+            let firstReelMatches = [];
+            for (let row = 0; row < height; row++) {
+                const index = row * width + 0;
+                const symbolInReel = symbolsArr[index];
+                if (symbolInReel === targetSymbol || symbolInReel === WILD_SYMBOL) {
+                    firstReelMatches.push({ index: index, symbol: symbolInReel, path: [index] });
                 }
             }
-            
-            // Handle Scatter Wins first (award free spins if enough scatters)
-            if (scatterCount >= 3) {
-                // Get awarded spins from PAYTABLE for the exact scatter count if defined, else use 5-scatter value
-                const awardedSpins = PAYTABLE['scatter'][scatterCount] || PAYTABLE['scatter'][5]; 
-                allWinningMatches.push({ type: 'scatter_trigger', freeSpinsAwarded: awardedSpins, symbols: scatterPositions });
-            }
 
-            // Check for regular wins (left-to-right on adjacent reels)
-            for (let rowIdx = 0; rowIdx < SYMBOLS_PER_REEL_VISIBLE; rowIdx++) {
-                for (let colIdx = 0; colIdx < NUM_REELS; colIdx++) {
-                    const firstSymbol = transposedBoard[rowIdx][colIdx];
-                    if (!firstSymbol || firstSymbol.type === 'scatter') continue; // Scatters handled separately
+            if (firstReelMatches.length === 0) continue; // No match in the first reel for this symbol
 
-                    let currentMatchLength = 0;
-                    let currentLineSymbols = [];
-                    const symbolIdToMatch = firstSymbol.id;
-
-                    for (let checkCol = colIdx; checkCol < NUM_REELS; checkCol++) { // corrected `checkColCol` to `checkCol`
-                        const checkSymbol = transposedBoard[rowIdx][checkCol];
-                        if (checkSymbol && (checkSymbol.id === symbolIdToMatch || checkSymbol.type === 'wild')) {
-                            currentMatchLength++;
-                            currentLineSymbols.push({ row: rowIdx, col: checkCol, symbolId: checkSymbol.id });
-                        } else {
-                            break; // No match, break from this line check
-                        }
-                    }
-
-                    if (currentMatchLength >= 3) { // Minimum 3 symbols for a win
-                        if (PAYTABLE[symbolIdToMatch] && PAYTABLE[symbolIdToMatch][currentMatchLength]) {
-                            allWinningMatches.push({
-                                type: 'normal_win',
-                                symbolId: symbolIdToMatch,
-                                matchLength: currentMatchLength,
-                                symbols: currentLineSymbols
-                            });
-                            // Advance colIdx to skip already counted symbols for efficiency
-                            colIdx += currentMatchLength - 1;
-                        }
-                    }
-                }
-            }
-            console.log("Win check complete. All matches:", JSON.stringify(allWinningMatches, null, 2));
-            return allWinningMatches;
-        }
-
-
-        function startFreeSpinMode(spins) {
-            console.log("Starting Free Spin mode:", spins, "spins.");
-            freeSpinMode = true;
-            freeSpinsLeft = spins;
-            currentMultiplier = FREE_SPIN_MULTIPLIERS[0]; // Start with 2x multiplier
-            gameContainer.classList.add('free-spin-mode');
-            bodyGame.classList.add('free-spin-mode'); // Apply theme to body
-            messageDisplay.textContent = `Anda memenangkan ${spins} Free Spins!`;
-            updateDisplay();
-            setTimeout(() => {
-                spinReels(); // Start the first free spin
-            }, 1500);
-        }
-
-        function endFreeSpinMode() {
-            console.log("Ending Free Spin mode.");
-            freeSpinMode = false;
-            freeSpinsLeft = 0;
-            currentMultiplier = 1;
-            gameContainer.classList.remove('free-spin-mode');
-            bodyGame.classList.remove('free-spin-mode');
-            messageDisplay.textContent = 'Free Spins berakhir. Kembali ke game dasar.';
-            updateDisplay();
-            setControlState(true);
-            spinBtn.disabled = false;
-            autoSpinBtn.disabled = false;
-            if (playerBalance <= 0) {
-                gameOver();
-            }
-        }
-
-        function gameOver() {
-            console.log("Game Over. Player balance:", playerBalance);
-            isSpinning = false;
-            // Stop auto spin if game over
-            if (autoSpinInterval) {
-                clearInterval(autoSpinInterval);
-                autoSpinInterval = null;
-                autoSpinBtn.textContent = 'Auto Spin';
-            }
-            setControlState(false); // Disable all controls
-            spinBtn.disabled = true;
-            autoSpinBtn.disabled = true;
-            messageDisplay.textContent = 'Saldo Anda habis!';
-            finalScoreDisplay.textContent = `Saldo Akhir: ${Math.floor(playerBalance).toLocaleString('id-ID')}`;
-            gameOverScreen.style.display = 'flex';
-        }
-
-        // --- Event Handlers ---
-        betAmountSelect.addEventListener('change', (e) => {
-            currentBet = parseInt(e.target.value);
-            updateDisplay();
-            console.log("Bet changed to:", currentBet);
-        });
-
-        spinBtn.addEventListener('click', spinReels);
-
-        autoSpinBtn.addEventListener('click', () => {
-            if (autoSpinInterval) {
-                clearInterval(autoSpinInterval);
-                autoSpinInterval = null;
-                autoSpinBtn.textContent = 'Auto Spin';
-                setControlState(true); // Re-enable manual spin and bet select
-                spinBtn.disabled = false;
-                console.log("Auto Spin stopped.");
-            } else {
-                // Check initial balance before starting auto-spin
-                if (playerBalance < currentBet && !freeSpinMode) {
-                    messageDisplay.textContent = 'Saldo tidak cukup untuk Auto Spin!';
+            // Recursively build winning paths across reels
+            function findPaths(currentMatches, currentReel) {
+                if (currentReel === width) { // Reached the end of the reels
+                    winningPaths.push(currentMatches);
                     return;
                 }
-                autoSpinBtn.textContent = 'Stop Auto';
-                setControlState(false); // Disable manual spin, bet select
-                spinBtn.disabled = true;
-                autoSpinInterval = setInterval(() => {
-                    if (freeSpinMode && freeSpinsLeft <= 0) {
-                        clearInterval(autoSpinInterval);
-                        autoSpinInterval = null;
-                        autoSpinBtn.textContent = 'Auto Spin';
-                        endFreeSpinMode();
-                        return;
+
+                let nextReelMatches = [];
+                for (const match of currentMatches) {
+                    for (let row = 0; row < height; row++) {
+                        const index = row * width + currentReel;
+                        const symbolInNextReel = symbolsArr[index];
+                        if (symbolInNextReel === targetSymbol || symbolInNextReel === WILD_SYMBOL) {
+                            nextReelMatches.push({
+                                 index: index,
+                                symbol: symbolInNextReel,
+                                path: [...match.path, index]
+                            });
+                        }
                     }
-                    if (!freeSpinMode && playerBalance < currentBet) {
-                        clearInterval(autoSpinInterval);
-                        autoSpinInterval = null;
-                        autoSpinBtn.textContent = 'Auto Spin';
-                        gameOver();
-                        return;
+                }
+
+                if (nextReelMatches.length > 0) {
+                    findPaths(nextReelMatches, currentReel + 1);
+                } else if (currentMatches[0].path.length >= 3) { // If sequence ends but is 3 or more symbols
+                    winningPaths.push(currentMatches);
+                }
+            }
+
+            findPaths(firstReelMatches, 1); // Start from the second reel (index 1)
+
+            // Process winning paths
+            for (const pathGroup of winningPaths) {
+                // Each pathGroup represents all possible ways to hit this symbol from reel 1 to current reel
+                // We need to count the *length* of the longest consecutive match
+                let maxConsecutiveReels = 0;
+                if (pathGroup.length > 0) {
+                    maxConsecutiveReels = pathGroup[0].path.length; // Length of the path directly corresponds to consecutive reels
+                }
+                
+                if (maxConsecutiveReels >= 3) {
+                    // Calculate base payout for this combination
+                    const basePayout = symbolPayouts[targetSymbol] || 1;
+                    
+                    // The payout is typically `bet * multiplier_for_length * (number_of_ways_to_win)`
+                    // For ways-to-win, the 'number_of_ways_to_win' is the product of how many matching symbols appeared in each reel.
+                    // Let's calculate the 'ways'
+                    let waysCount = 1;
+                    for (let reelIdx = 0; reelIdx < maxConsecutiveReels; reelIdx++) {
+                        let symbolsInReel = new Set();
+                        for (const path of pathGroup) {
+                            const tileIndex = path.path[reelIdx];
+                            symbolsInReel.add(symbolsArr[tileIndex]);
+                        }
+                        // Count actual unique positions that match the target symbol (or wild) in this reel
+                        let matchingPositionsInReel = 0;
+                        for(let row = 0; row < height; row++) {
+                            const index = row * width + reelIdx;
+                            if (symbolsArr[index] === targetSymbol || symbolsArr[index] === WILD_SYMBOL) {
+                                matchingPositionsInReel++;
+                            }
+                        }
+                        waysCount *= matchingPositionsInReel;
                     }
-                    spinReels();
-                }, SPIN_DURATION_MS + 1500); // Delay between auto-spins (adjust as needed)
-                console.log("Auto Spin started.");
-                spinReels(); // Trigger first spin immediately
+                    
+                    // Simple payout example: payout for 3-of-a-kind, 4-of-a-kind, 5-of-a-kind
+                    // You'll need a more robust payout table based on symbol and length
+                    let lengthPayoutFactor = 0;
+                    if (maxConsecutiveReels === 3) lengthPayoutFactor = 1;
+                    else if (maxConsecutiveReels === 4) lengthPayoutFactor = 3; // Example: 3x for 4-of-a-kind
+                    else if (maxConsecutiveReels === 5) lengthPayoutFactor = 10; // Example: 10x for 5-of-a-kind
+
+                    currentRoundWin += (basePayout * lengthPayoutFactor * waysCount * (bet / 100));
+
+                    // Add all tiles in the winning path to winningTiles
+                    for (const path of pathGroup) {
+                        path.path.forEach(idx => winningTiles.add(idx));
+                    }
+                }
+            }
+        }
+        
+        return {
+            winningTiles: Array.from(winningTiles),
+            scatterCount: scatterTiles.size,
+            scatterIndices: Array.from(scatterTiles),
+            currentRoundWin: currentRoundWin // Return win from regular lines
+        };
+    }
+
+    function animateWinningTiles(indices) {
+        document.querySelectorAll('.tile').forEach((tile, i) => {
+            if (indices.includes(i)) {
+                tile.classList.add('break');
             }
         });
+        // Mainkan suara pecah setiap kali ada simbol yang pecah
+        breakSound.currentTime = 0; // Reset suara agar bisa dimainkan lagi
+        breakSound.play();
+    }
 
-        logoutBtn.addEventListener('click', handleLogout);
+    async function handleTileCollapse(indicesToBreak) {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
 
-        playAgainBtn.addEventListener('click', () => {
-            // No need to reload page for play again, just reset game state
-            // If user is logged in, balance is preserved from Supabase
-            // If guest, balance is reset to 1000
-            if (currentUser) {
-                loadPlayerStats(currentUser.id); // Reload balance from DB
+        if (indicesToBreak.length > 0) {
+            animateWinningTiles(indicesToBreak);
+            await delay(500); // Durasi animasi pecah
+        }
+
+        for (let i = 0; i < currentSymbols.length; i++) {
+            if (indicesToBreak.includes(i)) {
+                currentSymbols[i] = null;
+            }
+        }
+
+        for (let col = 0; col < width; col++) {
+            const colSymbols = [];
+            for (let row = height - 1; row >= 0; row--) {
+                const idx = row * width + col;
+                if (currentSymbols[idx] !== null) {
+                    colSymbols.unshift(currentSymbols[idx]);
+                }
+            }
+
+            while (colSymbols.length < height) {
+                let newSymbol;
+                const rand = Math.random();
+                if (col === 0) {
+                    if (rand < 0.10) {
+                        newSymbol = SCATTER_SYMBOL;
+                    } else {
+                        newSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))];
+                    }
+                } else {
+                    if (rand < 0.05) {
+                        newSymbol = WILD_SYMBOL;
+                    } else if (rand < 0.05) {
+                        newSymbol = SCATTER_SYMBOL;
+                    } else {
+                        newSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))];
+                    }
+                }
+                colSymbols.unshift(newSymbol);
+            }
+            for (let row = 0; row < height; row++) {
+                currentSymbols[row * width + col] = colSymbols[row];
+            }
+        }
+        renderGrid(currentSymbols);
+    }
+
+    function updateBalance(amount) {
+        balance += amount;
+        balanceDisplay.textContent = `Saldo: Rp.${balance}`;
+    }
+
+    function updateBetDisplay() {
+        betDisplay.textContent = `${bet}`;
+    }
+
+    function updateFreeSpinDisplay() {
+        if (freeSpinCount > 0) {
+            freeSpinDisplay.textContent = `Free Spins: ${freeSpinCount}`;
+            freeSpinDisplay.style.display = 'block';
+        } else {
+            freeSpinDisplay.textContent = `Free Spins: 0`;
+            freeSpinDisplay.style.display = 'none';
+        }
+    }
+
+    function showPopup(message) {
+        const popup = document.getElementById('popup');
+        popup.textContent = message;
+        popup.style.display = 'block';
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 1500);
+    }
+
+    async function showFreeSpinWinAnimation(totalWin) {
+        freeSpinTotalWinDisplay.textContent = `Rp.${totalWin}`;
+        freeSpinWinOverlay.style.opacity = '1';
+        freeSpinWinOverlay.style.visibility = 'visible';
+
+        // Play big win sound for Free Spin total win
+        document.getElementById('winBigSound').currentTime = 0;
+        document.getElementById('winBigSound').play();
+
+        await new Promise(resolve => setTimeout(resolve, 5000)); // Tampilkan selama 3 detik
+        freeSpinWinOverlay.style.opacity = '0';
+        freeSpinWinOverlay.style.visibility = 'hidden';
+    }
+
+
+    async function spin() {
+        if (freeSpinCount === 0 && balance < bet) {
+            showPopup('Saldo tidak cukup!');
+            return;
+        }
+
+        const spinSound = document.getElementById('spinSound');
+        spinSound.currentTime = 0;
+        spinSound.play();
+
+        // Jangan mengurangi saldo jika sedang Free Spin
+        if (freeSpinCount === 0) {
+            updateBalance(-bet);
+        } else {
+            freeSpinCount--;
+        }
+        updateFreeSpinDisplay();
+
+        spinButton.disabled = true;
+
+        multiplier = 0;
+        multiplierDisplay.textContent = `x${multiplier}`;
+
+        rollSound.currentTime = 0;
+        rollSound.play();
+
+        for (let col = 0; col < width; col++) {
+            await animateReelShake(col);
+        }
+
+        rollSound.pause();
+        rollSound.currentTime = 0;
+
+        let currentSpinWin = 0; // Kemenangan untuk spin saat ini
+        let chainReaction = true;
+
+        while (chainReaction) {
+            chainReaction = false;
+            const { winningTiles, scatterCount, scatterIndices, currentRoundWin: baseWin } = getWinningTiles(currentSymbols);
+
+            let roundPayout = baseWin; // Mulai dengan kemenangan dari kombinasi simbol
+
+            const tilesToBreakInThisRound = new Set();
+
+            if (scatterCount >= 3) {
+                let newFreeSpins = 0;
+                if (scatterCount === 3) newFreeSpins = 10;
+                else if (scatterCount === 4) newFreeSpins = 12;
+                else if (scatterCount >= 5) newFreeSpins = 15;
+
+                freeSpinCount += newFreeSpins;
+                showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
+                scatterIndices.forEach(i => tilesToBreakInThisRound.add(i));
+                chainReaction = true;
+                updateFreeSpinDisplay();
+
+                // PENAMBAHAN UNTUK EFEK SUARA DAN BGM FREE SPIN
+                if (newFreeSpins > 0 && !isInFreeSpinMode) {
+                    freeSpinSound.currentTime = 0;
+                    freeSpinSound.play();
+                    bgm.pause();
+                    bgm.currentTime = 0;
+                    freeSpinBGM.volume = 0.3;
+                    freeSpinBGM.play();
+                    isInFreeSpinMode = true;
+                    totalFreeSpinWin = 0; // Reset total kemenangan Free Spin saat masuk mode Free Spin baru
+                }
+            }
+
+            if (winningTiles.length > 0) {
+                multiplier = Math.min(multiplier + 1, 5);
+                multiplierDisplay.textContent = `x${multiplier}`;
+                
+                roundPayout *= multiplier; // Terapkan multiplier ke kemenangan putaran ini
+
+                winningTiles.forEach(i => tilesToBreakInThisRound.add(i));
+                chainReaction = true;
+            }
+
+            currentSpinWin += roundPayout; // Tambahkan kemenangan putaran ini ke total kemenangan spin
+
+            if (tilesToBreakInThisRound.size > 0) {
+                await handleTileCollapse(Array.from(tilesToBreakInThisRound));
+                await new Promise(res => setTimeout(res, 300));
             } else {
-                playerBalance = 1000; // Reset for guest
+                chainReaction = false;
             }
-            resetGame();
-            console.log("Play Again clicked. Game reset.");
-        });
+        }
 
-        // Initial setup - Supabase onAuthStateChange will trigger initGame after checking session
-        // If no session, it will set up for guest mode and then call initGame.
-        // So, no direct initGame() call here, let the auth listener handle it.
-    </script>
+        multiplier = 0;
+        multiplierDisplay.textContent = `x${multiplier}`;
+        
+        if (isInFreeSpinMode) {
+            totalFreeSpinWin += currentSpinWin; // Tambahkan ke total kemenangan Free Spin
+        } else {
+            updateBalance(currentSpinWin); // Hanya tambahkan ke saldo jika bukan Free Spin
+        }
+        
+        if (uid) {
+            await supabase
+                .from('users_data')
+                .update({ saldo: balance })
+                .eq('user_id', uid);
+        }
+
+        if (currentSpinWin > 0) {
+            if (currentSpinWin >= bet * 10) {
+                document.getElementById('winBigSound').play();
+            } else {
+                document.getElementById('winSmallSound').play();
+            }
+            showPopup(`Anda menang Rp.${currentSpinWin}!`);
+        } else if (freeSpinCount === 0 && !isInFreeSpinMode) { // Hanya tampilkan "Coba lagi!" jika bukan Free Spin
+             showPopup('Coba lagi!');
+        }
+
+        if (freeSpinCount > 0) {
+            await new Promise(res => setTimeout(res, 1500));
+            spin();
+        } else {
+            spinButton.disabled = false;
+            updateFreeSpinDisplay();
+            // MENGEMBALIKAN BGM UTAMA JIKA FREE SPIN SELESAI
+            if (isInFreeSpinMode) {
+                freeSpinBGM.pause();
+                freeSpinBGM.currentTime = 0;
+                bgm.play();
+                isInFreeSpinMode = false;
+                await showFreeSpinWinAnimation(totalFreeSpinWin); // Tampilkan total kemenangan Free Spin
+                updateBalance(totalFreeSpinWin); // Tambahkan total kemenangan Free Spin ke saldo
+                totalFreeSpinWin = 0; // Reset total kemenangan Free Spin
+            }
+        }
+    }
+
+    betMinusBtn.onclick = () => {
+      if (bet - 100 >= minBet) {
+        bet -= 100;
+        updateBetDisplay();
+      }
+    };
+    betPlusBtn.onclick = () => {
+      if (bet + 100 <= maxBet && (freeSpinCount > 0 || bet + 100 <= balance)) {
+        bet += 100;
+        updateBetDisplay();
+      } else if (freeSpinCount === 0 && bet + 100 > balance) {
+          showPopup('Saldo tidak cukup untuk bet ini!');
+      }
+    };
+    spinButton.onclick = spin;
+
+    // Pastikan BGM utama diatur volumenya saat init
+    bgm.volume = 0.3;
+
+    function init() {
+      currentSymbols = generateRandomSymbols();
+      renderGrid(currentSymbols);
+      updateBalance(0);
+      updateBetDisplay();
+      updateFreeSpinDisplay();
+
+      // Memainkan BGM utama saat game dimuat
+      bgm.play().catch(() => {
+        // Fallback jika autoplay diblokir
+        document.body.addEventListener('click', () => {
+          bgm.play();
+        }, { once: true });
+      });
+    }
+
+    init();
+  </script>
 </body>
 </html>
