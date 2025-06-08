@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong Ways Neon</title>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        /* Neon Theme Colors */
+        :root {
+            --neon-bg-dark: #0f0a20; /* Dark purple/blue for background */
+            --neon-bg-light: #2a0050; /* Slightly lighter purple */
+            --neon-pink: #FF0077; /* Bright neon pink */
+            --neon-blue: #00FFFF; /* Electric blue */
+            --neon-green: #00FF00; /* Bright lime green */
+            --neon-yellow: #FFFF00; /* Bright yellow */
+            --text-primary: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --border-glow: #FF0077;
+            --button-primary: linear-gradient(45deg, #00FF00, #00BFFF);
+            --button-hover: linear-gradient(45deg, #00BFFF, #00FF00);
+            --info-panel-bg: rgba(255, 255, 255, 0.1); /* Slightly transparent for neon feel */
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace; /* Lebih futuristik */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--neon-bg-dark) 0%, var(--neon-bg-light) 100%);
+            color: var(--text-primary);
+            margin: 0;
+            padding: 1.5vw; /* Responsive padding */
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        #game-container {
+            background-color: var(--neon-bg-dark);
+            border-radius: 20px;
+            box-shadow: 0 0 25px var(--border-glow), inset 0 0 10px var(--border-glow); /* Neon glow */
+            padding: 2vw; /* Responsive padding */
+            text-align: center;
+            max-width: 900px; /* Batasi lebar maksimum */
+            width: 95vw; /* Ambil 95% lebar viewport */
+            border: 4px solid var(--neon-pink);
+            position: relative;
+            animation: fadeInGlow 0.8s ease-out;
+            box-sizing: border-box;
+        }
+
+        @keyframes fadeInGlow {
+            from { opacity: 0; transform: scale(0.9); box-shadow: none; }
+            to { opacity: 1; transform: scale(1); box-shadow: 0 0 25px var(--border-glow), inset 0 0 10px var(--border-glow); }
+        }
+
+        h1 {
+            font-family: 'Audiowide', cursive; /* Font judul neon */
+            color: var(--neon-blue);
+            font-size: 8vw; /* Responsive font size */
+            margin-bottom: 3vw;
+            text-shadow: 0 0 15px var(--neon-blue), 0 0 25px var(--neon-pink); /* Neon text glow */
+        }
+
+        @media (min-width: 600px) { /* Adjust for larger screens */
+            h1 {
+                font-size: 3.8em;
+            }
+        }
+
+
+        .info-bar {
+            display: flex;
+            flex-wrap: wrap; /* Agar bisa wrap di layar kecil */
+            justify-content: space-around;
+            align-items: center;
+            margin-bottom: 2.5vw;
+            font-size: 3.5vw; /* Responsive font size */
+            font-weight: bold;
+            color: var(--text-primary);
+            background-color: var(--info-panel-bg);
+            border-radius: 10px;
+            padding: 1vw;
+            box-shadow: inset 0 0 5px rgba(0, 255, 255, 0.5);
+        }
+
+        @media (min-width: 600px) { /* Adjust for larger screens */
+            .info-bar {
+                font-size: 1.2em;
+                padding: 10px;
+            }
+        }
+
+        .info-item {
+            margin: 0.5vw 1vw; /* Spacing for wrap */
+        }
+
+        .info-item span {
+            color: var(--neon-yellow);
+            font-size: 1.1em;
+            text-shadow: 0 0 5px var(--neon-yellow);
+        }
+
+        #multiplier-display {
+            background-color: var(--neon-pink);
+            color: var(--text-primary);
+            padding: 1vw 2vw;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-family: 'Audiowide', cursive;
+            border: 2px solid var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+            min-width: 15vw; /* Responsive min-width */
+        }
+        @media (min-width: 600px) {
+            #multiplier-display {
+                min-width: 80px;
+                padding: 8px 15px;
+            }
+        }
+
+
+        #game-board-wrapper {
+            background-color: #000; /* Black for true contrast */
+            border-radius: 15px;
+            padding: 1.5vw;
+            box-shadow: inset 0 0 15px var(--neon-green), 0 0 20px var(--neon-green); /* Green neon inner glow */
+            border: 3px solid var(--neon-blue);
+            position: relative;
+            overflow: hidden;
+            height: 60vw; /* Responsive height */
+            max-height: 520px; /* Max height for desktop */
+        }
+
+        @media (orientation: landscape) and (max-height: 500px) {
+            #game-board-wrapper {
+                height: 75vh; /* In landscape, use viewport height */
+            }
+        }
+
+        #game-board {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 1.5vw; /* Responsive gap */
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (min-width: 600px) {
+            #game-board {
+                gap: 10px;
+            }
+        }
+
+        .symbol-container {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 100%;
+            position: relative;
+        }
+
+        .reel-content {
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.5s ease-out;
+        }
+
+        .symbol {
+            width: 15vw; /* Responsive width */
+            height: 15vw; /* Responsive height */
+            max-width: 90px; /* Max size for desktop */
+            max-height: 90px;
+            background-color: rgba(255, 255, 255, 0.15); /* Slightly transparent for dark bg */
+            border: 2px solid var(--neon-yellow);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8vw; /* Responsive emoji size */
+            font-weight: bold;
+            color: var(--neon-blue);
+            box-shadow: inset 0 0 5px var(--neon-blue), 0 0 8px var(--neon-blue); /* Symbol glow */
+            position: relative;
+            box-sizing: border-box;
+            line-height: 1; /* Penting untuk penempatan emoji vertikal */
+            flex-shrink: 0;
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        @media (min-width: 600px) {
+            .symbol {
+                width: 90px;
+                height: 90px;
+                font-size: 2.5em; /* Larger emoji for desktop */
+            }
+        }
+        @media (orientation: landscape) and (max-height: 500px) {
+             .symbol {
+                width: 12vh;
+                height: 12vh;
+                font-size: 6vh;
+            }
+        }
+
+
+        /* Simbol khusus untuk visualisasi */
+        .symbol.wild { background-color: rgba(255, 255, 0, 0.2); border-color: var(--neon-yellow); box-shadow: inset 0 0 5px var(--neon-yellow), 0 0 15px var(--neon-yellow); }
+        .symbol.scatter { background-color: rgba(148, 0, 211, 0.2); border-color: var(--neon-pink); color: var(--text-primary); box-shadow: inset 0 0 5px var(--neon-pink), 0 0 15px var(--neon-pink); }
+
+        .symbol.winning {
+            animation: pulseWinGlow 0.7s infinite alternate, popOut 0.3s forwards;
+            border-color: var(--neon-green);
+            box-shadow: 0 0 15px var(--neon-green), 0 0 25px var(--neon-green);
+        }
+
+        @keyframes pulseWinGlow {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.05); opacity: 0.9; box-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green); }
+        }
+
+        @keyframes popOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .symbol.matched {
+            animation: fadeOutAndShrink 0.4s forwards;
+            pointer-events: none;
+        }
+
+        @keyframes fadeOutAndShrink {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0.1); }
+        }
+
+        .controls {
+            margin-top: 3vw;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1.5vw; /* Responsive gap */
+        }
+        @media (min-width: 600px) {
+            .controls {
+                margin-top: 30px;
+                gap: 15px;
+            }
+        }
+
+
+        .control-group {
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+            border-radius: 10px;
+            padding: 1vw 2vw;
+            box-shadow: 0 0 10px var(--neon-blue);
+            display: flex;
+            align-items: center;
+            gap: 1vw;
+            color: var(--text-primary);
+            font-weight: bold;
+            min-width: 30vw; /* Agar tidak terlalu sempit di ponsel */
+            box-sizing: border-box;
+        }
+        @media (min-width: 600px) {
+            .control-group {
+                min-width: auto;
+                padding: 10px 20px;
+                gap: 10px;
+            }
+        }
+
+
+        .control-group label {
+            font-size: 3.5vw;
+        }
+        @media (min-width: 600px) {
+            .control-group label {
+                font-size: 1.1em;
+            }
+        }
+
+
+        .control-group select, .control-group input {
+            padding: 0.8vw 1.2vw;
+            border-radius: 5px;
+            border: 1px solid var(--neon-blue);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: var(--neon-green);
+            font-size: 3.5vw;
+            outline: none;
+            box-shadow: inset 0 0 5px var(--neon-green);
+            appearance: none; /* Remove default select arrow */
+            background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300FF00%22%20d%3D%22M287%2069.4L146.2%20208.8%205.4%2069.4c-1.8-1.8-4.7-1.8-6.5%200l-4.8%204.8c-1.8%201.8-1.8%204.7%200%206.5l145.4%20145.4c1.8%201.8%204.7%201.8%206.5%200l145.4-145.4c1.8-1.8%201.8-4.7%200-6.5l-4.8-4.8c-1.8-1.8-4.7-1.8-6.5%200z%22%2F%3E%3C%2Fsvg%3E');
+            background-repeat: no-repeat;
+            background-position: right 0.5em top 50%;
+            background-size: 1.5em auto;
+        }
+
+        @media (min-width: 600px) {
+            .control-group select, .control-group input {
+                padding: 8px 12px;
+                font-size: 1em;
+                background-size: 1em auto;
+                background-position: right 0.7em top 50%;
+            }
+        }
+
+
+        button {
+            padding: 1.5vw 3vw;
+            border: none;
+            border-radius: 10px;
+            background: var(--button-primary); /* Gradasi neon */
+            color: var(--text-primary);
+            font-size: 4vw;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 0 10px var(--neon-blue), 0 0 20px var(--neon-green); /* Shadow neon */
+            min-width: 25vw;
+        }
+
+        @media (min-width: 600px) {
+            button {
+                padding: 15px 30px;
+                font-size: 1.3em;
+                min-width: auto;
+            }
+        }
+
+
+        button:hover {
+            background: var(--button-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px var(--neon-blue), 0 0 30px var(--neon-green);
+        }
+
+        button:active {
+            transform: translateY(0);
+            box-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-green);
+        }
+
+        button:disabled {
+            background: #444;
+            color: #888;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        #message-display {
+            min-height: 1.5em;
+            margin-top: 3vw;
+            font-size: 4vw;
+            font-weight: bold;
+            color: var(--neon-yellow);
+            text-shadow: 0 0 10px var(--neon-yellow), 0 0 20px rgba(255, 255, 0, 0.5);
+        }
+        @media (min-width: 600px) {
+            #message-display {
+                margin-top: 20px;
+                font-size: 1.5em;
+            }
+        }
+
+
+        #game-over-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            z-index: 100;
+            border-radius: 20px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #game-over-screen h2 {
+            font-family: 'Audiowide', cursive;
+            font-size: 8vw;
+            color: var(--neon-pink);
+            margin-bottom: 3vw;
+            text-shadow: 0 0 15px var(--neon-pink), 0 0 25px var(--neon-blue);
+        }
+        @media (min-width: 600px) {
+            #game-over-screen h2 {
+                font-size: 4em;
+                margin-bottom: 25px;
+            }
+        }
+
+
+        #final-score-display {
+            font-size: 6vw;
+            margin-bottom: 3.5vw;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+        @media (min-width: 600px) {
+            #final-score-display {
+                font-size: 2.5em;
+                margin-bottom: 35px;
+            }
+        }
+
+
+        .free-spin-mode {
+            background: linear-gradient(135deg, #0d001a 0%, #003366 100%) !important; /* Darker blue/purple for FS */
+        }
+        #game-container.free-spin-mode {
+            border-color: var(--neon-blue); /* Brighter blue for free spin */
+            box-shadow: 0 0 25px var(--neon-blue), inset 0 0 10px var(--neon-blue);
+        }
+        #multiplier-display.free-spin-mode {
+            background-color: var(--neon-blue);
+            border-color: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+        body.free-spin-mode {
+            background: linear-gradient(135deg, #001f3f 0%, #005080 100%); /* Darker blue overall */
+        }
+
+    </style>
+</head>
+<body id="body-game">
+    <div id="game-container">
+        <h1>Mahjong Ways</h1>
+        <div class="info-bar">
+            <div class="info-item">Saldo: <span id="balance-display">1000</span></div>
+            <div class="info-item">Taruhan: <span id="current-bet-display">10</span></div>
+            <div class="info-item">Kemenangan Terakhir: <span id="last-win-display">0</span></div>
+            <div class="info-item">Username: <span id="username-display">Tamu</span></div>
+            <div class="info-item">Multiplier: <span id="multiplier-display">1x</span></div>
+            <div class="info-item" id="free-spins-left" style="display:none;">Free Spins: <span id="free-spins-count">0</span></div>
+        </div>
+
+        <div id="game-board-wrapper">
+            <div id="game-board">
+                </div>
+            <div id="game-over-screen">
+                <h2>Game Over!</h2>
+                <div id="final-score-display">Saldo Akhir: 0</div>
+                <button id="play-again-btn">Main Lagi</button>
+            </div>
+        </div>
+
+        <div id="message-display">Siap untuk memutar gulungan?</div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="bet-amount">Taruhan:</label>
+                <select id="bet-amount">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                </select>
+            </div>
+            <button id="spin-btn">Spin</button>
+            <button id="auto-spin-btn">Auto Spin</button>
+            <button id="cash-out-btn">Cash Out</button>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <audio id="spin-sound" src="audio/spin.mp3" preload="auto"></audio>
+    <audio id="win-sound" src="audio/win.mp3" preload="auto"></audio>
+    <audio id="tumble-sound" src="audio/tumble.mp3" preload="auto"></audio>
+    <audio id="stop-sound" src="audio/stop.mp3" preload="auto"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const supabase = window.supabase.createClient(
+            'https://vqmfachxnjyxwuavpgds.supabase.co',
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+        );
+
+        let user; 
+        let userSaldo = 0;
+        let userId = null; 
+        
+        const bodyGame = document.getElementById('body-game');
+        const gameContainer = document.getElementById('game-container');
+        const balanceDisplay = document.getElementById('balance-display');
+        const currentBetDisplay = document.getElementById('current-bet-display');
+        const lastWinDisplay = document.getElementById('last-win-display');
+        const usernameDisplay = document.getElementById('username-display');
+        const multiplierDisplay = document.getElementById('multiplier-display');
+        const freeSpinsLeftDiv = document.getElementById('free-spins-left');
+        const freeSpinsCountDisplay = document.getElementById('free-spins-count');
+        const gameBoardWrapper = document.getElementById('game-board-wrapper');
+        const gameBoard = document.getElementById('game-board');
+        const messageDisplay = document.getElementById('message-display');
+        const betAmountSelect = document.getElementById('bet-amount');
+        const spinBtn = document.getElementById('spin-btn');
+        const autoSpinBtn = document.getElementById('auto-spin-btn');
+        const cashOutBtn = document.getElementById('cash-out-btn');
+        const logoutBtn = document.getElementById('logout-btn');
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const finalScoreDisplay = document.getElementById('final-score-display');
+        const playAgainBtn = document.getElementById('play-again-btn');
+
+        // Audio Elements
+        const spinSound = document.getElementById('spin-sound');
+        const winSound = document.getElementById('win-sound');
+        const tumbleSound = document.getElementById('tumble-sound');
+        const stopSound = document.getElementById('stop-sound');
+
+        // --- Game State Variables ---
+        let currentUser = null;
+        let playerBalance = 1000;
+        let currentBet = 10;
+        let lastWinAmount = 0;
+        let isSpinning = false;
+        let autoSpinInterval = null;
+        let currentMultiplier = 1;
+        let cascadingCount = 0;
+        let freeSpinMode = false;
+        let freeSpinsLeft = 0;
+
+        const NUM_REELS = 5;
+        const SYMBOLS_PER_REEL_VISIBLE = 4;
+
+        // Mendapatkan tinggi simbol secara dinamis berdasarkan CSS (penting untuk responsivitas)
+        let SYMBOL_HEIGHT = 90; // Default, akan diupdate
+        const SPIN_DURATION_MS = 1000;
+
+        // Multiplier Tiers
+        const BASE_MULTIPLIERS = [1, 2, 3, 5];
+        const FREE_SPIN_MULTIPLIERS = [2, 4, 6, 10];
+
+        // --- Symbol Definitions (menggunakan Emoji) ---
+        const symbols = [
+            { id: 'tile1', name: 'Red Dragon', emoji: '🀄', type: 'normal', value: 10 },
+            { id: 'tile2', name: 'Green Dragon', emoji: '🀅', type: 'normal', value: 10 },
+            { id: 'tile3', name: 'White Dragon', emoji: '🀆', type: 'normal', value: 12 },
+            { id: 'tile4', name: 'East Wind', emoji: '🀇', type: 'normal', value: 12 },
+            { id: 'tile5', name: 'South Wind', emoji: '🀈', type: 'normal', value: 15 },
+            { id: 'tile6', name: 'West Wind', emoji: '🀉', type: 'normal', value: 15 },
+            { id: 'wild', name: 'Wild', emoji: '🌟', type: 'wild', value: 0 },
+            { id: 'scatter', name: 'Scatter', emoji: '💰', type: 'scatter', value: 0 }
+        ];
+
+        const PAYTABLE = {
+            'tile1': { 3: 50, 4: 100, 5: 200 },
+            'tile2': { 3: 50, 4: 100, 5: 200 },
+            'tile3': { 3: 60, 4: 120, 5: 250 },
+            'tile4': { 3: 60, 4: 120, 5: 250 },
+            'tile5': { 3: 75, 4: 150, 5: 300 },
+            'tile6': { 3: 75, 4: 150, 5: 300 },
+            'scatter': { 3: 10 }
+        };
+
+        // --- Initialization ---
+        function initGame() {
+            console.log("Game Initialization started.");
+            // Dapatkan tinggi simbol yang sebenarnya dari DOM setelah CSS dimuat
+            const tempSymbol = document.createElement('div');
+            tempSymbol.classList.add('symbol');
+            // Agar bisa dihitung tinggi, tambahkan ke DOM (tapi jangan tampilkan)
+            gameBoard.appendChild(tempSymbol);
+            SYMBOL_HEIGHT = tempSymbol.offsetHeight;
+            gameBoard.removeChild(tempSymbol);
+            console.log("Detected SYMBOL_HEIGHT:", SYMBOL_HEIGHT);
+
+
+            loadCurrentUser();
+            resetGame();
+        }
+
+        function resetGame() {
+            console.log("Resetting game state.");
+            playerBalance = 1000;
+            currentMultiplier = 1;
+            cascadingCount = 0;
+            freeSpinMode = false;
+            freeSpinsLeft = 0;
+            lastWinAmount = 0;
+            isSpinning = false;
+            if (autoSpinInterval) {
+                clearInterval(autoSpinInterval);
+                autoSpinInterval = null;
+                autoSpinBtn.textContent = 'Auto Spin';
+            }
+
+            updateDisplay();
+            gameBoard.innerHTML = '';
+            for (let i = 0; i < NUM_REELS; i++) {
+                const reelContainer = document.createElement('div');
+                reelContainer.classList.add('symbol-container');
+                const reelContent = document.createElement('div');
+                reelContent.classList.add('reel-content');
+                for (let j = 0; j < SYMBOLS_PER_REEL_VISIBLE; j++) {
+                    reelContent.appendChild(createSymbolElement(getRandomSymbol()));
+                }
+                reelContainer.appendChild(reelContent);
+                gameBoard.appendChild(reelContainer);
+            }
+
+            setControlState(true);
+            gameOverScreen.style.display = 'none';
+            messageDisplay.textContent = 'Siap untuk memutar gulungan?';
+            gameContainer.classList.remove('free-spin-mode');
+            bodyGame.classList.remove('free-spin-mode'); // Hapus class di body juga
+            freeSpinsLeftDiv.style.display = 'none';
+            console.log("Game reset complete. Board children count:", gameBoard.children.length);
+        }
+
+        // --- UI Updates ---
+        function updateDisplay() {
+            balanceDisplay.textContent = playerBalance.toLocaleString('id-ID');
+            currentBetDisplay.textContent = currentBet.toLocaleString('id-ID');
+            lastWinDisplay.textContent = lastWinAmount.toLocaleString('id-ID');
+            usernameDisplay.textContent = currentUser ? currentUser.username : 'Tamu';
+            multiplierDisplay.textContent = `${currentMultiplier}x`;
+            freeSpinsCountDisplay.textContent = freeSpinsLeft;
+            freeSpinsLeftDiv.style.display = freeSpinMode ? 'inline-block' : 'none';
+        }
+
+        function setControlState(enabled) {
+            spinBtn.disabled = !enabled;
+            // autoSpinBtn.disabled = !enabled; // Keep autoSpinBtn state managed by its own click handler
+            cashOutBtn.disabled = !enabled;
+            betAmountSelect.disabled = !enabled;
+        }
+
+        // --- Reel Generation & Logic ---
+        let currentReelSymbols = [];
+
+        function getRandomSymbol() {
+            const normalSymbols = symbols.filter(s => s.type === 'normal');
+            const wildSymbol = symbols.find(s => s.type === 'wild');
+            const scatterSymbol = symbols.find(s => s.type === 'scatter');
+
+            let pool = [];
+            for(let i = 0; i < 8; i++) pool.push(...normalSymbols);
+            for(let i = 0; i < 2; i++) pool.push(wildSymbol);
+            // Probabilitas scatter lebih rendah
+            if (Math.random() < 0.08) pool.push(scatterSymbol); // Adjust probability if needed
+
+            return pool[Math.floor(Math.random() * pool.length)];
+        }
+
+        function createSymbolElement(symbolData) {
+            const div = document.createElement('div');
+            div.classList.add('symbol');
+            div.dataset.id = symbolData.id;
+            div.dataset.type = symbolData.type;
+            div.textContent = symbolData.emoji;
+
+            if (symbolData.type === 'wild') div.classList.add('wild');
+            if (symbolData.type === 'scatter') div.classList.add('scatter');
+
+            return div;
+        }
+
+        async function spinReels() {
+            console.log("Spin initiated. isSpinning:", isSpinning);
+            if (isSpinning) return;
+            if (playerBalance < currentBet && !freeSpinMode) {
+                messageDisplay.textContent = 'Saldo tidak cukup!';
+                return;
+            }
+            if (freeSpinMode && freeSpinsLeft <= 0) {
+                 messageDisplay.textContent = 'Free Spins habis!';
+                 endFreeSpinMode();
+                 return;
+            }
+
+            isSpinning = true;
+            setControlState(false);
+            spinBtn.disabled = true;
+            autoSpinBtn.disabled = true; // Disabled during spin cycle
+
+            if (!freeSpinMode) {
+                playerBalance -= currentBet;
+            } else {
+                freeSpinsLeft--;
+            }
+            lastWinAmount = 0;
+            updateDisplay();
+            messageDisplay.textContent = 'Berputar...';
+            winSound.pause(); winSound.currentTime = 0;
+            tumbleSound.pause(); tumbleSound.currentTime = 0;
+
+            spinSound.play().catch(e => console.error("Error playing spin sound:", e));
+
+            document.querySelectorAll('.symbol.winning').forEach(el => el.classList.remove('winning'));
+
+            const reelContainers = Array.from(gameBoard.children);
+            const reelContents = reelContainers.map(container => container.querySelector('.reel-content'));
+
+            const finalResultMatrix = Array.from({ length: NUM_REELS }, () => []);
+
+            const spinPromises = reelContents.map((reelContent, reelIndex) => {
+                return new Promise(resolve => {
+                    const spinSymbols = [];
+                    // Tambahkan simbol acak untuk efek gulir yang lebih panjang
+                    for (let i = 0; i < 20; i++) {
+                        spinSymbols.push(getRandomSymbol());
+                    }
+                    // Tambahkan simbol hasil akhir
+                    for (let i = 0; i < SYMBOLS_PER_REEL_VISIBLE; i++) {
+                        const finalSymbol = getRandomSymbol();
+                        spinSymbols.push(finalSymbol);
+                        finalResultMatrix[reelIndex].push(finalSymbol);
+                    }
+
+                    reelContent.innerHTML = '';
+                    spinSymbols.forEach(sData => {
+                        reelContent.appendChild(createSymbolElement(sData));
+                    });
+
+                    const startPosition = -(spinSymbols.length - SYMBOLS_PER_REEL_VISIBLE) * SYMBOL_HEIGHT;
+                    reelContent.style.transition = 'none';
+                    reelContent.style.transform = `translateY(${startPosition}px)`;
+
+                    // Force reflow for transform to take effect before animation
+                    void reelContent.offsetWidth; // eslint-disable-line no-unused-expressions
+
+                    setTimeout(() => {
+                        reelContent.style.transition = `transform ${SPIN_DURATION_MS + (reelIndex * 150)}ms ease-out`;
+                        reelContent.style.transform = `translateY(0px)`;
+                    }, 50);
+
+                    setTimeout(() => {
+                        stopSound.play().catch(e => console.error("Error playing stop sound:", e));
+                        reelContent.style.transition = 'none';
+                        const visibleSymbolsHTML = Array.from(reelContent.children)
+                            .slice(-SYMBOLS_PER_REEL_VISIBLE)
+                            .map(el => el.outerHTML)
+                            .join('');
+                        reelContent.innerHTML = visibleSymbolsHTML;
+                        resolve();
+                    }, SPIN_DURATION_MS + (reelIndex * 150) + 100);
+                });
+            });
+
+            await Promise.all(spinPromises);
+            spinSound.pause(); spinSound.currentTime = 0;
+
+            currentReelSymbols = finalResultMatrix;
+            console.log("Final Board State (After Spin):", JSON.stringify(currentReelSymbols, null, 2));
+
+            cascadingCount = 0;
+            processWinCycle();
+            isSpinning = false;
+            // Controls re-enabled by processWinCycle or endFreeSpinMode
+        }
+
+        async function processWinCycle() {
+            console.log("Starting win cycle. Multiplier:", currentMultiplier);
+            let totalWinThisCascade = 0;
+            const winningSymbols = checkWins();
+
+            if (winningSymbols.length > 0) {
+                winSound.play().catch(e => console.error("Error playing win sound:", e));
+                cascadingCount++;
+                currentMultiplier = getMultiplier();
+                multiplierDisplay.textContent = `${currentMultiplier}x`;
+                messageDisplay.textContent = `Menang! Multiplier ${currentMultiplier}x!`;
+                tumbleSound.play().catch(e => console.error("Error playing tumble sound:", e));
+
+                winningSymbols.forEach(pos => {
+                    // Pastikan elemen DOM ada sebelum menambahkan class
+                    const reelContent = gameBoard.children[pos.col] ? gameBoard.children[pos.col].querySelector('.reel-content') : null;
+                    const symbolEl = reelContent && reelContent.children[pos.row] ? reelContent.children[pos.row] : null;
+                    if (symbolEl) {
+                        symbolEl.classList.add('winning');
+                        const payout = PAYTABLE[pos.symbolId] ? PAYTABLE[pos.symbolId][pos.matchLength] : 0;
+                        if (payout) {
+                            totalWinThisCascade += payout; // Base payout before multiplier
+                        }
+                    }
+                });
+
+                lastWinAmount = totalWinThisCascade * currentMultiplier;
+                playerBalance += lastWinAmount;
+                updateDisplay();
+
+                await new Promise(resolve => setTimeout(resolve, 1000));
+
+                await cascadeSymbols(winningSymbols);
+
+                await new Promise(resolve => setTimeout(resolve, 500));
+                processWinCycle(); // Recursive call for next cascade
+            } else {
+                console.log("No more wins in this cycle. Resetting multiplier.");
+                messageDisplay.textContent = 'Tidak ada kemenangan. Coba lagi!';
+                currentMultiplier = 1;
+                multiplierDisplay.textContent = `${currentMultiplier}x`;
+                updateDisplay();
+
+                if (freeSpinMode && freeSpinsLeft > 0) {
+                    spinBtn.disabled = false; // Allow manual spin during free spins
+                    autoSpinBtn.disabled = false;
+                    messageDisplay.textContent = `Free Spins tersisa: ${freeSpinsLeft}.`;
+                } else if (freeSpinMode && freeSpinsLeft <= 0) {
+                    endFreeSpinMode();
+                } else {
+                    setControlState(true);
+                    spinBtn.disabled = false;
+                    autoSpinBtn.disabled = false;
+                    if (playerBalance <= 0) {
+                        gameOver();
+                    }
+                }
+            }
+        }
+        function getMultiplier() {
+            let multipliers = freeSpinMode ? FREE_SPIN_MULTIPLIERS : BASE_MULTIPLIERS;
+            // Cascading count starts from 1 for the first cascade, 2 for the second, etc.
+            // Array index is (count - 1). Cap at max index.
+            const index = Math.min(cascadingCount, multipliers.length) -1;
+            return multipliers[index] || multipliers[multipliers.length - 1];
+        }
+
+        async function cascadeSymbols(winningSymbols) {
+            console.log("Cascading symbols...");
+            winningSymbols.forEach(pos => {
+                const reelContent = gameBoard.children[pos.col] ? gameBoard.children[pos.col].querySelector('.reel-content') : null;
+                const symbolEl = reelContent && reelContent.children[pos.row] ? reelContent.children[pos.row] : null;
+                if (symbolEl) {
+                    symbolEl.classList.add('matched');
+                }
+            });
+
+            await new Promise(resolve => setTimeout(resolve, 400));
+
+            const newReelState = Array.from({ length: NUM_REELS }, () => []);
+
+            for (let col = 0; col < NUM_REELS; col++) {
+                // Filter out winning symbols from the current visible reel state
+                let nonWinningSymbols = currentReelSymbols[col].filter((_, row) =>
+                    !winningSymbols.some(p => p.row === row && p.col === col)
+                );
+
+                const newSymbolsNeeded = SYMBOLS_PER_REEL_VISIBLE - nonWinningSymbols.length;
+                for (let i = 0; i < newSymbolsNeeded; i++) {
+                    newReelState[col].push(getRandomSymbol());
+                }
+                newReelState[col].push(...nonWinningSymbols);
+            }
+
+            currentReelSymbols = newReelState;
+
+            const reelContents = Array.from(gameBoard.children).map(container => container.querySelector('.reel-content'));
+
+            await Promise.all(reelContents.map((reelContent, col) => {
+                return new Promise(resolve => {
+                    const symbolsToAppend = [];
+                    // Add symbols above the current view for falling animation
+                    for (let i = 0; i < SYMBOLS_PER_REEL_VISIBLE; i++) {
+                        symbolsToAppend.push(getRandomSymbol());
+                    }
+                    symbolsToAppend.push(...newReelState[col]);
+
+                    reelContent.innerHTML = '';
+                    symbolsToAppend.forEach(sData => {
+                        reelContent.appendChild(createSymbolElement(sData));
+                    });
+
+                    const startPos = -(newSymbolsNeeded * SYMBOL_HEIGHT);
+                    reelContent.style.transition = 'none';
+                    reelContent.style.transform = `translateY(${startPos}px)`;
+
+                    void reelContent.offsetWidth; // Force reflow
+
+                    setTimeout(() => {
+                        reelContent.style.transition = `transform 0.4s ease-in`;
+                        reelContent.style.transform = `translateY(0px)`;
+                    }, 50);
+
+                    setTimeout(() => {
+                        reelContent.style.transition = 'none';
+                        const visibleSymbolsHTML = Array.from(reelContent.children)
+                            .slice(-SYMBOLS_PER_REEL_VISIBLE)
+                            .map(el => el.outerHTML)
+                            .join('');
+                        reelContent.innerHTML = visibleSymbolsHTML;
+                        resolve();
+                    }, 450);
+                });
+            }));
+             console.log("Cascade complete. New Board State:", JSON.stringify(currentReelSymbols, null, 2));
+        }
+
+        function checkWins() {
+            let winningSymbols = [];
+            let scatterCount = 0;
+            let currentWinPayout = 0;
+
+            const transposedBoard = Array.from({ length: SYMBOLS_PER_REEL_VISIBLE }, () => Array(NUM_REELS).fill(null));
+            for (let r = 0; r < SYMBOLS_PER_REEL_VISIBLE; r++) {
+                for (let c = 0; c < NUM_REELS; c++) {
+                    transposedBoard[r][c] = currentReelSymbols[c][r];
+                }
+            }
+            // console.log("Transposed Board for win check:", transposedBoard);
+
+            // Basic Left-to-Right Payline Check
+            // Iterate over each row
+            for (let rowIdx = 0; rowIdx < SYMBOLS_PER_REEL_VISIBLE; rowIdx++) {
+                const row = transposedBoard[rowIdx];
+                // Iterate over each starting column (to check sequences)
+                for (let colIdx = 0; colIdx < NUM_REELS; colIdx++) {
+                    const firstSymbol = row[colIdx];
+                    if (!firstSymbol || firstSymbol.type === 'scatter') continue; // Skip if no symbol or it's a scatter
+
+                    let matchCount = 0;
+                    let currentLineSymbolsPositions = []; // Store {row, col, symbolId}
+
+                    // Check for consecutive matches from current colIdx
+                    for (let checkCol = colIdx; checkCol < NUM_REELS; checkCol++) {
+                        const checkSymbol = row[checkCol];
+                        // If it's the same ID OR a WILD, it's a match
+                        if (checkSymbol && (checkSymbol.id === firstSymbol.id || checkSymbol.type === 'wild')) {
+                            matchCount++;
+                            // Store original position (column, row)
+                            currentLineSymbolsPositions.push({ row: rowIdx, col: checkCol, symbolId: checkSymbol.id });
+                        } else {
+                            break; // Sequence broken
+                        }
+                    }
+
+                    if (matchCount >= 3) {
+                        const payout = PAYTABLE[firstSymbol.id] ? PAYTABLE[firstSymbol.id][matchCount] : 0;
+                        if (payout > 0) {
+                            currentWinPayout += payout;
+                            // Add symbols to winning list, ensure no duplicates
+                            currentLineSymbolsPositions.forEach(symPos => {
+                                // Check if this symbol position (original col, row) is already in winningSymbols
+                                const originalCol = symPos.col;
+                                const originalRow = symPos.row;
+                                if (!winningSymbols.some(ws => ws.row === originalRow && ws.col === originalCol)) {
+                                    winningSymbols.push({ row: originalRow, col: originalCol, symbolId: symPos.symbolId, matchLength: matchCount });
+                                }
+                            });
+                            // To prevent multiple payouts for the same starting symbol in a row
+                            // We advance colIdx to skip the just-matched symbols
+                            colIdx += matchCount -1;
+                        }
+                    }
+                }
+            }
+
+
+            // Scatter Count (Scatters win regardless of position)
+            currentReelSymbols.forEach((reel, colIdx) => {
+                reel.forEach((symbol, rowIdx) => {
+                    if (symbol && symbol.type === 'scatter') {
+                        scatterCount++;
+                        // Add scatter to winningSymbols for highlight, but not for base payout here
+                        if (!winningSymbols.some(ws => ws.row === rowIdx && ws.col === colIdx)) {
+                            winningSymbols.push({ row: rowIdx, col: colIdx, symbolId: symbol.id, type: symbol.type, matchLength: 0 }); // Match length 0 for scatters
+                        }
+                    }
+                });
+            });
+
+            // Handle Free Spins Trigger
+            if (scatterCount >= 3) {
+                const freeSpinsAwarded = PAYTABLE['scatter'][3]; // Assume 3 scatters always give 10 FS for now
+                if (freeSpinsAwarded) {
+                    if (!freeSpinMode) {
+                        startFreeSpinMode(freeSpinsAwarded);
+                    } else { // Re-trigger during free spins
+                        freeSpinsLeft += freeSpinsAwarded;
+                        messageDisplay.textContent = `Free Spins +${freeSpinsAwarded}! Total ${freeSpinsLeft} FS!`;
+                        updateDisplay();
+                    }
+                }
+            }
+
+            console.log("Win check complete. Total payout this cascade (base):", currentWinPayout, "Winning symbols:", winningSymbols.length);
+            return winningSymbols;
+        }
+
+
+        function startFreeSpinMode(spins) {
+            console.log("Starting Free Spin mode:", spins, "spins.");
+            freeSpinMode = true;
+            freeSpinsLeft = spins;
+            currentMultiplier = FREE_SPIN_MULTIPLIERS[0]; // Reset multiplier for FS start
+            gameContainer.classList.add('free-spin-mode');
+            bodyGame.classList.add('free-spin-mode'); // Add class to body for overall theme change
+            messageDisplay.textContent = `Anda memenangkan ${spins} Free Spins!`;
+            updateDisplay();
+            setTimeout(() => {
+                spinReels();
+            }, 1500);
+        }
+
+        function endFreeSpinMode() {
+            console.log("Ending Free Spin mode.");
+            freeSpinMode = false;
+            freeSpinsLeft = 0;
+            currentMultiplier = 1;
+            gameContainer.classList.remove('free-spin-mode');
+            bodyGame.classList.remove('free-spin-mode');
+            messageDisplay.textContent = 'Free Spins berakhir. Kembali ke game dasar.';
+            updateDisplay();
+            setControlState(true);
+            spinBtn.disabled = false;
+            autoSpinBtn.disabled = false;
+            if (playerBalance <= 0) {
+                gameOver();
+            }
+        }
+
+        function gameOver() {
+            console.log("Game Over. Player balance:", playerBalance);
+            isSpinning = false;
+            setControlState(false);
+            spinBtn.disabled = true;
+            autoSpinBtn.disabled = true;
+            cashOutBtn.disabled = true;
+            messageDisplay.textContent = 'Saldo Anda habis!';
+            finalScoreDisplay.textContent = `Saldo Akhir: ${playerBalance.toLocaleString('id-ID')}`;
+            gameOverScreen.style.display = 'flex';
+            savePlayerStats();
+        }
+
+        // --- Event Handlers ---
+        betAmountSelect.addEventListener('change', (e) => {
+            currentBet = parseInt(e.target.value);
+            updateDisplay();
+            console.log("Bet changed to:", currentBet);
+        });
+
+        spinBtn.addEventListener('click', spinReels);
+
+        autoSpinBtn.addEventListener('click', () => {
+            if (autoSpinInterval) {
+                clearInterval(autoSpinInterval);
+                autoSpinInterval = null;
+                autoSpinBtn.textContent = 'Auto Spin';
+                setControlState(true);
+                spinBtn.disabled = false;
+                console.log("Auto Spin stopped.");
+            } else {
+                autoSpinBtn.textContent = 'Stop Auto';
+                setControlState(false);
+                spinBtn.disabled = true;
+                autoSpinInterval = setInterval(() => {
+                    if (freeSpinMode && freeSpinsLeft <= 0) {
+                        clearInterval(autoSpinInterval);
+                        autoSpinInterval = null;
+                        autoSpinBtn.textContent = 'Auto Spin';
+                        endFreeSpinMode();
+                        return;
+                    }
+                    if (playerBalance < currentBet && !freeSpinMode) {
+                        clearInterval(autoSpinInterval);
+                        autoSpinInterval = null;
+                        autoSpinBtn.textContent = 'Auto Spin';
+                        gameOver();
+                    } else {
+                        spinReels();
+                    }
+                }, SPIN_DURATION_MS + 1500);
+                console.log("Auto Spin started.");
+                // Immediately spin on auto spin start
+                spinReels();
+            }
+        });
+
+        cashOutBtn.addEventListener('click', async () => {
+            if (confirm(`Anda yakin ingin melakukan Cash Out sebesar ${playerBalance.toLocaleString('id-ID')}?`)) {
+                await savePlayerStats();
+                alert(`Cash Out berhasil! Saldo akhir Anda: ${playerBalance.toLocaleString('id-ID')}`);
+                logoutUser();
+                console.log("Cash Out successful.");
+            }
+        });
+
+        logoutBtn.addEventListener('click', logoutUser);
+
+        playAgainBtn.addEventListener('click', () => {
+            resetGame();
+            console.log("Play Again clicked. Game reset.");
+        });
+
+        // --- Supabase Integration ---
+        async function loadCurrentUser() {
+            const storedUser = localStorage.getItem('currentUser');
+            if (storedUser) {
+                currentUser = JSON.parse(storedUser);
+                usernameDisplay.textContent = currentUser.username;
+                console.log("Current user loaded:", currentUser.username);
+                await loadPlayerStats(currentUser.id);
+            } else {
+                alert('Anda harus login untuk bermain game ini.');
+                window.location.href = 'index.html';
+                console.warn("No user found in localStorage. Redirecting to login.");
+            }
+        }
+
+        async function loadPlayerStats(userId) {
+            try {
+          const { data, error } = await supabase
+            .from('users_data')
+            .select('saldo, last_score, highest_score') // UBAH 'balance' menjadi 'saldo' di sini
+            .eq('id', userId)
+            .single();
+
+        // ...
+
+        if (data && data.saldo !== null) {
+            playerBalance = data.saldo;
+            updateDisplay();
+            console.log("Player stats loaded. saldo:", playerBalance);
+        } else {
+            console.log("No existing player balance found. Initializing balance.");
+            await supabase.from('users_data').upsert({ id: userId, saldo: playerBalance }, { onConflict: 'id' });
+        }
+
+
+        async function savePlayerStats() {
+            if (!currentUser) {
+                console.warn("No current user to save stats for.");
+                return;
+            }
+                    try {
+            const { data, error } = await supabase
+                .from('users_data')
+                .upsert({
+                    id: currentUser.id,
+                    saldo: playerBalance,
+                    last_score: lastWinAmount
+                }, { onConflict: 'id' });
+
+
+        function logoutUser() {
+            clearInterval(autoSpinInterval);
+            localStorage.removeItem('currentUser');
+            alert('Anda telah logout.');
+            window.location.href = 'profil.html';
+            console.log("User logged out.");
+        }
+
+        // --- Initialize the Game on Load ---
+        document.addEventListener('DOMContentLoaded', initGame);
+        window.addEventListener('beforeunload', savePlayerStats);
+    </script>
+</body>
+</html>
