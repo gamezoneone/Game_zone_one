@@ -100,7 +100,7 @@ h1 {
     height: 100%;
     border-radius: 50%;
     background: radial-gradient(circle at center, #330033 0%, #0d0d1a 100%);
-    border: 5px solid #ff00ff; /* Neon pink */
+    border: 0px solid #ff00ff; /* Neon pink */
     box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
     display: flex;
     justify-content: center;
@@ -112,8 +112,8 @@ h1 {
     height: 100%;
     border-radius: 50%;
     background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//roulete.jpeg');
-    background-size: 100%;
-    border: 1px solid #00ffcc; /* Neon green inner border */
+    background-size: cover;
+    border: 0px solid #00ffcc; /* Neon green inner border */
     box-shadow: inset 0 0 10px #00ffcc, 0 0 20px #00ffcc;
     position: relative;
     display: flex;
@@ -123,13 +123,13 @@ h1 {
 }
 
 .current-result {
-    font-size: 3.5em; /* Ukuran hasil lebih kecil */
+    font-size: 15em; /* Ukuran hasil lebih kecil */
     font-weight: bold;
     color: #ff0f; /* Neon pink */
     text-shadow: 0 0 10px #ffff, 0 0 20px #ffff, 0 0 30px #ffff;
     position: absolute;
     z-index: 5;
-    background-color: rgba(0, 0, 0, 0.2); /* Slightly transparent background for readability */
+    background-color: rgba(0, 0, 0, 0.3); /* Slightly transparent background for readability */
     border-radius: 10px;
     padding: 5px 15px;
 }
@@ -219,9 +219,9 @@ h2 {
 }
 .bet-chip.black {
     background-color: #000000;
-    border-color: #444444;
+    border-color: gold;
     color: white;
-    box-shadow: 0 0 8px #444444;
+    box-shadow: 0 0 8px gold;
 }
 .bet-chip.green {
     background-color: #006400;
@@ -242,7 +242,7 @@ h2 {
 }
 
 .bet-chip.red:hover { --bet-chip-shadow-hover: #ff0000; }
-.bet-chip.black:hover { --bet-chip-shadow-hover: #444444; }
+.bet-chip.black:hover { --bet-chip-shadow-hover: black; }
 .bet-chip.green:hover { --bet-chip-shadow-hover: #00ff00; }
 .bet-chip.even:hover, .bet-chip.odd:hover, .bet-chip.low:hover, .bet-chip.high:hover { --bet-chip-shadow-hover: #cc00ff; }
 
