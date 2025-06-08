@@ -31,10 +31,10 @@
             align-items: center;
             min-height: 100vh;
             /* Background gradien animasi */
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color), var(--tertiary-color), var(--primary-color));
-            background-size: 400% 400%;
-            animation: gradientAnimation 15s ease infinite;
-            padding: 10px;
+            background:black;
+            background-size: cover;
+            animation: gradientAnimation 100s ease infinite;
+            padding: 0px;
             box-sizing: border-box;
             user-select: none; /* Mencegah seleksi teks */
             -webkit-touch-callout: none; /* iOS Safari */
@@ -47,7 +47,7 @@
         @keyframes gradientAnimation {
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            100% { background-position: 0% 100%; }
         }
 
         /* Animasi untuk perubahan saldo */
@@ -67,7 +67,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.5); /* Background transparan */
+            background-color: rgba(0, 0, 0, 0.9); /* Background transparan */
             padding: 0px;
             border-radius: 5px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.7); /* Efek glow */
@@ -117,7 +117,7 @@
 
         /* Styling untuk area informasi pemain (banner) */
         .player-banner {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(5).jpeg'); ;
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 15px;
@@ -274,13 +274,10 @@
         <div class="player-banner">
             <p>Pemain: <span id="playerName" class="player-name">Memuat...</span></p>
             <p>Status: <span id="playerStatus" class="player-status">Memeriksa Login...</span></p>
+               <p class="info-item">Kemenangan: <span id="totalKemenangan">0</span></p>
+                <p class="info-item">Saldo: <span id="balance">Memuat...</span></p>
         </div>
 
-        <div class="game-info">
-            <h1>Susun Balok </h1>
-            <p class="info-item">Kemenangan: <span id="totalKemenangan">0</span></p>
-            <p class="info-item">Saldo: <span id="balance">Memuat...</span></p>
-        </div>
         <canvas id="gameCanvas"></canvas>
         <div class="controls">
             <button id="moveLeftBtn" class="control-btn">←</button>
