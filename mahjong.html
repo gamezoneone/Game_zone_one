@@ -7,13 +7,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    const supabase = window.supabase.createClient(
+  const supabase = window.supabase.createClient(
       'https://vqmfachxnjyxwuavpgds.supabase.co',
       'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
     );
-    const uid = localStorage.getItem('uid');
+ const uid = localStorage.getItem('uid');
   </script>
-  <style>
+    <style>
     /* Global styles */
     :root {
       --neon-cyan: #00ffff;
@@ -36,11 +36,11 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 20px 0; /* Add some vertical padding */
+      padding: 20px 0;
       color: var(--neon-cyan);
       overflow-x: hidden;
-      min-height: 100vh; /* Ensure body takes full viewport height */
-      position: relative; /* For absolute positioning of fixed elements relative to body */
+      min-height: 100vh;
+      position: relative;
     }
 
     /* Neon glow effect for elements */
@@ -60,7 +60,7 @@
       border-bottom: 1px solid var(--neon-pink);
       border-top: 1px solid var(--neon-pink);
       box-shadow: 0 0 5px var(--neon-pink);
-      margin-bottom: 20px; /* Increased margin for better spacing */
+      margin-bottom: 20px;
     }
 
     /* Main title */
@@ -68,7 +68,7 @@
       background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink), var(--neon-green));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      font-size: 2em; /* Adjusted font size for better readability */
+      font-size: 2em;
       margin-bottom: 20px;
       text-align: center;
       padding: 5px 20px;
@@ -93,12 +93,12 @@
     hr {
       border-color: var(--neon-green);
       box-shadow: 0 0 8px var(--neon-green);
-      margin-top: 10px; /* Added margin for better spacing */
+      margin-top: 10px;
     }
 
     /* Slot frame */
     .slot-frame {
-      padding: 10px; /* Increased padding */
+      padding: 10px;
       border-radius: 15px;
       background: rgba(0, 0, 0, 0.6);
       border: 3px solid var(--neon-green);
@@ -133,7 +133,7 @@
       transition: transform 0.1s linear, box-shadow 0.2s ease-in-out;
       overflow: hidden;
       border: 2px solid var(--neon-cyan);
-      position: relative; /* For image positioning */
+      position: relative;
     }
 
     .tile:hover {
@@ -155,7 +155,7 @@
 
     /* Popup messages */
     .popup {
-      position: fixed; /* Fixed position to overlay on top */
+      position: fixed;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
@@ -168,35 +168,33 @@
       font-size: 1.2em;
       font-family: 'Share Tech Mono', monospace;
       text-align: center;
-      z-index: 1000; /* High z-index to be on top */
-      display: none; /* Hidden by default, show with JavaScript */
+      z-index: 1000;
+      display: none;
     }
 
-    /* Controls container - now a normal flex container for better flow */
-.controls-container {
-  width: 100%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 20px;
-  padding-bottom: 120px; /* Space for fixed buttons at bottom */
-  position: relative; /* Tambahkan ini agar multiplier bisa diposisikan absolut relatif terhadap kontainer ini */
-}
+    /* Controls container - now just for saldo and bet display */
+    .controls-container {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 20px;
+      padding-bottom: 120px;
+      position: relative;
+    }
 
-    /* Balance, Bet, Multiplier, Free Spin Displays - adjusted to be part of the flow initially */
-.balance, .bet-display, .multiplier, .free-spin-display {
-  background: var(--darkest-bg);
-  padding: 8px 12px;
-  border-radius: 100px;
-  font-size: 0.9em;
-  font-weight: bold;
-  box-shadow: 0 0 10px; /* Color inherited from individual styles */
-  z-index: 10;
-  margin: 5px; /* Add margin for spacing between elements */
-  /* Hapus properti positioning (top, left, transform) jika ada di sini,
-     karena multiplier akan diposisikan secara terpisah. */
-}
+    /* Balance, Bet, Free Spin Displays - part of the flow */
+    .balance, .bet-display, .free-spin-display {
+      background: var(--darkest-bg);
+      padding: 8px 12px;
+      border-radius: 100px;
+      font-size: 0.9em;
+      font-weight: bold;
+      box-shadow: 0 0 10px;
+      z-index: 10;
+      margin: 5px;
+    }
 
     .balance {
       color: var(--neon-cyan);
@@ -208,40 +206,19 @@
       color: var(--neon-pink);
       border: 2px solid var(--neon-pink);
       box-shadow: 0 0 10px var(--neon-pink);
-      font-size: 1.2em; /* Keep it larger */
+      font-size: 1.2em;
     }
 
-.multiplier {
-  position: absolute; /* Ubah menjadi absolute */
-  top: 0; /* Posisikan di bagian atas kontainer */
-  left: 50%; /* Posisikan di tengah horizontal */
-  transform: translateX(-50%); /* Geser ke kiri 50% dari lebarnya sendiri untuk penempatan tengah yang sempurna */
-  color: var(--neon-green);
-  border: 2px solid var(--neon-green);
-  box-shadow: 0 0 15px var(--neon-green);
-  font-size: 2em;
-  padding: 5px 15px; /* Pastikan paddingnya sesuai */
-  border-radius: 10px; /* Pastikan border-radiusnya sesuai */
-  white-space: nowrap; /* Mencegah teks terpotong jika angkanya besar */
-}
+    /* Multiplier display - HILANG DARI SINI */
+    /* .multiplier { ... } */
 
-.free-spin-display {
-  /* Pertahankan ini jika Anda ingin free spin display berada di aliran normal
-     atau posisikan secara absolut juga jika diinginkan di posisi yang spesifik. */
-  top: 50px; /* Adjusted position */
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--darkest-bg);
-  padding: 5px 15px;
-  border-radius: 10px;
-  color: var(--neon-yellow);
-  border: 2px solid var(--neon-yellow);
-  font-size: 1.2em;
-  font-weight: bold;
-  box-shadow: 0 0 10px var(--neon-yellow);
-  z-index: 100;
-  display: none;
-}
+    .free-spin-display {
+      color: var(--neon-yellow);
+      border: 2px solid var(--neon-yellow);
+      box-shadow: 0 0 10px var(--neon-yellow);
+      font-size: 1.2em;
+      display: none;
+    }
 
     /* Spin button */
     .spin-button {
@@ -366,7 +343,7 @@
         opacity: 0;
         visibility: hidden;
         transition: opacity 0.5s ease, visibility 0.5s ease;
-        z-index: 1001; /* Above popups */
+        z-index: 1001;
     }
 
     #freeSpinWinOverlay.show {
@@ -413,6 +390,47 @@
         text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
     }
 
+    /* Multiplier yang muncul di tengah dengan animasi */
+    #animatedMultiplier {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0); /* Awalnya kecil dan di tengah */
+      opacity: 0; /* Awalnya tidak terlihat */
+
+      background: var(--darkest-bg);
+      border: 4px solid var(--neon-green);
+      border-radius: 15px;
+      padding: 20px 30px;
+      font-size: 3.5em;
+      font-weight: bold;
+      color: var(--neon-green);
+      box-shadow: 0 0 30px var(--neon-green), 0 0 50px rgba(0, 255, 0, 0.7);
+      z-index: 1002;
+      text-align: center;
+      white-space: nowrap;
+
+      /* Animasi tidak dipicu secara default, akan dipicu oleh JS */
+      /* animation: multiplierPopIn 0.8s forwards cubic-bezier(0.68, -0.55, 0.27, 1.55); */
+
+      display: none; /* Sembunyikan secara default, akan ditampilkan dengan JS */
+    }
+        /* Keyframes untuk animasi pop-in multiplier */
+    @keyframes multiplierPopIn {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.2); /* Sedikit membesar melewati batas */
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(1); /* Kembali ke ukuran normal */
+        opacity: 1;
+      }
+    }
+
     /* Media Queries for Responsiveness */
     @media (max-width: 768px) {
       h1 {
@@ -421,7 +439,7 @@
       }
 
       .slot-grid {
-        grid-template-columns: repeat(5, 60px); /* Smaller tiles on smaller screens */
+        grid-template-columns: repeat(5, 60px);
         grid-template-rows: repeat(5, 75px);
       }
 
@@ -439,7 +457,7 @@
         width: 50px;
         height: 50px;
         font-size: 1.2em;
-        bottom: 30px; /* Adjust vertical position */
+        bottom: 30px;
       }
 
       .bet-controls button {
@@ -450,7 +468,7 @@
         right: 10px;
       }
 
-      .balance, .bet-display, .multiplier, .free-spin-display {
+      .balance, .bet-display, .free-spin-display { /* Sesuaikan juga di sini */
         font-size: 0.8em;
         padding: 5px 10px;
       }
@@ -462,6 +480,11 @@
       .win-animation-content p {
         font-size: 1.5em;
       }
+
+      #animatedMultiplier { /* Sesuaikan untuk layar kecil */
+        font-size: 2.5em;
+        padding: 15px 25px;
+      }
     }
 
     @media (max-width: 480px) {
@@ -471,7 +494,7 @@
       }
 
       .slot-grid {
-        grid-template-columns: repeat(5, 50px); /* Even smaller tiles */
+        grid-template-columns: repeat(5, 50px);
         grid-template-rows: repeat(5, 60px);
         gap: 3px;
       }
@@ -494,12 +517,18 @@
         font-size: 1em;
         bottom: 20px;
       }
+
+      #animatedMultiplier { /* Sesuaikan lebih lanjut untuk layar sangat kecil */
+        font-size: 2em;
+        padding: 10px 20px;
+      }
     }
   </style>
 </head>
 <body>
 
-  <audio id="rollSound" src=""></audio> <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
+  <audio id="rollSound" src=""></audio>
+  <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
   <audio id="winBigSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-final-level-bonus-2061.mp3"></audio>
   <audio id="breakSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
   <audio id="spinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3"></audio>
@@ -519,7 +548,6 @@
   <div class="controls-container">
     <div class="balance neon-glow" id="balanceDisplay">Saldo: Rp0</div>
     <div class="bet-display neon-glow" id="betDisplay">100</div>
-    <div class="multiplier neon-glow" id="multiplierDisplay">x0</div>
     <div class="free-spin-display neon-glow" id="freeSpinDisplay">Free Spins: 0</div>
   </div>
 
@@ -536,6 +564,10 @@
       <h2>FREE SPIN SELESAI!</h2>
       <p>TOTAL KEMENANGAN: <span id="freeSpinTotalWin">Rp0</span></p>
     </div>
+  </div>
+
+  <div id="animatedMultiplier" class="animated-multiplier neon-glow">
+    <span id="animatedMultiplierValue">x1</span>
   </div>
 
   <script>
@@ -576,8 +608,8 @@
 
     let currentSymbols = [];
     let balance = 0;
-    let bet = 200;
-    const minBet = 200;
+    let bet = 100;
+    const minBet = 100;
     const maxBet = 1000;
     let multiplier = 0;
     let freeSpinCount = 0;
