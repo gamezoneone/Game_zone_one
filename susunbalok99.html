@@ -24,7 +24,7 @@
         body {
             margin: 0;
             overflow: hidden; /* Sembunyikan scrollbar jika canvas melebihi viewport */
-            font-family: 'Press Start ', cursive; /* Gunakan font Press Start 2P */
+            font-family: 'Press Start 2P ', cursive; /* Gunakan font Press Start 2P */
             color: var(--text-light);
             display: flex;
             justify-content: center;
@@ -67,7 +67,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: rgba(0, 0, 0, 0.9); /* Background transparan */
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(5).jpeg'); ;
             padding: 0px;
             border-radius: 5px;
             box-shadow: 0 0 30px rgba(0, 255, 255, 0.7); /* Efek glow */
@@ -96,7 +96,7 @@
             white-space: nowrap; /* Mencegah teks pecah baris */
         }
         .info-item #totalKemenangan {
-          font-size: 10px;
+          font-size: 1px;
             color: var(--tertiary-color);
             font-weight: bold;
         }
@@ -117,13 +117,14 @@
 
         /* Styling untuk area informasi pemain (banner) */
         .player-banner {
-            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(5).jpeg'); ;
+            background-color: var(--canvas-bg);
+            border: 2px solid var(--accent-color);
             padding: 10px;
             border-radius: 8px;
             margin-bottom: 15px;
             width: 100%;
             box-sizing: border-box;
-            font-size: 0.9em;
+            font-size: 1em;
             color: var(--accent-color);
             text-align: left; /* Teks rata kiri */
         }
