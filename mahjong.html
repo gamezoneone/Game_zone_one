@@ -479,7 +479,27 @@
     const breakSound = document.getElementById('breakSound'); // Dapatkan elemen audio breakSound
     let isInFreeSpinMode = false; // Flag untuk melacak status mode Free Spin
 
+async function loadSaldo() {
+  if (!uid) {
+    alert("User belum login!");
+    window.location.href = "index.html"; // redirect ke login kalau belum login
+    return;
+  }
 
+  const { data, error } = await supabase
+    .from('users_data')
+    .select('saldo')
+    .eq('user_id', uid)
+    .single();
+
+  if (error || !data) {
+    alert("Gagal mengambil saldo user!");
+    return;
+  }
+
+  balance = data.saldo;
+  updateBalance(0);
+}
 
 window.onload = () => {
   loadSaldo();
