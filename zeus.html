@@ -454,7 +454,7 @@
     const winBigSound = document.getElementById('winBigSound');
     const breakSound = document.getElementById('breakSound');
     const betMinusBtn = document.getElementById('betMinus');
-    const betPlusBtn = document.getElementById('betPlus');
+    const betPlusBtn = document = document.getElementById('betPlus');
     const minBetBtn = document.getElementById('minBetBtn');
     const maxBetBtn = document.getElementById('maxBetBtn');
     const freeSpinDisplay = document.getElementById('freeSpinDisplay');
@@ -465,10 +465,10 @@
     const freeSpinSound = document.getElementById('freeSpinSound');
 
     // Supabase Configuration - GANTI DENGAN KUNCI ANDA YANG SEBENARNYA!
-   const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+    const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-     
+
     // Gates of Olympus grid size
     const width = 6;
     const height = 5;
@@ -599,7 +599,7 @@
 
     function generateSingleRandomSymbol() {
         const rand = Math.random();
-        const SCATTER_PROBABILITY = 0.01; // 1%
+        const SCATTER_PROBABILITY = 1.01; // 1%
         const ORB_PROBABILITY = 0.015;    // 1.5%
 
         if (rand < SCATTER_PROBABILITY) {
@@ -651,119 +651,167 @@
             tileElement.classList.add('scatter-symbol');
         }
     }
-    
+
     async function animateTumbleDrop(symbolsBeforeTumble, symbolsAfterTumble, indicesToBreak) {
         const delay = ms => new Promise(res => setTimeout(res, ms));
         const cells = Array.from(grid.children);
-        
+
         // Step 1: Animate breaking symbols
         if (indicesToBreak.length > 0) {
-            animateWinningTiles(indicesToBreak); 
+            animateWinningTiles(indicesToBreak);
             breakSound.currentTime = 0;
             breakSound.play().catch(e => console.log("Break sound play blocked:", e));
             await delay(500); // Wait for break animation
         }
+        
+        // Remove 'break' class and reset opacity for winning tiles (they will be replaced)
+        // Dim non-winning tiles back to full opacity
+        cells.forEach((tile, i) => {
+            tile.classList.remove('break');
+            if (!indicesToBreak.includes(i)) {
+                tile.style.opacity = '1';
+            }
+        });
 
-        // Step 2: Prepare for drop - mark empty spots and shift existing symbols' positions
-        const symbolsToAnimate = []; // Stores { element, startY, endY, newSymbolObj }
-        const initialPositions = Array(width * height).fill(0); // 0 for original position
+        // Step 2: Prepare for drop and new symbols
+        const tilesToUpdate = []; // Stores { element, newSymbolObj, startYOffset }
 
         for (let col = 0; col < width; col++) {
-            const columnSymbols = [];
-            const breakingInColumn = new Set();
-            for (let row = 0; row < height; row++) {
+            const emptyCellsInCol = []; // Store row indices of empty cells
+            const symbolsToDropInCol = []; // Store { symbolObj, originalRow } for non-breaking symbols
+
+            for (let row = height - 1; row >= 0; row--) { // From bottom to top
                 const idx = row * width + col;
                 if (indicesToBreak.includes(idx)) {
-                    breakingInColumn.add(row);
+                    emptyCellsInCol.unshift(row); // Add to front so lowest empty row is at index 0
                 } else {
-                    columnSymbols.push({ symbol: currentSymbols[idx], originalRow: row });
+                    symbolsToDropInCol.unshift({ symbolObj: symbolsBeforeTumble[idx], originalRow: row });
                 }
             }
+            
+            // Now, symbolsToDropInCol has the symbols that will fall, ordered from top to bottom
+            // emptyCellsInCol has the row indices that need to be filled, ordered from lowest to highest
 
-            let currentSymbolIndex = 0;
-            for (let row = height - 1; row >= 0; row--) { // Fill column from bottom up
-                const idx = row * width + col;
-                if (currentSymbolIndex < columnSymbols.length) {
-                    // This cell will be filled by an existing symbol falling down
-                    const symbolData = columnSymbols[columnSymbols.length - 1 - currentSymbolIndex];
-                    currentSymbolIndex++;
-
-                    const tile = cells[idx];
-                    updateTileContent(tile, symbolData.symbol); // Update content to the symbol that's falling
+            // Fill empty cells from the bottom up with existing symbols
+            for (let i = 0; i < emptyCellsInCol.length; i++) {
+                const targetRow = emptyCellsInCol[i];
+                if (symbolsToDropInCol.length > 0) {
+                    // An existing symbol will drop into this empty spot
+                    const symbolToMove = symbolsToDropInCol.pop(); // Take from end (bottom-most falling symbol)
+                    const originalIndex = symbolToMove.originalRow * width + col;
+                    const targetIndex = targetRow * width + col;
                     
-                    // Calculate start and end Y for existing symbols
-                    // startY is original row relative to new row (negative indicates falling)
-                    const startY = (symbolData.originalRow - row) * (tile.offsetHeight + 5); 
-                    tile.style.transition = 'none'; // Disable transition for initial position
-                    tile.style.transform = `translateY(${-startY}px)`; // Set initial position (above or current)
-                    tile.style.opacity = '1'; // Ensure visible
+                    const tile = cells[originalIndex]; // Get the actual DOM element of the symbol that is falling
 
-                    symbolsToAnimate.push({ element: tile, startY: startY, endY: 0, newSymbolObj: symbolData.symbol });
+                    // Update the content of the target tile to the symbol that's falling
+                    // This is important because the DOM element is moving from its original place to a new one
+                    const targetTile = cells[targetIndex];
+                    updateTileContent(targetTile, symbolToMove.symbolObj);
+                    targetTile.style.transition = 'none'; // Disable transition for initial setup
+                    
+                    // Calculate drop distance in px
+                    const dropDistance = (targetRow - symbolToMove.originalRow) * (targetTile.offsetHeight + 5); // 5px is tile gap
+                    targetTile.style.transform = `translateY(${-dropDistance}px)`; // Initial position: "above" its target
+                    targetTile.style.opacity = '0'; // Start invisible
+
+                    tilesToUpdate.push({
+                        element: targetTile,
+                        newSymbolObj: symbolToMove.symbolObj,
+                        targetIndex: targetIndex,
+                        // For animation, we need to know its final destination and its starting point (relative to target)
+                        startY: -dropDistance,
+                        endY: 0
+                    });
+
                 } else {
-                    // This cell will be filled by a new symbol from above
-                    const newSymbolObj = symbolsAfterTumble[idx];
-                    const tile = cells[idx];
-                    updateTileContent(tile, newSymbolObj); // Update content to the new symbol
-                    
-                    // New symbols start from way above the grid
+                    // This empty spot needs a new symbol from the top
+                    const targetIndex = targetRow * width + col;
+                    const newSymbolObj = symbolsAfterTumble[targetIndex]; // Get new symbol from final grid state
+                    const tile = cells[targetIndex]; // This tile was previously empty or winning, now filled by a new symbol
+
+                    updateTileContent(tile, newSymbolObj); // Update content to new symbol
                     tile.style.transition = 'none';
-                    tile.style.transform = 'translateY(-100vh)';
+                    tile.style.transform = 'translateY(-100vh)'; // Start far above
                     tile.style.opacity = '0'; // Start invisible
-                    symbolsToAnimate.push({ element: tile, startY: '100vh', endY: 0, newSymbolObj: newSymbolObj });
+
+                    tilesToUpdate.push({
+                        element: tile,
+                        newSymbolObj: newSymbolObj,
+                        targetIndex: targetIndex,
+                        startY: '-100vh',
+                        endY: 0
+                    });
+                }
+            }
+            // For symbols that didn't move but were previously dimmed, ensure they are full opacity again
+            for (let row = 0; row < height; row++) {
+                const idx = row * width + col;
+                if (!indicesToBreak.includes(idx) && !emptyCellsInCol.includes(row)) {
+                     // This symbol did not break and did not need to fall
+                     cells[idx].style.opacity = '1';
+                     cells[idx].style.transform = 'translateY(0)';
+                     cells[idx].style.transition = 'none';
                 }
             }
         }
         
-        // Update currentSymbols immediately after determining new layout
+        // This is crucial: Set currentSymbols to the post-tumble state BEFORE animating
+        // So `getWinningTiles` on the next iteration gets the correct state.
         currentSymbols = symbolsAfterTumble;
 
-        await delay(50); // Small delay to allow DOM to update hidden positions
+        await delay(50); // Small delay to allow DOM to update initial positions
 
-        // Step 3: Trigger the fall animation for all relevant symbols
+        // Step 3: Trigger the fall animation
         rollSound.currentTime = 0;
         rollSound.play().catch(e => console.log("Roll sound play blocked:", e));
 
         const animationPromises = [];
-        symbolsToAnimate.forEach((animData, i) => {
-            const tile = animData.element;
-            const rowIndex = Math.floor(i / width); // Simple row index for staggering
+        tilesToUpdate.sort((a,b) => a.targetIndex - b.targetIndex); // Sort by target index for consistent staggering
 
-            const fallDelay = rowIndex * 70; // Stagger by row
+        tilesToUpdate.forEach(animData => {
+            const tile = animData.element;
+            const rowIndex = Math.floor(animData.targetIndex / width);
+            const fallDelay = rowIndex * 70; // Stagger by row for falling effect
 
             animationPromises.push(new Promise(resolve => {
                 setTimeout(() => {
                     tile.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1.2), opacity 0.3s ease-out';
                     tile.style.transform = `translateY(${animData.endY}px)`;
                     tile.style.opacity = '1';
-                    
+
                     const onTransitionEnd = () => {
                         tile.removeEventListener('transitionend', onTransitionEnd);
+                        // Ensure it resets to default
+                        tile.style.transform = 'translateY(0)';
+                        tile.style.opacity = '1';
+                        tile.style.transition = 'transform 0.1s linear, box-shadow 0.3s ease';
                         resolve();
                     };
                     tile.addEventListener('transitionend', onTransitionEnd, { once: true });
-                    // Fallback for cases where transitionend might not fire
+                    // Fallback to ensure resolve in case transitionend doesn't fire
                     setTimeout(() => resolve(), 600);
                 }, fallDelay);
             }));
         });
 
         await Promise.all(animationPromises);
-        // Ensure all tiles are reset to default visual state after animation
+        
+        // Ensure all tiles are completely reset to default styles after all animations
         cells.forEach(tile => {
             tile.style.transform = 'translateY(0)';
             tile.style.opacity = '1';
-            tile.style.transition = 'transform 0.1s linear, box-shadow 0.3s ease'; // Restore default transition
+            tile.classList.remove('break'); // Remove any lingering break classes
+            tile.style.transition = 'transform 0.1s linear, box-shadow 0.3s ease'; // Reset to default transition
         });
     }
 
-
     // --- Gates of Olympus Specific Win Logic (Cluster Pays + Orbs) ---
     function getWinningTiles(symbolsArr) {
-        const winningTiles = new Set();
+        const winningTiles = new Set(); // For regular cluster wins
         let scatterCount = 0;
         const scatterIndices = [];
-        let currentSpinOrbsMultiplier = 0;
-        const orbIndices = [];
+        let currentTumbleOrbsMultiplier = 0;
+        const orbIndices = new Set(); // Use Set to avoid duplicates if orbs are processed multiple times (unlikely here)
         let currentTumbleWinAmount = 0;
 
         for (let i = 0; i < symbolsArr.length; i++) {
@@ -772,8 +820,8 @@
                 scatterCount++;
                 scatterIndices.push(i);
             } else if (symbolObj && symbolObj.id === ORB_BASE_ID) {
-                currentSpinOrbsMultiplier += symbolObj.value;
-                orbIndices.push(i);
+                currentTumbleOrbsMultiplier += symbolObj.value;
+                orbIndices.add(i); // Add orb index to a set
             }
         }
 
@@ -804,7 +852,7 @@
                 
                 if (payoutMultiplier > 0) {
                     currentTumbleWinAmount += bet * payoutMultiplier;
-                    currentSymbolIndices.forEach(idx => winningTiles.add(idx));
+                    currentSymbolIndices.forEach(idx => winningTiles.add(idx)); // Add winning regular symbols
                 } else {
                     console.warn(`Payout not defined for symbol ${symbolId} with count ${count}`);
                 }
@@ -813,16 +861,24 @@
         
         // Orbs only break if there's a win from other symbols in the same tumble.
         // If there is a win, Orbs will also break and contribute their value.
-        if (currentTumbleWinAmount > 0 && currentSpinOrbsMultiplier > 0) {
-            orbIndices.forEach(idx => winningTiles.add(idx));
+        if (currentTumbleWinAmount > 0 && currentTumbleOrbsMultiplier > 0) {
+            orbIndices.forEach(idx => winningTiles.add(idx)); // Add orb indices to winningTiles only if there was a win
         }
 
+        // IMPORTANT: Scatters ONLY break if they trigger Free Spins.
+        // They do NOT break just because there's a general win.
+        let scattersToBreakIndices = [];
+        if (scatterCount >= 4) { // Only mark scatters as breaking if Free Spins are triggered
+            scattersToBreakIndices = scatterIndices;
+        }
+
+
         return {
-            winningTiles: Array.from(winningTiles),
+            winningTiles: Array.from(winningTiles), // Regular cluster wins + orbs (if associated with a win)
             scatterCount: scatterCount,
-            scatterIndices: Array.from(scatterIndices),
+            scattersToBreakIndices: scattersToBreakIndices, // Only scatters that trigger free spins
             currentTumbleWinAmount: currentTumbleWinAmount,
-            currentSpinOrbsMultiplier: currentSpinOrbsMultiplier
+            currentTumbleOrbsMultiplier: currentTumbleOrbsMultiplier
         };
     }
 
@@ -832,7 +888,10 @@
             if (indices.includes(i)) {
                 tile.classList.add('break'); // Apply break animation
             } else {
-                tile.style.opacity = 0.5; // Dim non-winning symbols
+                // Dim non-winning symbols, but not scatters unless they also broke
+                if (!tile.classList.contains('scatter-symbol')) {
+                    tile.style.opacity = 0.5;
+                }
             }
         });
     }
@@ -866,7 +925,7 @@
     }
 
 
-function updateBalance(amount) {
+    function updateBalance(amount) {
         balance += amount;
         balanceDisplay.textContent = `Saldo: Rp.${balance.toLocaleString('id-ID')}`;
     }
@@ -936,31 +995,36 @@ function updateBalance(amount) {
             updateFreeSpinDisplay();
         }
         
-        // Reset tile appearance for a new spin
+        // Reset tile appearance for a new spin - only remove 'break' and reset opacity
         document.querySelectorAll('.tile').forEach(tile => {
             tile.style.opacity = 1;
             tile.classList.remove('break');
         });
 
         // Initial spin symbols
-        currentSymbols = [];
-        for (let i = 0; i < width * height; i++) {
-            currentSymbols.push(generateSingleRandomSymbol());
+        if (!isInFreeSpinMode || freeSpinCount === 15) { // Only generate entirely new grid on first free spin or base game
+             currentSymbols = [];
+             for (let i = 0; i < width * height; i++) {
+                 currentSymbols.push(generateSingleRandomSymbol());
+             }
+             renderGrid(currentSymbols); // Initial render with newly generated symbols
         }
-        renderGrid(currentSymbols); // Initial render with newly generated symbols
-        
+        // If it's a subsequent free spin, currentSymbols already holds the previous state after tumble
+        // and renderGrid is called inside animateTumbleDrop with the new state.
+
         let currentSpinTotalWin = 0;
         let chainReactionOccurredInSpin = false;
         let orbMultiplierAccumulatedThisSpin = 0; // Accumulate orbs for the entire chain reaction
+        let freeSpinTriggeredThisSpin = false; // Flag to prevent multiple free spin triggers per spin
 
         // Loop for tumbles
         while (true) {
-            const { winningTiles, scatterCount, scatterIndices, currentTumbleWinAmount, currentSpinOrbsMultiplier } = getWinningTiles(currentSymbols);
+            const { winningTiles, scatterCount, scattersToBreakIndices, currentTumbleWinAmount, currentTumbleOrbsMultiplier } = getWinningTiles(currentSymbols);
 
             let tumbleHadWin = false;
             
-            if (currentSpinOrbsMultiplier > 0) {
-                orbMultiplierAccumulatedThisSpin += currentSpinOrbsMultiplier;
+            if (currentTumbleOrbsMultiplier > 0) {
+                orbMultiplierAccumulatedThisSpin += currentTumbleOrbsMultiplier;
                 updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
             }
 
@@ -969,13 +1033,11 @@ function updateBalance(amount) {
                  finalTumbleWin = currentTumbleWinAmount * orbMultiplierAccumulatedThisSpin;
             }
 
-            let allIndicesToBreak = new Set();
-            if (finalTumbleWin > 0) {
-                winningTiles.forEach(idx => allIndicesToBreak.add(idx));
-            }
-            // Scatters also break if part of a win or trigger free spins
-            if (scatterCount >= 4 || (finalTumbleWin > 0 && scatterCount > 0)) {
-                scatterIndices.forEach(idx => allIndicesToBreak.add(idx));
+            let allIndicesToBreak = new Set(winningTiles); // Start with regular wins + orbs
+            
+            // Add scatters to break ONLY if they trigger free spins
+            if (scattersToBreakIndices.length > 0) {
+                scattersToBreakIndices.forEach(idx => allIndicesToBreak.add(idx));
             }
 
             if (allIndicesToBreak.size > 0) {
@@ -986,18 +1048,20 @@ function updateBalance(amount) {
                 // Calculate the next grid state before animating
                 const nextGridSymbols = calculateNextGridState(currentSymbols, Array.from(allIndicesToBreak));
                 await animateTumbleDrop(currentSymbols, nextGridSymbols, Array.from(allIndicesToBreak));
-                currentSymbols = nextGridSymbols; // Update currentSymbols after animation
+                // currentSymbols is updated inside animateTumbleDrop now
                 await new Promise(res => setTimeout(res, 600)); // Short pause before next win check
             } else {
                 break; // No more wins, stop tumbling
             }
 
             // Check for Free Spin trigger (only trigger once per main spin)
-            if (!isInFreeSpinMode && scatterCount >= 4) {
+            // This logic must be outside the `tumbleHadWin` block IF free spins can be triggered without a win.
+            // In Gates of Olympus, 4 scatters always trigger, regardless of other wins.
+            if (!isInFreeSpinMode && scatterCount >= 4 && !freeSpinTriggeredThisSpin) {
                 let newFreeSpins = 0;
-                if (scatterCount === 4) newFreeSpins = 15;
-                else if (scatterCount >= 5) newFreeSpins = 5; // Assuming more than 5 scatters also give 5 retrigger, adjust as needed
-
+                if (scatterCount >= 4) newFreeSpins = 15; // 4+ scatters give 15 free spins
+                // else if (scatterCount >= 5) newFreeSpins = ... // Gates of Olympus typically 15 FS for 4+, +5 for retrigger by 3+ during FS
+                
                 freeSpinCount += newFreeSpins;
                 showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
                 updateFreeSpinDisplay();
@@ -1008,18 +1072,17 @@ function updateBalance(amount) {
                 freeSpinBGM.volume = 0.3;
                 freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
                 isInFreeSpinMode = true;
-                totalFreeSpinWin = 0; // Reset total free spin win
+                totalFreeSpinWin = 0; // Reset total free spin win for the new free spin round
                 orbMultiplierAccumulatedThisSpin = 0; // Reset orb multiplier for free spins
                 updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
+                freeSpinTriggeredThisSpin = true; // Mark as triggered
                 break; // Exit tumble loop to start free spin mode
             } else if (isInFreeSpinMode && scatterCount >= 3) { // Retrigger in Free Spin
-                 let retriggerSpins = 0;
-                 if (scatterCount === 3) retriggerSpins = 5;
-                 else if (scatterCount === 4) retriggerSpins = 15;
-                 else if (scatterCount >= 5) retriggerSpins = 5; // Adjust as per game rules
+                 let retriggerSpins = 5; // 3+ scatters retrigger 5 spins
                  freeSpinCount += retriggerSpins;
                  showPopup(`+${retriggerSpins} Free Spins!`);
                  updateFreeSpinDisplay();
+                 // No break here, allow more tumbles if they happen
             }
         }
 
@@ -1039,7 +1102,7 @@ function updateBalance(amount) {
                 winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
             }
             showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
-        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) {
+        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin && !freeSpinTriggeredThisSpin) {
              showPopup('Coba lagi!');
         }
 
@@ -1056,8 +1119,6 @@ function updateBalance(amount) {
                 await showFreeSpinWinAnimation(totalFreeSpinWin);
                 updateBalance(totalFreeSpinWin); // Add total free spin win to balance
                 totalFreeSpinWin = 0; // Reset total free spin win
-                orbMultiplierAccumulatedThisSpin = 0; // Reset orb multiplier
-                updateMultiplierDisplay(currentGlobalMultiplier); // Reset multiplier display
             }
 
             // Ensure all tiles are back to full opacity and without break class
@@ -1136,7 +1197,7 @@ function updateBalance(amount) {
     }
 
     document.addEventListener('DOMContentLoaded', init);
-    
+
   </script>
 </body>
 </html>
