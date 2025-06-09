@@ -600,8 +600,8 @@
 
     function generateSingleRandomSymbol() {
         const rand = Math.random();
-        const SCATTER_PROBABILITY = 0.02; // 1%
-        const ORB_PROBABILITY = 0.09;    // 1.5%
+        const SCATTER_PROBABILITY = 0.05; // 1%
+        const ORB_PROBABILITY = 0.03;    // 1.5%
 
         if (rand < SCATTER_PROBABILITY) {
             return { id: SCATTER_DATA.id };
@@ -853,14 +853,15 @@
     }
 
     // --- Gates of Olympus Specific Win Logic (Cluster Pays + Orbs) ---
-    function getWinningTiles(symbolsArr) {
-        const winningTiles = new Set(); // For regular cluster wins
+function getWinningTiles(symbolsArr) {
+        const winningTiles = new Set(); // Stores indices of all symbols that will break
         let scatterCount = 0;
         const scatterIndices = [];
         let currentTumbleOrbsMultiplier = 0;
-        const orbIndices = new Set(); // Use Set to avoid duplicates if orbs are processed multiple times (unlikely here)
+        const orbIndices = new Set(); 
         let currentTumbleWinAmount = 0;
 
+        // First pass: Count Scatters and collect Orb values and their indices
         for (let i = 0; i < symbolsArr.length; i++) {
             const symbolObj = symbolsArr[i];
             if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
@@ -868,25 +869,32 @@
                 scatterIndices.push(i);
             } else if (symbolObj && symbolObj.id === ORB_BASE_ID) {
                 currentTumbleOrbsMultiplier += symbolObj.value;
-                orbIndices.add(i); // Add orb index to a set
+                orbIndices.add(i); 
             }
         }
 
-        const uniqueSymbolIdsInGrid = new Set(symbolsArr.map(s => s ? s.id : null).filter(id => id !== null && id !== ORB_BASE_ID && id !== SCATTER_DATA.id));
+        // Second pass: Identify winning clusters for regular symbols
+        // Filter out non-regular symbols before checking for clusters
+        const regularSymbolsInGrid = symbolsArr.filter(s => s && s.id !== ORB_BASE_ID && s.id !== SCATTER_DATA.id);
+        const uniqueRegularSymbolIdsInGrid = new Set(regularSymbolsInGrid.map(s => s.id));
         
-        for (const symbolId of uniqueSymbolIdsInGrid) {
-            let count = 0;
+        for (const symbolId of uniqueRegularSymbolIdsInGrid) {
             const currentSymbolIndices = [];
-
             for (let i = 0; i < symbolsArr.length; i++) {
                 if (symbolsArr[i] && symbolsArr[i].id === symbolId) {
-                    count++;
                     currentSymbolIndices.push(i);
                 }
             }
 
-            if (count >= 8) {
+            const count = currentSymbolIndices.length;
+
+            if (count >= 8) { // Gates of Olympus cluster payout starts from 8 symbols
                 const symbolData = SYMBOLS_DATA.find(s => s.id === symbolId);
+                if (!symbolData) {
+                    console.warn(`Symbol data not found for ID: ${symbolId}`);
+                    continue;
+                }
+
                 const payoutKeys = Object.keys(symbolData.payout).map(Number).sort((a, b) => b - a);
 
                 let payoutMultiplier = 0;
@@ -899,33 +907,33 @@
                 
                 if (payoutMultiplier > 0) {
                     currentTumbleWinAmount += bet * payoutMultiplier;
-                    currentSymbolIndices.forEach(idx => winningTiles.add(idx)); // Add winning regular symbols
-                } else {
-                    console.warn(`Payout not defined for symbol ${symbolId} with count ${count}`);
+                    // Add ALL indices of this winning cluster to the set
+                    currentSymbolIndices.forEach(idx => winningTiles.add(idx)); 
                 }
             }
         }
         
-        // Orbs only break if there's a win from other symbols in the same tumble.
-        // If there is a win, Orbs will also break and contribute their value.
-        if (currentTumbleWinAmount > 0 && currentTumbleOrbsMultiplier > 0) {
-            orbIndices.forEach(idx => winningTiles.add(idx)); // Add orb indices to winningTiles only if there was a win
+        // Orbs break and contribute if there was ANY winning cluster in this tumble.
+        // The orbs themselves don't form clusters, but are removed if there's a win.
+        if (currentTumbleWinAmount > 0) {
+            orbIndices.forEach(idx => winningTiles.add(idx)); 
         }
 
-        // IMPORTANT: Scatters ONLY break if they trigger Free Spins.
-        // They do NOT break just because there's a general win.
+        // Scatters ONLY break if they trigger Free Spins (4 or more).
+        // They do NOT break just because there's a general win from other symbols.
         let scattersToBreakIndices = [];
-        if (scatterCount >= 4) { // Only mark scatters as breaking if Free Spins are triggered
+        if (scatterCount >= 4) { 
             scattersToBreakIndices = scatterIndices;
+            // Also add scatters to winningTiles if they are triggering free spins
+            scattersToBreakIndices.forEach(idx => winningTiles.add(idx));
         }
-
 
         return {
-            winningTiles: Array.from(winningTiles), // Regular cluster wins + orbs (if associated with a win)
-            scatterCount: scatterCount,
+            winningTiles: Array.from(winningTiles), // All symbols that will break (regular cluster wins + orbs + triggering scatters)
+            scatterCount: scatterCount, // Total scatters found in grid
             scattersToBreakIndices: scattersToBreakIndices, // Only scatters that trigger free spins
-            currentTumbleWinAmount: currentTumbleWinAmount,
-            currentTumbleOrbsMultiplier: currentTumbleOrbsMultiplier
+            currentTumbleWinAmount: currentTumbleWinAmount, // Raw win from regular symbols before multiplier
+            currentTumbleOrbsMultiplier: currentTumbleOrbsMultiplier // Total orb value in this tumble
         };
     }
 
