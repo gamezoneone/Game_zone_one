@@ -110,7 +110,7 @@
       transition: transform 0.1s linear, box-shadow 0.3s ease;
       overflow: hidden;
       border: 1px solid rgba(255, 215, 0, 0.1);
-      position: relative;
+      position: relative; /* Penting untuk posisi absolut Orb Value */
     }
 
     .tile img {
@@ -181,8 +181,8 @@
       position: absolute;
       top: 10px;
       right: 10px;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 8px 15px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 0px 0px;
       border-radius: 15px;
       color: var(--zeus-gold); /* Multiplier color */
       font-size: 2em;
@@ -369,6 +369,28 @@
         box-shadow: 0 0 10px rgba(255,215,0,0.3);
     }
 
+    /* CSS BARU untuk menampilkan nilai perkalian di dalam Orb */
+    .orb-value-display {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%); /* Menengahkan teks */
+        font-size: 1.2em; /* Ukuran font lebih besar */
+        font-weight: bold;
+        color: white; /* Warna teks */
+        text-shadow: 0 0 5px var(--zeus-blue), 0 0 10px var(--zeus-gold), 0 0 15px rgba(255, 0, 255, 0.7); /* Efek glow neon */
+        background: rgba(0, 0, 0, 0.5); /* Background semi-transparan untuk keterbacaan */
+        padding: 2px 7px;
+        border-radius: 8px;
+        border: 1px solid var(--zeus-gold);
+        box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        z-index: 2; /* Pastikan di atas gambar Orb */
+        min-width: 35px; /* Minimal lebar untuk nilai kecil */
+        text-align: center;
+        box-sizing: border-box; /* Pastikan padding dihitung dalam lebar */
+    }
+
+    /* Media queries untuk responsivitas */
     @media (max-width: 768px) {
         body { padding: 5px; }
         h1 { font-size: 1.5em; margin-bottom: 10px; }
@@ -379,6 +401,12 @@
             gap: 2px;
         }
         .tile { font-size: min(25px, 6vw); border-radius: 4px; }
+        .tile img { max-width: 80%; max-height: 80%; } /* Sesuaikan ukuran gambar agar ada ruang teks */
+        .orb-value-display { /* Sesuaikan di mobile */
+            font-size: 0.9em;
+            padding: 1px 4px;
+            min-width: 30px;
+        }
         .multiplier { font-size: 1.5em; padding: 5px 10px; top: 5px; right: 5px; }
         .spin-button { width: 60px; height: 60px; font-size: 0.9em; bottom: 10px; }
         .bet-buttons-container button { padding: 6px 12px; font-size: 0.8em; border-radius: 20px; }
@@ -471,14 +499,15 @@
     ];
 
     // Placeholder images for Zeus Orb and Scatter
-    const ORB_DATA = { id: 'ORB', emoji: '⚡', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg' }; // Ganti dengan URL gambar Orb Anda
+    // PERHATIKAN: ORB_DATA sekarang hanya menyimpan ID dan URL gambar, nilai akan ditambahkan saat spin
+    const ORB_BASE_DATA = { id: 'ORB', emoji: '⚡', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg' }; // Ganti dengan URL gambar Orb Anda
     const SCATTER_DATA = { id: 'SCATTER', emoji: '🔱', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//zeuz.jpeg', payout: { '4': 3, '5': 5, '6': 100 } }; // Ganti dengan URL gambar Scatter Zeus Anda
 
     // Combine all unique symbol IDs for random generation
-    const ALL_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id).concat(ORB_DATA.id, SCATTER_DATA.id);
+    const ALL_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id).concat(ORB_BASE_DATA.id, SCATTER_DATA.id);
     const REGULAR_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id); // Only regular symbols for initial reel fill
 
-    let currentSymbols = [];
+    let currentSymbols = []; // Ini akan menyimpan objek { id: 'symbol_id', value: <orb_value_if_orb> }
     let balance = 0;
     const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]; // Defined bet levels
     let currentBetIndex = 0;
@@ -562,55 +591,70 @@
 
     // --- Game Logic ---
 
-    // Helper to get symbol object by ID
-    function getSymbolById(id) {
-        if (id === ORB_DATA.id) return ORB_DATA;
-        if (id === SCATTER_DATA.id) return SCATTER_DATA;
-        return SYMBOLS_DATA.find(s => s.id === id);
+    // Helper to get symbol object by ID (sekarang bisa menerima objek simbol lengkap)
+    function getSymbolData(symbolObj) {
+        if (typeof symbolObj === 'string') { // Jika hanya ID string yang diberikan
+            if (symbolObj === ORB_BASE_DATA.id) return ORB_BASE_DATA;
+            if (symbolObj === SCATTER_DATA.id) return SCATTER_DATA;
+            return SYMBOLS_DATA.find(s => s.id === symbolObj);
+        }
+        // Jika sudah objek { id: 'ORB', value: X }
+        if (symbolObj.id === ORB_BASE_DATA.id) return { ...ORB_BASE_DATA, value: symbolObj.value };
+        if (symbolObj.id === SCATTER_DATA.id) return SCATTER_DATA;
+        return SYMBOLS_DATA.find(s => s.id === symbolObj.id);
     }
 
-    // Function to generate random symbols for initial grid fill
-    function generateRandomSymbols() {
+    // Function to generate a single random symbol (sekarang mengembalikan objek)
+    function generateSingleRandomSymbol() {
+        const rand = Math.random();
+        if (rand < 0.01) { // 1% Scatter
+            return { id: SCATTER_DATA.id };
+        } else if (rand < 0.08) { // 7% Orb
+            const orbValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 50, 100, 250, 500][Math.floor(Math.random() * 17)];
+            return { id: ORB_BASE_DATA.id, value: orbValue }; // Simpan nilai Orb di sini
+        } else {
+            const regularId = REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
+            return { id: regularId }; // Simbol reguler tidak perlu 'value'
+        }
+    }
+
+    // Function to generate initial random symbols for grid fill
+    function generateInitialSymbols() {
         const arr = [];
         for (let i = 0; i < width * height; i++) {
-            // Gates of Olympus symbols often don't have Wilds on reels
-            // Orbs are multiplier symbols, not a replacement like Wilds
-            // Scatter appears anywhere.
-            const rand = Math.random();
-            let symbolId;
-
-            // Adjust probabilities as needed
-            if (rand < 0.01) { // 1% chance for Scatter (Zeus)
-                symbolId = SCATTER_DATA.id;
-            } else if (rand < 0.08) { // 7% chance for Orb (multiplier)
-                symbolId = ORB_DATA.id;
-            } else { // Regular symbols
-                symbolId = REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
-            }
-            arr.push(symbolId);
+            arr.push(generateSingleRandomSymbol()); // Panggil generator simbol tunggal
         }
         return arr;
     }
+
+
     function renderGrid(symbolsArr) {
         grid.innerHTML = '';
-        symbolsArr.forEach(symbolId => {
+        symbolsArr.forEach(symbolObj => { // Iterasi melalui objek simbol
             const div = document.createElement('div');
             div.className = 'tile';
-            const symbolData = getSymbolById(symbolId);
 
-            if (symbolData.imgUrl) {
+            // Dapatkan data dasar simbol (imgUrl, emoji)
+            const baseSymbolData = getSymbolData(symbolObj.id); // Gunakan ID saja untuk mendapatkan base data
+
+            if (baseSymbolData.imgUrl) {
                 const img = document.createElement('img');
-                img.src = symbolData.imgUrl;
-                img.alt = symbolData.id;
+                img.src = baseSymbolData.imgUrl;
+                img.alt = baseSymbolData.id;
                 div.appendChild(img);
             } else {
-                div.textContent = symbolData.emoji;
+                div.textContent = baseSymbolData.emoji;
             }
 
-            if (symbolId === ORB_DATA.id) {
-                div.classList.add('special-symbol'); // For Orb
-            } else if (symbolId === SCATTER_DATA.id) {
-                div.classList.add('scatter-symbol'); // For Zeus Scatter
+            if (symbolObj.id === ORB_BASE_DATA.id) { // Jika ini adalah Orb
+                div.classList.add('special-symbol');
+                // TAMBAHKAN ELEMEN UNTUK NILAI PERKALIAN ORB DI SINI
+                const orbValueDisplay = document.createElement('span');
+                orbValueDisplay.className = 'orb-value-display';
+                orbValueDisplay.textContent = `x${symbolObj.value}`; // Tampilkan nilai Orb
+                div.appendChild(orbValueDisplay);
+            } else if (symbolObj.id === SCATTER_DATA.id) {
+                div.classList.add('scatter-symbol');
             }
             grid.appendChild(div);
         });
@@ -624,8 +668,8 @@
             }
 
             let position = 0;
-            const reelSpeed = 30;
-            const targetDuration = 1000 + col * 150;
+            const reelSpeed = 30; // Kecepatan putaran reel
+            const targetDuration = 1000 + col * 150; // Durasi putaran untuk setiap kolom
             let startTime = null;
 
             const rollSoundInstance = rollSound.cloneNode(true);
@@ -642,27 +686,34 @@
                         position -= reelTiles[0].offsetHeight;
                         for (let r = height - 1; r >= 0; r--) {
                             const currentTile = reelTiles[r];
-                            const nextSymbolId = (r === 0) ? generateSingleRandomSymbol() : currentSymbols[(r - 1) * width + col];
+                            // Dapatkan simbol baru dari atas, atau simbol dari tile di atasnya
+                            const nextSymbolObj = (r === 0) ? generateSingleRandomSymbol() : currentSymbols[(r - 1) * width + col];
 
-                            currentTile.innerHTML = '';
-                            currentTile.classList.remove('special-symbol', 'scatter-symbol');
-                            const symbolData = getSymbolById(nextSymbolId);
+                            currentTile.innerHTML = ''; // Hapus konten lama
+                            currentTile.classList.remove('special-symbol', 'scatter-symbol'); // Hapus kelas khusus
 
-                            if (symbolData.imgUrl) {
+                            // Dapatkan data dasar simbol (gambar, emoji)
+                            const baseSymbolData = getSymbolData(nextSymbolObj.id);
+
+                            if (baseSymbolData.imgUrl) {
                                 const img = document.createElement('img');
-                                img.src = symbolData.imgUrl;
-                                img.alt = symbolData.id;
+                                img.src = baseSymbolData.imgUrl;
+                                img.alt = baseSymbolData.id;
                                 currentTile.appendChild(img);
                             } else {
-                                currentTile.textContent = symbolData.emoji;
+                                currentTile.textContent = baseSymbolData.emoji;
                             }
 
-                            if (nextSymbolId === ORB_DATA.id) {
+                            if (nextSymbolObj.id === ORB_BASE_DATA.id) { // Jika Orb, tambahkan nilai perkalian
                                 currentTile.classList.add('special-symbol');
-                            } else if (nextSymbolId === SCATTER_DATA.id) {
+                                const orbValueSpan = document.createElement('span');
+                                orbValueSpan.className = 'orb-value-display';
+                                orbValueSpan.textContent = `x${nextSymbolObj.value}`;
+                                currentTile.appendChild(orbValueSpan);
+                            } else if (nextSymbolObj.id === SCATTER_DATA.id) {
                                 currentTile.classList.add('scatter-symbol');
                             }
-                            currentSymbols[r * width + col] = nextSymbolId;
+                            currentSymbols[r * width + col] = nextSymbolObj; // Perbarui array currentSymbols
                         }
                     }
                     for (let r = 0; r < height; r++) {
@@ -682,17 +733,6 @@
         });
     }
 
-    function generateSingleRandomSymbol() {
-        const rand = Math.random();
-        if (rand < 0.01) { // 1% Scatter
-            return SCATTER_DATA.id;
-        } else if (rand < 0.08) { // 7% Orb
-            return ORB_DATA.id;
-        } else {
-            return REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
-        }
-    }
-
     // --- Gates of Olympus Specific Win Logic (Cluster Pays + Orbs) ---
     function getWinningTiles(symbolsArr) {
         const winningTiles = new Set();
@@ -703,29 +743,24 @@
 
         // Count scatters and collect orb multipliers
         for (let i = 0; i < symbolsArr.length; i++) {
-            if (symbolsArr[i] === SCATTER_DATA.id) {
+            const symbolObj = symbolsArr[i];
+            if (symbolObj.id === SCATTER_DATA.id) {
                 scatterCount++;
                 scatterIndices.push(i);
-            } else if (symbolsArr[i] === ORB_DATA.id) {
-                // In actual Gates of Olympus, Orbs have random values (e.g., 2x-500x)
-                // For simplicity, let's assign a random value here.
-                const orbValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 50, 100, 250, 500][Math.floor(Math.random() * 17)];
-                totalOrbsMultiplier += orbValue;
+            } else if (symbolObj.id === ORB_BASE_DATA.id) { // Cek ID Orb
+                totalOrbsMultiplier += symbolObj.value; // Gunakan nilai 'value' yang disimpan
                 orbIndices.push(i);
             }
         }
-
         let currentRoundWin = 0;
-        const countedSymbols = {}; // Track symbols already part of a cluster win
-
         // Find clusters of 8 or more symbols anywhere on the grid
-        for (const symbolData of SYMBOLS_DATA) {
+        for (const symbolData of SYMBOLS_DATA) { // Iterasi melalui SYMBOLS_DATA untuk payout
             const currentSymbolId = symbolData.id;
             let count = 0;
             const currentSymbolIndices = [];
 
             for (let i = 0; i < symbolsArr.length; i++) {
-                if (symbolsArr[i] === currentSymbolId) {
+                if (symbolsArr[i].id === currentSymbolId) { // Bandingkan hanya ID
                     count++;
                     currentSymbolIndices.push(i);
                 }
@@ -748,10 +783,8 @@
 
         // Apply Orb multiplier to total win of the spin/tumble
         if (currentRoundWin > 0 && totalOrbsMultiplier > 0) {
-            // In Gates, Orbs multiply the total win of the current tumble, then sum up
             currentRoundWin *= totalOrbsMultiplier;
-            // Add orb indices to winning tiles if they contributed to a win
-            orbIndices.forEach(idx => winningTiles.add(idx));
+            orbIndices.forEach(idx => winningTiles.add(idx)); // Tambahkan Orb ke winningTiles jika berkontribusi
         }
 
         return {
@@ -783,34 +816,36 @@
             await delay(500);
         }
 
+        // Set symbols to null for broken tiles
         for (let i = 0; i < currentSymbols.length; i++) {
             if (indicesToBreak.includes(i)) {
                 currentSymbols[i] = null;
             } else {
                 const tileElement = grid.children[i];
                 if (tileElement && tileElement.style.opacity < 1) {
-                    tileElement.style.opacity = 1;
+                    tileElement.style.opacity = 1; // Restore opacity for non-broken tiles
                 }
             }
         }
 
+        // Gravity/Tumble effect - move existing symbols down and fill from top
         for (let col = 0; col < width; col++) {
             const colSymbols = [];
             for (let row = height - 1; row >= 0; row--) {
                 const idx = row * width + col;
                 if (currentSymbols[idx] !== null) {
-                    colSymbols.unshift(currentSymbols[idx]);
+                    colSymbols.unshift(currentSymbols[idx]); // Add non-null symbols to top
                 }
             }
 
             while (colSymbols.length < height) {
-                colSymbols.unshift(generateSingleRandomSymbol());
+                colSymbols.unshift(generateSingleRandomSymbol()); // Fill empty spots with new random symbols
             }
             for (let row = 0; row < height; row++) {
                 currentSymbols[row * width + col] = colSymbols[row];
             }
         }
-        renderGrid(currentSymbols);
+        renderGrid(currentSymbols); // Re-render the grid with new symbols
     }
 
     function updateBalance(amount) {
@@ -1039,7 +1074,7 @@
     document.getElementById('freeSpinSound').volume = 0.6; // New FS sound
 
     function init() {
-      currentSymbols = generateRandomSymbols();
+      currentSymbols = generateInitialSymbols(); // Menggunakan fungsi baru
       renderGrid(currentSymbols);
       updateBalance(0); // Will trigger loadSaldo and update display
       updateBetDisplay();
