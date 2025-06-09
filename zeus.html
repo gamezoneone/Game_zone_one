@@ -1,1024 +1,1061 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Zeus Slot</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Gates of Olympus - Slot Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+        /* Neon Theme Colors (dapat disesuaikan untuk tema Zeus) */
+        :root {
+            --zeus-bg-dark: #1a0f30; /* Darker purple/blue for background */
+            --zeus-bg-light: #3a1f60; /* Lighter purple */
+            --zeus-gold: #FFD700; /* Gold color */
+            --zeus-blue: #00BFFF; /* Deep Sky Blue */
+            --zeus-purple: #8A2BE2; /* Blue Violet */
+            --zeus-red: #DC143C; /* Crimson */
+            --text-primary: #f0f0f0;
+            --text-secondary: #cccccc;
+            --border-glow-gold: #FFD700;
+            --button-primary: linear-gradient(45deg, #00BFFF, #8A2BE2);
+            --button-hover: linear-gradient(45deg, #8A2BE2, #00BFFF);
+            --glow-sm: 0 0 5px;
+            --glow-md: 0 0 10px;
+            --glow-lg: 0 0 20px;
+        }
+
+       body {
+            font-family: 'Share Tech Mono', monospace;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: flex-start; /* Mengatur konten ke atas */
             min-height: 100vh;
-            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(3).jpeg');
-            overflow: hidden;
-            font-family: 'Press Start ', cursive;
-            color: #fff;
-            touch-action: manipulation;
-        }
-
-        #game-container {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-            max-width: 900px;
-            max-height: 600px;
-           background: ;
-            border-radius: 0;
-            box-shadow: none;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            padding-top: 60px;
-            padding-bottom: 130px;
-            box-sizing: border-box;
-        }
-
-        canvas {
-            display: block;
-            width: calc(100% - 40px);
-            height: 100%;
-            object-fit: contain;
-            background-color: #0d081a;
-            border: 4px solid #ff00ff;
-            border-radius: 15px;
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.7);
-            box-sizing: border-box;
-        }
-
-        #top-info-panel {
-            position: absolute;
-            top: 0px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            max-width: 400px;
-            background-color: rgba(0, 150, 0, 0.8);
-            border: 3px solid #00ff00;
-            border-radius: 10px;
-            padding: 8px 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 1.2em;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-            text-align: center;
-            z-index: 20;
-            box-sizing: border-box;
-            white-space: nowrap;
-        }
-
-        #top-info-panel span {
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #fff;
-        }
-
-        #bottom-ui-panel {
-            position: absolute;
-            bottom: 0px;
-            left: 0;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zeus/bg_zeus.jpeg'); /* Placeholder Zeus BG */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--text-primary);
+            margin: 0;
             padding: 10px;
-            box-sizing: border-box;
-            background: rgba(0, 0, 0, 0.0);
-            z-index: 10;
-        }
-
-        #top-tumble-win-display {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 2em;
-            color: #00ffff;
-            text-shadow: 0 0 15px #00ffff, 0 0 25px rgba(0,255,255,0.8);
-            font-weight: bold;
-            z-index: 15;
-            display: none;
-            animation: fadeAndScale 1.5s forwards;
-        }
-
-        @keyframes fadeAndScale {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
-            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
-            80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-        }
-
-
-        #main-controls {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            max-width: 500px;
-            margin-top: 10px;
-            margin-bottom: 5px;
-        }
-
-        .bet-button {
-            background-color: #00ff00;
-            color: #000;
-            padding: 8px 15px;
-            font-size: 14px;
-            font-weight: bold;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            white-space: nowrap;
-        }
-        .bet-button:hover:not(:disabled) {
-            background-color: #00dd00;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 1);
-        }
-        .bet-button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        #spin-button {
-            background-color: #ff0000;
-            color: #000;
-            padding: 15px 25px;
-            font-size: 20px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-            margin: 0 15px;
-        }
-        #spin-button:hover:not(:disabled) {
-            background-color: #dd0000;
-            box-shadow: 0 0 30px rgba(255, 0, 0, 1);
-        }
-        #spin-button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .info-display-row {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            max-width: 600px;
-            margin-top: 5px;
-            gap: 10px;
-        }
-
-        .ui-item {
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 8px 15px;
-            border-radius: 10px;
-            font-size: 14px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 2px;
-            border: 2px solid #00ffff;
-            flex-grow: 1;
-            text-align: center;
-            justify-content: center;
-            box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
-            white-space: nowrap;
             overflow: hidden;
-        }
-        .ui-item span {
-            color: #00ffff;
-            font-weight: bold;
-            font-size: 1.1em;
-            text-shadow: 0 0 8px #00ffff;
-        }
-        .ui-item label {
-            font-size: 0.8em;
-            color: #ccc;
+            box-sizing: border-box;
         }
 
-        @media (min-width: 768px) {
-            #game-container {
-                border-radius: 15px;
-                box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
-                width: 800px;
-                height: 600px;
-                padding-top: 80px;
-                padding-bottom: 150px;
-            }
-            canvas {
-                width: calc(100% - 60px);
-                border-width: 5px;
-                border-radius: 20px;
-            }
-            #top-info-panel {
-                top: 20px;
-                font-size: 1.5em;
-                padding: 10px 20px;
-                border-width: 4px;
-            }
-            #top-info-panel span {
-                font-size: 1.5em;
-            }
-            #bottom-ui-panel {
-                bottom: 20px;
-                padding: 15px;
-                border-radius: 15px;
-            }
-            #main-controls {
-                max-width: 600px;
-            }
-            .bet-button {
-                padding: 10px 20px;
-                font-size: 16px;
-            }
-            #spin-button {
-                padding: 20px 30px;
-                font-size: 24px;
-            }
-            .info-display-row {
-                max-width: 700px;
-            }
-            .ui-item {
-                font-size: 16px;
-                padding: 10px 20px;
-                flex-direction: row;
-                gap: 10px;
-            }
+    h1 {
+      background: linear-gradient(45deg, var(--zeus-gold), var(--zeus-blue), var(--zeus-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 2em;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      text-shadow: var(--glow-md) var(--zeus-gold);
+      text-align: center;
+      padding: 5px 15px;
+      border: 2px solid var(--zeus-purple);
+      border-radius: 12px;
+      box-shadow: var(--glow-md) var(--zeus-blue);
+      animation: zeusPulse 2s infinite alternate;
+      letter-spacing: 1px;
+    }
+
+    @keyframes zeusPulse {
+      0% { box-shadow: var(--glow-md) var(--zeus-blue); }
+      100% { box-shadow: var(--glow-md) var(--zeus-purple); }
+    }
+
+    hr {
+      border: none;
+      border-top: 1px dashed var(--zeus-gold);
+      margin-top: 8px;
+    }
+
+    .slot-frame {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      border-radius: 15px;
+      box-shadow: var(--glow-md) var(--zeus-blue);
+      border: 2px solid var(--zeus-purple);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: repeat(6, min(65px, 15vw)); /* Gates of Olympus is 6x5 */
+      grid-template-rows: repeat(5, min(65px, 15vw));
+      gap: 5px;
+      justify-content: center;
+      border: 0px solid var(--zeus-gold);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: inset 0 0 10px rgba(0,191,255,0.3); /* Blue glow inside */
+    }
+
+    .tile {
+      background: #222;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: min(35px, 7vw);
+      font-weight: bold;
+      color: var(--zeus-gold);
+      box-shadow: inset 0 0 3px rgba(255, 215, 0, 0.2), 0 0 5px rgba(255, 215, 0, 0.3);
+      transition: transform 0.1s linear, box-shadow 0.3s ease;
+      overflow: hidden;
+      border: 1px solid rgba(255, 215, 0, 0.1);
+      position: relative;
+    }
+
+    .tile img {
+      max-width: 90%;
+      max-height: 90%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.8)); /* Blue drop shadow for Zeus theme */
+    }
+
+    .tile.break {
+      animation: breakAnim 0.5s forwards;
+    }
+    @keyframes breakAnim {
+      0% { transform: scale(1); opacity: 1; border-color: var(--zeus-red); }
+      100% { transform: scale(0.1); opacity: 0; }
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.9);
+      color: var(--zeus-gold);
+      padding: 15px 25px;
+      border: 2px solid var(--zeus-gold);
+      border-radius: 10px;
+      font-size: 1.2em;
+      box-shadow: var(--glow-md) var(--zeus-gold);
+      z-index: 9999;
+      display: none;
+      text-align: center;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .controls-container {
+        width: 100%;
+        max-width: 500px; /* Lebar kontrol */
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: center;
+        margin-top: 15px;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .info-box {
+        background-color: var(--zeus-bg-dark);
+        border-radius: 10px;
+        box-shadow: 0 0 15px var(--border-glow-gold), inset 0 0 5px var(--border-glow-gold);
+        padding: 8px 15px;
+        text-align: center;
+        font-size: 0.9em;
+        color: var(--text-primary);
+        border: 2px solid var(--zeus-blue);
+        margin: 5px;
+        flex-grow: 1;
+        white-space: nowrap;
+    }
+    .info-box.balance-box { border-color: var(--zeus-gold); color: var(--zeus-gold); }
+    .info-box.bet-box { border-color: var(--zeus-purple); color: var(--zeus-purple); }
+    .info-box.freespin-box { border-color: var(--zeus-red); color: var(--zeus-red); }
+
+    .multiplier {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 8px 15px;
+      border-radius: 15px;
+      color: var(--zeus-gold); /* Multiplier color */
+      font-size: 2em;
+      font-weight: bold;
+      border: 3px solid var(--zeus-gold);
+      box-shadow: var(--glow-sm) var(--zeus-gold);
+      transition: transform 0.2s ease-out;
+      z-index: 5;
+    }
+
+    .multiplier.zoom {
+      animation: multiplierZoom 0.3s ease forwards;
+    }
+
+    @keyframes multiplierZoom {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); text-shadow: var(--glow-md) var(--zeus-gold); }
+      100% { transform: scale(1); }
+    }
+
+    .spin-button {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--zeus-red); /* Spin button color */
+      border: 3px solid var(--zeus-gold);
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #FFF;
+      text-shadow: 0 0 8px #FFF, 0 0 15px var(--zeus-gold);
+      box-shadow: var(--glow-md) var(--zeus-red);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      z-index: 20;
+    }
+
+    .spin-button:hover {
+      transform: translateX(-50%) scale(1.05);
+      box-shadow: var(--glow-md) var(--zeus-blue), var(--glow-md) var(--zeus-gold);
+      background: linear-gradient(45deg, var(--zeus-red), var(--zeus-purple));
+    }
+
+    .spin-button:active {
+      transform: translateX(-50%) scale(0.95);
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .spin-button:disabled {
+      background: #555;
+      border-color: #888;
+      color: #AAA;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .bet-buttons-container {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 10px;
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .bet-buttons-container button {
+      padding: 8px 18px;
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--zeus-blue);
+      border: 2px solid var(--zeus-blue);
+      border-radius: 25px;
+      font-size: 0.9em;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0, 0, 255, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .bet-buttons-container button:hover {
+      background: rgba(0, 0, 0, 0.9);
+      box-shadow: var(--glow-md) var(--zeus-blue);
+    }
+
+    .bet-buttons-container button:active {
+      transform: scale(0.97);
+    }
+
+    /* Specific bet button colors */
+    #betMinus { border-color: var(--zeus-purple); color: var(--zeus-purple); }
+    #betPlus { border-color: var(--zeus-red); color: var(--zeus-red); }
+    #minBetBtn, #maxBetBtn { border-color: var(--zeus-gold); color: var(--zeus-gold); }
+
+    /* Special Symbol styling (can be applied to Orb/Scatter as needed) */
+    .tile.special-symbol { /* For Orb multipliers */
+      border: 2px solid var(--zeus-gold);
+      box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold);
+      animation: pulseSpecial 1.2s infinite alternate;
+    }
+
+    @keyframes pulseSpecial {
+      0% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold); }
+      50% { transform: scale(1.02); box-shadow: 0 0 18px var(--zeus-gold), inset 0 0 8px var(--zeus-gold); }
+      100% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold); }
+    }
+
+    .tile.scatter-symbol { /* For Zeus Scatter */
+      border: 2px solid var(--zeus-blue);
+      box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue);
+      animation: pulseScatter 1.2s infinite alternate;
+    }
+
+    @keyframes pulseScatter {
+      0% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue); }
+      50% { transform: scale(1.02); box-shadow: 0 0 18px var(--zeus-blue), inset 0 0 8px var(--zeus-blue); }
+      100% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue); }
+    }
+
+    /* Win Animation Overlay */
+    .win-animation-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.4s ease, visibility 0.4s ease;
+    }
+
+    .win-animation-content {
+        background: linear-gradient(45deg, var(--zeus-gold), var(--zeus-blue), var(--zeus-purple));
+        padding: 30px 40px;
+        border-radius: 20px;
+        box-shadow: var(--glow-lg) var(--zeus-gold);
+        text-align: center;
+        transform: scale(0.7);
+        opacity: 0;
+        animation: winPopIn 0.8s forwards ease-out;
+        border: 3px solid var(--zeus-gold);
+    }
+
+    @keyframes winPopIn {
+        0% { transform: scale(0.5); opacity: 0; }
+        70% { transform: scale(1.05); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+
+    .win-animation-content h2 {
+        font-size: 2.5em;
+        color: #FFF;
+        margin-bottom: 15px;
+        text-shadow: var(--glow-md) var(--zeus-red);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 800;
+    }
+
+    .win-animation-content p {
+        font-size: 2em;
+        color: var(--zeus-gold);
+        font-weight: bold;
+        text-shadow: var(--glow-md) var(--zeus-gold);
+        letter-spacing: 1px;
+    }
+
+    marquee {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        color: var(--zeus-gold);
+        padding: 5px 0;
+        margin-bottom: 10px;
+        font-size: 0.9em;
+        border-top: 1px solid var(--zeus-gold);
+        border-bottom: 1px solid var(--zeus-gold);
+        box-shadow: 0 0 10px rgba(255,215,0,0.3);
+    }
+
+    @media (max-width: 768px) {
+        body { padding: 5px; }
+        h1 { font-size: 1.5em; margin-bottom: 10px; }
+        .slot-frame { padding: 5px; }
+        .slot-grid {
+            grid-template-columns: repeat(6, min(50px, 15vw));
+            grid-template-rows: repeat(5, min(50px, 15vw));
+            gap: 2px;
         }
-    </style>
+        .tile { font-size: min(25px, 6vw); border-radius: 4px; }
+        .multiplier { font-size: 1.5em; padding: 5px 10px; top: 5px; right: 5px; }
+        .spin-button { width: 60px; height: 60px; font-size: 0.9em; bottom: 10px; }
+        .bet-buttons-container button { padding: 6px 12px; font-size: 0.8em; border-radius: 20px; }
+        .info-box { font-size: 0.8em; padding: 6px 10px; margin: 3px; }
+        .win-animation-content h2 { font-size: 1.8em; }
+        .win-animation-content p { font-size: 1.5em; }
+    }
+  </style>
 </head>
 <body>
-    <div id="game-container">
-        <div id="top-info-panel">
-            SALDO: Rp. <span id="current-balance">0</span>
-        </div>
+  <audio id="rollSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-fast-sci-fi-sweep-1946.mp3"></audio>
+  <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
+  <audio id="winBigSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-final-level-bonus-2061.mp3"></audio>
+  <audio id="breakSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
+  <div id="popup" class="popup"></div>
+  <audio id="spinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-ball-tap-2073.mp3"></audio>
+  <audio id="bgm" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" loop></audio>
+  <audio id="freeSpinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3"></audio>
+  <audio id="freeSpinBGM" src="https://www.bensound.com/bensound-music/bensound-epic.mp3" loop></audio>
 
-        <div id="top-tumble-win-display">
-            KEMENANGAN: 0
-        </div>
+  <marquee>•RASAKAN KEKUATAN ZEUS DENGAN KEMENANGAN TAK TERHINGGA!•RAIH SCATTER DAN MASUKI GERBANG OLYMPUS UNTUK MAXWIN!•</marquee>
 
-        <div id="bottom-ui-panel">
-            <div id="main-controls">
-                <button id="min-bet-button" class="bet-button">MIN</button>
-                <button id="minus-bet-button" class="bet-button">-</button>
-                <button id="spin-button">PUTAR</button>
-                <button id="plus-bet-button" class="bet-button">+</button>
-                <button id="max-bet-button" class="bet-button">MAX</button>
-            </div>
-            <div class="info-display-row">
-                <div class="ui-item" id="bet-display">
-                    <label>TARUHAN:</label>
-                    <span id="current-bet-value">100</span>
-                </div>
-                <div class="ui-item" id="win-display">
-                    <label>MENANG:</label>
-                    <span id="current-win-value">0</span>
-                </div>
-                <div class="ui-item" id="multiplier-display">
-                    <label>PENGGANDA:</label>
-                    <span id="current-multiplier-value">1x</span>
-                </div>
-                <div class="ui-item" id="freespin-display">
-                    <label>FREE SPINS:</label>
-                    <span id="free-spin-count">0</span>
-                </div>
-            </div>
-        </div>
+  <h1>Gates of Olympus<hr></h1>
+  <div class="slot-frame">
+    <div class="slot-grid" id="grid"></div>
+    <div class="multiplier" id="multiplierDisplay">x1</div>
+  </div>
+
+  <div class="controls-container">
+    <div class="info-box balance-box" id="balanceDisplay">Saldo: Rp0</div>
+    <div class="info-box bet-box" id="betDisplay">BET: 100</div>
+    <div class="info-box freespin-box" id="freeSpinDisplay">Free Spins: 0</div>
+  </div>
+
+  <div class="bet-buttons-container">
+    <button id="minBetBtn">MIN</button>
+    <button id="betMinus">-</button>
+    <button id="betPlus">+</button>
+    <button id="maxBetBtn">MAX</button>
+  </div>
+
+  <button class="spin-button" id="spinButton">SPIN</button>
+
+  <div id="freeSpinWinOverlay" class="win-animation-overlay">
+    <div class="win-animation-content">
+      <h2>FREE SPIN SELESAI!</h2>
+      <p>TOTAL KEMENANGAN: <span id="freeSpinTotalWin">Rp0</span></p>
     </div>
+  </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script>
-        const supabase = window.supabase.createClient(
-            'https://vqmfachxnjyxwuavpgds.supabase.co',
-            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
-        );
+  <script>
+    const grid = document.getElementById('grid');
+    const spinButton = document.getElementById('spinButton');
+    const balanceDisplay = document.getElementById('balanceDisplay');
+    const betDisplay = document.getElementById('betDisplay');
+    const multiplierDisplay = document.getElementById('multiplierDisplay');
+    const rollSound = document.getElementById('rollSound');
+    const winSmallSound = document.getElementById('winSmallSound');
+    const winBigSound = document.getElementById('winBigSound');
+    const breakSound = document.getElementById('breakSound');
+    const betMinusBtn = document.getElementById('betMinus');
+    const betPlusBtn = document.getElementById('betPlus');
+    const minBetBtn = document.getElementById('minBetBtn');
+    const maxBetBtn = document.getElementById('maxBetBtn');
+    const freeSpinDisplay = document.getElementById('freeSpinDisplay');
+    const freeSpinWinOverlay = document.getElementById('freeSpinWinOverlay');
+    const freeSpinTotalWinDisplay = document.getElementById('freeSpinTotalWin');
 
-        let user; 
-        let userSaldo = 0;
-        let userId = null; 
-        
-        // --- DOM Elements ---
-        const gameContainer = document.getElementById('game-container');
-        const topInfoPanel = document.getElementById('top-info-panel');
-        const balanceDisplay = document.getElementById('current-balance');
-        const topTumbleWinDisplay = document.getElementById('top-tumble-win-display');
-        const bottomUiPanel = document.getElementById('bottom-ui-panel');
+    // Supabase Configuration - GANTI DENGAN KUNCI ANDA YANG SEBENARNYA!
+    const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        const spinButton = document.getElementById('spin-button');
-        const minBetButton = document.getElementById('min-bet-button');
-        const minusBetButton = document.getElementById('minus-bet-button');
-        const plusBetButton = document.getElementById('plus-bet-button');
-        const maxBetButton = document.getElementById('max-bet-button');
+    // Gates of Olympus grid size
+    const width = 6;
+    const height = 5;
 
-        const betDisplay = document.getElementById('current-bet-value');
-        const winDisplay = document.getElementById('current-win-value');
-        const multiplierDisplay = document.getElementById('current-multiplier-value');
-        const freespinDisplay = document.getElementById('free-spin-count');
+    // Symbol data for Gates of Olympus
+    // GANTI DENGAN URL GAMBAR SIMBOL ZEUS ASLI ANDA
+    const SYMBOLS_DATA = [
+        { id: 'gem_blue', emoji: '🔷', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(4).jpeg', payout: { '8': 0.25, '10': 0.5, '12': 0.75, '15': 1.25, '20': 2.5, '25': 5, '30': 8 } },
+        { id: 'gem_green', emoji: '💚', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(3).jpeg', payout: { '8': 0.4, '10': 0.8, '12': 1.2, '15': 2, '20': 4, '25': 7, '30': 10 } },
+        { id: 'gem_yellow', emoji: '💛', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(2).jpeg', payout: { '8': 0.5, '10': 1, '12': 1.5, '15': 2.5, '20': 5, '25': 8, '30': 12 } },
+        { id: 'gem_purple', emoji: '💜', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download.jpeg', payout: { '8': 0.6, '10': 1.2, '12': 1.8, '15': 3, '20': 6, '25': 10, '30': 15 } },
+        { id: 'gem_red', emoji: '❤️', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(2).jpeg', payout: { '8': 0.75, '10': 1.5, '12': 2.25, '15': 4, '20': 8, '25': 12, '30': 20 } },
+        { id: 'goblet', emoji: '🏆', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(3).jpeg', payout: { '8': 1, '10': 2, '12': 3, '15': 5, '20': 10, '25': 15, '30': 25 } },
+        { id: 'ring', emoji: '💍', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(6).jpeg', payout: { '8': 1.2, '10': 2.4, '12': 3.6, '15': 6, '20': 12, '25': 18, '30': 30 } },
+        { id: 'hourglass', emoji: '⏳', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(7).jpeg', payout: { '8': 1.5, '10': 3, '12': 4.5, '15': 7.5, '20': 15, '25': 22.5, '30': 37.5 } },
+        { id: 'crown', emoji: '👑', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(8).jpeg', payout: { '8': 2, '10': 4, '12': 6, '15': 10, '20': 20, '25': 30, '30': 50 } }
+    ];
 
-        // --- Game Configuration ---
-        const app = new PIXI.Application({
-            backgroundColor: 0x0d081a,
-            antialias: true,
-            resizeTo: () => {
-                const canvasWidth = gameContainer.clientWidth - 40;
-                const canvasHeight = gameContainer.clientHeight - (topInfoPanel.clientHeight + bottomUiPanel.clientHeight);
-                app.renderer.resize(canvasWidth, canvasHeight);
-                app.view.style.width = canvasWidth + 'px';
-                app.view.style.height = canvasHeight + 'px';
-                return app.view;
-            }
-        });
-        gameContainer.insertBefore(app.view, bottomUiPanel);
+    // Placeholder images for Zeus Orb and Scatter
+    const ORB_DATA = { id: 'ORB', emoji: '⚡', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zeus/orb.png' }; // Ganti dengan URL gambar Orb Anda
+    const SCATTER_DATA = { id: 'SCATTER', emoji: '🔱', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//zeuz.jpeg', payout: { '4': 3, '5': 5, '6': 100 } }; // Ganti dengan URL gambar Scatter Zeus Anda
 
-        const numReels = 6;
-        const numRows = 5;
-        const symbolBaseSize = 100;
-        let currentSymbolSize = symbolBaseSize;
+    // Combine all unique symbol IDs for random generation
+    const ALL_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id).concat(ORB_DATA.id, SCATTER_DATA.id);
+    const REGULAR_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id); // Only regular symbols for initial reel fill
 
-        const BET_LEVELS = [50, 100, 200, 500, 1000, 2000, 5000];
-        let currentBetIndex = 1;
-        let betAmount = BET_LEVELS[currentBetIndex];
+    let currentSymbols = [];
+    let balance = 0;
+    const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]; // Defined bet levels
+    let currentBetIndex = 0;
+    let bet = BET_LEVELS[currentBetIndex];
 
-        let currentBalance = 0;
-        let totalWinThisSpin = 0;
-        let currentTumbleMultiplier = 1;
-        let globalFreeSpinMultiplier = 1;
-        let freeSpinCount = 0;
-        let inFreeSpins = false;
-        let isSpinning = false;
+    let currentGlobalMultiplier = 1; // Global multiplier for Gates of Olympus
+    let freeSpinCount = 0;
+    let totalFreeSpinWin = 0;
+    let isInFreeSpinMode = false;
+    let isSpinning = false;
+    let globalUid = null; // Supabase UID
 
-        // --- ALL ASSETS VIA DIRECT URL ---
-        const EMOJI_SYMBOLS = ['🐷', '🐻', '🐤', '🐯', '🐔', '🐬', '🐒', '🦜', '🦖', '🕊️'];
+    // --- Supabase Integration ---
+    async function loadSaldo() {
+        const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-        // URL GAMBAR SCATTER & MULTIPLIER (dari GitHub saya)
-        const SCATTER_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//zeuz.jpeg';
-        const MULTIPLIER_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg';
-
-        const SYMBOL_TYPES = {
-            EMOJI_START: 0,
-            SCATTER: EMOJI_SYMBOLS.length,
-            MULTIPLIER: EMOJI_SYMBOLS.length + 1
-        };
-        const TOTAL_SYMBOL_TYPES = EMOJI_SYMBOLS.length + 2;
-
-        const symbolTextures = []; // Akan diisi saat pemuatan
-
-        // URL SUARA (dari FreeSound.org - pastikan lisensinya memungkinkan penggunaan ini)
-        const SOUND_SPIN_URL = '___';
-        const SOUND_TUMBLE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-experience-level-increased-2062.mp3';
-        const SOUND_REEL_STOP_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3';
-        const SOUND_WIN_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3';
-        const sounds = {}; // Akan diisi setelah Audio dimuat
-
-
-        const emojiTextStyle = new PIXI.TextStyle({
-            fontSize: 70,
-            fill: '#FFFFFF',
-            align: 'center',
-            fontWeight: 'bold',
-            stroke: '#000000',
-            strokeThickness: 5,
-            dropShadow: true,
-            dropShadowColor: '#00ffff',
-            dropShadowBlur: 10,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 5,
-        });
-
-        const multiplierTextStyle = new PIXI.TextStyle({
-            fontSize: 40,
-            fill: '#ff00ff',
-            align: 'center',
-            fontWeight: 'bold',
-            stroke: '#000000',
-            strokeThickness: 4,
-            dropShadow: true,
-            dropShadowColor: '#00ffff',
-            dropShadowBlur: 8,
-            dropShadowAngle: Math.PI / 6,
-            dropShadowDistance: 3,
-        });
-
-        const PAYOUT_TABLE = {
-            8:  { 0: 0.5, 1: 0.5, 2: 0.5, 3: 0.5, 4: 0.5, 5: 1, 6: 1, 7: 1, 8: 2, 9: 2, [SYMBOL_TYPES.SCATTER]: 3 },
-            10: { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 4, 9: 4, [SYMBOL_TYPES.SCATTER]: 5 },
-            12: { 0: 1.5, 1: 1.5, 2: 1.5, 3: 1.5, 4: 1.5, 5: 3, 6: 3, 7: 3, 8: 6, 9: 6, [SYMBOL_TYPES.SCATTER]: 10 },
-            15: { 0: 3, 1: 3, 2: 3, 3: 3, 4: 3, 5: 6, 6: 6, 7: 6, 8: 12, 9: 12, [SYMBOL_TYPES.SCATTER]: 20 },
-            20: { 0: 8, 1: 8, 2: 8, 3: 8, 4: 8, 5: 16, 6: 16, 7: 16, 8: 32, 9: 32, [SYMBOL_TYPES.SCATTER]: 100 },
-            30: { [SYMBOL_TYPES.SCATTER]: 500 }
-        };
-
-        const MULTIPLIER_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 50, 100, 250, 500];
-
-        // --- Reels Setup ---
-        const reels = [];
-        const reelContainer = new PIXI.Container();
-        app.stage.addChild(reelContainer);
-
-        let currentReelSymbols = [];
-
-        function resizeGame() {
-            currentSymbolSize = Math.min(symbolBaseSize, app.renderer.height / numRows);
-            emojiTextStyle.fontSize = currentSymbolSize * 0.7;
-            multiplierTextStyle.fontSize = currentSymbolSize * 0.4;
-
-            const totalReelWidth = numReels * currentSymbolSize * 1.1;
-            reelContainer.x = (app.renderer.width - totalReelWidth) / 2;
-            reelContainer.y = (app.renderer.height - (numRows * currentSymbolSize)) / 2;
-
-            reels.forEach((reel, rIdx) => {
-                for (let i = 0; i < reel.symbols.length; i++) {
-                    const symbolSprite = reel.symbols[i];
-                    
-                    if (symbolSprite instanceof PIXI.Sprite) {
-                        symbolSprite.scale.set(currentSymbolSize / symbolSprite.texture.width);
-                        symbolSprite.x = rIdx * currentSymbolSize * 1.1 + currentSymbolSize / 2;
-                        symbolSprite.y = i * currentSymbolSize + currentSymbolSize / 2;
-                    } else if (symbolSprite instanceof PIXI.Text) {
-                        symbolSprite.style = emojiTextStyle;
-                        symbolSprite.scale.set(1);
-                        symbolSprite.x = rIdx * currentSymbolSize * 1.1 + currentSymbolSize / 2;
-                        symbolSprite.y = i * currentSymbolSize + currentSymbolSize / 2;
-                    }
-
-                    if (symbolSprite.multiplierText) {
-                        symbolSprite.multiplierText.style = multiplierTextStyle;
-                        symbolSprite.multiplierText.x = 0;
-                        symbolSprite.multiplierText.y = currentSymbolSize * 0.2;
-                    }
-                }
-            });
+        if (authError || !user) {
+            console.warn('Pengguna tidak login atau sesi berakhir. Mengalihkan ke halaman login...');
+            window.location.href = "index.html"; // Mengarahkan ke halaman login Anda
+            return;
         }
 
-        window.addEventListener('resize', () => {
-            app.resize();
-            resizeGame();
-        });
+        globalUid = user.id;
 
-        // --- Supabase Integration Functions ---
-        async function getPlayerBalance() {
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
+        try {
+            const { data: userData, error: fetchError } = await supabase
+                .from('users_data') // Nama tabel di Supabase
+                .select('saldo')
+                .eq('user_id', globalUid) // Asumsi kolom `user_id` di tabel `users_data`
+                .single();
 
-                if (!user) {
-                    console.warn('Pengguna tidak login. Menggunakan saldo default untuk pengujian.');
-                    currentBalance = 500000;
-                    balanceDisplay.textContent = currentBalance.toLocaleString();
-                    return;
-                }
+            if (fetchError && fetchError.code === 'PGRST116') { // No rows found for this user
+                console.warn('Pengguna belum memiliki entri saldo. Membuat entri baru...');
+                const initialBalance = 500000; // Saldo awal untuk pengguna baru
 
-                const { data, error } = await supabase
+                const { data: newUserData, error: insertError } = await supabase
                     .from('users_data')
+                    .insert([{ user_id: globalUid, saldo: initialBalance }])
                     .select('saldo')
-                    .eq('id', user.id)
                     .single();
 
-                if (error) throw error;
-
-                currentBalance = data.saldo;
-                balanceDisplay.textContent = currentBalance.toLocaleString();
-                console.log('Saldo berhasil dimuat:', currentBalance);
-
-            } catch (error) {
-                console.error('Error fetching balance:', error.message);
-                alert('Gagal memuat saldo: ' + error.message + '. Menggunakan saldo default.');
-                currentBalance = 500000;
-                balanceDisplay.textContent = currentBalance.toLocaleString();
-            }
-        }
-
-        async function updatePlayerBalance(amount) {
-            currentBalance += amount;
-            if (currentBalance < 0) currentBalance = 0;
-            balanceDisplay.textContent = currentBalance.toLocaleString();
-            console.log('Saldo diuji diperbarui:', currentBalance);
-
-            try {
-                const { data: { user } } = await supabase.auth.getUser();
-                if (user) {
-                    const { data, error } = await supabase
-                        .from('users_data')
-                        .update({ saldo: currentBalance })
-                        .eq('id', user.id)
-                        .select('saldo')
-                        .single();
-                    if (error) throw error;
-                    console.log('Saldo Supabase diperbarui:', data.saldo);
-                }
-                return true;
-            } catch (error) {
-                console.error('Error updating balance to Supabase:', error.message);
-                return true;
-            }
-        }
-
-        // --- Game Core Logic ---
-        function createSymbolSprite(symbolId, specificMultiplier = null) {
-            let sprite;
-            if (symbolId >= SYMBOL_TYPES.EMOJI_START && symbolId < SYMBOL_TYPES.SCATTER) {
-                sprite = new PIXI.Text(EMOJI_SYMBOLS[symbolId], emojiTextStyle);
-            } else if (symbolId === SYMBOL_TYPES.SCATTER) {
-                sprite = new PIXI.Sprite(symbolTextures[SYMBOL_TYPES.SCATTER]);
-            } else if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
-                sprite = new PIXI.Sprite(symbolTextures[SYMBOL_TYPES.MULTIPLIER]);
-                const multiplierValue = specificMultiplier || MULTIPLIER_VALUES[Math.floor(Math.random() * MULTIPLIER_VALUES.length)];
-                const multiplierText = new PIXI.Text(`x${multiplierValue}`, multiplierTextStyle);
-                multiplierText.anchor.set(0.5);
-                sprite.addChild(multiplierText);
-                sprite.multiplierValue = multiplierValue;
-                sprite.multiplierText = multiplierText;
+                if (insertError) throw insertError;
+                balance = newUserData.saldo;
+                console.log('Saldo baru berhasil dibuat dan dimuat:', balance);
+            } else if (fetchError) {
+                throw fetchError;
             } else {
-                sprite = new PIXI.Text('?', emojiTextStyle);
+                balance = userData.saldo;
+                console.log('Saldo berhasil dimuat:', balance);
             }
-            sprite.anchor.set(0.5);
-            return sprite;
+        } catch (error) {
+            console.error('Error memuat saldo dari Supabase:', error.message);
+            alert('Gagal memuat saldo. Silakan coba lagi.');
+            balance = 0; // Set to 0 if error
+        } finally {
+            updateBalance(0); // Update display
         }
+    }
 
-        function fillReelsRandomly(isTumble = false) {
-            const newReelSymbols = [];
-            reels.forEach((reel, rIdx) => {
-                const reelColumn = [];
-                for (let i = 0; i < numRows; i++) {
-                    let symbolId;
-                    let multiplierValue = null;
+    async function saveBalanceToSupabase() {
+        if (!globalUid) {
+            console.warn('Tidak ada UID pengguna untuk menyimpan saldo.');
+            return;
+        }
+        try {
+            const { error } = await supabase
+                .from('users_data')
+                .update({ saldo: balance })
+                .eq('user_id', globalUid); // Asumsi kolom `user_id`
+            if (error) throw error;
+            console.log('Saldo berhasil disimpan:', balance);
+        } catch (error) {
+            console.error('Error menyimpan saldo ke Supabase:', error.message);
+        }
+    }
 
-                    if (isTumble && currentReelSymbols[rIdx] && currentReelSymbols[rIdx][i] !== null) {
-                        symbolId = currentReelSymbols[rIdx][i][0];
-                        multiplierValue = currentReelSymbols[rIdx][i][1];
-                    } else {
-                        do {
-                            symbolId = Math.floor(Math.random() * TOTAL_SYMBOL_TYPES);
-                            if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
-                                multiplierValue = MULTIPLIER_VALUES[Math.floor(Math.random() * MULTIPLIER_VALUES.length)];
+    window.onload = () => {
+        loadSaldo();
+        init();
+    };
+
+    // --- Game Logic ---
+
+    // Helper to get symbol object by ID
+    function getSymbolById(id) {
+        if (id === ORB_DATA.id) return ORB_DATA;
+        if (id === SCATTER_DATA.id) return SCATTER_DATA;
+        return SYMBOLS_DATA.find(s => s.id === id);
+    }
+
+    // Function to generate random symbols for initial grid fill
+    function generateRandomSymbols() {
+        const arr = [];
+        for (let i = 0; i < width * height; i++) {
+            // Gates of Olympus symbols often don't have Wilds on reels
+            // Orbs are multiplier symbols, not a replacement like Wilds
+            // Scatter appears anywhere.
+            const rand = Math.random();
+            let symbolId;
+
+            // Adjust probabilities as needed
+            if (rand < 0.01) { // 1% chance for Scatter (Zeus)
+                symbolId = SCATTER_DATA.id;
+            } else if (rand < 0.08) { // 7% chance for Orb (multiplier)
+                symbolId = ORB_DATA.id;
+            } else { // Regular symbols
+                symbolId = REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
+            }
+            arr.push(symbolId);
+        }
+        return arr;
+    }
+    function renderGrid(symbolsArr) {
+        grid.innerHTML = '';
+        symbolsArr.forEach(symbolId => {
+            const div = document.createElement('div');
+            div.className = 'tile';
+            const symbolData = getSymbolById(symbolId);
+
+            if (symbolData.imgUrl) {
+                const img = document.createElement('img');
+                img.src = symbolData.imgUrl;
+                img.alt = symbolData.id;
+                div.appendChild(img);
+            } else {
+                div.textContent = symbolData.emoji;
+            }
+
+            if (symbolId === ORB_DATA.id) {
+                div.classList.add('special-symbol'); // For Orb
+            } else if (symbolId === SCATTER_DATA.id) {
+                div.classList.add('scatter-symbol'); // For Zeus Scatter
+            }
+            grid.appendChild(div);
+        });
+    }
+
+    function animateReelShake(col) {
+        return new Promise(resolve => {
+            const reelTiles = [];
+            for (let row = 0; row < height; row++) {
+                reelTiles.push(grid.children[row * width + col]);
+            }
+
+            let position = 0;
+            const reelSpeed = 30;
+            const targetDuration = 1000 + col * 150;
+            let startTime = null;
+
+            const rollSoundInstance = rollSound.cloneNode(true);
+            rollSoundInstance.volume = 0.3;
+            rollSoundInstance.play().catch(e => console.log("Roll sound play blocked:", e));
+
+            function step(timestamp) {
+                if (!startTime) startTime = timestamp;
+                const elapsed = timestamp - startTime;
+
+                if (elapsed < targetDuration) {
+                    position += reelSpeed;
+                    if (position >= reelTiles[0].offsetHeight) {
+                        position -= reelTiles[0].offsetHeight;
+                        for (let r = height - 1; r >= 0; r--) {
+                            const currentTile = reelTiles[r];
+                            const nextSymbolId = (r === 0) ? generateSingleRandomSymbol() : currentSymbols[(r - 1) * width + col];
+
+                            currentTile.innerHTML = '';
+                            currentTile.classList.remove('special-symbol', 'scatter-symbol');
+                            const symbolData = getSymbolById(nextSymbolId);
+
+                            if (symbolData.imgUrl) {
+                                const img = document.createElement('img');
+                                img.src = symbolData.imgUrl;
+                                img.alt = symbolData.id;
+                                currentTile.appendChild(img);
                             } else {
-                                multiplierValue = null;
+                                currentTile.textContent = symbolData.emoji;
                             }
-                        } while (
-                            (symbolId === SYMBOL_TYPES.SCATTER && Math.random() > 0.1) ||
-                            (symbolId === SYMBOL_TYPES.MULTIPLIER && Math.random() > 0.15)
-                        );
-                    }
-                    reelColumn.push([symbolId, multiplierValue]);
 
-                    const oldSprite = reel.symbols[i];
-                    if (oldSprite) {
-                        reel.container.removeChild(oldSprite);
-                        if (oldSprite.multiplierText) oldSprite.multiplierText.destroy();
-                        oldSprite.destroy();
-                    }
-                    
-                    const newSprite = createSymbolSprite(symbolId, multiplierValue);
-                    newSprite.x = rIdx * currentSymbolSize * 1.1 + currentSymbolSize / 2;
-                    newSprite.y = i * currentSymbolSize + currentSymbolSize / 2;
-                    
-                    reel.symbols[i] = newSprite;
-                    reel.container.addChild(newSprite);
-                    newSprite.alpha = 1;
-                    newSprite.visible = true;
-                    if (newSprite instanceof PIXI.Sprite) {
-                        newSprite.scale.set(currentSymbolSize / newSprite.texture.width);
-                    } else {
-                        newSprite.scale.set(1);
-                        newSprite.style = emojiTextStyle;
-                    }
-                }
-                newReelSymbols.push(reelColumn);
-            });
-            currentReelSymbols = newReelSymbols;
-        }
-
-        function calculateWinnings() {
-            let spinWin = 0;
-            let multipliersInThisTumble = 0;
-            let winningSymbolsPositions = [];
-
-            const symbolCounts = {};
-            const symbolPositions = {};
-            let scatterCount = 0;
-
-            for (let c = 0; c < numReels; c++) {
-                for (let r = 0; r < numRows; r++) {
-                    const [symbolId, multiplierValue] = currentReelSymbols[c][r];
-                    symbolCounts[symbolId] = (symbolCounts[symbolId] || 0) + 1;
-                    if (!symbolPositions[symbolId]) {
-                        symbolPositions[symbolId] = [];
-                    }
-                    symbolPositions[symbolId].push({ col: c, row: r });
-
-                    if (symbolId === SYMBOL_TYPES.SCATTER) {
-                        scatterCount++;
-                    }
-                }
-            }
-            let hasWin = false;
-            for (const symbolIdStr in symbolCounts) {
-                const type = parseInt(symbolIdStr);
-                const count = symbolCounts[type];
-
-                if (type !== SYMBOL_TYPES.MULTIPLIER && PAYOUT_TABLE[count] && PAYOUT_TABLE[count][type] !== undefined) {
-                    if (type === SYMBOL_TYPES.SCATTER && count >= 4) {
-                        const scatterPayout = PAYOUT_TABLE[count][type];
-                        const win = betAmount * scatterPayout;
-                        spinWin += win;
-                        hasWin = true;
-                        winningSymbolsPositions.push(...symbolPositions[type]);
-                    } else if (type !== SYMBOL_TYPES.SCATTER && count >= 8) {
-                        const payoutMultiplier = PAYOUT_TABLE[count][type];
-                        const win = betAmount * payoutMultiplier;
-                        spinWin += win;
-                        hasWin = true;
-                        winningSymbolsPositions.push(...symbolPositions[type]);
-                    }
-                }
-            }
-
-            for (let c = 0; c < numReels; c++) {
-                for (let r = 0; r < numRows; r++) {
-                    const [symbolId, multiplierValue] = currentReelSymbols[c][r];
-                    if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
-                        multipliersInThisTumble += multiplierValue;
-                        winningSymbolsPositions.push({ col: c, row: r });
-                    }
-                }
-            }
-
-            currentTumbleMultiplier = multipliersInThisTumble > 0 ? multipliersInThisTumble : 1;
-            
-            if (inFreeSpins) {
-                globalFreeSpinMultiplier += multipliersInThisTumble;
-                spinWin *= globalFreeSpinMultiplier;
-                multiplierDisplay.textContent = `${globalFreeSpinMultiplier}x`;
-            } else {
-                spinWin *= currentTumbleMultiplier;
-                multiplierDisplay.textContent = `${currentTumbleMultiplier}x`;
-            }
-
-            return {
-                winAmount: spinWin,
-                hasWin: hasWin || multipliersInThisTumble > 0,
-                winningSymbolsPositions: winningSymbolsPositions,
-                scatterCount: scatterCount,
-                multipliersInThisTumble: multipliersInThisTumble
-            };
-        }
-
-        async function performTumble(winningSymbolsPositions) {
-            if (winningSymbolsPositions.length === 0) return;
-
-            sounds.tumble?.play();
-
-            const promises = [];
-            winningSymbolsPositions.forEach(pos => {
-                const sprite = reels[pos.col].symbols[pos.row];
-                if (sprite) {
-                    promises.push(new Promise(resolve => {
-                        gsap.to(sprite.scale, { x: 0, y: 0, duration: 0.3, ease: "power2.in" });
-                        gsap.to(sprite, { alpha: 0, duration: 0.3, onComplete: () => {
-                            sprite.visible = false;
-                            sprite.alpha = 1;
-                            sprite.scale.set(1);
-                            if (sprite.multiplierText) {
-                                sprite.multiplierText.visible = false;
+                            if (nextSymbolId === ORB_DATA.id) {
+                                currentTile.classList.add('special-symbol');
+                            } else if (nextSymbolId === SCATTER_DATA.id) {
+                                currentTile.classList.add('scatter-symbol');
                             }
-                            resolve();
-                        }});
-                    }));
-                }
-                currentReelSymbols[pos.col][pos.row] = null;
-            });
-
-            await Promise.all(promises);
-
-            reels.forEach((reel, c) => {
-                let emptySpots = 0;
-                const newColumnData = [];
-                for (let r = numRows - 1; r >= 0; r--) {
-                    if (currentReelSymbols[c][r] === null) {
-                        emptySpots++;
-                    } else {
-                        newColumnData.unshift(currentReelSymbols[c][r]);
-                    }
-                }
-                for (let i = 0; i < emptySpots; i++) {
-                    let symbolId;
-                    let multiplierValue = null;
-                    do {
-                        symbolId = Math.floor(Math.random() * TOTAL_SYMBOL_TYPES);
-                        if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
-                            multiplierValue = MULTIPLIER_VALUES[Math.floor(Math.random() * MULTIPLIER_VALUES.length)];
+                            currentSymbols[r * width + col] = nextSymbolId;
                         }
-                    } while ((symbolId === SYMBOL_TYPES.SCATTER && Math.random() > 0.1) ||
-                             (symbolId === SYMBOL_TYPES.MULTIPLIER && Math.random() > 0.15));
-                    newColumnData.unshift([symbolId, multiplierValue]);
+                    }
+                    for (let r = 0; r < height; r++) {
+                        reelTiles[r].style.transform = `translateY(${position}px)`;
+                    }
+                    requestAnimationFrame(step);
+                } else {
+                    rollSoundInstance.pause();
+                    rollSoundInstance.currentTime = 0;
+                    for (let r = 0; r < height; r++) {
+                        reelTiles[r].style.transform = 'translateY(0)';
+                    }
+                    resolve();
                 }
-                currentReelSymbols[c] = newColumnData;
+            }
+            requestAnimationFrame(step);
+        });
+    }
 
-                for (let r = 0; r < numRows; r++) {
-                    const [symbolId, multiplierValue] = currentReelSymbols[c][r];
-                    const oldSprite = reel.symbols[r];
-                    if (oldSprite) {
-                        reel.container.removeChild(oldSprite);
-                        if (oldSprite.multiplierText) oldSprite.multiplierText.destroy();
-                        oldSprite.destroy();
-                    }
+    function generateSingleRandomSymbol() {
+        const rand = Math.random();
+        if (rand < 0.01) { // 1% Scatter
+            return SCATTER_DATA.id;
+        } else if (rand < 0.08) { // 7% Orb
+            return ORB_DATA.id;
+        } else {
+            return REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
+        }
+    }
 
-                    const newSprite = createSymbolSprite(symbolId, multiplierValue);
-                    newSprite.x = c * currentSymbolSize * 1.1 + currentSymbolSize / 2;
-                    newSprite.y = (r - emptySpots) * currentSymbolSize + currentSymbolSize / 2;
-                    
-                    reel.symbols[r] = newSprite;
-                    reel.container.addChild(newSprite);
-                    newSprite.alpha = 1;
-                    newSprite.visible = true;
-                    if (newSprite instanceof PIXI.Sprite) {
-                        newSprite.scale.set(currentSymbolSize / newSprite.texture.width);
-                    } else {
-                        newSprite.scale.set(1);
-                        newSprite.style = emojiTextStyle;
-                    }
-                    if (newSprite.multiplierText) {
-                        newSprite.multiplierText.visible = true;
-                    }
+    // --- Gates of Olympus Specific Win Logic (Cluster Pays + Orbs) ---
+    function getWinningTiles(symbolsArr) {
+        const winningTiles = new Set();
+        let scatterCount = 0;
+        const scatterIndices = [];
+        let totalOrbsMultiplier = 0; // Sum of all Orb values
+        const orbIndices = [];
 
-                    gsap.to(newSprite,
-                        { y: r * currentSymbolSize + currentSymbolSize / 2, duration: 0.5 + r * 0.05, ease: "bounce.out" }
-                    );
-                }
-            });
-            await new Promise(resolve => setTimeout(resolve, 800));
+        // Count scatters and collect orb multipliers
+        for (let i = 0; i < symbolsArr.length; i++) {
+            if (symbolsArr[i] === SCATTER_DATA.id) {
+                scatterCount++;
+                scatterIndices.push(i);
+            } else if (symbolsArr[i] === ORB_DATA.id) {
+                // In actual Gates of Olympus, Orbs have random values (e.g., 2x-500x)
+                // For simplicity, let's assign a random value here.
+                const orbValue = [2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 15, 20, 25, 50, 100, 250, 500][Math.floor(Math.random() * 17)];
+                totalOrbsMultiplier += orbValue;
+                orbIndices.push(i);
+            }
         }
 
-        // --- Main Game Loop & Spin Logic ---
-        spinButton.addEventListener('click', async () => {
-            if (isSpinning) return;
+        let currentRoundWin = 0;
+        const countedSymbols = {}; // Track symbols already part of a cluster win
 
-            if (!inFreeSpins && currentBalance < betAmount) {
-                alert('Saldo tidak cukup! Silakan deposit atau naikkan taruhan.');
-                return;
-            }
+        // Find clusters of 8 or more symbols anywhere on the grid
+        for (const symbolData of SYMBOLS_DATA) {
+            const currentSymbolId = symbolData.id;
+            let count = 0;
+            const currentSymbolIndices = [];
 
-            isSpinning = true;
-            spinButton.disabled = true;
-            minBetButton.disabled = true;
-            minusBetButton.disabled = true;
-            plusBetButton.disabled = true;
-            maxBetButton.disabled = true;
-
-            topTumbleWinDisplay.style.display = 'none';
-            winDisplay.textContent = '0';
-            totalWinThisSpin = 0;
-            
-            if (!inFreeSpins) {
-                currentTumbleMultiplier = 1;
-                multiplierDisplay.textContent = '1x';
-            } else {
-                multiplierDisplay.textContent = `${globalFreeSpinMultiplier}x`;
-            }
-
-            sounds.spin?.play();
-
-            if (!inFreeSpins) {
-                const success = await updatePlayerBalance(-betAmount);
-                if (!success) {
-                    isSpinning = false;
-                    spinButton.disabled = false;
-                    minBetButton.disabled = false;
-                    minusBetButton.disabled = false;
-                    plusBetButton.disabled = false;
-                    maxBetButton.disabled = false;
-                    return;
+            for (let i = 0; i < symbolsArr.length; i++) {
+                if (symbolsArr[i] === currentSymbolId) {
+                    count++;
+                    currentSymbolIndices.push(i);
                 }
-            } else {
-                freeSpinCount--;
-                freespinDisplay.textContent = freeSpinCount;
             }
 
-            reels.forEach(reel => {
-                reel.velocity = 0;
-                reel.position = 0;
-                reel.spinning = true;
-                reel.blur.blurY = 0;
-                reel.blur.blurX = 0;
-            });
+            if (count >= 8) { // Gates of Olympus needs 8+ symbols anywhere for a win
+                const payoutMultiplier = symbolData.payout[count];
+                if (payoutMultiplier) {
+                    currentRoundWin += bet * payoutMultiplier; // Payout directly based on bet and multiplier
+                    currentSymbolIndices.forEach(idx => winningTiles.add(idx)); // Mark as winning
+                }
+            }
+        }
 
-            const spinPromises = reels.map((reel, index) => {
-                return new Promise(resolve => {
-                    const spinDuration = 800 + index * 150;
-                    reel.velocity = Math.random() * 20 + 20;
-                    gsap.to(reel, {
-                        duration: spinDuration / 1000,
-                        velocity: 0,
-                        ease: "power2.out",
-                        onComplete: () => {
-                            reel.spinning = false;
-                            reels.forEach((r, rIdx) => {
-                                for (let sIdx = 0; sIdx < r.symbols.length; sIdx++) {
-                                    r.symbols[sIdx].y = sIdx * currentSymbolSize + currentSymbolSize / 2;
-                                }
-                            });
-                            sounds.reel_stop?.play();
-                            resolve();
-                        }
-                    });
+        // Add Scatter win (separate from cluster pays)
+        if (SCATTER_DATA.payout[scatterCount]) {
+            currentRoundWin += bet * SCATTER_DATA.payout[scatterCount];
+            scatterIndices.forEach(idx => winningTiles.add(idx));
+        }
+
+        // Apply Orb multiplier to total win of the spin/tumble
+        if (currentRoundWin > 0 && totalOrbsMultiplier > 0) {
+            // In Gates, Orbs multiply the total win of the current tumble, then sum up
+            currentRoundWin *= totalOrbsMultiplier;
+            // Add orb indices to winning tiles if they contributed to a win
+            orbIndices.forEach(idx => winningTiles.add(idx));
+        }
+
+        return {
+            winningTiles: Array.from(winningTiles),
+            scatterCount: scatterCount,
+            scatterIndices: scatterIndices,
+            currentRoundWin: currentRoundWin,
+            totalOrbsMultiplier: totalOrbsMultiplier // Return this for display
+        };
+    }
+
+    function animateWinningTiles(indices) {
+        document.querySelectorAll('.tile').forEach((tile, i) => {
+            if (indices.includes(i)) {
+                tile.classList.add('break');
+            } else {
+                tile.style.opacity = 0.5;
+            }
+        });
+        breakSound.currentTime = 0;
+        breakSound.play().catch(e => console.log("Break sound play blocked:", e));
+    }
+
+    async function handleTileCollapse(indicesToBreak) {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+
+        if (indicesToBreak.length > 0) {
+            animateWinningTiles(indicesToBreak);
+            await delay(500);
+        }
+
+        for (let i = 0; i < currentSymbols.length; i++) {
+            if (indicesToBreak.includes(i)) {
+                currentSymbols[i] = null;
+            } else {
+                const tileElement = grid.children[i];
+                if (tileElement && tileElement.style.opacity < 1) {
+                    tileElement.style.opacity = 1;
+                }
+            }
+        }
+
+        for (let col = 0; col < width; col++) {
+            const colSymbols = [];
+            for (let row = height - 1; row >= 0; row--) {
+                const idx = row * width + col;
+                if (currentSymbols[idx] !== null) {
+                    colSymbols.unshift(currentSymbols[idx]);
+                }
+            }
+
+            while (colSymbols.length < height) {
+                colSymbols.unshift(generateSingleRandomSymbol());
+            }
+            for (let row = 0; row < height; row++) {
+                currentSymbols[row * width + col] = colSymbols[row];
+            }
+        }
+        renderGrid(currentSymbols);
+    }
+
+    function updateBalance(amount) {
+        balance += amount;
+        balanceDisplay.textContent = `Saldo: Rp.${balance.toLocaleString('id-ID')}`;
+    }
+
+    function updateBetDisplay() {
+        betDisplay.textContent = `BET: ${bet.toLocaleString('id-ID')}`;
+    }
+
+    function updateFreeSpinDisplay() {
+        if (freeSpinCount > 0) {
+            freeSpinDisplay.textContent = `Free Spins: ${freeSpinCount}`;
+            freeSpinDisplay.style.display = 'block';
+        } else {
+            freeSpinDisplay.textContent = `Free Spins: 0`;
+            freeSpinDisplay.style.display = 'none';
+        }
+    }
+
+    function updateMultiplierDisplay(value) {
+        multiplierDisplay.textContent = `x${value}`;
+        multiplierDisplay.classList.add('zoom');
+        setTimeout(() => multiplierDisplay.classList.remove('zoom'), 300);
+    }
+
+    function showPopup(message) {
+        const popup = document.getElementById('popup');
+        popup.textContent = message;
+        popup.style.display = 'block';
+        setTimeout(() => {
+            popup.style.display = 'none';
+        }, 1500);
+    }
+
+    async function showFreeSpinWinAnimation(totalWin) {
+        freeSpinTotalWinDisplay.textContent = `Rp.${totalWin.toLocaleString('id-ID')}`;
+        freeSpinWinOverlay.style.opacity = '1';
+        freeSpinWinOverlay.style.visibility = 'visible';
+
+        winBigSound.currentTime = 0;
+        winBigSound.play().catch(e => console.log("Big win sound play blocked:", e));
+
+        await new Promise(resolve => setTimeout(resolve, 5000));
+        freeSpinWinOverlay.style.opacity = '0';
+        freeSpinWinOverlay.style.visibility = 'hidden';
+    }
+
+    async function spin() {
+        if (isSpinning) return;
+        if (!isInFreeSpinMode && balance < bet) {
+            showPopup('Saldo tidak cukup!');
+            return;
+        }
+
+        isSpinning = true;
+        spinButton.disabled = true;
+        betMinusBtn.disabled = true;
+        betPlusBtn.disabled = true;
+        minBetBtn.disabled = true;
+        maxBetBtn.disabled = true;
+
+        const spinSoundInstance = document.getElementById('spinSound').cloneNode(true);
+        spinSoundInstance.volume = 0.5;
+        spinSoundInstance.play().catch(e => console.log("Spin sound play blocked:", e));
+
+        if (!isInFreeSpinMode) {
+            updateBalance(-bet);
+            currentGlobalMultiplier = 1; // Reset global multiplier for new base game spin
+        } else {
+            freeSpinCount--;
+            updateFreeSpinDisplay();
+        }
+        updateMultiplierDisplay(currentGlobalMultiplier); // Display initial multiplier (1x or current FS value)
+
+        const reelPromises = [];
+        for (let col = 0; col < width; col++) {
+            reelPromises.push(animateReelShake(col));
+        }
+        await Promise.all(reelPromises);
+
+        let currentSpinTotalWin = 0; // Total win for this entire spin (including all tumbles)
+        let chainReaction = true;
+
+        while (chainReaction) {
+            chainReaction = false;
+            const { winningTiles, scatterCount, scatterIndices, currentRoundWin, totalOrbsMultiplier } = getWinningTiles(currentSymbols);
+
+            if (currentRoundWin > 0) {
+                chainReaction = true; // Continue tumbling if there's a win
+                currentSpinTotalWin += currentRoundWin; // Accumulate win from this tumble
+
+                // Update global multiplier if Orbs appeared in this tumble
+                if (totalOrbsMultiplier > 0) {
+                    currentGlobalMultiplier += totalOrbsMultiplier;
+                    updateMultiplierDisplay(currentGlobalMultiplier);
+                }
+
+                await handleTileCollapse(winningTiles); // Animate and replace
+                await new Promise(res => setTimeout(res, 600)); // Delay for visual clarity
+            } else {
+                // If no more wins, reset opacity of all tiles that might have been dimmed
+                document.querySelectorAll('.tile').forEach(tile => {
+                    if (tile.style.opacity < 1) {
+                        tile.style.opacity = 1;
+                    }
                 });
-            });
+            }
 
-            await Promise.all(spinPromises);
+            // Scatter check and Free Spin trigger/re-trigger
+            if (scatterCount >= 4) { // Gates of Olympus needs 4+ scatters for Free Spins
+                let newFreeSpins = 0;
+                if (scatterCount === 4) newFreeSpins = 15; // Base 15 FS
+                else if (scatterCount === 5) newFreeSpins = 20; // Example: +5 for 5 scatters
+                else if (scatterCount >= 6) newFreeSpins = 25; // Example: +10 for 6 scatters
 
-            let continueTumble = true;
-            let currentTumbleTotalWin = 0;
+                freeSpinCount += newFreeSpins;
+                showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
+                updateFreeSpinDisplay();
+                chainReaction = true; // Trigger tumble to remove scatters
 
-            while (continueTumble) {
-                const { winAmount, hasWin, winningSymbolsPositions, scatterCount, multipliersInThisTumble } = calculateWinnings();
-
-                if (hasWin) {
-                    currentTumbleTotalWin += winAmount;
-                    topTumbleWinDisplay.textContent = `KEMENANGAN: ${currentTumbleTotalWin.toLocaleString()}`;
-                    topTumbleWinDisplay.style.display = 'block';
-                    
-                    await performTumble(winningSymbolsPositions);
-                } else {
-                    continueTumble = false;
+                if (!isInFreeSpinMode) { // Entering Free Spin mode
+                    freeSpinSound.currentTime = 0;
+                    freeSpinSound.play().catch(e => console.log("Free spin sound play blocked:", e));
+                    bgm.pause();
+                    bgm.currentTime = 0;
+                    freeSpinBGM.volume = 0.3;
+                    freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
+                    isInFreeSpinMode = true;
+                    totalFreeSpinWin = 0; // Reset total win for new FS session
+                    currentGlobalMultiplier = 1; // Global multiplier starts at 1 in FS and accumulates
                 }
-
-                if (!inFreeSpins && scatterCount >= 4) {
-                    console.log(`Memicu Free Spins dengan ${scatterCount} Scatter!`);
-                    freeSpinCount += 15;
-                    inFreeSpins = true;
-                    globalFreeSpinMultiplier = 1;
-                    freespinDisplay.textContent = freeSpinCount;
-                    alert('Selamat! Anda mendapatkan 15 Putaran Gratis!');
-                    break;
-                } else if (inFreeSpins && scatterCount >= 3) {
-                    console.log(`Retrigger Free Spins dengan ${scatterCount} Scatter!`);
-                    freeSpinCount += 5;
-                    freespinDisplay.textContent = freeSpinCount;
-                    alert('Anda mendapatkan tambahan 5 Putaran Gratis!');
-                }
-            }
-
-            totalWinThisSpin = currentTumbleTotalWin;
-            winDisplay.textContent = totalWinThisSpin.toLocaleString();
-
-            if (totalWinThisSpin > 0) {
-                sounds.win?.play();
-                await updatePlayerBalance(totalWinThisSpin);
-            }
-
-            if (inFreeSpins && freeSpinCount > 0) {
-                isSpinning = false;
-                spinButton.disabled = false;
-                setTimeout(() => spinButton.click(), 1500);
-            } else if (inFreeSpins && freeSpinCount <= 0) {
-                console.log('Free Spins berakhir.');
-                inFreeSpins = false;
-                globalFreeSpinMultiplier = 1;
-                freespinDisplay.textContent = '0';
-                multiplierDisplay.textContent = '1x';
-                isSpinning = false;
-                spinButton.disabled = false;
-                alert('Putaran Gratis Berakhir! Saldo telah diperbarui.');
-            } else {
-                isSpinning = false;
-                spinButton.disabled = false;
-                minBetButton.disabled = false;
-                minusBetButton.disabled = false;
-                plusBetButton.disabled = false;
-                maxBetButton.disabled = false;
-            }
-        });
-
-        app.ticker.add(() => {
-            reels.forEach(reel => {
-                if (reel.spinning) {
-                    reel.position += reel.velocity;
-                    reel.blur.blurY = Math.min(20, Math.abs(reel.velocity));
-
-                    for (let i = 0; i < reel.symbols.length; i++) {
-                        const symbol = reel.symbols[i];
-                        symbol.y = ((reel.position + i * currentSymbolSize) % (currentSymbolSize * numRows)) + (currentSymbolSize / 2);
-                        if (symbol.y < currentSymbolSize / 2) {
-                            symbol.y += currentSymbolSize * numRows;
-                        }
-                    }
-                } else {
-                    if (reel.velocity > 0.1) {
-                        reel.velocity *= 0.95;
-                        reel.blur.blurY = Math.min(20, Math.abs(reel.velocity));
-                    } else {
-                        reel.velocity = 0;
-                        reel.blur.blurY = 0;
-                    }
-                }
-            });
-        });
-
-        // --- Bet Adjustment Functions ---
-        function updateBetDisplay() {
-            betAmount = BET_LEVELS[currentBetIndex];
-            betDisplay.textContent = betAmount.toLocaleString();
-            minBetButton.disabled = (currentBetIndex === 0) || isSpinning;
-            minusBetButton.disabled = (currentBetIndex === 0) || isSpinning;
-            plusBetButton.disabled = (currentBetIndex === BET_LEVELS.length - 1) || isSpinning;
-            maxBetButton.disabled = (currentBetIndex === BET_LEVELS.length - 1) || isSpinning;
-        }
-
-        minBetButton.addEventListener('click', () => {
-            currentBetIndex = 0;
-            updateBetDisplay();
-        });
-
-        minusBetButton.addEventListener('click', () => {
-            if (currentBetIndex > 0) {
-                currentBetIndex--;
-                updateBetDisplay();
-            }
-        });
-
-        plusBetButton.addEventListener('click', () => {
-            if (currentBetIndex < BET_LEVELS.length - 1) {
-                currentBetIndex++;
-                updateBetDisplay();
-            }
-        });
-
-        maxBetButton.addEventListener('click', () => {
-            currentBetIndex = BET_LEVELS.length - 1;
-            updateBetDisplay();
-        });
-
-        // --- Asset Loader (manual for images and audio) ---
-        async function loadAssets() {
-            try {
-                // Memuat gambar Scatter dan Multiplier Orb dari URL eksternal
-                const zeusTexture = await PIXI.Assets.load(SCATTER_URL);
-                const orbTexture = await PIXI.Assets.load(MULTIPLIER_URL);
-                symbolTextures[SYMBOL_TYPES.SCATTER] = zeusTexture;
-                symbolTextures[SYMBOL_TYPES.MULTIPLIER] = orbTexture;
-
-                // Memuat file audio dari URL eksternal
-                sounds.spin = new Audio(SOUND_SPIN_URL);
-                sounds.tumble = new Audio(SOUND_TUMBLE_URL);
-                sounds.reel_stop = new Audio(SOUND_REEL_STOP_URL);
-                sounds.win = new Audio(SOUND_WIN_URL);
                 
-                sounds.spin.volume = 0.5;
-                sounds.tumble.volume = 0.7;
-                sounds.reel_stop.volume = 0.6;
-                sounds.win.volume = 0.8;
-
-                for (let i = 0; i < numReels; i++) {
-                    const reel = {
-                        container: new PIXI.Container(),
-                        symbols: [],
-                        position: 0,
-                        velocity: 0,
-                        blur: new PIXI.filters.BlurFilter(),
-                        spinning: false,
-                    };
-
-                    reel.blur.blurX = 0;
-                    reel.blur.blurY = 0;
-                    reel.container.filters = [reel.blur];
-                    reelContainer.addChild(reel.container);
-                    reels.push(reel);
-
-                    for (let j = 0; j < numRows + 2; j++) {
-                        const symbol = new PIXI.Text('', emojiTextStyle);
-                        symbol.x = i * currentSymbolSize * 1.1 + currentSymbolSize / 2;
-                        symbol.y = j * currentSymbolSize + currentSymbolSize / 2;
-                        reel.symbols.push(symbol);
-                        reel.container.addChild(symbol);
-                    }
-                }
-
-                updateBetDisplay();
-                fillReelsRandomly(false);
-                getPlayerBalance();
-                app.resize();
-                resizeGame();
-            } catch (error) {
-                console.error("Failed to load assets:", error);
-                alert("Gagal memuat aset game. Silakan periksa koneksi internet atau URL aset Anda. Mungkin ada masalah dengan CORS.");
+                // Animate breaking of scatters
+                await handleTileCollapse(scatterIndices);
+                await new Promise(res => setTimeout(res, 600));
             }
         }
+        
+        // Final balance update and display
+        if (isInFreeSpinMode) {
+            totalFreeSpinWin += currentSpinTotalWin;
+        } else {
+            updateBalance(currentSpinTotalWin);
+        }
+        
+        if (currentSpinTotalWin > 0) {
+            if (currentSpinTotalWin >= bet * 10) {
+                winBigSound.currentTime = 0;
+                winBigSound.play().catch(e => console.log("Big win sound play blocked:", e));
+            } else {
+                winSmallSound.currentTime = 0;
+                winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
+            }
+            showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
+        } else if (!isInFreeSpinMode) {
+             showPopup('Coba lagi!');
+        }
 
-        loadAssets();
-    </script>
+        // Handle end of free spins or next spin
+        if (freeSpinCount > 0) {
+            await new Promise(res => setTimeout(res, 1500));
+            spin(); // Auto-spin for Free Spins
+        } else {
+            if (isInFreeSpinMode) { // Free Spins just ended
+                freeSpinBGM.pause();
+                freeSpinBGM.currentTime = 0;
+                bgm.play().catch(e => console.log("BGM play blocked:", e));
+                isInFreeSpinMode = false;
+                await showFreeSpinWinAnimation(totalFreeSpinWin);
+                updateBalance(totalFreeSpinWin); // Add total FS win to balance
+                totalFreeSpinWin = 0; // Reset for next session
+                currentGlobalMultiplier = 1; // Reset for base game
+                updateMultiplierDisplay(currentGlobalMultiplier);
+            }
+
+            spinButton.disabled = false;
+            betMinusBtn.disabled = false;
+            betPlusBtn.disabled = false;
+            minBetBtn.disabled = false;
+            maxBetBtn.disabled = false;
+            updateFreeSpinDisplay(); // Ensure it shows 0
+        }
+
+        // Save balance to Supabase
+        await saveBalanceToSupabase();
+        isSpinning = false;
+    }
+
+    // Bet adjustment functions
+    betMinusBtn.onclick = () => {
+        if (isSpinning) return;
+        currentBetIndex = Math.max(0, currentBetIndex - 1);
+        bet = BET_LEVELS[currentBetIndex];
+        updateBetDisplay();
+    };
+    betPlusBtn.onclick = () => {
+        if (isSpinning) return;
+        currentBetIndex = Math.min(BET_LEVELS.length - 1, currentBetIndex + 1);
+        bet = BET_LEVELS[currentBetIndex];
+        updateBetDisplay();
+    };
+    minBetBtn.onclick = () => {
+        if (isSpinning) return;
+        currentBetIndex = 0;
+        bet = BET_LEVELS[currentBetIndex];
+        updateBetDisplay();
+    };
+    maxBetBtn.onclick = () => {
+        if (isSpinning) return;
+        currentBetIndex = BET_LEVELS.length - 1;
+        bet = BET_LEVELS[currentBetIndex];
+        updateBetDisplay();
+    };
+    spinButton.onclick = spin;
+
+    // Initialize audio volumes
+    bgm.volume = 0.3;
+    freeSpinBGM.volume = 0.3;
+    rollSound.volume = 0.3;
+    winSmallSound.volume = 0.5;
+    winBigSound.volume = 0.8;
+    breakSound.volume = 0.7;
+    document.getElementById('spinSound').volume = 0.5;
+    document.getElementById('freeSpinSound').volume = 0.6; // New FS sound
+
+    function init() {
+      currentSymbols = generateRandomSymbols();
+      renderGrid(currentSymbols);
+      updateBalance(0); // Will trigger loadSaldo and update display
+      updateBetDisplay();
+      updateFreeSpinDisplay();
+      updateMultiplierDisplay(currentGlobalMultiplier);
+
+      // Attempt to play BGM, add click listener as fallback
+      bgm.play().catch(() => {
+        document.body.addEventListener('click', () => {
+          bgm.play();
+        }, { once: true });
+      });
+    }
+
+    // Ensure initial state is rendered after DOM loads
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
 </body>
 </html>
