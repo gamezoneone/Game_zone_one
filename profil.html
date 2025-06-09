@@ -86,7 +86,7 @@
             font-family: 'Orbitron', sans-serif; /* Font futuristik */
             font-size: 1em;
             font-weight: 700;
-            color: gold; /* Neon hijau terang */
+            color: gold;
             background: linear-gradient(90deg, black 0%, #00bc 100%);
             padding: 10px 18px;
             border-radius: 15px;
@@ -95,32 +95,32 @@
             border: 1px solid rgba(57, 255, 20, 0.4);
         }
 
-        /* Judul Utama */
-        h2 {
+        h1 {
             text-align: center;
             font-family: 'Orbitron', sans-serif;
             color: #ffd700;
-            
             animation: neon-glow 1.5s ease-in-out infinite alternate;
-            margin-top: 30px; /* Jarak dari atas container */
-            margin-bottom: 20px;
-            line-height: 1.2;
-            font-size: 3em; /* Ukuran default lebih besar */
+            background: linear-gradient(90deg, black 0%, #00bc 100%);
+           margin-top: 10px;
+            margin-bottom: 10px;
+            line-height: 3;
+            font-size: 3em;
+            height: 60px;
         }
         .marquee-container {
             width: 100%;
-            padding: 10px 0;
+            padding: 0px 0px;
             background: linear-gradient(90deg, #222 0%, #00bc 100%);
             color: gold; /* Hijau neon */
             font-size: 1em;
             text-align: center;
-            border-bottom: 2px solid #ff00ff; /* Border bawah */
-            border-top: 2px solid #ff00ff; /* Border atas */
+            border-bottom: 0px solid #ff00ff; /* Border bawah */
+            border-top: 1px solid #ff00ff; /* Border atas */
             box-shadow: 0 0 10px #00ff00; /* Glow hijau */
-            margin-bottom: 2px; /* Jarak dengan elemen berikutnya */
+            margin-bottom: -3px; /* Jarak dengan elemen berikutnya */
         }
         .marquee-container marquee {
-            padding: 0 10px; /* Padding di dalam marquee untuk menghindari teks menempel sisi */
+            padding: 0 0px; /* Padding di dalam marquee untuk menghindari teks menempel sisi */
         }
 
         /* Grup Tombol (Deposit, Penarikan, Riwayat) */
@@ -128,7 +128,7 @@
             display: flex;
             justify-content: center;
             gap: 10px; /* Jarak antar tombol yang lebih kecil */
-            margin-bottom: 2px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
             padding: 0 20px; /* Padding agar tidak menempel sisi layar */
         }
@@ -264,7 +264,8 @@
         }
 
         .modal-content {
-            background: #1a0a2e; /* Ungu gelap */
+            background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(3).jpeg'); /* Ungu gelap */
+            background-size: cover;
             color: #e0e0e0;
             padding: 35px;
             border-radius: 20px;
@@ -448,15 +449,15 @@
             padding: 10px;
             border-radius: 15px;
             background: rgba(0,0,0,0.0);
-            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
+            box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.8);
             border: 1px solid gold;
         }
 
         .game-item {
-            background: rgba(10, 10, 30, 0.0); /* Background item game lebih gelap */
+            background: rgba(10, 10, 30, 0.2); /* Background item game lebih gelap */
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
+            box-shadow: 0 0 15px rgba(24, 0, 255, 0.8); /* Glow ungu halus */
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             display: block;
             position: relative;
@@ -559,12 +560,12 @@
                 border-radius: 12px;
             }
             h1 {
-                font-size: 2.2em; /* Sesuaikan ukuran judul utama */
-                margin-top: 25px;
+                font-size: 3em; /* Sesuaikan ukuran judul utama */
+                margin-top: 0px;
             }
             .marquee-container {
-                padding: 8px 0;
-                font-size: 0.9em;
+                padding: 0px 0px;
+                font-size: 1em;
             }
             .btn-group {
                 gap: 8px; /* Jarak lebih kecil */
@@ -644,12 +645,12 @@
                 padding: 6px 12px;
             }
             h1 {
-                font-size: 0.8em; /* Lebih kecil lagi */
-                margin-top: 20px;
+                font-size: 2em; /* Lebih kecil lagi */
+                margin-top: 0px;
             }
             .marquee-container {
-                padding: 6px 0;
-                font-size: 0.8em;
+                padding: 0px 0;
+                font-size: 1em;
             }
             .btn-group {
                 gap: 6px;
@@ -693,8 +694,8 @@
                 min-width: 50px;
             }
             .game-grid {
-                grid-template-columns: repeat(auto-fit, minmax(60px, 1fr)); /* Paling kecil untuk ponsel */
-                gap: 6px;
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Paling kecil untuk ponsel */
+                gap: 5px;
             }
             .refresh-btn-wrapper {
                 padding: 0 10px;
@@ -709,44 +710,7 @@
                 height: 35px;
             }
             /* Gaya untuk Gambar Judul "PILIH GAME" */
-.game-section-title-image {
-    display: block; /* Agar gambar mengambil baris penuh */
-    max-width: 90%; /* Batasi lebar gambar agar tidak terlalu besar */
-    height: auto;
-    margin: 20px auto 25px auto; /* Pusatkan gambar dan berikan margin atas/bawah */
-    border-radius: 10px; /* Sudut sedikit membulat */
-    border: 2px solid #00ffff; /* Border neon biru */
-    box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff, 0 0 40px #00ffff; /* Efek glow neon */
-    animation: neon-glow-image 1.5s ease-in-out infinite alternate; /* Animasi glow */
-}
 
-@keyframes neon-glow-image {
-    from {
-        box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
-        border-color: rgba(0, 255, 255, 0.7);
-    }
-    to {
-        box-shadow: 0 0 20px #00ffff, 0 0 5px #00ffff, 0 0 0px #00ffff;
-        border-color: #00ffff;
-    }
-}
-
-/* Sesuaikan media queries jika perlu untuk ukuran gambar */
-@media (max-width: 768px) {
-    .game-section-title-image {
-        max-width: 95%; /* Lebih lebar sedikit di mobile */
-        margin: 15px auto 20px auto;
-        box-shadow: 0 0 10px #00ffff, 0 0 15px #00ffff;
-    }
-}
-
-@media (max-width: 480px) {
-    .game-section-title-image {
-        max-width: 98%; /* Hampir penuh di layar sangat kecil */
-        margin: 10px auto 15px auto;
-        box-shadow: 0 0 8px #00ffff, 0 0 12px #00ffff;
-    }
-}
  </style>
 </head>
 <body>
@@ -762,7 +726,7 @@
 
   <div class="container">
     <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
-    <h1></h1>
+    <h1>GAME CLASIC</h1>
   <div class="marquee-container">
  <marquee> ⚠️•penting untuk mengecek rekening/nomor deposit bandar dan nomor penerima penarikan ('nomor anda') agar proses berjalan lancar. Game Zone tidak akan memproses deposit ke nomor lain dan tidak memproses withdraw kembali jika ada kesalah input nomor penerima withdraw•⚠️</marquee>
     </div>
@@ -787,9 +751,6 @@
         <tbody><tr><td colspan="3" class="empty">Memuat data...</td></tr></tbody>
       </table>
     </div>
-    
-<div class="game-grid-section">
-  <img src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//wso138-jackpot.gif" alt="__" class="game-section-title-image">
   <div class="game-grid" id="game-display-grid">
     </div>
 </div>
@@ -1417,7 +1378,7 @@
         { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
         { name: 'ROULLETE', url: 'roullete.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//1515954_ea5fd.gif' },
         { name: 'MAHJONG', url: 'mahjong.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg' },
-        
+         { name: 'ZEUZ', url: 'zeus.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg' },
     ];
 
     // Load game list into display grid
