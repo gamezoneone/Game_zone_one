@@ -447,13 +447,13 @@
             gap: 15px; /* Jarak antar game lebih kecil */
             padding: 10px;
             border-radius: 15px;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.0);
             box-shadow: inset 0 0 20px rgba(0, 255, 255, 0.1);
             border: 1px solid gold;
         }
 
         .game-item {
-            background: rgba(10, 10, 30, 0.8); /* Background item game lebih gelap */
+            background: rgba(10, 10, 30, 0.0); /* Background item game lebih gelap */
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 0 15px rgba(224, 0, 255, 0.3); /* Glow ungu halus */
@@ -847,8 +847,8 @@
         <option value="Bank">Transfer Bank</option>
       </select>
 
-      <label for="with-nomor">No. Rekening/Ponsel:</label>
-      <input type="text" id="with-nomor" placeholder="Nomor Rekening/Ponsel" />
+      <label for="with-nomor">No. Rekening/e-Wallet:</label>
+      <input type="text" id="with-nomor" placeholder="Nomor Rekening/e-Wallet" />
 
       <label for="with-bank" id="label-bank" style="display:none;">Nama Bank:</label>
       <input type="text" id="with-bank" placeholder="Contoh: BCA / Mandiri" style="display:none;" />
@@ -899,12 +899,11 @@
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let uid = localStorage.getItem('uid');
-    let currentSaldo = 0; // Tambahkan variabel untuk menyimpan saldo saat ini
+    let currentSaldo = 0;
 
     const backgroundMusic = document.getElementById('background-music');
     const clickSound = document.getElementById('click-sound');
 
-    // Autoplay background music on first user interaction
     document.addEventListener('click', () => {
         if (backgroundMusic.paused) {
             backgroundMusic.play().catch(e => console.log("Autoplay blocked:", e));
@@ -1416,7 +1415,7 @@
         { name: 'SAMGONG', url: 'samgong1.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//unnamed.png' },
         { name: 'SUSUN BALOK', url: 'susunbalok99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(2).jpeg' },
         { name: 'QIU QIU', url: 'qiu99.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//download%20(4).jpeg' },
-        { name: 'ROULLETE', url: 'roullete.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//roulete.jpeg' },
+        { name: 'ROULLETE', url: 'roullete.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//1515954_ea5fd.gif' },
         { name: 'MAHJONG', url: 'mahjong.html', imageUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(1).jpeg' },
         
     ];
