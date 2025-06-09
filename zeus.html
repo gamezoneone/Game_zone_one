@@ -79,7 +79,7 @@
       box-shadow: var(--glow-md) var(--zeus-blue);
       border: 2px solid var(--zeus-purple);
       position: relative;
-      overflow: hidden;
+      overflow: hidden; /* Penting untuk animasi jatuh */
       display: flex;
       justify-content: center;
       align-items: center;
@@ -95,6 +95,7 @@
       border-radius: 8px;
       overflow: hidden;
       box-shadow: inset 0 0 10px rgba(0,191,255,0.3); /* Blue glow inside */
+      position: relative; /* Untuk positioning tile */
     }
 
     .tile {
@@ -110,7 +111,16 @@
       transition: transform 0.1s linear, box-shadow 0.3s ease;
       overflow: hidden;
       border: 1px solid rgba(255, 215, 0, 0.1);
-      position: relative; /* Penting untuk posisi absolut Orb Value */
+      position: relative;
+      /* Animasi Jatuh */
+      transform: translateY(0);
+      transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1.2), opacity 0.3s ease-out; /* Tambah opacity transition */
+      z-index: 1; /* Default z-index */
+    }
+
+    .tile.falling {
+        transition: none; /* Disable transition during fall preparation */
+        transform: translateY(-100vh); /* Start far above */
     }
 
     .tile img {
@@ -123,6 +133,7 @@
 
     .tile.break {
       animation: breakAnim 0.5s forwards;
+      z-index: 2; /* Agar di atas tile lain saat pecah */
     }
     @keyframes breakAnim {
       0% { transform: scale(1); opacity: 1; border-color: var(--zeus-red); }
@@ -391,7 +402,7 @@
   </style>
 </head>
 <body>
- <audio id="rollSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-fast-sci-fi-sweep-1946.mp3"></audio>
+  <audio id="rollSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-fast-sci-fi-sweep-1946.mp3"></audio>
   <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
   <audio id="winBigSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-final-level-bonus-2061.mp3"></audio>
   <audio id="breakSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
@@ -567,6 +578,7 @@
             console.error('Error menyimpan saldo ke Supabase:', error.message);
         }
     }
+
     window.onload = () => {
         loadSaldo();
         init();
@@ -639,101 +651,94 @@
             const div = document.createElement('div');
             div.className = 'tile';
 
-            // Dapatkan data dasar simbol. Untuk Orb, ini akan mengambil imgUrl spesifiknya.
-            const baseSymbolData = getSymbolData(symbolObj); // Kirim seluruh objek symbolObj
+            const baseSymbolData = getSymbolData(symbolObj);
 
-            // console.log("Rendering symbol:", symbolObj, "-> Resolved Data:", baseSymbolData); // Debugging: lihat apa yang sedang dirender
-
-            if (baseSymbolData && baseSymbolData.imgUrl) { // Pastikan baseSymbolData ada dan memiliki imgUrl
+            if (baseSymbolData && baseSymbolData.imgUrl) {
                 const img = document.createElement('img');
                 img.src = baseSymbolData.imgUrl;
-                img.alt = baseSymbolData.id || 'symbol'; // Tambahkan alt text
+                img.alt = baseSymbolData.id || 'symbol';
                 div.appendChild(img);
-            } else if (baseSymbolData && baseSymbolData.emoji) { // Jika tidak ada gambar, gunakan emoji
+            } else if (baseSymbolData && baseSymbolData.emoji) {
                 div.textContent = baseSymbolData.emoji;
             } else {
-                 div.textContent = ''; // Atau placeholder jika tidak ada data sama sekali
-                 console.warn("Could not render symbol, missing imgUrl or emoji:", symbolObj); // Debugging: jika symbol tidak punya imgUrl/emoji
+                 div.textContent = '';
+                 console.warn("Could not render symbol, missing imgUrl or emoji:", symbolObj);
             }
 
-            if (symbolObj && symbolObj.id === ORB_BASE_ID) { // Periksa symbolObj dan ID
+            if (symbolObj && symbolObj.id === ORB_BASE_ID) {
                 div.classList.add('special-symbol');
-            } else if (symbolObj && symbolObj.id === SCATTER_DATA.id) { // Periksa symbolObj dan ID
+            } else if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
                 div.classList.add('scatter-symbol');
             }
             grid.appendChild(div);
         });
     }
+    async function animateTumbleDrop(newSymbols) {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        const cells = Array.from(grid.children);
 
-    function animateReelShake(col) {
-        return new Promise(resolve => {
-            const reelTiles = [];
-            for (let row = 0; row < height; row++) {
-                reelTiles.push(grid.children[row * width + col]);
+        // Siapkan semua tile untuk animasi jatuh
+        for (let i = 0; i < cells.length; i++) {
+            const cell = cells[i];
+            const newSymbolObj = newSymbols[i]; // Simbol baru untuk posisi ini
+
+            // Update konten tile dengan simbol baru
+            cell.innerHTML = '';
+            cell.classList.remove('special-symbol', 'scatter-symbol');
+            const baseSymbolData = getSymbolData(newSymbolObj);
+
+            if (baseSymbolData && baseSymbolData.imgUrl) {
+                const img = document.createElement('img');
+                img.src = baseSymbolData.imgUrl;
+                img.alt = baseSymbolData.id || 'symbol';
+                cell.appendChild(img);
+            } else if (baseSymbolData && baseSymbolData.emoji) {
+                cell.textContent = baseSymbolData.emoji;
             }
 
-            let position = 0;
-            const reelSpeed = 30; 
-            const targetDuration = 1000 + col * 150; 
-            let startTime = null;
-
-            const rollSoundInstance = rollSound.cloneNode(true);
-            rollSoundInstance.volume = 0.3;
-            rollSoundInstance.play().catch(e => console.log("Roll sound play blocked:", e));
-
-            function step(timestamp) {
-                if (!startTime) startTime = timestamp;
-                const elapsed = timestamp - startTime;
-
-                if (elapsed < targetDuration) {
-                    position += reelSpeed;
-                    if (position >= reelTiles[0].offsetHeight) {
-                        position -= reelTiles[0].offsetHeight;
-                        for (let r = height - 1; r >= 0; r--) {
-                            const currentTile = reelTiles[r];
-                            const nextSymbolObj = (r === 0) ? generateSingleRandomSymbol() : currentSymbols[(r - 1) * width + col];
-
-                            currentTile.innerHTML = ''; 
-                            currentTile.classList.remove('special-symbol', 'scatter-symbol'); 
-                            currentTile.style.transform = `translateY(0)`; // Reset transform
-
-                            const baseSymbolData = getSymbolData(nextSymbolObj); 
-
-                            if (baseSymbolData && baseSymbolData.imgUrl) {
-                                const img = document.createElement('img');
-                                img.src = baseSymbolData.imgUrl;
-                                img.alt = baseSymbolData.id || 'symbol';
-                                currentTile.appendChild(img);
-                            } else if (baseSymbolData && baseSymbolData.emoji) {
-                                currentTile.textContent = baseSymbolData.emoji;
-                            } else {
-                                currentTile.textContent = '';
-                            }
-
-                            if (nextSymbolObj && nextSymbolObj.id === ORB_BASE_ID) { 
-                                currentTile.classList.add('special-symbol');
-                            } else if (nextSymbolObj && nextSymbolObj.id === SCATTER_DATA.id) {
-                                currentTile.classList.add('scatter-symbol');
-                            }
-                            currentSymbols[r * width + col] = nextSymbolObj; 
-                        }
-                    }
-                    for (let r = 0; r < height; r++) {
-                        reelTiles[r].style.transform = `translateY(${position}px)`;
-                    }
-                    requestAnimationFrame(step);
-                } else {
-                    rollSoundInstance.pause();
-                    rollSoundInstance.currentTime = 0;
-                    for (let r = 0; r < height; r++) {
-                        reelTiles[r].style.transform = 'translateY(0)';
-                    }
-                    resolve();
-                }
+            if (newSymbolObj && newSymbolObj.id === ORB_BASE_ID) {
+                cell.classList.add('special-symbol');
+            } else if (newSymbolObj && newSymbolObj.id === SCATTER_DATA.id) {
+                cell.classList.add('scatter-symbol');
             }
-            requestAnimationFrame(step);
-        });
+
+            // Atur posisi awal di luar pandangan (atas)
+            cell.classList.add('falling');
+            cell.style.opacity = '0'; // Mulai tak terlihat
+        }
+
+        // Jalankan animasi jatuh dengan sedikit delay antar baris
+        const animationPromises = [];
+        for (let row = 0; row < height; row++) {
+            for (let col = 0; col < width; col++) {
+                const index = row * width + col;
+                const cell = cells[index];
+                
+                // Hitung delay berdasarkan baris untuk efek berjenjang
+                const fallDelay = row * 50; // 50ms delay per baris
+                
+                animationPromises.push(new Promise(resolve => {
+                    setTimeout(() => {
+                        cell.classList.remove('falling'); // Hapus kelas falling
+                        cell.style.transform = 'translateY(0)'; // Jatuh ke posisi akhir
+                        cell.style.opacity = '1'; // Muncul
+                        cell.ontransitionend = () => {
+                            cell.ontransitionend = null; // Hapus listener setelah selesai
+                            resolve();
+                        };
+                    }, fallDelay);
+                }));
+            }
+        }
+        
+        rollSound.currentTime = 0;
+        rollSound.play().catch(e => console.log("Roll sound play blocked:", e));
+
+        await Promise.all(animationPromises);
+        currentSymbols = newSymbols; // Update currentSymbols setelah animasi selesai
+        // console.log("Tumble drop animation complete.");
     }
+
 
     // --- Gates of Olympus Specific Win Logic (Cluster Pays + Orbs) ---
     function getWinningTiles(symbolsArr) {
@@ -832,39 +837,31 @@
 
         if (indicesToBreak.length > 0) {
             animateWinningTiles(indicesToBreak);
-            await delay(500); 
+            await delay(500); // Durasi animasi 'break'
         }
 
-        for (let i = 0; i < currentSymbols.length; i++) {
-            if (indicesToBreak.includes(i)) {
-                currentSymbols[i] = null;
-            } else {
-                const tileElement = grid.children[i];
-                if (tileElement) { // Pastikan elemen tile ada
-                    tileElement.style.opacity = 1; 
-                    tileElement.classList.remove('break'); // Hapus kelas break jika ada
-                }
-            }
-        }
+        // Buat array simbol baru yang akan diisi setelah pecah dan jatuh
+        const nextSymbols = Array(width * height).fill(null);
 
+        // Isi `nextSymbols` dengan simbol yang tidak pecah, pindahkan ke bawah (efek gravitasi)
         for (let col = 0; col < width; col++) {
-            const colSymbols = [];
+            let currentRowInNextSymbols = height - 1; // Mulai dari bawah kolom
             for (let row = height - 1; row >= 0; row--) {
-                const idx = row * width + col;
-                if (currentSymbols[idx] !== null) {
-                    colSymbols.unshift(currentSymbols[idx]); 
+                const currentIdx = row * width + col;
+                if (!indicesToBreak.includes(currentIdx)) {
+                    // Simbol ini tidak pecah, pindahkan ke baris terbawah yang tersedia di `nextSymbols`
+                    nextSymbols[currentRowInNextSymbols * width + col] = currentSymbols[currentIdx];
+                    currentRowInNextSymbols--;
                 }
             }
-
-            while (colSymbols.length < height) {
-                colSymbols.unshift(generateSingleRandomSymbol()); 
-            }
-            
-            for (let row = 0; row < height; row++) {
-                currentSymbols[row * width + col] = colSymbols[row];
+            // Isi sisa baris di atas dengan simbol baru yang acak
+            for (let row = currentRowInNextSymbols; row >= 0; row--) {
+                nextSymbols[row * width + col] = generateSingleRandomSymbol();
             }
         }
-        renderGrid(currentSymbols); 
+        
+        // Panggil animateTumbleDrop dengan simbol-simbol baru ini
+        await animateTumbleDrop(nextSymbols);
     }
 
 
@@ -929,10 +926,6 @@
         minBetBtn.disabled = true;
         maxBetBtn.disabled = true;
 
-        const spinSoundInstance = document.getElementById('spinSound').cloneNode(true);
-        spinSoundInstance.volume = 0.5;
-        spinSoundInstance.play().catch(e => console.log("Spin sound play blocked:", e));
-
         if (!isInFreeSpinMode) {
             updateBalance(-bet);
             currentGlobalMultiplier = 1; 
@@ -947,11 +940,9 @@
             tile.classList.remove('break'); 
         });
 
-        const reelPromises = [];
-        for (let col = 0; col < width; col++) {
-            reelPromises.push(animateReelShake(col));
-        }
-        await Promise.all(reelPromises);
+        // Generasi simbol baru untuk spin awal
+        const newSymbolsForSpin = generateInitialSymbols();
+        await animateTumbleDrop(newSymbolsForSpin); // Animasi jatuh untuk spin awal
 
         let currentSpinTotalWin = 0; 
         let chainReaction = true;
@@ -971,16 +962,20 @@
                 chainReaction = true; 
                 currentSpinTotalWin += finalTumbleWin; 
 
-                await handleTileCollapse(winningTiles); 
-                await new Promise(res => setTimeout(res, 600)); 
+                await handleTileCollapse(winningTiles); // Ini akan memicu animasi pecah dan jatuh lagi
+                await new Promise(res => setTimeout(res, 600)); // Sedikit jeda setelah tumble
             } else {
+                // Pastikan semua tile kembali normal jika tidak ada kemenangan di tumble ini
                 document.querySelectorAll('.tile').forEach(tile => {
                     tile.style.opacity = 1;
                     tile.classList.remove('break'); 
                 });
             }
 
-            if (scatterCount >= 4) { 
+            // Periksa scatter di akhir setiap tumble jika ada kemenangan
+            // Catatan: Dalam game aslinya, Scatter bisa muncul di mana saja, tapi seringkali memicu free spin setelah semua tumble selesai dari satu spin utama.
+            // Untuk kesederhanaan, kita bisa biarkan ini memicu free spin di tengah-tengah tumble jika menang.
+            if (scatterCount >= 4 && winningTiles.length > 0) { // Hanya picu FS jika ada kemenangan tumble yang menyertai scatter atau kemenangan lain
                 let newFreeSpins = 0;
                 if (scatterCount === 4) newFreeSpins = 15; 
                 else if (scatterCount >= 5) newFreeSpins = 5; 
@@ -988,7 +983,7 @@
                 freeSpinCount += newFreeSpins;
                 showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
                 updateFreeSpinDisplay();
-                chainReaction = true; 
+                chainReaction = true; // Jika scatter memicu FS, anggap sebagai bagian dari chain reaction
 
                 if (!isInFreeSpinMode) { 
                     freeSpinSound.currentTime = 0;
@@ -1003,7 +998,7 @@
                     updateMultiplierDisplay(currentGlobalMultiplier);
                 }
                 
-                await handleTileCollapse(scatterIndices);
+                await handleTileCollapse(scatterIndices); // Scatter juga akan pecah
                 await new Promise(res => setTimeout(res, 600));
             }
         }
@@ -1028,7 +1023,7 @@
         }
 
         if (freeSpinCount > 0) {
-            await new Promise(res => setTimeout(res, 1500)); 
+            await new Promise(res => setTimeout(res, 1500)); // Jeda sebelum spin FS berikutnya
             spin(); 
         } else {
             if (isInFreeSpinMode) { 
@@ -1055,7 +1050,7 @@
         isSpinning = false;
     }
 
-// Bet adjustment functions
+    // Bet adjustment functions
     betMinusBtn.onclick = () => {
         if (isSpinning) return;
         currentBetIndex = Math.max(0, currentBetIndex - 1);
