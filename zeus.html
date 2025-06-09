@@ -1028,7 +1028,7 @@ function getWinningTiles(symbolsArr) {
     }
 
     async function spin() {
-        if (isSpinning) return;
+        if (isSpinning) return; // Prevent multiple clicks
         if (!isInFreeSpinMode && balance < bet) {
             showPopup('Saldo tidak cukup!');
             return;
@@ -1041,6 +1041,10 @@ function getWinningTiles(symbolsArr) {
         minBetBtn.disabled = true;
         maxBetBtn.disabled = true;
 
+        // Play spin sound
+        spinSound.currentTime = 0;
+        spinSound.play().catch(e => console.log("Spin sound play blocked:", e));
+
         if (!isInFreeSpinMode) {
             updateBalance(-bet);
             currentGlobalMultiplier = 1; // Reset multiplier in base game spin
@@ -1051,32 +1055,31 @@ function getWinningTiles(symbolsArr) {
         }
         
         // Step 1: Animate initial spin (visual reels spinning)
-        // Generate potential next symbols for the spin outcome
         let potentialNextSymbols = [];
         for (let i = 0; i < width * height; i++) {
             potentialNextSymbols.push(generateSingleRandomSymbol());
         }
-
-        await animateInitialSpin(potentialNextSymbols); // Perform initial spin animation
-        currentSymbols = potentialNextSymbols; // Update currentSymbols with the result of the initial spin
+        await animateInitialSpin(potentialNextSymbols);
+        currentSymbols = potentialNextSymbols;
 
         let currentSpinTotalWin = 0;
-        let chainReactionOccurredInSpin = false;
-        let orbMultiplierAccumulatedThisSpin = 0; // Accumulate orbs for the entire chain reaction
-        let freeSpinTriggeredThisSpin = false; // Flag to prevent multiple free spin triggers per spin
+        let chainReactionOccurredInSpin = false; // Indicates if any win or scatter trigger happened in this spin cycle
+        let orbMultiplierAccumulatedThisSpin = 0; // Accumulate orbs for the entire chain reaction of one base game spin
+
+        // Flag to manage free spin trigger to happen only once per main spin cycle
+        let freeSpinTriggeredInThisMainSpin = false; 
 
         // Loop for tumbles
         while (true) {
             const { winningTiles, scatterCount, scattersToBreakIndices, currentTumbleWinAmount, currentTumbleOrbsMultiplier } = getWinningTiles(currentSymbols);
 
-            let tumbleHadWin = false;
+            let tumbleHadWinOrTrigger = false; // Check if this specific tumble results in a win or free spin trigger
             
+            // Accumulate Orbs - apply differently based on mode
             if (currentTumbleOrbsMultiplier > 0) {
-                // If in free spin mode, accumulate into currentGlobalMultiplier
                 if (isInFreeSpinMode) {
                     currentGlobalMultiplier += currentTumbleOrbsMultiplier;
                 } else {
-                    // In base game, orbs only apply to current tumble and accumulate within that tumble
                     orbMultiplierAccumulatedThisSpin += currentTumbleOrbsMultiplier;
                 }
                 updateMultiplierDisplay(isInFreeSpinMode ? currentGlobalMultiplier : orbMultiplierAccumulatedThisSpin);
@@ -1089,61 +1092,62 @@ function getWinningTiles(symbolsArr) {
                  } else {
                      finalTumbleWin = currentTumbleWinAmount * (orbMultiplierAccumulatedThisSpin || 1);
                  }
+                 tumbleHadWinOrTrigger = true; // Win from symbols
             }
 
-            let allIndicesToBreak = new Set(winningTiles); // Start with regular wins + orbs
+            // Collect all indices that need to break in this tumble
+            let allIndicesToBreak = new Set(winningTiles); 
             
-            // Add scatters to break ONLY if they trigger free spins
-            if (scattersToBreakIndices.length > 0) {
-                scattersToBreakIndices.forEach(idx => allIndicesToBreak.add(idx));
-            }
-
-            if (allIndicesToBreak.size > 0) {
-                tumbleHadWin = true;
-                chainReactionOccurredInSpin = true;
-                currentSpinTotalWin += finalTumbleWin;
-
-                // Calculate the next grid state before animating
-                const nextGridSymbols = calculateNextGridState(currentSymbols, Array.from(allIndicesToBreak));
-                await animateTumbleDrop(currentSymbols, nextGridSymbols, Array.from(allIndicesToBreak));
-                // currentSymbols is updated inside animateTumbleDrop now
-                await new Promise(res => setTimeout(res, 600)); // Short pause before next win check
-            } else {
-                break; // No more wins, stop tumbling
-            }
-
-            // Check for Free Spin trigger (only trigger once per main spin)
-            if (!isInFreeSpinMode && scatterCount >= 4 && !freeSpinTriggeredThisSpin) {
+            // Handle Free Spin trigger
+            if (scatterCount >= 4 && !freeSpinTriggeredInThisMainSpin) { // Trigger only once per main spin
                 let newFreeSpins = 0;
-                if (scatterCount >= 4) newFreeSpins = 15;
-                
+                if (scatterCount >= 4) newFreeSpins = 15; // Gates of Olympus 4+ scatters = 15 FS
+
                 freeSpinCount += newFreeSpins;
                 showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
                 updateFreeSpinDisplay();
+                
+                scattersToBreakIndices.forEach(idx => allIndicesToBreak.add(idx)); // Make scatters break
+
+                // Sound and BGM transition for Free Spin
                 freeSpinSound.currentTime = 0;
                 freeSpinSound.play().catch(e => console.log("Free spin sound play blocked:", e));
                 bgm.pause();
                 bgm.currentTime = 0;
                 freeSpinBGM.volume = 0.3;
                 freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
+                
                 isInFreeSpinMode = true;
                 totalFreeSpinWin = 0; // Reset total free spin win for the new free spin round
-                currentGlobalMultiplier = 1; // Reset global multiplier for new free spin round (orbs accumulate from 1x)
+                currentGlobalMultiplier = 1; // Reset global multiplier for new free spin round
                 updateMultiplierDisplay(currentGlobalMultiplier);
-                freeSpinTriggeredThisSpin = true; // Mark as triggered
-                break; // Exit tumble loop to start free spin mode
-            } else if (isInFreeSpinMode && scatterCount >= 3) { // Retrigger in Free Spin
+                freeSpinTriggeredInThisMainSpin = true; // Mark as triggered for this main spin
+                tumbleHadWinOrTrigger = true; // Free spin trigger counts as a tumble event
+            } else if (isInFreeSpinMode && scatterCount >= 3) { // Retrigger in Free Spin mode
                  let retriggerSpins = 5; // 3+ scatters retrigger 5 spins
                  freeSpinCount += retriggerSpins;
                  showPopup(`+${retriggerSpins} Free Spins!`);
                  updateFreeSpinDisplay();
-                 // No break here, allow more tumbles if they happen
+                 scattersToBreakIndices.forEach(idx => allIndicesToBreak.add(idx)); // Make re-triggering scatters break
+                 tumbleHadWinOrTrigger = true; // Retrigger counts as a tumble event
+            }
+
+            // If there's a win or free spin trigger, proceed with tumble
+            if (tumbleHadWinOrTrigger) {
+                chainReactionOccurredInSpin = true; // Mark that something happened in this overall spin
+                currentSpinTotalWin += finalTumbleWin; // Add win from this specific tumble
+
+                const nextGridSymbols = calculateNextGridState(currentSymbols, Array.from(allIndicesToBreak));
+                await animateTumbleDrop(currentSymbols, nextGridSymbols, Array.from(allIndicesToBreak));
+                await new Promise(res => setTimeout(res, 600)); // Pause after tumble for visual clarity
+            } else {
+                break; // No more wins or triggers, stop tumbling
             }
         }
 
-        // After all tumbles are done for the current spin
+        // After all tumbles are done for the current spin cycle
         if (isInFreeSpinMode) {
-            totalFreeSpinWin += currentSpinTotalWin;
+            totalFreeSpinWin += currentSpinTotalWin; // Accumulate win in Free Spin mode
         } else {
             updateBalance(currentSpinTotalWin); // Add win to balance in base game
         }
@@ -1157,23 +1161,24 @@ function getWinningTiles(symbolsArr) {
                 winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
             }
             showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
-        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin && !freeSpinTriggeredThisSpin) {
-             showPopup('Coba lagi!');
+        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin && !freeSpinTriggeredInThisMainSpin) {
+             showPopup('Coba lagi!'); // Only show "try again" if nothing happened in base game
         }
 
         // Handle continuation or end of Free Spins
         if (freeSpinCount > 0 && isInFreeSpinMode) {
             await new Promise(res => setTimeout(res, 1500)); // Pause before next FS spin
-            spin(); // Continue Free Spin
+            spin(); // Continue Free Spin by calling spin recursively
         } else {
+            // Free spins are over or it was a base game spin
             if (isInFreeSpinMode) { // Just finished Free Spins
                 freeSpinBGM.pause();
                 freeSpinBGM.currentTime = 0;
                 bgm.play().catch(e => console.log("BGM play blocked:", e));
                 isInFreeSpinMode = false;
-                await showFreeSpinWinAnimation(totalFreeSpinWin);
-                updateBalance(totalFreeSpinWin); // Add total free spin win to balance
-                totalFreeSpinWin = 0; // Reset total free spin win
+                await showFreeSpinWinAnimation(totalFreeSpinWin); // Show total free spin win
+                updateBalance(totalFreeSpinWin); // Add total free spin win to main balance
+                totalFreeSpinWin = 0; // Reset total free spin win for next round
             }
 
             // Ensure all tiles are back to full opacity and without break class
@@ -1182,22 +1187,26 @@ function getWinningTiles(symbolsArr) {
                 tile.classList.remove('break');
             });
 
+            // Re-enable buttons
             spinButton.disabled = false;
             betMinusBtn.disabled = false;
             betPlusBtn.disabled = false;
             minBetBtn.disabled = false;
             maxBetBtn.disabled = false;
-            updateFreeSpinDisplay();
-            // currentGlobalMultiplier is kept for free spins, so only reset if it's base game
-            if (!isInFreeSpinMode) {
+            updateFreeSpinDisplay(); // Update display to show 0 if FS ended
+            
+            // Reset global multiplier if not in Free Spin mode
+            if (!isInFreeSpinMode) { 
                 currentGlobalMultiplier = 1;
                 updateMultiplierDisplay(currentGlobalMultiplier);
             }
         }
-
+        
+        // Save balance to Supabase after the entire spin cycle (including all tumbles and FS)
         await saveBalanceToSupabase();
-        isSpinning = false;
+        isSpinning = false; // End of spin cycle
     }
+
 
     // Bet adjustment functions
     betMinusBtn.onclick = () => {
