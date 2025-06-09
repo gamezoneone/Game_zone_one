@@ -460,21 +460,20 @@
     const freeSpinDisplay = document.getElementById('freeSpinDisplay');
     const freeSpinWinOverlay = document.getElementById('freeSpinWinOverlay');
     const freeSpinTotalWinDisplay = document.getElementById('freeSpinTotalWin');
-    const bgm = document.getElementById('bgm'); // Ambil elemen BGM
-    const freeSpinBGM = document.getElementById('freeSpinBGM'); // Ambil elemen Free Spin BGM
+    const bgm = document.getElementById('bgm');
+    const freeSpinBGM = document.getElementById('freeSpinBGM');
     const freeSpinSound = document.getElementById('freeSpinSound');
 
     // Supabase Configuration - GANTI DENGAN KUNCI ANDA YANG SEBENARNYA!
-    const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+   const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
     const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
     const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+     
     // Gates of Olympus grid size
     const width = 6;
     const height = 5;
 
     // Symbol data for Gates of Olympus
-    // MENGGUNAKAN URL YANG DISEDIAKAN DALAM PERCAKAPAN ANDA
     const SYMBOLS_DATA = [
         { id: 'gem_blue', emoji: '🔷', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(4).jpeg', payout: { '8': 0.25, '10': 0.5, '12': 0.75, '15': 1.25, '20': 2.5, '25': 5, '30': 8 } },
         { id: 'gem_green', emoji: '💚', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//BeautyPlus-image-extender.jpeg', payout: { '8': 0.4, '10': 0.8, '12': 1.2, '15': 2, '20': 4, '25': 7, '30': 10 } },
@@ -486,33 +485,32 @@
         { id: 'hourglass', emoji: '⏳', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//images%20(7).jpeg', payout: { '8': 1.5, '10': 3, '12': 4.5, '15': 7.5, '20': 15, '25': 22.5, '30': 37.5 } },
     ];
 
-    const ORB_BASE_ID = 'ORB_MULTIPLIER_SYMBOL'; // ID dasar untuk semua simbol Orb
+    const ORB_BASE_ID = 'ORB_MULTIPLIER_SYMBOL';
     const ORBS_DATA = [
-        { value: 2, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//BeautyPlus-image-extender%20(2).jpeg' }, // 2x
-        { value: 25, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//25x.jpeg' }, // 25x
-        { value: 50, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//50x.jpeg' }, // 50x
-        { value: 100, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//BeautyPlus-image-extender%20(1).jpeg' }, // 100x
-        { value: 500, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(6).jpeg' }  // 500x
+        { value: 2, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//BeautyPlus-image-extender%20(2).jpeg' },
+        { value: 25, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//25x.jpeg' },
+        { value: 50, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//50x.jpeg' },
+        { value: 100, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//BeautyPlus-image-extender%20(1).jpeg' },
+        { value: 500, imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/simbolzeus//download%20(6).jpeg' }
     ];
 
     const SCATTER_DATA = { id: 'SCATTER', emoji: '🔱', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//zeuz.jpeg', payout: { '4': 3, '5': 5, '6': 100 } };
 
-    // Perbarui ALL_SYMBOL_IDS
     const ALL_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id).concat(ORB_BASE_ID, SCATTER_DATA.id);
     const REGULAR_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id);
 
-    let currentSymbols = []; // Ini akan menyimpan objek { id: 'symbol_id', value: <orb_value_if_orb>, imgUrl: <orb_specific_url_if_orb> }
+    let currentSymbols = []; // Stores { id: 'symbol_id', value: <orb_value_if_orb>, imgUrl: <orb_specific_url_if_orb> }
     let balance = 0;
-    const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]; // Defined bet levels
+    const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
     let currentBetIndex = 0;
     let bet = BET_LEVELS[currentBetIndex];
 
-    let currentGlobalMultiplier = 1; // Global multiplier for Gates of Olympus
+    let currentGlobalMultiplier = 1;
     let freeSpinCount = 0;
     let totalFreeSpinWin = 0;
     let isInFreeSpinMode = false;
     let isSpinning = false;
-    let globalUid = null; // Supabase UID
+    let globalUid = null;
 
     // --- Supabase Integration ---
     async function loadSaldo() {
@@ -528,14 +526,14 @@
 
         try {
             const { data: userData, error: fetchError } = await supabase
-                .from('users_data') // Nama tabel di Supabase
+                .from('users_data')
                 .select('saldo')
-                .eq('user_id', globalUid) // Asumsi kolom `user_id` di tabel `users_data`
+                .eq('user_id', globalUid)
                 .single();
 
-            if (fetchError && fetchError.code === 'PGRST116') { // No rows found for this user
+            if (fetchError && fetchError.code === 'PGRST116') {
                 console.warn('Pengguna belum memiliki entri saldo. Membuat entri baru...');
-                const initialBalance = 500000; // Saldo awal untuk pengguna baru
+                const initialBalance = 500000;
 
                 const { data: newUserData, error: insertError } = await supabase
                     .from('users_data')
@@ -555,9 +553,9 @@
         } catch (error) {
             console.error('Error memuat saldo dari Supabase:', error.message);
             alert('Gagal memuat saldo. Silakan coba lagi.');
-            balance = 0; // Set to 0 if error
+            balance = 0;
         } finally {
-            updateBalance(0); // Update display (0 karena loadSaldo hanya memuat, bukan menambah)
+            updateBalance(0);
         }
     }
 
@@ -570,7 +568,7 @@
             const { error } = await supabase
                 .from('users_data')
                 .update({ saldo: balance })
-                .eq('user_id', globalUid); // Asumsi kolom `user_id`
+                .eq('user_id', globalUid);
             if (error) throw error;
             console.log('Saldo berhasil disimpan:', balance);
         } catch (error) {
@@ -585,53 +583,38 @@
 
     // --- Game Logic ---
 
-    // Helper to get symbol object data (sekarang bisa menerima objek simbol lengkap)
     function getSymbolData(symbolObj) {
         if (!symbolObj || !symbolObj.id) return null;
 
         if (symbolObj.id === SCATTER_DATA.id) return SCATTER_DATA;
         if (symbolObj.id === ORB_BASE_ID) {
-            // Untuk Orb, kembalikan objek symbolObj itu sendiri karena sudah berisi imgUrl spesifik
             return {
                 id: ORB_BASE_ID,
                 value: symbolObj.value,
                 imgUrl: symbolObj.imgUrl
             };
         }
-        // Untuk simbol reguler, cari dari SYMBOLS_DATA
         return SYMBOLS_DATA.find(s => s.id === symbolObj.id);
     }
 
-    // Function to generate a single random symbol
     function generateSingleRandomSymbol() {
         const rand = Math.random();
-        
-        // Probabilitas Orb dan Scatter
-        const SCATTER_PROBABILITY = 0.015; // 1%
+        const SCATTER_PROBABILITY = 0.01; // 1%
         const ORB_PROBABILITY = 0.015;    // 1.5%
 
-        if (rand < SCATTER_PROBABILITY) { // Scatter
+        if (rand < SCATTER_PROBABILITY) {
             return { id: SCATTER_DATA.id };
-        } else if (rand < SCATTER_PROBABILITY + ORB_PROBABILITY) { // Orb
+        } else if (rand < SCATTER_PROBABILITY + ORB_PROBABILITY) {
             const randomOrb = ORBS_DATA[Math.floor(Math.random() * ORBS_DATA.length)];
-            return { 
-                id: ORB_BASE_ID, 
-                value: randomOrb.value, 
-                imgUrl: randomOrb.imgUrl 
-            }; 
-        } else { // Simbol reguler
+            return {
+                id: ORB_BASE_ID,
+                value: randomOrb.value,
+                imgUrl: randomOrb.imgUrl
+            };
+        } else {
             const regularId = REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
             return { id: regularId };
         }
-    }
-
-    // Function to generate initial random symbols for grid fill
-    function generateInitialSymbols() {
-        const arr = [];
-        for (let i = 0; i < width * height; i++) {
-            arr.push(generateSingleRandomSymbol()); 
-        }
-        return arr;
     }
 
     function renderGrid(symbolsArr) {
@@ -639,100 +622,138 @@
         symbolsArr.forEach(symbolObj => {
             const div = document.createElement('div');
             div.className = 'tile';
-
-            const baseSymbolData = getSymbolData(symbolObj);
-
-            if (baseSymbolData && baseSymbolData.imgUrl) {
-                const img = document.createElement('img');
-                img.src = baseSymbolData.imgUrl;
-                img.alt = baseSymbolData.id || 'symbol';
-                div.appendChild(img);
-            } else if (baseSymbolData && baseSymbolData.emoji) {
-                div.textContent = baseSymbolData.emoji;
-            } else {
-                 div.textContent = ''; // Kosongkan jika tidak ada data yang valid
-                 console.warn("Could not render symbol, missing imgUrl or emoji:", symbolObj);
-            }
-
-            if (symbolObj && symbolObj.id === ORB_BASE_ID) {
-                div.classList.add('special-symbol');
-            } else if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
-                div.classList.add('scatter-symbol');
-            }
+            updateTileContent(div, symbolObj);
             grid.appendChild(div);
         });
     }
-    
-    async function animateTumbleDrop(newSymbols) {
-        const delay = ms => new Promise(res => setTimeout(res, ms));
-        const cells = Array.from(grid.children);
 
-        // Siapkan semua tile untuk animasi jatuh:
-        // Setel posisi awal di luar pandangan (atas) dan opacity 0.
-        // Kemudian perbarui kontennya dengan simbol baru.
-        for (let i = 0; i < cells.length; i++) {
-            const cell = cells[i];
-            const newSymbolObj = newSymbols[i];
+    function updateTileContent(tileElement, symbolObj) {
+        tileElement.innerHTML = ''; // Clear existing content
+        tileElement.classList.remove('special-symbol', 'scatter-symbol', 'break'); // Reset classes
 
-            cell.classList.remove('special-symbol', 'scatter-symbol', 'break'); 
-            cell.style.opacity = '0'; 
-            cell.style.transform = 'translateY(-100vh)'; 
-            cell.classList.add('falling'); // Tambahkan kelas 'falling' untuk sementara menonaktifkan transisi
+        const baseSymbolData = getSymbolData(symbolObj);
 
-            // Perbarui konten DOM dengan simbol baru SEBELUM animasi jatuh
-            cell.innerHTML = '';
-            const baseSymbolData = getSymbolData(newSymbolObj);
-            if (baseSymbolData && baseSymbolData.imgUrl) {
-                const img = document.createElement('img');
-                img.src = baseSymbolData.imgUrl;
-                img.alt = baseSymbolData.id || 'symbol';
-                cell.appendChild(img);
-            } else if (baseSymbolData && baseSymbolData.emoji) {
-                cell.textContent = baseSymbolData.emoji;
-            }
-
-            if (newSymbolObj && newSymbolObj.id === ORB_BASE_ID) {
-                cell.classList.add('special-symbol');
-            } else if (newSymbolObj && newSymbolObj.id === SCATTER_DATA.id) {
-                cell.classList.add('scatter-symbol');
-            }
+        if (baseSymbolData && baseSymbolData.imgUrl) {
+            const img = document.createElement('img');
+            img.src = baseSymbolData.imgUrl;
+            img.alt = baseSymbolData.id || 'symbol';
+            tileElement.appendChild(img);
+        } else if (baseSymbolData && baseSymbolData.emoji) {
+            tileElement.textContent = baseSymbolData.emoji;
+        } else {
+            tileElement.textContent = '';
+            console.warn("Could not render symbol, missing imgUrl or emoji:", symbolObj);
         }
 
-        await delay(50); // Tunggu sebentar agar browser memproses perubahan CSS
+        if (symbolObj && symbolObj.id === ORB_BASE_ID) {
+            tileElement.classList.add('special-symbol');
+        } else if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
+            tileElement.classList.add('scatter-symbol');
+        }
+    }
+    
+    async function animateTumbleDrop(symbolsBeforeTumble, symbolsAfterTumble, indicesToBreak) {
+        const delay = ms => new Promise(res => setTimeout(res, ms));
+        const cells = Array.from(grid.children);
+        
+        // Step 1: Animate breaking symbols
+        if (indicesToBreak.length > 0) {
+            animateWinningTiles(indicesToBreak); 
+            breakSound.currentTime = 0;
+            breakSound.play().catch(e => console.log("Break sound play blocked:", e));
+            await delay(500); // Wait for break animation
+        }
 
-        // Jalankan animasi jatuh dengan sedikit delay antar baris
-        const animationPromises = [];
-        for (let row = 0; row < height; row++) {
-            for (let col = 0; col < width; col++) {
-                const index = row * width + col;
-                const cell = cells[index];
-                
-                const fallDelay = row * 70; // Penundaan berdasarkan baris
-                
-                animationPromises.push(new Promise(resolve => {
-                    setTimeout(() => {
-                        cell.classList.remove('falling'); // Hapus kelas falling untuk mengaktifkan transisi jatuh
-                        cell.style.transform = 'translateY(0)'; 
-                        cell.style.opacity = '1'; 
-                        
-                        const onTransitionEnd = () => {
-                            cell.removeEventListener('transitionend', onTransitionEnd);
-                            resolve();
-                        };
-                        // Pastikan event listener ditambahkan SEBELUM transisi dimulai
-                        cell.addEventListener('transitionend', onTransitionEnd, { once: true });
-                        // Fallback jika transitionend tidak dipicu (misal, transisi terlalu cepat atau tidak ada)
-                        setTimeout(() => resolve(), 600); // Max wait time for transition
-                    }, fallDelay);
-                }));
+        // Step 2: Prepare for drop - mark empty spots and shift existing symbols' positions
+        const symbolsToAnimate = []; // Stores { element, startY, endY, newSymbolObj }
+        const initialPositions = Array(width * height).fill(0); // 0 for original position
+
+        for (let col = 0; col < width; col++) {
+            const columnSymbols = [];
+            const breakingInColumn = new Set();
+            for (let row = 0; row < height; row++) {
+                const idx = row * width + col;
+                if (indicesToBreak.includes(idx)) {
+                    breakingInColumn.add(row);
+                } else {
+                    columnSymbols.push({ symbol: currentSymbols[idx], originalRow: row });
+                }
+            }
+
+            let currentSymbolIndex = 0;
+            for (let row = height - 1; row >= 0; row--) { // Fill column from bottom up
+                const idx = row * width + col;
+                if (currentSymbolIndex < columnSymbols.length) {
+                    // This cell will be filled by an existing symbol falling down
+                    const symbolData = columnSymbols[columnSymbols.length - 1 - currentSymbolIndex];
+                    currentSymbolIndex++;
+
+                    const tile = cells[idx];
+                    updateTileContent(tile, symbolData.symbol); // Update content to the symbol that's falling
+                    
+                    // Calculate start and end Y for existing symbols
+                    // startY is original row relative to new row (negative indicates falling)
+                    const startY = (symbolData.originalRow - row) * (tile.offsetHeight + 5); 
+                    tile.style.transition = 'none'; // Disable transition for initial position
+                    tile.style.transform = `translateY(${-startY}px)`; // Set initial position (above or current)
+                    tile.style.opacity = '1'; // Ensure visible
+
+                    symbolsToAnimate.push({ element: tile, startY: startY, endY: 0, newSymbolObj: symbolData.symbol });
+                } else {
+                    // This cell will be filled by a new symbol from above
+                    const newSymbolObj = symbolsAfterTumble[idx];
+                    const tile = cells[idx];
+                    updateTileContent(tile, newSymbolObj); // Update content to the new symbol
+                    
+                    // New symbols start from way above the grid
+                    tile.style.transition = 'none';
+                    tile.style.transform = 'translateY(-100vh)';
+                    tile.style.opacity = '0'; // Start invisible
+                    symbolsToAnimate.push({ element: tile, startY: '100vh', endY: 0, newSymbolObj: newSymbolObj });
+                }
             }
         }
         
+        // Update currentSymbols immediately after determining new layout
+        currentSymbols = symbolsAfterTumble;
+
+        await delay(50); // Small delay to allow DOM to update hidden positions
+
+        // Step 3: Trigger the fall animation for all relevant symbols
         rollSound.currentTime = 0;
         rollSound.play().catch(e => console.log("Roll sound play blocked:", e));
 
+        const animationPromises = [];
+        symbolsToAnimate.forEach((animData, i) => {
+            const tile = animData.element;
+            const rowIndex = Math.floor(i / width); // Simple row index for staggering
+
+            const fallDelay = rowIndex * 70; // Stagger by row
+
+            animationPromises.push(new Promise(resolve => {
+                setTimeout(() => {
+                    tile.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.4, 1.2), opacity 0.3s ease-out';
+                    tile.style.transform = `translateY(${animData.endY}px)`;
+                    tile.style.opacity = '1';
+                    
+                    const onTransitionEnd = () => {
+                        tile.removeEventListener('transitionend', onTransitionEnd);
+                        resolve();
+                    };
+                    tile.addEventListener('transitionend', onTransitionEnd, { once: true });
+                    // Fallback for cases where transitionend might not fire
+                    setTimeout(() => resolve(), 600);
+                }, fallDelay);
+            }));
+        });
+
         await Promise.all(animationPromises);
-        currentSymbols = newSymbols; // Update currentSymbols setelah animasi selesai
+        // Ensure all tiles are reset to default visual state after animation
+        cells.forEach(tile => {
+            tile.style.transform = 'translateY(0)';
+            tile.style.opacity = '1';
+            tile.style.transition = 'transform 0.1s linear, box-shadow 0.3s ease'; // Restore default transition
+        });
     }
 
 
@@ -741,23 +762,21 @@
         const winningTiles = new Set();
         let scatterCount = 0;
         const scatterIndices = [];
-        let currentSpinOrbsMultiplier = 0; 
+        let currentSpinOrbsMultiplier = 0;
         const orbIndices = [];
-        let currentTumbleWinAmount = 0; 
+        let currentTumbleWinAmount = 0;
 
-        // Collect scatters and orb multipliers from current grid state
         for (let i = 0; i < symbolsArr.length; i++) {
             const symbolObj = symbolsArr[i];
-            if (symbolObj && symbolObj.id === SCATTER_DATA.id) { 
+            if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
                 scatterCount++;
                 scatterIndices.push(i);
-            } else if (symbolObj && symbolObj.id === ORB_BASE_ID) { 
-                currentSpinOrbsMultiplier += symbolObj.value; 
+            } else if (symbolObj && symbolObj.id === ORB_BASE_ID) {
+                currentSpinOrbsMultiplier += symbolObj.value;
                 orbIndices.push(i);
             }
         }
 
-        // Find clusters of 8 or more symbols anywhere on the grid
         const uniqueSymbolIdsInGrid = new Set(symbolsArr.map(s => s ? s.id : null).filter(id => id !== null && id !== ORB_BASE_ID && id !== SCATTER_DATA.id));
         
         for (const symbolId of uniqueSymbolIdsInGrid) {
@@ -765,45 +784,45 @@
             const currentSymbolIndices = [];
 
             for (let i = 0; i < symbolsArr.length; i++) {
-                if (symbolsArr[i] && symbolsArr[i].id === symbolId) { 
+                if (symbolsArr[i] && symbolsArr[i].id === symbolId) {
                     count++;
                     currentSymbolIndices.push(i);
                 }
             }
 
-            if (count >= 8) { 
+            if (count >= 8) {
                 const symbolData = SYMBOLS_DATA.find(s => s.id === symbolId);
-                const payoutKeys = Object.keys(symbolData.payout).map(Number).sort((a, b) => b - a); 
+                const payoutKeys = Object.keys(symbolData.payout).map(Number).sort((a, b) => b - a);
 
                 let payoutMultiplier = 0;
                 for (const key of payoutKeys) {
                     if (count >= key) {
                         payoutMultiplier = symbolData.payout[key];
-                        break; 
+                        break;
                     }
                 }
                 
                 if (payoutMultiplier > 0) {
-                    currentTumbleWinAmount += bet * payoutMultiplier; 
-                    currentSymbolIndices.forEach(idx => winningTiles.add(idx)); 
+                    currentTumbleWinAmount += bet * payoutMultiplier;
+                    currentSymbolIndices.forEach(idx => winningTiles.add(idx));
                 } else {
                     console.warn(`Payout not defined for symbol ${symbolId} with count ${count}`);
                 }
             }
         }
         
-        // Orbs hanya memicu ketika ada kemenangan dari simbol lain di tumble yang sama.
-        // Jika ada kemenangan, Orb juga akan pecah.
+        // Orbs only break if there's a win from other symbols in the same tumble.
+        // If there is a win, Orbs will also break and contribute their value.
         if (currentTumbleWinAmount > 0 && currentSpinOrbsMultiplier > 0) {
-            orbIndices.forEach(idx => winningTiles.add(idx)); 
+            orbIndices.forEach(idx => winningTiles.add(idx));
         }
 
         return {
             winningTiles: Array.from(winningTiles),
-            scatterCount: scatterCount, // Total scatter di grid saat ini
-            scatterIndices: Array.from(scatterIndices), 
-            currentTumbleWinAmount: currentTumbleWinAmount, 
-            currentSpinOrbsMultiplier: currentSpinOrbsMultiplier 
+            scatterCount: scatterCount,
+            scatterIndices: Array.from(scatterIndices),
+            currentTumbleWinAmount: currentTumbleWinAmount,
+            currentSpinOrbsMultiplier: currentSpinOrbsMultiplier
         };
     }
 
@@ -811,54 +830,43 @@
     function animateWinningTiles(indices) {
         document.querySelectorAll('.tile').forEach((tile, i) => {
             if (indices.includes(i)) {
-                tile.classList.add('break');
+                tile.classList.add('break'); // Apply break animation
             } else {
-                tile.style.opacity = 0.5; // Simbol non-winning memudar sedikit
+                tile.style.opacity = 0.5; // Dim non-winning symbols
             }
         });
     }
 
-    async function handleTileCollapse(indicesToBreak) {
-        const delay = ms => new Promise(res => setTimeout(res, ms));
-        const cells = Array.from(grid.children);
-
-        if (indicesToBreak.length > 0) {
-            animateWinningTiles(indicesToBreak); 
-            breakSound.currentTime = 0;
-            breakSound.play().catch(e => console.log("Break sound play blocked:", e));
-            await delay(500); // Tunggu animasi pecah selesai
-        }
-
+    // Function to calculate the next state of the grid after winning symbols break
+    function calculateNextGridState(symbolsArr, indicesToBreak) {
         const nextSymbols = Array(width * height).fill(null);
 
         for (let col = 0; col < width; col++) {
             const columnSymbols = [];
-            for (let row = height - 1; row >= 0; row--) { // Dari bawah ke atas
+            // Collect non-breaking symbols in this column, from bottom up
+            for (let row = height - 1; row >= 0; row--) {
                 const currentIdx = row * width + col;
                 if (!indicesToBreak.includes(currentIdx)) {
-                    columnSymbols.unshift(currentSymbols[currentIdx]); // Tambahkan ke depan array
+                    columnSymbols.unshift(symbolsArr[currentIdx]); // Add to the front to maintain order from top to bottom
                 }
             }
 
+            // Determine how many new symbols are needed to fill the column
             const newSymbolsNeeded = height - columnSymbols.length;
             for (let i = 0; i < newSymbolsNeeded; i++) {
-                columnSymbols.unshift(generateSingleRandomSymbol()); // Simbol baru dari atas
+                columnSymbols.unshift(generateSingleRandomSymbol()); // Add new symbols to the top
             }
 
+            // Place symbols back into the nextSymbols array for this column
             for (let row = 0; row < height; row++) {
                 nextSymbols[row * width + col] = columnSymbols[row];
             }
         }
-        
-        await animateTumbleDrop(nextSymbols); // Ini akan mengupdate currentSymbols
-        // Setelah animasi jatuh, pastikan semua simbol kembali ke opacity 1
-        document.querySelectorAll('.tile').forEach(tile => {
-            tile.style.opacity = 1;
-        });
+        return nextSymbols;
     }
 
 
-    function updateBalance(amount) {
+function updateBalance(amount) {
         balance += amount;
         balanceDisplay.textContent = `Saldo: Rp.${balance.toLocaleString('id-ID')}`;
     }
@@ -921,36 +929,39 @@
 
         if (!isInFreeSpinMode) {
             updateBalance(-bet);
-            currentGlobalMultiplier = 1; // Reset multiplier di spin berbayar
-            updateMultiplierDisplay(currentGlobalMultiplier); 
+            currentGlobalMultiplier = 1; // Reset multiplier in base game spin
+            updateMultiplierDisplay(currentGlobalMultiplier);
         } else {
             freeSpinCount--;
             updateFreeSpinDisplay();
         }
         
-        // Reset tampilan tile
+        // Reset tile appearance for a new spin
         document.querySelectorAll('.tile').forEach(tile => {
             tile.style.opacity = 1;
-            tile.classList.remove('break'); 
+            tile.classList.remove('break');
         });
 
-        // Generasi simbol baru untuk spin awal
-        let initialSymbols = generateInitialSymbols();
-        await animateTumbleDrop(initialSymbols); // Ini akan mengupdate currentSymbols
+        // Initial spin symbols
+        currentSymbols = [];
+        for (let i = 0; i < width * height; i++) {
+            currentSymbols.push(generateSingleRandomSymbol());
+        }
+        renderGrid(currentSymbols); // Initial render with newly generated symbols
         
-        let currentSpinTotalWin = 0; 
-        let chainReactionOccurredInSpin = false; 
+        let currentSpinTotalWin = 0;
+        let chainReactionOccurredInSpin = false;
         let orbMultiplierAccumulatedThisSpin = 0; // Accumulate orbs for the entire chain reaction
 
-        // Loop untuk tumble
-        while (true) { 
+        // Loop for tumbles
+        while (true) {
             const { winningTiles, scatterCount, scatterIndices, currentTumbleWinAmount, currentSpinOrbsMultiplier } = getWinningTiles(currentSymbols);
 
             let tumbleHadWin = false;
             
             if (currentSpinOrbsMultiplier > 0) {
-                orbMultiplierAccumulatedThisSpin += currentSpinOrbsMultiplier; 
-                updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin); 
+                orbMultiplierAccumulatedThisSpin += currentSpinOrbsMultiplier;
+                updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
             }
 
             let finalTumbleWin = currentTumbleWinAmount;
@@ -962,28 +973,30 @@
             if (finalTumbleWin > 0) {
                 winningTiles.forEach(idx => allIndicesToBreak.add(idx));
             }
-            // Scatter juga ikut pecah jika ada kemenangan lain, atau jika memicu free spin
-            if (scatterCount >= 4 || (finalTumbleWin > 0 && scatterCount > 0)) { 
+            // Scatters also break if part of a win or trigger free spins
+            if (scatterCount >= 4 || (finalTumbleWin > 0 && scatterCount > 0)) {
                 scatterIndices.forEach(idx => allIndicesToBreak.add(idx));
             }
 
-            if (allIndicesToBreak.size > 0) { 
+            if (allIndicesToBreak.size > 0) {
                 tumbleHadWin = true;
                 chainReactionOccurredInSpin = true;
-                currentSpinTotalWin += finalTumbleWin; 
+                currentSpinTotalWin += finalTumbleWin;
 
-                await handleTileCollapse(Array.from(allIndicesToBreak));
-                await new Promise(res => setTimeout(res, 600)); // Tunggu sedikit sebelum cek kemenangan lagi
+                // Calculate the next grid state before animating
+                const nextGridSymbols = calculateNextGridState(currentSymbols, Array.from(allIndicesToBreak));
+                await animateTumbleDrop(currentSymbols, nextGridSymbols, Array.from(allIndicesToBreak));
+                currentSymbols = nextGridSymbols; // Update currentSymbols after animation
+                await new Promise(res => setTimeout(res, 600)); // Short pause before next win check
             } else {
-                break; // Tidak ada kemenangan lagi, hentikan tumble
+                break; // No more wins, stop tumbling
             }
 
-            // Cek pemicu Free Spin di setiap tumble, tapi hanya picu sekali per spin utama
-            // Ini untuk Gates of Olympus, di mana scatter bisa mendarat di tumble dan memicu FS.
-            if (!isInFreeSpinMode && scatterCount >= 4) { 
+            // Check for Free Spin trigger (only trigger once per main spin)
+            if (!isInFreeSpinMode && scatterCount >= 4) {
                 let newFreeSpins = 0;
-                if (scatterCount === 4) newFreeSpins = 15; 
-                else if (scatterCount >= 5) newFreeSpins = 5; 
+                if (scatterCount === 4) newFreeSpins = 15;
+                else if (scatterCount >= 5) newFreeSpins = 5; // Assuming more than 5 scatters also give 5 retrigger, adjust as needed
 
                 freeSpinCount += newFreeSpins;
                 showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
@@ -995,26 +1008,26 @@
                 freeSpinBGM.volume = 0.3;
                 freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
                 isInFreeSpinMode = true;
-                totalFreeSpinWin = 0; // Reset total kemenangan free spin
-                orbMultiplierAccumulatedThisSpin = 0; // Reset pengganda orb saat masuk free spin
+                totalFreeSpinWin = 0; // Reset total free spin win
+                orbMultiplierAccumulatedThisSpin = 0; // Reset orb multiplier for free spins
                 updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
-                break; // Keluar dari loop tumble untuk memulai mode free spin
-            } else if (isInFreeSpinMode && scatterCount >= 3) { // Retrigger di Free Spin
+                break; // Exit tumble loop to start free spin mode
+            } else if (isInFreeSpinMode && scatterCount >= 3) { // Retrigger in Free Spin
                  let retriggerSpins = 0;
                  if (scatterCount === 3) retriggerSpins = 5;
                  else if (scatterCount === 4) retriggerSpins = 15;
-                 else if (scatterCount >= 5) retriggerSpins = 5;
+                 else if (scatterCount >= 5) retriggerSpins = 5; // Adjust as per game rules
                  freeSpinCount += retriggerSpins;
                  showPopup(`+${retriggerSpins} Free Spins!`);
                  updateFreeSpinDisplay();
             }
-        } 
+        }
 
-        // Selesai dengan semua tumble
+        // After all tumbles are done for the current spin
         if (isInFreeSpinMode) {
             totalFreeSpinWin += currentSpinTotalWin;
         } else {
-            updateBalance(currentSpinTotalWin); // Tambahkan kemenangan ke saldo di mode normal
+            updateBalance(currentSpinTotalWin); // Add win to balance in base game
         }
         
         if (currentSpinTotalWin > 0) {
@@ -1026,32 +1039,31 @@
                 winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
             }
             showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
-        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) { 
+        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) {
              showPopup('Coba lagi!');
         }
 
-        // Handle kelanjutan atau akhir Free Spin
+        // Handle continuation or end of Free Spins
         if (freeSpinCount > 0 && isInFreeSpinMode) {
-            await new Promise(res => setTimeout(res, 1500)); // Jeda sebentar sebelum spin FS berikutnya
-            spin(); // Lanjutkan Free Spin
+            await new Promise(res => setTimeout(res, 1500)); // Pause before next FS spin
+            spin(); // Continue Free Spin
         } else {
-            // Free Spin berakhir atau bukan Free Spin mode
-            if (isInFreeSpinMode) { // Jika baru saja keluar dari Free Spin
+            if (isInFreeSpinMode) { // Just finished Free Spins
                 freeSpinBGM.pause();
                 freeSpinBGM.currentTime = 0;
                 bgm.play().catch(e => console.log("BGM play blocked:", e));
                 isInFreeSpinMode = false;
                 await showFreeSpinWinAnimation(totalFreeSpinWin);
-                updateBalance(totalFreeSpinWin); // Tambahkan total kemenangan Free Spin ke saldo
-                totalFreeSpinWin = 0; // Reset total kemenangan Free Spin
-                orbMultiplierAccumulatedThisSpin = 0; // Reset pengganda orb global
-                updateMultiplierDisplay(currentGlobalMultiplier); // Kembali ke x1
+                updateBalance(totalFreeSpinWin); // Add total free spin win to balance
+                totalFreeSpinWin = 0; // Reset total free spin win
+                orbMultiplierAccumulatedThisSpin = 0; // Reset orb multiplier
+                updateMultiplierDisplay(currentGlobalMultiplier); // Reset multiplier display
             }
 
-            // Pastikan semua tile di-reset ke opacity penuh dan tanpa kelas pecah
+            // Ensure all tiles are back to full opacity and without break class
             document.querySelectorAll('.tile').forEach(tile => {
                 tile.style.opacity = 1;
-                tile.classList.remove('break'); 
+                tile.classList.remove('break');
             });
 
             spinButton.disabled = false;
@@ -1059,8 +1071,8 @@
             betPlusBtn.disabled = false;
             minBetBtn.disabled = false;
             maxBetBtn.disabled = false;
-            updateFreeSpinDisplay(); 
-            currentGlobalMultiplier = 1; // Pastikan multiplier kembali ke 1 setelah spin normal
+            updateFreeSpinDisplay();
+            currentGlobalMultiplier = 1; // Ensure multiplier resets after normal spin
             updateMultiplierDisplay(currentGlobalMultiplier);
         }
 
@@ -1103,17 +1115,19 @@
     winBigSound.volume = 0.8;
     breakSound.volume = 0.7;
     document.getElementById('spinSound').volume = 0.5;
-    document.getElementById('freeSpinSound').volume = 0.6; 
+    document.getElementById('freeSpinSound').volume = 0.6;
 
     function init() {
-      currentSymbols = generateInitialSymbols(); 
-      renderGrid(currentSymbols);
-      updateBalance(0); 
+      currentSymbols = []; // Start with an empty grid, then fill with initial symbols
+      for (let i = 0; i < width * height; i++) {
+          currentSymbols.push(generateSingleRandomSymbol());
+      }
+      renderGrid(currentSymbols); // Initial render
+      updateBalance(0);
       updateBetDisplay();
       updateFreeSpinDisplay();
       updateMultiplierDisplay(currentGlobalMultiplier);
 
-      // Attempt to play BGM, add click listener as fallback
       bgm.play().catch(() => {
         document.body.addEventListener('click', () => {
           bgm.play();
@@ -1122,7 +1136,6 @@
     }
 
     document.addEventListener('DOMContentLoaded', init);
-
     
   </script>
 </body>
