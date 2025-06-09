@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Neon Zeus Slot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Press Start 2P', cursive;
+            color: #fff;
+            touch-action: manipulation;
+        }
+
+        #game-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            max-width: 900px;
+            max-height: 600px;
+            background-color: #1a0f2b;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: calc(100% - 100px); /* Kurangi tinggi untuk UI overlay */
+            object-fit: contain;
+        }
+
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #00ffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            flex-direction: column;
+            z-index: 100;
+        }
+        .spinner {
+            border: 8px solid rgba(0, 255, 255, 0.3);
+            border-top: 8px solid #00ffff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #ui-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 5px;
+            box-sizing: border-box;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.7);
+            border-top: 2px solid #ff00ff;
+        }
+
+        #spin-button {
+            background-color: #00ffff;
+            color: #000;
+            padding: 10px 18px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.7);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+            white-space: nowrap;
+        }
+        #spin-button:hover:not(:disabled) {
+            background-color: #00dddd;
+            box-shadow: 0 0 25px rgba(0, 255, 255, 1);
+        }
+        #spin-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .ui-item {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            border: 2px solid #ff00ff;
+            flex-grow: 1;
+            text-align: center;
+            justify-content: center;
+            margin: 0 3px;
+            white-space: nowrap;
+        }
+        .ui-item span {
+            color: #ff00ff;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        .ui-item label {
+            font-size: 0.8em;
+            color: #ccc;
+        }
+
+        /* Penyesuaian untuk desktop (ukuran yang lebih besar) */
+        @media (min-width: 768px) {
+            #game-container {
+                border-radius: 15px;
+                box-shadow: 0 0 50px rgba(0, 255, 255, 0.5);
+                width: 800px;
+                height: 600px;
+            }
+            canvas {
+                height: calc(100% - 120px);
+            }
+            #ui-overlay {
+                bottom: 20px;
+                left: 50%;
+                width: auto;
+                height: 80px;
+                transform: translateX(-50%);
+                padding: 10px 20px;
+                border-top: none;
+                border: 2px solid #ff00ff;
+                border-radius: 10px;
+                flex-direction: row;
+                gap: 20px;
+            }
+            #spin-button {
+                padding: 15px 30px;
+                font-size: 20px;
+            }
+            .ui-item {
+                font-size: 16px;
+                padding: 10px 20px;
+                flex-direction: row;
+                gap: 8px;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="loading-screen">
+            <div class="spinner"></div>
+            Memuat Game...
+        </div>
+
+        <div id="ui-overlay" style="display: none;">
+            <div class="ui-item" id="balance-display">
+                <label>SALDO:</label>
+                <span id="current-balance">0</span>
+            </div>
+            <div class="ui-item" id="win-display">
+                <label>MENANG:</label>
+                <span id="current-win">0</span>
+            </div>
+            <button id="spin-button">PUTAR</button>
+            <div class="ui-item" id="multiplier-display">
+                <label>PENGGANDA:</label>
+                <span id="current-multiplier">1x</span>
+            </div>
+            <div class="ui-item" id="freespin-display">
+                <label>FREE SPINS:</label>
+                <span id="free-spin-count">0</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.4.2/pixi.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+const supabase = window.supabase.createClient(
+      'https://vqmfachxnjyxwuavpgds.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+    );
+    const uid = localStorage.getItem('uid');
+    
+     const supabase = supabase_js.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // --- DOM Elements ---
+        const gameContainer = document.getElementById('game-container');
+        const loadingScreen = document.getElementById('loading-screen');
+        const uiOverlay = document.getElementById('ui-overlay');
+        const balanceDisplay = document.getElementById('current-balance');
+        const winDisplay = document.getElementById('current-win');
+        const multiplierDisplay = document.getElementById('current-multiplier');
+        const freespinDisplay = document.getElementById('free-spin-count');
+        const spinButton = document.getElementById('spin-button');
+
+        // --- Game Configuration ---
+        const app = new PIXI.Application({
+            backgroundColor: 0x1a0f2b,
+            antialias: true,
+            resizeTo: gameContainer
+        });
+        gameContainer.appendChild(app.view);
+        app.view.style.width = '100%';
+        app.view.style.height = 'calc(100% - 100px)'; // Sesuaikan tinggi canvas agar tidak menutupi UI
+
+        const numReels = 6;
+        const numRows = 5;
+        const symbolBaseSize = 100; // Ukuran dasar simbol, akan diskalakan
+        let currentSymbolSize = symbolBaseSize; // Ukuran simbol saat ini
+        const betAmount = 100;
+
+        let currentBalance = 0;
+        let totalWinThisSpin = 0;
+        let currentMultiplier = 1;
+        let globalMultiplier = 1;
+        let freeSpinCount = 0;
+        let inFreeSpins = false;
+        let isSpinning = false;
+
+        // --- Game Assets (Textures & Sounds) ---
+        // EMOJI SIMBOL (Ganti dengan emoji yang Anda suka, yang terlihat 'neon')
+        const EMOJI_SYMBOLS = ['💎', '💍', '🏺', '✨', '⚡', '💙', '💚', '💛', '🧡']; // 9 simbol dasar
+        const SCATTER_URL = 'YOUR_ZEUS_SCATTER_IMAGE_URL'; // GANTI dengan URL gambar Zeus Anda
+        const MULTIPLIER_URL = 'YOUR_ORB_MULTIPLIER_IMAGE_URL'; // GANTI dengan URL gambar Orb Anda
+
+        const SYMBOL_TYPES = {
+            EMOJI_START: 0, // Indeks awal untuk emoji
+            SCATTER: EMOJI_SYMBOLS.length, // Indeks setelah semua emoji
+            MULTIPLIER: EMOJI_SYMBOLS.length + 1 // Indeks setelah scatter
+        };
+        const TOTAL_SYMBOL_TYPES = EMOJI_SYMBOLS.length + 2; // Total jenis simbol (emoji + scatter + multiplier)
+
+        const symbolTextures = []; // Akan diisi untuk Scatter dan Multiplier
+        const sounds = {}; // Akan diisi untuk suara
+
+        // Gaya teks untuk emoji
+        const emojiTextStyle = new PIXI.TextStyle({
+            fontSize: 70, // Ukuran font emoji, akan diskalakan
+            fill: '#FFFFFF', // Warna default, bisa diatur per emoji
+            align: 'center',
+            fontWeight: 'bold',
+            stroke: '#000000',
+            strokeThickness: 5,
+            dropShadow: true,
+            dropShadowColor: '#00ffff',
+            dropShadowBlur: 10,
+            dropShadowAngle: Math.PI / 6,
+            dropShadowDistance: 5,
+        });
+
+        // Struktur pembayaran (Contoh, sesuaikan dengan Gates of Olympus)
+        const PAYOUT_TABLE = {
+            8:  { 0: 0.5, 1: 0.5, 2: 0.5, 3: 0.5, 4: 0.5, 5: 1, 6: 1, 7: 1, 8: 2, [SYMBOL_TYPES.SCATTER]: 3 },
+            10: { 0: 1, 1: 1, 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 4, [SYMBOL_TYPES.SCATTER]: 10 },
+            12: { 0: 1.5, 1: 1.5, 2: 1.5, 3: 1.5, 4: 1.5, 5: 3, 6: 3, 7: 3, 8: 6, [SYMBOL_TYPES.SCATTER]: 20 },
+            15: { 0: 3, 1: 3, 2: 3, 3: 3, 4: 3, 5: 6, 6: 6, 7: 6, 8: 12, [SYMBOL_TYPES.SCATTER]: 100 },
+            20: { 0: 8, 1: 8, 2: 8, 3: 8, 4: 8, 5: 16, 6: 16, 7: 16, 8: 32, [SYMBOL_TYPES.SCATTER]: 1000 },
+            30: { [SYMBOL_TYPES.SCATTER]: 5000 }
+        };
+
+        const MULTIPLIER_VALUES = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 25, 50, 100, 250, 500];
+
+        // --- Reels Setup ---
+        const reels = [];
+        const reelContainer = new PIXI.Container();
+        app.stage.addChild(reelContainer);
+
+        let currentReelSymbols = []; // currentReelSymbols[kolom][baris] = symbolId
+        // Fungsi untuk menyesuaikan ukuran game dan posisi elemen
+        function resizeGame() {
+            // Skala simbol berdasarkan tinggi layar
+            currentSymbolSize = Math.min(symbolBaseSize, app.screen.height / numRows);
+            emojiTextStyle.fontSize = currentSymbolSize * 0.7; // Sesuaikan ukuran font emoji
+
+            const totalReelWidth = numReels * currentSymbolSize * 1.1; // Sedikit jarak antar gulungan
+            reelContainer.x = (app.screen.width - totalReelWidth) / 2;
+            reelContainer.y = (app.screen.height - (numRows * currentSymbolSize)) / 2 - 50; // Sedikit di atas UI
+
+            // Perbarui posisi dan skala semua sprite di gulungan
+            reels.forEach((reel, rIdx) => {
+                for (let i = 0; i < reel.symbols.length; i++) {
+                    const symbolSprite = reel.symbols[i];
+                    symbolSprite.x = rIdx * currentSymbolSize * 1.1;
+                    symbolSprite.y = i * currentSymbolSize;
+                    
+                    if (symbolSprite instanceof PIXI.Sprite) {
+                        symbolSprite.scale.set(currentSymbolSize / symbolSprite.texture.width);
+                        symbolSprite.anchor.set(0.5);
+                        symbolSprite.x += currentSymbolSize / 2;
+                        symbolSprite.y += currentSymbolSize / 2;
+                    } else if (symbolSprite instanceof PIXI.Text) {
+                        symbolSprite.style = emojiTextStyle; // Perbarui gaya teks
+                        symbolSprite.anchor.set(0.5);
+                        symbolSprite.x += currentSymbolSize / 2;
+                        symbolSprite.y += currentSymbolSize / 2;
+                    }
+                }
+            });
+        }
+
+        window.addEventListener('resize', resizeGame);
+        app.ticker.add(resizeGame);
+
+        // --- Supabase Integration Functions ---
+
+        async function getPlayerBalance() {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+
+                if (!user) {
+                    alert('Anda harus login untuk bermain!');
+                    window.location.href = 'index.html';
+                    return;
+                }
+
+                const { data, error } = await supabase
+                    .from('users_data')
+                    .select('saldo')
+                    .eq('id', user.id)
+                    .single();
+
+                if (error) throw error;
+
+                currentBalance = data.saldo;
+                balanceDisplay.textContent = currentBalance.toLocaleString();
+                console.log('Saldo berhasil dimuat:', currentBalance);
+
+            } catch (error) {
+                console.error('Error fetching balance:', error.message);
+                alert('Gagal memuat saldo: ' + error.message);
+            }
+        }
+
+        async function updatePlayerBalance(amount) {
+            try {
+                const { data: { user } } = await supabase.auth.getUser();
+
+                if (!user) {
+                    console.error('Pengguna tidak login saat mencoba update saldo.');
+                    alert('Sesi Anda berakhir. Silakan login kembali.');
+                    window.location.href = 'index.html';
+                    return false;
+                }
+
+                const newBalance = currentBalance + amount;
+                if (newBalance < 0) {
+                     console.warn('Percobaan update saldo negatif, dibatalkan.');
+                     return false;
+                }
+
+                const { data, error } = await supabase
+                    .from('users_data')
+                    .update({ saldo: newBalance })
+                    .eq('id', user.id)
+                    .select('saldo')
+                    .single();
+
+                if (error) throw error;
+
+                currentBalance = data.saldo;
+                balanceDisplay.textContent = currentBalance.toLocaleString();
+                console.log('Saldo diperbarui:', currentBalance);
+                return true;
+
+            } catch (error) {
+                console.error('Error updating balance:', error.message);
+                alert('Gagal memperbarui saldo: ' + error.message);
+                return false;
+            }
+        }
+
+        // --- Game Core Logic ---
+
+        // Fungsi untuk membuat sprite simbol berdasarkan ID
+        function createSymbolSprite(symbolId) {
+            let sprite;
+            if (symbolId >= SYMBOL_TYPES.EMOJI_START && symbolId < SYMBOL_TYPES.SCATTER) {
+                sprite = new PIXI.Text(EMOJI_SYMBOLS[symbolId], emojiTextStyle);
+            } else if (symbolId === SYMBOL_TYPES.SCATTER) {
+                sprite = new PIXI.Sprite(symbolTextures[SYMBOL_TYPES.SCATTER]);
+            } else if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
+                sprite = new PIXI.Sprite(symbolTextures[SYMBOL_TYPES.MULTIPLIER]);
+            } else {
+                // Fallback untuk simbol yang tidak dikenal
+                sprite = new PIXI.Text('?', emojiTextStyle);
+            }
+            sprite.anchor.set(0.5); // Atur anchor di tengah
+            return sprite;
+        }
+
+        // Mengisi gulungan secara acak (digunakan untuk inisialisasi dan tumble)
+        function fillReelsRandomly(isTumble = false) {
+            const newReelSymbols = [];
+            reels.forEach((reel, rIdx) => {
+                const reelColumn = [];
+                for (let i = 0; i < numRows; i++) {
+                    let symbolId;
+                    if (isTumble && currentReelSymbols[rIdx] && currentReelSymbols[rIdx][i] !== null) {
+                        symbolId = currentReelSymbols[rIdx][i];
+                    } else {
+                        // Pilih simbol acak (hindari SCATTER dan MULTIPLIER terlalu sering)
+                        do {
+                            symbolId = Math.floor(Math.random() * TOTAL_SYMBOL_TYPES);
+                        } while ((symbolId === SYMBOL_TYPES.SCATTER && Math.random() > 0.15) ||
+                                 (symbolId === SYMBOL_TYPES.MULTIPLIER && Math.random() > 0.2));
+                    }
+                    reelColumn.push(symbolId);
+
+                    const symbolSprite = reel.symbols[i];
+                    reel.container.removeChild(symbolSprite); // Hapus sprite lama
+                    const newSprite = createSymbolSprite(symbolId); // Buat sprite baru
+                    newSprite.y = i * currentSymbolSize;
+                    newSprite.x = rIdx * currentSymbolSize * 1.1 + currentSymbolSize / 2; // Pusatkan
+                    
+                    reel.symbols[i] = newSprite; // Ganti referensi sprite
+                    reel.container.addChild(newSprite);
+                    newSprite.alpha = 1; // Pastikan terlihat
+                    newSprite.visible = true;
+                    // Skala ulang untuk memastikan ukuran konsisten
+                    if (newSprite instanceof PIXI.Sprite) {
+                        newSprite.scale.set(currentSymbolSize / newSprite.texture.width);
+                    } else { // PIXI.Text
+                        newSprite.scale.set(1); // Skala 1 karena ukuran diatur oleh fontSize
+                    }
+                }
+                newReelSymbols.push(reelColumn);
+            });
+            currentReelSymbols = newReelSymbols;
+            // console.log("Current Reel Symbols (after fill):", currentReelSymbols);
+        }
+
+        function calculateWinnings() {
+            let spinWin = 0;
+            let multipliersInThisTumble = 0;
+            let winningSymbolsPositions = [];
+
+            const symbolCounts = {};
+            const symbolPositions = {};
+            let scatterCount = 0;
+
+            for (let c = 0; c < numReels; c++) {
+                for (let r = 0; r < numRows; r++) {
+                    const symbolId = currentReelSymbols[c][r];
+                    symbolCounts[symbolId] = (symbolCounts[symbolId] || 0) + 1;
+                    if (!symbolPositions[symbolId]) {
+                        symbolPositions[symbolId] = [];
+                    }
+                    symbolPositions[symbolId].push({ col: c, row: r });
+
+                    if (symbolId === SYMBOL_TYPES.SCATTER) {
+                        scatterCount++;
+                    } else if (symbolId === SYMBOL_TYPES.MULTIPLIER) {
+                        const multiplierValue = MULTIPLIER_VALUES[Math.floor(Math.random() * MULTIPLIER_VALUES.length)];
+                        multipliersInThisTumble += multiplierValue;
+                        console.log(`Orb Pengganda muncul: x${multiplierValue}`);
+                    }
+                }
+            }
+
+            let hasWin = false;
+            for (const symbolIdStr in symbolCounts) {
+                const type = parseInt(symbolIdStr);
+                const count = symbolCounts[type];
+
+                if (type !== SYMBOL_TYPES.MULTIPLIER && type !== SYMBOL_TYPES.SCATTER && count >= 8 && PAYOUT_TABLE[count] && PAYOUT_TABLE[count][type] !== undefined) {
+                    const payoutMultiplier = PAYOUT_TABLE[count][type];
+                    const win = betAmount * payoutMultiplier;
+                    spinWin += win;
+                    hasWin = true;
+
+                    console.log(`Menang ${win.toFixed(2)} dengan ${count} simbol ${EMOJI_SYMBOLS[type]}`);
+                    winningSymbolsPositions.push(...symbolPositions[type]);
+                }
+            }
+
+            if (scatterCount >= 4 && PAYOUT_TABLE[scatterCount] && PAYOUT_TABLE[scatterCount][SYMBOL_TYPES.SCATTER] !== undefined) {
+                const scatterPayout = PAYOUT_TABLE[scatterCount][SYMBOL_TYPES.SCATTER];
+                const win = betAmount * scatterPayout;
+                spinWin += win;
+                hasWin = true;
+                console.log(`Menang ${win.toFixed(2)} dengan ${scatterCount} simbol Zeus Scatter`);
+                winningSymbolsPositions.push(...symbolPositions[SYMBOL_TYPES.SCATTER]);
+            }
+
+            if (multipliersInThisTumble > 0) {
+                currentMultiplier = multipliersInThisTumble;
+                spinWin *= currentMultiplier;
+                console.log(`Total Pengganda dari Orb di tumble ini: x${currentMultiplier}`);
+            } else {
+                currentMultiplier = 1;
+            }
+
+            if (inFreeSpins) {
+                globalMultiplier += multipliersInThisTumble;
+                spinWin *= globalMultiplier;
+                multiplierDisplay.textContent = `${globalMultiplier}x`;
+            } else {
+                multiplierDisplay.textContent = `${currentMultiplier}x`;
+            }
+
+            console.log(`Kemenangan bersih setelah pengganda di tumble ini: ${spinWin.toFixed(2)}`);
+
+            return {
+                winAmount: spinWin,
+                hasWin: hasWin,
+                winningSymbolsPositions: winningSymbolsPositions,
+                scatterCount: scatterCount,
+                multipliersInThisTumble: multipliersInThisTumble
+            };
+        }
+
+        async function performTumble(winningSymbolsPositions) {
+            if (winningSymbolsPositions.length === 0) return;
+
+            sounds.tumble?.play();
+
+            const promises = [];
+            winningSymbolsPositions.forEach(pos => {
+                const sprite = reels[pos.col].symbols[pos.row];
+                promises.push(new Promise(resolve => {
+                    gsap.to(sprite.scale, { x: 0, y: 0, duration: 0.3, ease: "power2.in" });
+                    gsap.to(sprite, { alpha: 0, duration: 0.3, onComplete: () => {
+                        sprite.visible = false;
+                        sprite.alpha = 1;
+                        sprite.scale.set(1); // Reset skala untuk penggunaan kembali
+                        resolve();
+                    }});
+                }));
+                currentReelSymbols[pos.col][pos.row] = null;
+            });
+            await Promise.all(promises);
+
+            reels.forEach((reel, c) => {
+                let emptySpots = 0;
+                const newColumn = [];
+                for (let r = numRows - 1; r >= 0; r--) {
+                    if (currentReelSymbols[c][r] === null) {
+                        emptySpots++;
+                    } else {
+                        newColumn.unshift(currentReelSymbols[c][r]);
+                    }
+                }
+                for (let i = 0; i < emptySpots; i++) {
+                    let symbolId;
+                    do {
+                        symbolId = Math.floor(Math.random() * TOTAL_SYMBOL_TYPES);
+                    } while ((symbolId === SYMBOL_TYPES.SCATTER && Math.random() > 0.15) ||
+                             (symbolId === SYMBOL_TYPES.MULTIPLIER && Math.random() > 0.2));
+                    newColumn.unshift(symbolId);
+                }
+                currentReelSymbols[c] = newColumn;
+
+                for (let r = 0; r < numRows; r++) {
+                    const symbolId = currentReelSymbols[c][r];
+                    const oldSprite = reel.symbols[r];
+                    reel.container.removeChild(oldSprite); // Hapus sprite lama
+
+                    const newSprite = createSymbolSprite(symbolId);
+                    newSprite.x = c * currentSymbolSize * 1.1 + currentSymbolSize / 2; // Pusatkan
+                    newSprite.y = r * currentSymbolSize;
+                    newSprite.visible = true;
+                    newSprite.alpha = 1;
+                    
+                    if (newSprite instanceof PIXI.Sprite) {
+                        newSprite.scale.set(currentSymbolSize / newSprite.texture.width);
+                    } else {
+                        newSprite.scale.set(1);
+                        newSprite.style = emojiTextStyle; // Pastikan gaya teks diperbarui
+                    }
+
+                    reel.symbols[r] = newSprite; // Ganti referensi sprite
+                    reel.container.addChild(newSprite);
+
+                    // Animasikan jatuh
+                    gsap.fromTo(newSprite,
+                        { y: (r - emptySpots) * currentSymbolSize - (emptySpots > 0 ? 50 : 0) },
+                        { y: r * currentSymbolSize, duration: 0.5 + emptySpots * 0.1, ease: "bounce.out" }
+                    );
+                }
+            });
+            await new Promise(resolve => setTimeout(resolve, 800));
+        }
+
+        // --- Main Game Loop & Spin Logic ---
+
+        spinButton.addEventListener('click', async () => {
+            if (isSpinning) return;
+
+            if (!inFreeSpins && currentBalance < betAmount) {
+                alert('Saldo tidak cukup! Silakan deposit.');
+                return;
+            }
+
+            isSpinning = true;
+            spinButton.disabled = true;
+            totalWinThisSpin = 0;
+            winDisplay.textContent = '0';
+            if (!inFreeSpins) {
+                multiplierDisplay.textContent = '1x';
+            }
+
+            sounds.spin?.play();
+
+            if (!inFreeSpins) {
+                const success = await updatePlayerBalance(-betAmount);
+                if (!success) {
+                    isSpinning = false;
+                    spinButton.disabled = false;
+                    return;
+                }
+            } else {
+                freeSpinCount--;
+                freespinDisplay.textContent = freeSpinCount;
+            }
+
+            reels.forEach(reel => {
+                reel.velocity = 0;
+                reel.position = 0;
+                reel.spinning = true;
+                reel.blur.blurY = 0;
+                reel.blur.blurX = 0;
+            });
+
+            const spinPromises = reels.map((reel, index) => {
+                return new Promise(resolve => {
+                    const spinDuration = 800 + index * 150;
+                    reel.velocity = Math.random() * 20 + 20;
+                    gsap.to(reel, {
+                        duration: spinDuration / 1000,
+                        velocity: 0,
+                        ease: "power2.out",
+                        onComplete: () => {
+                            reel.spinning = false;
+                            reels.forEach((r, rIdx) => {
+                                for (let sIdx = 0; sIdx < r.symbols.length; sIdx++) {
+                                    r.symbols[sIdx].y = sIdx * currentSymbolSize;
+                                }
+                            });
+                            sounds.reel_stop?.play();
+                            resolve();
+                        }
+                    });
+                });
+            });
+
+            await Promise.all(spinPromises);
+
+            console.log('Semua gulungan berhenti!');
+
+            let continueTumble = true;
+            while (continueTumble) {
+                const { winAmount, hasWin, winningSymbolsPositions, scatterCount, multipliersInThisTumble } = calculateWinnings();
+
+                if (winAmount > 0) {
+                    totalWinThisSpin += winAmount;
+                    winDisplay.textContent = totalWinThisSpin.toLocaleString();
+                    console.log(`Kemenangan tumble ini: ${winAmount.toFixed(2)}. Total spin: ${totalWinThisSpin.toFixed(2)}`);
+
+                    await performTumble(winningSymbolsPositions);
+                } else {
+                    continueTumble = false;
+                    console.log('Tidak ada kemenangan lagi. Tumble selesai.');
+                }
+
+                if (!inFreeSpins && scatterCount >= 4) {
+                    console.log(`Memicu Free Spins dengan ${scatterCount} Scatter!`);
+                    freeSpinCount += 15;
+                    inFreeSpins = true;
+                    globalMultiplier = 1;
+                    freespinDisplay.textContent = freeSpinCount;
+                    alert('Selamat! Anda mendapatkan 15 Putaran Gratis!');
+                    break;
+                } else if (inFreeSpins && scatterCount >= 3) {
+                    console.log(`Retrigger Free Spins dengan ${scatterCount} Scatter!`);
+                    freeSpinCount += 5;
+                    freespinDisplay.textContent = freeSpinCount;
+                    alert('Anda mendapatkan tambahan 5 Putaran Gratis!');
+                }
+            }
+
+            if (totalWinThisSpin > 0) {
+                sounds.win?.play();
+                console.log(`Total kemenangan akhir putaran ini: ${totalWinThisSpin.toFixed(2)}`);
+                await updatePlayerBalance(totalWinThisSpin);
+            }
+
+            if (inFreeSpins && freeSpinCount > 0) {
+                isSpinning = false;
+                spinButton.disabled = false;
+                console.log(`Masih ada ${freeSpinCount} Free Spins. Siap untuk putaran berikutnya.`);
+                // setTimeout(() => spinButton.click(), 1500); // Auto-spin Free Spins
+            } else if (inFreeSpins && freeSpinCount <= 0) {
+                console.log('Free Spins berakhir.');
+                inFreeSpins = false;
+                globalMultiplier = 1;
+                freespinDisplay.textContent = '0';
+                multiplierDisplay.textContent = '1x';
+                isSpinning = false;
+                spinButton.disabled = false;
+                alert('Putaran Gratis Berakhir! Saldo telah diperbarui.');
+            } else {
+                isSpinning = false;
+                spinButton.disabled = false;
+            }
+        });
+
+        app.ticker.add(() => {
+            reels.forEach(reel => {
+                if (reel.spinning) {
+                    reel.position += reel.velocity;
+                    reel.blur.blurY = Math.min(20, Math.abs(reel.velocity));
+
+                    for (let i = 0; i < reel.symbols.length; i++) {
+                        const symbol = reel.symbols[i];
+                        // Sesuaikan posisi Y berdasarkan currentSymbolSize
+                        symbol.y = ((reel.position + i * currentSymbolSize) % (currentSymbolSize * numRows)) + (currentSymbolSize / 2);
+                        if (symbol.y < currentSymbolSize / 2) {
+                            symbol.y += currentSymbolSize * numRows;
+                        }
+                    }
+                } else {
+                    if (reel.velocity > 0.1) {
+                        reel.velocity *= 0.95;
+                        reel.blur.blurY = Math.min(20, Math.abs(reel.velocity));
+                    } else {
+                        reel.velocity = 0;
+                        reel.blur.blurY = 0;
+                    }
+                }
+            });
+        });
+
+        // --- Asset Loader (manual for images and audio) ---
+        async function loadAssets() {
+            try {
+                // Load image textures
+                const zeusTexture = await PIXI.Assets.load(SCATTER_URL);
+                const orbTexture = await PIXI.Assets.load(MULTIPLIER_URL);
+                symbolTextures[SYMBOL_TYPES.SCATTER] = zeusTexture;
+                symbolTextures[SYMBOL_TYPES.MULTIPLIER] = orbTexture;
+
+                // Load audio files
+                sounds.spin = new Audio('https://freesound.org/data/previews/144/144766_2646696-lq.mp3'); // Example: Slot machine spin
+                sounds.tumble = new Audio('https://freesound.org/data/previews/203/203003_3632940-lq.mp3'); // Example: Glass shatter/pop
+                sounds.reel_stop = new Audio('https://freesound.org/data/previews/389/389146_5558917-lq.mp3'); // Example: Mechanical stop
+                sounds.win = new Audio('https://freesound.org/data/previews/270/270319_5121408-lq.mp3'); // Example: Short win sound
+                
+                sounds.spin.volume = 0.5;
+                sounds.tumble.volume = 0.7;
+                sounds.reel_stop.volume = 0.6;
+                sounds.win.volume = 0.8;
+
+                // Create initial reel sprites (as PIXI.Graphics for placeholder, will be replaced by emoji/image)
+                for (let i = 0; i < numReels; i++) {
+                    const reel = {
+                        container: new PIXI.Container(),
+                        symbols: [],
+                        position: 0,
+                        velocity: 0,
+                        blur: new PIXI.filters.BlurFilter(),
+                        spinning: false,
+                    };
+
+                    reel.blur.blurX = 0;
+                    reel.blur.blurY = 0;
+                    reel.container.filters = [reel.blur];
+                    reelContainer.addChild(reel.container);
+                    reels.push(reel);
+
+                    for (let j = 0; j < numRows + 2; j++) {
+                        // Awalnya, buat placeholder atau Text kosong
+                        const symbol = new PIXI.Text('', emojiTextStyle);
+                        symbol.x = i * currentSymbolSize * 1.1 + currentSymbolSize / 2;
+                        symbol.y = j * currentSymbolSize + currentSymbolSize / 2;
+                        reel.symbols.push(symbol);
+                        reel.container.addChild(symbol);
+                    }
+                }
+
+                // Hide loading screen and show UI
+                loadingScreen.style.display = 'none';
+                uiOverlay.style.display = 'flex';
+
+                // Initial game setup
+                fillReelsRandomly(false);
+                getPlayerBalance();
+                resizeGame(); // Initial resize to set correct positions
+            } catch (error) {
+                console.error("Failed to load assets:", error);
+                alert("Gagal memuat aset game. Silakan periksa koneksi internet atau URL gambar.");
+            }
+        }
+
+        // Start loading assets when the script runs
+        loadAssets();
+    </script>
+</body>
+</html>
