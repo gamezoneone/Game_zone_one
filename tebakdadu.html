@@ -22,32 +22,23 @@
 
     * { box-sizing: border-box; }
     body, html {
-      margin: 0; padding: 0; min-height: 100vh;
+      margin: 0; padding: 0; min-height: 0;
       font-family: 'Poppins', sans-serif;
       background-image: url('https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//images%20(4).jpeg');
-      background-size: cover;
+      background-size: 100%;
       color: var(--light-text);
-      display: flex;
-      justify-content: center;
       align-items: center;
-      padding: 0px; /* Kembali ke padding standar untuk fleksibilitas */
-      overflow-y: auto; /* Allow vertical scroll if content overflows */
-      overflow-x: hidden; /* Prevent horizontal scroll */
+      padding: 0px;
+      overflow-y: auto;
+      overflow-x: hidden;
     }
 
     /* Game Container */
     .game-container {
       width: 100%;
-      background: rgba(0,0,0,0.7); /* Background yang lebih gelap */
+      background: rgba(0,0,0,0.0);
       border-radius: 20px;
-      padding: 30px;
-      border: 2px solid var(--neon-blue); /* Border neon blue */
-      box-shadow: 0 0 25px rgba(0, 255, 255, 0.7); /* Glow neon blue */
-      text-align: center;
-      position: relative;
-      overflow: hidden; /* For particles */
-      animation: pulsateGlow 2s infinite alternate; /* Tetap pertahankan pulsate glow */
-      min-height: 80vh; /* Make it taller to match profil.html feel */
+      padding: 0px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -61,7 +52,7 @@
     /* Particles Effect (disesuaikan agar sesuai tema) */
     .particle {
         position: absolute;
-        background-color: rgba(0, 255, 255, 0.6); /* Warna partikel cyan */
+        background-color: rgba(0, 255, 255, 0.9); /* Warna partikel cyan */
         border-radius: 50%;
         animation: floatAndFade 5s infinite ease-out;
         opacity: 0;
@@ -80,7 +71,7 @@
       font-family: 'Orbitron', sans-serif; /* Ganti font title */
       color: var(--neon-green); /* Warna hijau neon */
       text-shadow: 0 0 10px var(--neon-green), 0 0 20px var(--neon-green), 0 0 30px var(--neon-green);
-      margin-bottom: 2px; /* Sedikit lebih besar */
+      margin-bottom: 0px; /* Sedikit lebih besar */
       font-size: 2em; /* Ukuran lebih besar */
       letter-spacing: 2px;
     }
@@ -88,7 +79,7 @@
     /* Saldo display (dibuat mirip dengan saldo di profil.html) */
     .saldo-container {
         width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 0px;
         text-align: center;
     }
     .saldo {
@@ -182,15 +173,17 @@
     }
     
     .bet-section, .guess-section {
-      margin-bottom: 20px; /* Jarak antar section */
+      margin-bottom: 2px; /* Jarak antar section */
       text-align: center;
     }
     label {
       display: block;
-      margin-bottom: 10px; /* Jarak antara label dan input/pilihan */
+      margin-bottom: 0px; /* Jarak antara label dan input/pilihan */
       font-weight: 700;
       font-size: 1.1em; /* Ukuran font label */
-      color: var(--neon-blue); /* Warna label biru neon */
+      color: #222; /* Warna label biru neon */
+      background: gold;
+      border-radius: 5px;
       text-shadow: 0 0 5px var(--neon-blue);
     }
     
@@ -199,9 +192,9 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 15px; /* Jarak antara tombol dan tampilan taruhan */
+        gap: 10px; /* Jarak antara tombol dan tampilan taruhan */
         margin-top: 5px;
-        margin-bottom: 20px;
+        margin-bottom: 0px;
     }
 
     .bet-control #display-bet-amount {
@@ -212,16 +205,16 @@
         min-width: 120px; /* Agar ukurannya stabil */
         text-align: center;
         padding: 8px 15px;
-        background: rgba(0, 0, 0, 0.7);
+        background: #fff;
         border-radius: 8px;
-        border: 2px solid var(--neon-green);
+        border: 2px solid black;
         box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
     }
 
     .btn-bet-adjust {
         background: var(--neon-purple); /* Warna ungu neon */
         color: #fff;
-        border: none;
+        border: 1 solid red;
         border-radius: 50%;
         width: 45px; /* Ukuran tombol */
         height: 45px;
@@ -283,7 +276,7 @@
     }
     /* Ganti input radio menjadi checkbox, sesuaikan selector */
     .guess-options-grid input[type="checkbox"]:checked + label.guess-box {
-        background: var(--neon-blue); /* Warna biru neon saat dipilih */
+        background: black; /* Warna biru neon saat dipilih */
         border-color: var(--neon-green); /* Border hijau neon saat dipilih */
         color: #000; /* Warna teks gelap agar kontras */
         font-weight: 700;
@@ -307,7 +300,7 @@
     }
     /* Ganti input radio menjadi checkbox, sesuaikan selector */
     .guess-options-grid input[type="checkbox"]:checked + label.guess-box.animal-guess-box {
-        background: var(--neon-purple); /* Warna ungu neon saat dipilih */
+        background: black; /* Warna ungu neon saat dipilih */
         border-color: var(--neon-green); /* Border hijau neon saat dipilih */
         color: #000; /* Emojis will likely ignore this, but good practice */
         box-shadow: 0 0 20px var(--neon-purple), 0 0 30px var(--neon-green); /* Glow lebih kuat */
@@ -499,8 +492,8 @@
         .dice.animal, .guess-box.animal {
             font-size: 24px;
         }
-        label { font-size: 0.9em; margin-bottom: 5px; }
-        .bet-control { gap: 10px; margin-bottom: 15px; }
+        label { font-size: 0.9em; margin-bottom: 2px; }
+        .bet-control { gap: 10px; margin-bottom: 5px; }
         .bet-control #display-bet-amount {
             font-size: 18px;
             padding: 5px 10px;
@@ -530,7 +523,7 @@
 </head>
 <body>
   <div class="game-container" id="game-container">
-    <h1>Tebak Dadu Fantasi </h1>
+    <h1>Tebak Dadu </h1>
     <div class="saldo-container">
         <div class="saldo" id="saldo-display">Saldo: Rp.0</div>
     </div>
@@ -748,7 +741,7 @@
         }
     }
 
-    async function loadUserProfile() {
+   async function loadUserProfile() {
       if (!uid) {
         showNotificationModal('Perhatian!', 'Anda harus login untuk bermain game ini.');
         // Beri sedikit waktu agar modal muncul sebelum redirect
