@@ -834,33 +834,44 @@
 
     async function handleTileCollapse(indicesToBreak) {
         const delay = ms => new Promise(res => setTimeout(res, ms));
+        const cells = Array.from(grid.children);
 
+        // Tahap 1: Animasi pecah dan tandai untuk dihilangkan
         if (indicesToBreak.length > 0) {
-            animateWinningTiles(indicesToBreak);
+            animateWinningTiles(indicesToBreak); // Tambahkan kelas 'break'
+            breakSound.currentTime = 0;
+            breakSound.play().catch(e => console.log("Break sound play blocked:", e));
             await delay(500); // Durasi animasi 'break'
         }
 
         // Buat array simbol baru yang akan diisi setelah pecah dan jatuh
         const nextSymbols = Array(width * height).fill(null);
+        let symbolsAfterBreak = []; // Untuk menyimpan simbol yang tidak pecah
 
-        // Isi `nextSymbols` dengan simbol yang tidak pecah, pindahkan ke bawah (efek gravitasi)
+        // Tahap 2: Geser simbol yang tidak pecah ke bawah dan kumpulkan simbol baru
         for (let col = 0; col < width; col++) {
-            let currentRowInNextSymbols = height - 1; // Mulai dari bawah kolom
-            for (let row = height - 1; row >= 0; row--) {
+            const columnSymbols = [];
+            // Kumpulkan simbol yang tersisa di kolom ini
+            for (let row = 0; row < height; row++) {
                 const currentIdx = row * width + col;
                 if (!indicesToBreak.includes(currentIdx)) {
-                    // Simbol ini tidak pecah, pindahkan ke baris terbawah yang tersedia di `nextSymbols`
-                    nextSymbols[currentRowInNextSymbols * width + col] = currentSymbols[currentIdx];
-                    currentRowInNextSymbols--;
+                    columnSymbols.push(currentSymbols[currentIdx]);
                 }
             }
-            // Isi sisa baris di atas dengan simbol baru yang acak
-            for (let row = currentRowInNextSymbols; row >= 0; row--) {
-                nextSymbols[row * width + col] = generateSingleRandomSymbol();
+
+            // Tambahkan simbol baru di bagian atas kolom untuk mengisi kekosongan
+            const newSymbolsNeeded = height - columnSymbols.length;
+            for (let i = 0; i < newSymbolsNeeded; i++) {
+                columnSymbols.unshift(generateSingleRandomSymbol()); // Tambahkan ke awal (atas)
+            }
+
+            // Masukkan kembali simbol-simbol kolom ke dalam `nextSymbols`
+            for (let row = 0; row < height; row++) {
+                nextSymbols[row * width + col] = columnSymbols[row];
             }
         }
         
-        // Panggil animateTumbleDrop dengan simbol-simbol baru ini
+        // Tahap 3: Animasikan jatuhnya simbol baru dan yang tersisa
         await animateTumbleDrop(nextSymbols);
     }
 
@@ -912,7 +923,7 @@
         freeSpinWinOverlay.style.visibility = 'hidden';
     }
 
-    async function spin() {
+  async function spin() {
         if (isSpinning) return;
         if (!isInFreeSpinMode && balance < bet) {
             showPopup('Saldo tidak cukup!');
@@ -935,57 +946,70 @@
             updateFreeSpinDisplay();
         }
         
+        // Reset tampilan semua tile di awal spin
         document.querySelectorAll('.tile').forEach(tile => {
             tile.style.opacity = 1;
             tile.classList.remove('break'); 
         });
 
-        // Generasi simbol baru untuk spin awal
-        const newSymbolsForSpin = generateInitialSymbols();
-        await animateTumbleDrop(newSymbolsForSpin); // Animasi jatuh untuk spin awal
+        // Generasi simbol baru untuk spin awal dan animasikan jatuh
+        currentSymbols = generateInitialSymbols(); // Update currentSymbols langsung di sini
+        await animateTumbleDrop(currentSymbols); // Animasi jatuh untuk spin awal
 
         let currentSpinTotalWin = 0; 
-        let chainReaction = true;
+        let chainReactionOccurredInSpin = false; // Flag untuk melacak apakah ada reaksi berantai
+        let orbMultiplierAccumulatedThisSpin = 0; // Akumulasi multiplier orb untuk satu spin utama
 
-        while (chainReaction) {
-            chainReaction = false;
+        while (true) { // Loop untuk menangani tumbles berantai
             const { winningTiles, scatterCount, scatterIndices, currentTumbleWinAmount, currentSpinOrbsMultiplier } = getWinningTiles(currentSymbols);
 
-            if (currentTumbleWinAmount > 0 && currentSpinOrbsMultiplier > 0) {
-                currentGlobalMultiplier += currentSpinOrbsMultiplier; 
-                updateMultiplierDisplay(currentGlobalMultiplier); 
-            }
+            let tumbleHadWin = false; // Flag untuk kemenangan di tumble saat ini
             
-            let finalTumbleWin = currentTumbleWinAmount * currentGlobalMultiplier;
-
-            if (finalTumbleWin > 0) {
-                chainReaction = true; 
-                currentSpinTotalWin += finalTumbleWin; 
-
-                await handleTileCollapse(winningTiles); // Ini akan memicu animasi pecah dan jatuh lagi
-                await new Promise(res => setTimeout(res, 600)); // Sedikit jeda setelah tumble
-            } else {
-                // Pastikan semua tile kembali normal jika tidak ada kemenangan di tumble ini
-                document.querySelectorAll('.tile').forEach(tile => {
-                    tile.style.opacity = 1;
-                    tile.classList.remove('break'); 
-                });
+            // Logika untuk Multiplier Orb
+            if (currentSpinOrbsMultiplier > 0) {
+                orbMultiplierAccumulatedThisSpin += currentSpinOrbsMultiplier; 
+                updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin); // Perbarui tampilan multiplier
+                // Jika ada Orb, itu akan dianggap sebagai bagian dari winningTiles jika ada kemenangan lain di tumble ini
+                if (currentTumbleWinAmount > 0) {
+                    // WinningTiles sudah menyertakan orbIndices di getWinningTiles jika ada kemenangan
+                }
             }
 
-            // Periksa scatter di akhir setiap tumble jika ada kemenangan
-            // Catatan: Dalam game aslinya, Scatter bisa muncul di mana saja, tapi seringkali memicu free spin setelah semua tumble selesai dari satu spin utama.
-            // Untuk kesederhanaan, kita bisa biarkan ini memicu free spin di tengah-tengah tumble jika menang.
-            if (scatterCount >= 4 && winningTiles.length > 0) { // Hanya picu FS jika ada kemenangan tumble yang menyertai scatter atau kemenangan lain
+            let finalTumbleWin = currentTumbleWinAmount;
+            // Terapkan multiplier orb hanya jika ada kemenangan simbol biasa di tumble ini
+            if (currentTumbleWinAmount > 0 && orbMultiplierAccumulatedThisSpin > 0) {
+                 finalTumbleWin = currentTumbleWinAmount * orbMultiplierAccumulatedThisSpin;
+            }
+
+
+            if (finalTumbleWin > 0 || scatterCount >= 4) { // Lanjutkan jika ada kemenangan atau cukup scatter
+                tumbleHadWin = true;
+                chainReactionOccurredInSpin = true;
+                currentSpinTotalWin += finalTumbleWin; // Tambahkan kemenangan tumble saat ini
+
+                // Gabungkan winningTiles dan scatterIndices untuk pecah
+                let allIndicesToBreak = new Set([...winningTiles, ...scatterIndices]);
+
+                // Pecahkan simbol dan biarkan yang baru jatuh
+                await handleTileCollapse(Array.from(allIndicesToBreak));
+                // Setelah handleTileCollapse, currentSymbols sudah diperbarui oleh animateTumbleDrop
+
+                await new Promise(res => setTimeout(res, 600)); // Jeda sebentar setelah jatuh
+            } else {
+                // Jika tidak ada kemenangan atau scatter yang memicu aksi, hentikan chain reaction
+                break; 
+            }
+
+            // Cek Scatter setelah setiap tumble
+            if (scatterCount >= 4) {
                 let newFreeSpins = 0;
                 if (scatterCount === 4) newFreeSpins = 15; 
-                else if (scatterCount >= 5) newFreeSpins = 5; 
-
-                freeSpinCount += newFreeSpins;
-                showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
-                updateFreeSpinDisplay();
-                chainReaction = true; // Jika scatter memicu FS, anggap sebagai bagian dari chain reaction
+                else if (scatterCount >= 5) newFreeSpins = 5; // Bisa lebih dari 5, asumsikan +5 per scatter tambahan (sesuai game)
 
                 if (!isInFreeSpinMode) { 
+                    freeSpinCount += newFreeSpins;
+                    showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
+                    updateFreeSpinDisplay();
                     freeSpinSound.currentTime = 0;
                     freeSpinSound.play().catch(e => console.log("Free spin sound play blocked:", e));
                     bgm.pause();
@@ -994,15 +1018,18 @@
                     freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
                     isInFreeSpinMode = true;
                     totalFreeSpinWin = 0; 
-                    currentGlobalMultiplier = 1; 
-                    updateMultiplierDisplay(currentGlobalMultiplier);
+                    orbMultiplierAccumulatedThisSpin = 1; // Reset multiplier di awal free spin
+                    updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
+                } else {
+                    // Jika sudah dalam Free Spin mode, hanya tambahkan spin
+                    freeSpinCount += newFreeSpins;
+                    showPopup(`+${newFreeSpins} Free Spins!`);
+                    updateFreeSpinDisplay();
                 }
-                
-                await handleTileCollapse(scatterIndices); // Scatter juga akan pecah
-                await new Promise(res => setTimeout(res, 600));
             }
-        }
-        
+        } // Akhir dari while(true) loop untuk tumble
+
+        // Logika setelah semua tumble selesai
         if (isInFreeSpinMode) {
             totalFreeSpinWin += currentSpinTotalWin;
         } else {
@@ -1018,10 +1045,11 @@
                 winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
             }
             showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
-        } else if (!isInFreeSpinMode) { 
+        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) { 
              showPopup('Coba lagi!');
         }
 
+        // Lanjutkan spin jika masih ada free spin
         if (freeSpinCount > 0) {
             await new Promise(res => setTimeout(res, 1500)); // Jeda sebelum spin FS berikutnya
             spin(); 
@@ -1034,8 +1062,8 @@
                 await showFreeSpinWinAnimation(totalFreeSpinWin);
                 updateBalance(totalFreeSpinWin); 
                 totalFreeSpinWin = 0; 
-                currentGlobalMultiplier = 1; 
-                updateMultiplierDisplay(currentGlobalMultiplier);
+                orbMultiplierAccumulatedThisSpin = 1; // Pastikan multiplier reset setelah free spin
+                updateMultiplierDisplay(orbMultiplierAccumulatedThisSpin);
             }
 
             spinButton.disabled = false;
@@ -1049,6 +1077,7 @@
         await saveBalanceToSupabase();
         isSpinning = false;
     }
+
 
     // Bet adjustment functions
     betMinusBtn.onclick = () => {
