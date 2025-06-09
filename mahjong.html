@@ -8,7 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-        /* Neon Theme Colors (Diadaptasi untuk tema Zeus) */
+        /* Neon Theme Colors (dapat disesuaikan untuk tema Zeus) */
         :root {
             --zeus-bg-dark: #1a0f30; /* Darker purple/blue for background */
             --zeus-bg-light: #3a1f60; /* Lighter purple */
@@ -88,8 +88,8 @@
     .slot-grid {
       display: grid;
       /* Mahjong Ways grid is typically 5x4 or 5x5. */
-      grid-template-columns: repeat(5, min(65px, 15vw));
-      grid-template-rows: repeat(5, min(65px, 15vw)); /* Sesuaikan dengan grid Mahjong Anda (5x5 sesuai kode Anda) */
+      grid-template-columns: repeat(5, min(65px, 15vw)); 
+      grid-template-rows: repeat(4, min(65px, 15vw)); /* Sesuaikan dengan grid Mahjong Anda (biasanya 4 atau 5 baris) */
       gap: 5px;
       justify-content: center;
       border: 0px solid var(--zeus-gold);
@@ -130,7 +130,7 @@
       object-fit: contain;
       display: block;
       /* Filter untuk gambar Mahjong, bisa disesuaikan agar sesuai dengan tema Zeus */
-      filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.5));
+      filter: drop-shadow(0 0 5px rgba(0, 191, 255, 0.5)); 
     }
 
     .tile.break {
@@ -163,9 +163,9 @@
 
     .controls-container {
         width: 100%;
-        max-width: 500px; /* Lebar maksimal untuk kontrol */
+        max-width: 500px;
         display: flex;
-        flex-wrap: wrap; /* Agar bisa wrap di mobile */
+        flex-wrap: wrap;
         justify-content: space-around;
         align-items: center;
         margin-top: 15px;
@@ -183,26 +183,25 @@
         color: var(--text-primary);
         border: 2px solid var(--zeus-blue);
         margin: 5px;
-        flex-grow: 1; /* Agar mengisi ruang yang tersedia */
-        white-space: nowrap; /* Mencegah teks putus */
+        flex-grow: 1;
+        white-space: nowrap;
     }
     .info-box.balance-box { border-color: var(--zeus-gold); color: var(--zeus-gold); }
     .info-box.bet-box { border-color: var(--zeus-purple); color: var(--zeus-purple); }
     .info-box.freespin-box { border-color: var(--zeus-red); color: var(--zeus-red); }
 
-
     .multiplier {
-      position: fixed; /* Mengubah dari fixed menjadi absolute, karena di dalam slot-frame */
+      position: fixed;
       top: 10px;
       right: 10px;
-      background: rgba(0, 0, 0, 0.0);
+      background: rgba(0, 0, 0, 0.9);
       padding: 8px 15px;
       border-radius: 15px;
       color: var(--zeus-gold);
       font-size: 2em;
       font-weight: bold;
-      border: 0px solid var(--zeus-gold);
-      box-shadow: ;
+      border: 3px solid var(--zeus-gold);
+      box-shadow: var(--glow-sm) var(--zeus-gold);
       transition: transform 0.2s ease-out;
       z-index: 5;
     }
@@ -293,12 +292,11 @@
     #betPlus { border-color: var(--zeus-red); color: var(--zeus-red); }
     #minBetBtn, #maxBetBtn { border-color: var(--zeus-gold); color: var(--zeus-gold); }
 
-
-    /* Simbol Wild dan Scatter dengan List Berbeda (Diadaptasi untuk tema Zeus) */
-    .tile.wild-symbol {
-      border: 2px solid var(--zeus-gold); /* List kuning */
-      box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold); /* Glow lebih kecil */
-      animation: pulseSpecial 1.2s infinite alternate; /* Animasi lebih cepat */
+    /* Special Symbol styling (Mahjong Wild/Scatter/Gold Tile) */
+    .tile.wild-symbol { /* For Mahjong Wild (e.g., golden tile) */
+      border: 2px solid var(--zeus-gold);
+      box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold);
+      animation: pulseSpecial 1.2s infinite alternate;
     }
 
     @keyframes pulseSpecial {
@@ -307,10 +305,10 @@
       100% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-gold), inset 0 0 5px var(--zeus-gold); }
     }
 
-    .tile.scatter-symbol {
-      border: 2px solid var(--zeus-blue); /* List biru */
-      box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue); /* Glow lebih kecil */
-      animation: pulseScatter 1.2s infinite alternate; /* Animasi lebih cepat */
+    .tile.scatter-symbol { /* For Mahjong Scatter (e.g., logo) */
+      border: 2px solid var(--zeus-blue);
+      box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue);
+      animation: pulseScatter 1.2s infinite alternate;
     }
 
     @keyframes pulseScatter {
@@ -319,7 +317,7 @@
       100% { transform: scale(1); box-shadow: 0 0 10px var(--zeus-blue), inset 0 0 5px var(--zeus-blue); }
     }
 
-    /* Animasi kemenangan Free Spin (Diadaptasi untuk tema Zeus) */
+    /* Win Animation Overlay */
     .win-animation-overlay {
         position: fixed;
         top: 0;
@@ -390,8 +388,8 @@
         h1 { font-size: 1.5em; margin-bottom: 10px; }
         .slot-frame { padding: 5px; }
         .slot-grid {
-            grid-template-columns: repeat(5, min(50px, 15vw)); /* Sesuaikan untuk Mahjong 5x5 */
-            grid-template-rows: repeat(5, min(50px, 15vw));
+            grid-template-columns: repeat(5, min(50px, 15vw)); /* Sesuaikan untuk Mahjong 5x4 */
+            grid-template-rows: repeat(4, min(50px, 15vw));
             gap: 2px;
         }
         .tile { font-size: min(25px, 6vw); border-radius: 4px; }
@@ -406,7 +404,7 @@
   </style>
 </head>
 <body>
-<audio id="rollSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-fast-sci-fi-sweep-1946.mp3"></audio>
+  <audio id="rollSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-fast-sci-fi-sweep-1946.mp3"></audio>
   <audio id="winSmallSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-money-bag-drop-1989.mp3"></audio>
   <audio id="winBigSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-final-level-bonus-2061.mp3"></audio>
   <audio id="breakSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-mechanical-crate-pick-up-3154%20(1).mp3"></audio>
@@ -415,18 +413,19 @@
   <audio id="bgm" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//dj-background-music-background-music-free-music-music-free-for-use-221916%20(1).mp3" loop></audio>
   <audio id="freeSpinSound" src="https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/music//mixkit-game-level-completed-2059.mp3"></audio>
   <audio id="freeSpinBGM" src="https://www.bensound.com/bensound-music/bensound-epic.mp3" loop></audio>
-
-  <marquee>•NIKMATI KESERUAN BERMAIN DENGAN KEMENANGAN YANG TIDAK PERNAH TERBAYANGKAN•LAKUKAN STRATEGI AGAR DAPAT MEMENANGKAN PERMAINAN DAN DAPATKAN UANG SECARA MUDAH•</marquee>
+  
+  <marquee>•SELAMAT DATANG DI MAHJONG WAYS!•KUMPULKAN SIMBOL EMAS UNTUK KEMENANGAN BESAR!•</marquee>
 
   <h1>Mahjong Ways<hr></h1>
-
   <div class="slot-frame">
     <div class="slot-grid" id="grid"></div>
-    <div class="multiplier" id="multiplierDisplay">x1</div> </div>
+    <div class="multiplier" id="multiplierDisplay">x1</div>
+  </div>
 
   <div class="controls-container">
     <div class="info-box balance-box" id="balanceDisplay">Saldo: Rp0</div>
-    <div class="info-box bet-box" id="betDisplay">BET: 100</div> <div class="info-box freespin-box" id="freeSpinDisplay">Free Spins: 0</div>
+    <div class="info-box bet-box" id="betDisplay">BET: 100</div>
+    <div class="info-box freespin-box" id="freeSpinDisplay">Free Spins: 0</div>
   </div>
 
   <div class="bet-buttons-container">
@@ -457,67 +456,57 @@
     const breakSound = document.getElementById('breakSound');
     const betMinusBtn = document.getElementById('betMinus');
     const betPlusBtn = document.getElementById('betPlus');
+    const minBetBtn = document.getElementById('minBetBtn');
+    const maxBetBtn = document.getElementById('maxBetBtn');
     const freeSpinDisplay = document.getElementById('freeSpinDisplay');
     const freeSpinWinOverlay = document.getElementById('freeSpinWinOverlay');
     const freeSpinTotalWinDisplay = document.getElementById('freeSpinTotalWin');
-    const minBetBtn = document.getElementById('minBetBtn'); // Added for Zeus-like controls
-    const maxBetBtn = document.getElementById('maxBetBtn'); // Added for Zeus-like controls
 
+    // Supabase Configuration - GANTI DENGAN KUNCI ANDA YANG SEBENARNYA!
+   const SUPABASE_URL = 'https://vqmfachxnjyxwuavpgds.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const supabase = window.supabase.createClient(
-      'https://vqmfachxnjyxwuavpgds.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4njyxwuavpgdsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
-    );
-    let globalUid = null; // Changed uid to globalUid for consistency and scope
-
-    const symbolPayouts = {
-      '🦧': 15,
-      '🐅': 13,
-      '🦫': 12,
-      '🐥': 11,
-      '🦜': 10,
-      '🐓': 9,
-      '🕊️': 6,
-      '🐖': 4,
-      '🦕': 7,
-      '🐈': 6,
-      '🐬': 5,
-    };
-
+    // Mahjong Ways grid size - Umumnya 5x4 atau 5x5, mari asumsikan 5x4 untuk Mahjong Ways 1
     const width = 5;
-    const height = 5;
-    const symbols = ['🐬', '🐈', '🦕', '🐖', '🕊️', '🐓', '🦜', '🐥', '🦫', '🐅', '🦧', '🌟', '🐉'];
-    const WILD_SYMBOL = '🌟'; // Gold tile in Mahjong Ways
-    const SCATTER_SYMBOL = '🐉'; // Mahjong Ways logo/coin
+    const height = 4; // Atur 5 jika Mahjong Ways Anda 5x5
 
-    // Mapping symbols to their actual image URLs (assuming you want to use the provided URLs)
-    const SYMBOL_IMAGE_MAP = {
-        '🌟': 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//download%20(1).png', // Your Wild image
-        '🐉': 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/qris//2432cb49c2991c8dd62a77f44f51fb45.png', // Your Scatter image
-        // You might need to add URLs for other Mahjong symbols if you want images for them
-        // For now, regular symbols will remain as emojis.
-        // Example for other symbols if you get images:
-        // '🦧': 'url_gambar_kera.png',
-        // '🐅': 'url_gambar_harimau.png',
-        // ...
-    };
+    // Symbol data for Mahjong Ways - GANTI DENGAN URL SIMBOL MAHJONG ANDA
+    // Pastikan Anda memiliki gambar-gambar Mahjong yang sesuai!
+    const SYMBOLS_DATA = [
+        { id: 'green_dragon', emoji: '🀄', imgUrl: '', payout: { '3': 0.1, '4': 0.2, '5': 0.4 } },
+        { id: 'red_dragon', emoji: '🀅', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//e6f94801-9924-415f-b544-b4828c47228c.jpeg', payout: { '3': 0.1, '4': 0.25, '5': 0.5 } },
+        { id: 'white_dragon', emoji: '🀀', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download%20(1).jpeg', payout: { '3': 0.15, '4': 0.3, '5': 0.6 } },
+        { id: 'bamboo_1', emoji: '🀐', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download%20(8).jpeg', payout: { '3': 0.2, '4': 0.4, '5': 0.8 } },
+        { id: 'bamboo_2', emoji: '🀑', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download%20(9).jpeg', payout: { '3': 0.25, '4': 0.5, '5': 1.0 } },
+        { id: 'bamboo_3', emoji: '🀒', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download%20(10).jpeg', payout: { '3': 0.3, '4': 0.6, '5': 1.2 } },
+        { id: 'char_east', emoji: '🀀', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download%20(12).jpeg', payout: { '3': 0.4, '4': 0.8, '5': 1.6 } },
+        { id: 'char_south', emoji: '🀀', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//images.jpeg', payout: { '3': 0.5, '4': 1.0, '5': 2.0 } }
+        // Tambahkan simbol mahjong lain yang Anda inginkan
+    ];
 
+    // Wild symbol (Golden Tile)
+    const WILD_DATA = { id: 'WILD', emoji: '🀀', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong/wild_tile.png' }; 
+    // Scatter symbol (Mahjong Ways Logo/Gold coin)
+    const SCATTER_DATA = { id: 'SCATTER', emoji: '⛩️', imgUrl: 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/mahjong//download.jpeg', payout: { '3': 1, '4': 2, '5': 10 } }; 
 
+const ALL_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id).concat(WILD_DATA.id, SCATTER_DATA.id);
+    const REGULAR_SYMBOL_IDS = SYMBOLS_DATA.map(s => s.id);
+    
     let currentSymbols = [];
     let balance = 0;
-    const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000]; // Adjust as needed
+    const BET_LEVELS = [100, 200, 500, 1000, 2000, 5000, 10000, 20000, 50000, 100000];
     let currentBetIndex = 0;
-    let bet = BET_LEVELS[currentBetIndex]; // Use BET_LEVELS for bet
-    let currentMultiplier = 1; // Renamed 'multiplier' to 'currentMultiplier' for clarity
+    let bet = BET_LEVELS[currentBetIndex];
+
+    let currentMultiplier = 1;
     let freeSpinCount = 0;
     let totalFreeSpinWin = 0;
-
-    const bgm = document.getElementById('bgm');
-    const freeSpinSound = document.getElementById('freeSpinSound');
-    const freeSpinBGM = document.getElementById('freeSpinBGM');
     let isInFreeSpinMode = false;
-    let isSpinning = false; // Add isSpinning flag
+    let isSpinning = false;
+    let globalUid = null;
 
+    // --- Supabase Integration ---
     async function loadSaldo() {
         const { data: { user }, error: authError } = await supabase.auth.getUser();
 
@@ -583,232 +572,238 @@
         init();
     };
 
+    // --- Game Logic ---
 
-    function generateRandomSymbols() {
-      const arr = [];
-      for (let i = 0; i < width * height; i++) {
-        let randomSymbol;
-        const col = i % width;
+    function getSymbolData(symbolObj) {
+        if (!symbolObj || !symbolObj.id) return null;
 
+        if (symbolObj.id === SCATTER_DATA.id) return SCATTER_DATA;
+        if (symbolObj.id === WILD_DATA.id) return WILD_DATA;
+        return SYMBOLS_DATA.find(s => s.id === symbolObj.id);
+    }
+    
+    function generateSingleRandomSymbol() {
         const rand = Math.random();
-
-        // Adjust probabilities for Mahjong Ways like behavior
-        const SCATTER_PROBABILITY = 0.01; // Example, adjust as needed
-        const WILD_PROBABILITY = 0.015; // Example, adjust as needed
+        
+        const SCATTER_PROBABILITY = 0.01; 
+        const WILD_PROBABILITY = 0.015;    
 
         if (rand < SCATTER_PROBABILITY) {
-            randomSymbol = SCATTER_SYMBOL;
+            return { id: SCATTER_DATA.id };
         } else if (rand < SCATTER_PROBABILITY + WILD_PROBABILITY) {
-            randomSymbol = WILD_SYMBOL;
+            return { id: WILD_DATA.id }; 
         } else {
-            randomSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Exclude WILD and SCATTER
+            const regularId = REGULAR_SYMBOL_IDS[Math.floor(Math.random() * REGULAR_SYMBOL_IDS.length)];
+            return { id: regularId };
         }
-        arr.push(randomSymbol);
-      }
-      return arr;
+    }
+
+    function generateInitialSymbols() {
+        const arr = [];
+        for (let i = 0; i < width * height; i++) {
+            arr.push(generateSingleRandomSymbol());
+        }
+        return arr;
     }
 
     function renderGrid(symbolsArr) {
-      grid.innerHTML = '';
-      symbolsArr.forEach(sym => {
-        const div = document.createElement('div');
-        div.className = 'tile';
+        grid.innerHTML = '';
+        symbolsArr.forEach(symbolObj => {
+            const div = document.createElement('div');
+            div.className = 'tile';
 
-        if (SYMBOL_IMAGE_MAP[sym]) {
-          const img = document.createElement('img');
-          img.src = SYMBOL_IMAGE_MAP[sym];
-          img.alt = sym;
-          div.appendChild(img);
-        } else {
-          div.textContent = sym;
-        }
+            const baseSymbolData = getSymbolData(symbolObj);
 
-        if (sym === WILD_SYMBOL) {
-          div.classList.add('wild-symbol');
-        } else if (sym === SCATTER_SYMBOL) {
-          div.classList.add('scatter-symbol');
-        }
-        grid.appendChild(div);
-      });
+            if (baseSymbolData && baseSymbolData.imgUrl) {
+                const img = document.createElement('img');
+                img.src = baseSymbolData.imgUrl;
+                img.alt = baseSymbolData.id || 'symbol';
+                div.appendChild(img);
+            } else if (baseSymbolData && baseSymbolData.emoji) {
+                div.textContent = baseSymbolData.emoji;
+            } else {
+                 div.textContent = '';
+            }
+
+            if (symbolObj && symbolObj.id === WILD_DATA.id) {
+                div.classList.add('wild-symbol');
+            } else if (symbolObj && symbolObj.id === SCATTER_DATA.id) {
+                div.classList.add('scatter-symbol');
+            }
+            grid.appendChild(div);
+        });
     }
-
-
+    
     async function animateTumbleDrop(newSymbols) {
         const delay = ms => new Promise(res => setTimeout(res, ms));
         const cells = Array.from(grid.children);
 
-        // Animate old tiles falling off (if any were broken)
         for (let i = 0; i < cells.length; i++) {
             const cell = cells[i];
-            if (cell.classList.contains('break')) { // If it's a broken tile, make it disappear
-                cell.style.opacity = '0';
-                cell.style.transform = 'translateY(100vh)'; // Fall down
-            }
-        }
-        await delay(100); // Short delay for old tiles to start falling
+            const newSymbolObj = newSymbols[i];
 
-        // Prepare new tiles at the top
-        for (let i = 0; i < cells.length; i++) {
-            const cell = cells[i];
-            const newSymbol = newSymbols[i];
-
-            cell.classList.remove('wild-symbol', 'scatter-symbol', 'break');
-            cell.style.opacity = '0'; // Start invisible
-            cell.style.transform = 'translateY(-100vh)'; // Start above the grid
-            cell.classList.add('falling'); // Apply falling class to remove transition for start
+            cell.classList.remove('wild-symbol', 'scatter-symbol', 'break'); 
+            cell.style.opacity = '0'; 
+            cell.style.transform = 'translateY(-100vh)'; 
+            cell.classList.add('falling');
 
             cell.innerHTML = '';
-            if (SYMBOL_IMAGE_MAP[newSymbol]) {
+            const baseSymbolData = getSymbolData(newSymbolObj);
+            if (baseSymbolData && baseSymbolData.imgUrl) {
                 const img = document.createElement('img');
-                img.src = SYMBOL_IMAGE_MAP[newSymbol];
-                img.alt = newSymbol;
+                img.src = baseSymbolData.imgUrl;
+                img.alt = baseSymbolData.id || 'symbol';
                 cell.appendChild(img);
-            } else {
-                cell.textContent = newSymbol;
+            } else if (baseSymbolData && baseSymbolData.emoji) {
+                cell.textContent = baseSymbolData.emoji;
             }
 
-            if (newSymbol === WILD_SYMBOL) {
+            if (newSymbolObj && newSymbolObj.id === WILD_DATA.id) {
                 cell.classList.add('wild-symbol');
-            } else if (newSymbol === SCATTER_SYMBOL) {
+            } else if (newSymbolObj && newSymbolObj.id === SCATTER_DATA.id) {
                 cell.classList.add('scatter-symbol');
             }
         }
 
-        await delay(50); // Small delay before dropping
+        await delay(50); 
 
         const animationPromises = [];
-        for (let col = 0; col < width; col++) {
-            for (let row = 0; row < height; row++) {
+        for (let row = 0; row < height; row++) {
+            for (let col = 0; col < width; col++) {
                 const index = row * width + col;
                 const cell = cells[index];
-
-                const fallDelay = col * 50 + row * 30; // Staggered fall
+                
+                const fallDelay = row * 70; 
                 
                 animationPromises.push(new Promise(resolve => {
                     setTimeout(() => {
-                        cell.classList.remove('falling'); // Remove to allow transition
-                        cell.style.transform = 'translateY(0)'; // Fall to position
-                        cell.style.opacity = '1'; // Become visible
-
+                        cell.classList.remove('falling');
+                        cell.style.transform = 'translateY(0)'; 
+                        cell.style.opacity = '1'; 
+                        
                         const onTransitionEnd = () => {
                             cell.removeEventListener('transitionend', onTransitionEnd);
                             resolve();
                         };
                         cell.addEventListener('transitionend', onTransitionEnd, { once: true });
-                        setTimeout(() => resolve(), 600); // Fallback if transitionend doesn't fire (e.g., if element wasn't animating)
+                        setTimeout(() => resolve(), 600); 
                     }, fallDelay);
                 }));
             }
         }
-
+        
         rollSound.currentTime = 0;
         rollSound.play().catch(e => console.log("Roll sound play blocked:", e));
 
         await Promise.all(animationPromises);
-        currentSymbols = newSymbols;
+        currentSymbols = newSymbols; 
     }
-
 
     function getWinningTiles(symbolsArr) {
         const winningTiles = new Set();
         let scatterCount = 0;
         const scatterIndices = [];
         let currentTumbleWinAmount = 0;
-
+        
         // Collect scatters
         for (let i = 0; i < symbolsArr.length; i++) {
-            const symbol = symbolsArr[i];
-            if (symbol === SCATTER_SYMBOL) {
+            const symbolObj = symbolsArr[i];
+            if (symbolObj && symbolObj.id === SCATTER_DATA.id) { 
                 scatterCount++;
                 scatterIndices.push(i);
             }
         }
 
-        // --- Simplified Payline Check (Mahjong Ways usually has many ways, this is a basic version) ---
-        // Iterate through each regular symbol to find winning combinations
-        const regularSymbols = symbols.filter(s => s !== WILD_SYMBOL && s !== SCATTER_SYMBOL);
+        // Check for winning lines (from left to right, any position on reel)
+        // This is a simplified version; a full implementation would need to check all paylines.
+        for (let row = 0; row < height; row++) {
+            let currentMatchId = null;
+            let currentMatchCount = 0;
+            let currentMatchIndices = [];
 
-        for (const targetSymbol of regularSymbols) {
-            // A "Ways to Win" check means symbols on adjacent reels from left to right, regardless of row, combine.
-            // This is a simplified approach, a full Mahjong Ways logic is complex (e.g., cascading, multiplier)
-            let currentLineWin = 0;
-            let currentLineIndices = new Set();
-
-            for (let row = 0; row < height; row++) {
-                let consecutiveMatches = 0;
-                let pathIndices = [];
-                for (let col = 0; col < width; col++) {
-                    const index = row * width + col;
-                    const symbolInCell = symbolsArr[index];
-
-                    if (symbolInCell === targetSymbol || symbolInCell === WILD_SYMBOL) {
-                        consecutiveMatches++;
-                        pathIndices.push(index);
-                    } else {
-                        break; // Break if mismatch, as it's consecutive
+            for (let col = 0; col < width; col++) {
+                const index = row * width + col;
+                const symbolObj = symbolsArr[index];
+                
+                if (!symbolObj || symbolObj.id === SCATTER_DATA.id) { 
+                    if (currentMatchCount >= 3) {
+                        const symbolData = SYMBOLS_DATA.find(s => s.id === currentMatchId);
+                        if (symbolData && symbolData.payout[currentMatchCount]) {
+                            const payout = symbolData.payout[currentMatchCount];
+                            currentTumbleWinAmount += bet * payout;
+                            currentMatchIndices.forEach(idx => winningTiles.add(idx));
+                        }
                     }
+                    currentMatchId = null;
+                    currentMatchCount = 0;
+                    currentMatchIndices = [];
+                    continue;
                 }
 
-                // Check for 3, 4, or 5 consecutive matches
-                if (consecutiveMatches >= 3) {
-                    const basePayout = symbolPayouts[targetSymbol] || 1; // Default to 1 if not found
-                    let multiplierForLength = 0;
-                    if (consecutiveMatches === 3) multiplierForLength = 1;
-                    else if (consecutiveMatches === 4) multiplierForLength = 3;
-                    else if (consecutiveMatches === 5) multiplierForLength = 10;
+                const effectiveId = (symbolObj.id === WILD_DATA.id && currentMatchId !== null) ? currentMatchId : symbolObj.id;
 
-                    currentLineWin += (basePayout * multiplierForLength);
-                    pathIndices.forEach(idx => currentLineIndices.add(idx));
+                if (effectiveId === currentMatchId) {
+                    currentMatchCount++;
+                    currentMatchIndices.push(index);
+                } else {
+                    if (currentMatchCount >= 3) {
+                        const symbolData = SYMBOLS_DATA.find(s => s.id === currentMatchId);
+                        if (symbolData && symbolData.payout[currentMatchCount]) {
+                            const payout = symbolData.payout[currentMatchCount];
+                            currentTumbleWinAmount += bet * payout;
+                            currentMatchIndices.forEach(idx => winningTiles.add(idx));
+                        }
+                    }
+                    currentMatchId = effectiveId;
+                    currentMatchCount = 1;
+                    currentMatchIndices = [index];
                 }
             }
-            if (currentLineWin > 0) {
-                 currentTumbleWinAmount += currentLineWin;
-                 currentLineIndices.forEach(idx => winningTiles.add(idx));
+            if (currentMatchCount >= 3) {
+                const symbolData = SYMBOLS_DATA.find(s => s.id === currentMatchId);
+                if (symbolData && symbolData.payout[currentMatchCount]) {
+                    const payout = symbolData.payout[currentMatchCount];
+                    currentTumbleWinAmount += bet * payout;
+                    currentMatchIndices.forEach(idx => winningTiles.add(idx));
+                }
             }
         }
 
-
         // Add Scatter win
-        if (scatterCount >= 3) {
-            // In Mahjong Ways, scatter pays based on count and can trigger free spins
-            let scatterPayoutMultiplier = 0;
-            if (scatterCount === 3) scatterPayoutMultiplier = 1; // Example multiplier for 3 scatters
-            else if (scatterCount === 4) scatterPayoutMultiplier = 5; // Example for 4 scatters
-            else if (scatterCount >= 5) scatterPayoutMultiplier = 20; // Example for 5+ scatters
-
-            currentTumbleWinAmount += bet * scatterPayoutMultiplier; // Scatter pays based on total bet
-            scatterIndices.forEach(idx => winningTiles.add(idx));
+        if (scatterCount >= 3) { 
+            const scatterPayoutMultiplier = SCATTER_DATA.payout[scatterCount]; 
+            if (scatterPayoutMultiplier) {
+                currentTumbleWinAmount += bet * scatterPayoutMultiplier; 
+                scatterIndices.forEach(idx => winningTiles.add(idx)); 
+            }
         }
 
         return {
             winningTiles: Array.from(winningTiles),
             scatterCount: scatterCount,
-            scatterIndices: Array.from(scatterIndices),
+            scatterIndices: Array.from(scatterIndices), 
             currentTumbleWinAmount: currentTumbleWinAmount
         };
     }
-
 
     function animateWinningTiles(indices) {
         document.querySelectorAll('.tile').forEach((tile, i) => {
             if (indices.includes(i)) {
                 tile.classList.add('break');
             } else {
-                // Dim non-winning tiles to highlight wins, then reset in next tumble
                 tile.style.opacity = 0.5;
             }
         });
-        breakSound.currentTime = 0;
-        breakSound.play().catch(e => console.log("Break sound play blocked:", e));
     }
-
 
     async function handleTileCollapse(indicesToBreak) {
         const delay = ms => new Promise(res => setTimeout(res, ms));
-
+        
         if (indicesToBreak.length > 0) {
-            animateWinningTiles(indicesToBreak);
-            await delay(500); // Wait for break animation
+            animateWinningTiles(indicesToBreak); 
+            breakSound.currentTime = 0;
+            breakSound.play().catch(e => console.log("Break sound play blocked:", e));
+            await delay(500); 
         }
 
         const nextSymbols = Array(width * height).fill(null);
@@ -818,34 +813,23 @@
             for (let row = height - 1; row >= 0; row--) {
                 const currentIdx = row * width + col;
                 if (!indicesToBreak.includes(currentIdx)) {
-                    columnSymbols.unshift(currentSymbols[currentIdx]);
+                    columnSymbols.unshift(currentSymbols[currentIdx]); 
                 }
             }
 
             const newSymbolsNeeded = height - columnSymbols.length;
             for (let i = 0; i < newSymbolsNeeded; i++) {
-                // Generate new symbols for the empty slots
-                let newSymbol;
-                const rand = Math.random();
-                const SCATTER_PROBABILITY = 0.01;
-                const WILD_PROBABILITY = 0.015;
-
-                if (rand < SCATTER_PROBABILITY) {
-                    newSymbol = SCATTER_SYMBOL;
-                } else if (rand < SCATTER_PROBABILITY + WILD_PROBABILITY) {
-                    newSymbol = WILD_SYMBOL;
-                } else {
-                    newSymbol = symbols[Math.floor(Math.random() * (symbols.length - 2))]; // Exclude WILD and SCATTER
-                }
-                columnSymbols.unshift(newSymbol);
+                columnSymbols.unshift(generateSingleRandomSymbol()); 
             }
 
             for (let row = 0; row < height; row++) {
                 nextSymbols[row * width + col] = columnSymbols[row];
             }
         }
-        await animateTumbleDrop(nextSymbols);
+        
+        await animateTumbleDrop(nextSymbols); 
     }
+
 
     function updateBalance(amount) {
         balance += amount;
@@ -894,7 +878,7 @@
         freeSpinWinOverlay.style.visibility = 'hidden';
     }
 
-  async function spin() {
+    async function spin() {
         if (isSpinning) return;
         if (!isInFreeSpinMode && balance < bet) {
             showPopup('Saldo tidak cukup!');
@@ -910,97 +894,90 @@
 
         if (!isInFreeSpinMode) {
             updateBalance(-bet);
-            currentMultiplier = 1;
-            updateMultiplierDisplay(currentMultiplier);
+            currentMultiplier = 1; 
+            updateMultiplierDisplay(currentMultiplier); 
         } else {
             freeSpinCount--;
             updateFreeSpinDisplay();
-            // Mahjong Ways Free Spin Multiplier: Starts at x2 and increases with each win
-            currentMultiplier = Math.min(currentMultiplier + 1, 10); // Max multiplier usually x10 in Free Spins
+            currentMultiplier = Math.min(currentMultiplier * 2, 10); 
             updateMultiplierDisplay(currentMultiplier);
         }
-
-        // Reset opacity of all tiles and remove 'break' class
+        
         document.querySelectorAll('.tile').forEach(tile => {
             tile.style.opacity = 1;
-            tile.classList.remove('break');
+            tile.classList.remove('break'); 
         });
 
-        let initialSymbols = generateRandomSymbols();
+        let initialSymbols = generateInitialSymbols();
         await animateTumbleDrop(initialSymbols);
+        
+        let currentSpinTotalWin = 0; 
+        let chainReactionOccurredInSpin = false; 
 
-        let currentSpinTotalWin = 0;
-        let chainReactionOccurredInSpin = false;
-
-        while (true) {
+        while (true) { 
             const { winningTiles, scatterCount, scatterIndices, currentTumbleWinAmount } = getWinningTiles(currentSymbols);
 
             let tumbleHadWin = false;
-
+            
             let finalTumbleWin = currentTumbleWinAmount;
-            if (currentTumbleWinAmount > 0) {
-                 finalTumbleWin = currentTumbleWinAmount * currentMultiplier; // Apply current multiplier
+            if (currentTumbleWinAmount > 0) { 
+                 finalTumbleWin = currentTumbleWinAmount * currentMultiplier;
             }
 
             let allIndicesToBreak = new Set();
             if (finalTumbleWin > 0) {
                 winningTiles.forEach(idx => allIndicesToBreak.add(idx));
             }
-            if (scatterCount >= 3) {
+            if (scatterCount >= 3) { 
                 scatterIndices.forEach(idx => allIndicesToBreak.add(idx));
             }
 
-            if (allIndicesToBreak.size > 0) {
+            if (allIndicesToBreak.size > 0) { 
                 tumbleHadWin = true;
                 chainReactionOccurredInSpin = true;
-                currentSpinTotalWin += finalTumbleWin;
+                currentSpinTotalWin += finalTumbleWin; 
 
                 await handleTileCollapse(Array.from(allIndicesToBreak));
-                await new Promise(res => setTimeout(res, 600)); // Wait for fall animation
-
-                // Mahjong Ways Base Game Multiplier: Increases with consecutive wins/tumbles
-                if (tumbleHadWin && !isInFreeSpinMode) {
-                    currentMultiplier = Math.min(currentMultiplier + 1, 5); // Max multiplier usually x5 in base game
+                await new Promise(res => setTimeout(res, 600)); 
+                if (tumbleHadWin && !isInFreeSpinMode) { 
+                    currentMultiplier = Math.min(currentMultiplier * 2, 5); 
                     updateMultiplierDisplay(currentMultiplier);
                 }
             } else {
-                break; // No more wins, break chain reaction
+                break; 
             }
 
-            // Check for Free Spin trigger after each tumble
-            if (scatterCount >= 3) {
-                let newFreeSpins = 0;
-                if (scatterCount === 3) newFreeSpins = 10;
-                else if (scatterCount === 4) newFreeSpins = 12;
-                else if (scatterCount >= 5) newFreeSpins = 15;
+            if (scatterCount >= 3 && tumbleHadWin) { 
+                let newFreeSpins = 10; 
 
-                if (newFreeSpins > 0) {
+                if (!isInFreeSpinMode) { 
                     freeSpinCount += newFreeSpins;
                     showPopup(`Anda mendapatkan ${newFreeSpins} Free Spins!`);
                     updateFreeSpinDisplay();
-
-                    if (!isInFreeSpinMode) {
-                        freeSpinSound.currentTime = 0;
-                        freeSpinSound.play().catch(e => console.log("Free spin sound play blocked:", e));
-                        bgm.pause();
-                        bgm.currentTime = 0;
-                        freeSpinBGM.volume = 0.3;
-                        freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
-                        isInFreeSpinMode = true;
-                        totalFreeSpinWin = 0;
-                        currentMultiplier = 2; // Free spin usually starts at x2
-                        updateMultiplierDisplay(currentMultiplier);
-                    }
+                    freeSpinSound.currentTime = 0;
+                    freeSpinSound.play().catch(e => console.log("Free spin sound play blocked:", e));
+                    bgm.pause();
+                    bgm.currentTime = 0;
+                    freeSpinBGM.volume = 0.3;
+                    freeSpinBGM.play().catch(e => console.log("Free spin BGM play blocked:", e));
+                    isInFreeSpinMode = true;
+                    totalFreeSpinWin = 0; 
+                    currentMultiplier = 2; 
+                    updateMultiplierDisplay(currentMultiplier);
+                } else {
+                    freeSpinCount += newFreeSpins;
+                    showPopup(`+${newFreeSpins} Free Spins!`);
+                    updateFreeSpinDisplay();
                 }
             }
-        }
+        } 
 
         if (isInFreeSpinMode) {
             totalFreeSpinWin += currentSpinTotalWin;
         } else {
             updateBalance(currentSpinTotalWin);
         }
-
+        
         if (currentSpinTotalWin > 0) {
             if (currentSpinTotalWin >= bet * 10) {
                 winBigSound.currentTime = 0;
@@ -1010,30 +987,29 @@
                 winSmallSound.play().catch(e => console.log("Small win sound play blocked:", e));
             }
             showPopup(`MENANG: Rp.${currentSpinTotalWin.toLocaleString('id-ID')}!`);
-        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) {
+        } else if (!isInFreeSpinMode && !chainReactionOccurredInSpin) { 
              showPopup('Coba lagi!');
         }
 
         if (freeSpinCount > 0) {
-            await new Promise(res => setTimeout(res, 1500)); // Delay between free spins
-            spin(); // Auto-spin for free spins
+            await new Promise(res => setTimeout(res, 1500)); 
+            spin(); 
         } else {
-            if (isInFreeSpinMode) {
+            if (isInFreeSpinMode) { 
                 freeSpinBGM.pause();
                 freeSpinBGM.currentTime = 0;
                 bgm.play().catch(e => console.log("BGM play blocked:", e));
                 isInFreeSpinMode = false;
                 await showFreeSpinWinAnimation(totalFreeSpinWin);
-                updateBalance(totalFreeSpinWin);
-                totalFreeSpinWin = 0;
+                updateBalance(totalFreeSpinWin); 
+                totalFreeSpinWin = 0; 
+                currentMultiplier = 1; 
+                updateMultiplierDisplay(currentMultiplier);
             }
 
-            // Reset currentMultiplier and opacity for next regular spin
-            currentMultiplier = 1;
-            updateMultiplierDisplay(currentMultiplier);
             document.querySelectorAll('.tile').forEach(tile => {
                 tile.style.opacity = 1;
-                tile.classList.remove('break');
+                tile.classList.remove('break'); 
             });
 
             spinButton.disabled = false;
@@ -1041,15 +1017,14 @@
             betPlusBtn.disabled = false;
             minBetBtn.disabled = false;
             maxBetBtn.disabled = false;
-            updateFreeSpinDisplay();
+            updateFreeSpinDisplay(); 
         }
 
         await saveBalanceToSupabase();
         isSpinning = false;
     }
 
-
-    // Bet adjustment functions (adapted for MIN/MAX buttons)
+    // Bet adjustment functions
     betMinusBtn.onclick = () => {
         if (isSpinning) return;
         currentBetIndex = Math.max(0, currentBetIndex - 1);
@@ -1084,15 +1059,15 @@
     winBigSound.volume = 0.8;
     breakSound.volume = 0.7;
     document.getElementById('spinSound').volume = 0.5;
-    document.getElementById('freeSpinSound').volume = 0.6;
+    document.getElementById('freeSpinSound').volume = 0.6; 
 
     function init() {
-      currentSymbols = generateRandomSymbols();
+      currentSymbols = generateInitialSymbols(); 
       renderGrid(currentSymbols);
-      updateBalance(0);
+      updateBalance(0); 
       updateBetDisplay();
       updateFreeSpinDisplay();
-      updateMultiplierDisplay(currentMultiplier); // Initialize multiplier to x1
+      updateMultiplierDisplay(currentMultiplier);
 
       bgm.play().catch(() => {
         document.body.addEventListener('click', () => {
