@@ -599,8 +599,8 @@
 
     function generateSingleRandomSymbol() {
         const rand = Math.random();
-        const SCATTER_PROBABILITY = 1.01; // 1%
-        const ORB_PROBABILITY = 0.015;    // 1.5%
+        const SCATTER_PROBABILITY = 0.02; // 1%
+        const ORB_PROBABILITY = 0.05;    // 1.5%
 
         if (rand < SCATTER_PROBABILITY) {
             return { id: SCATTER_DATA.id };
