@@ -95,9 +95,12 @@
             margin: 5px 0;
             white-space: nowrap; /* Mencegah teks pecah baris */
         }
-        .info-item #totalKemenangan {
-          font-size: 1px;
+        .info-item #totalKemenanganSesi { /* Mengubah ID menjadi totalKemenanganSesi */
             color: var(--tertiary-color);
+            font-weight: bold;
+        }
+        .info-item #totalKekalahanDisplay { /* Menambahkan ID baru untuk total kekalahan */
+            color: var(--primary-color);
             font-weight: bold;
         }
         .info-item #balance {
@@ -275,8 +278,9 @@
         <div class="player-banner">
             <p>Pemain: <span id="playerName" class="player-name">Memuat...</span></p>
             <p>Status: <span id="playerStatus" class="player-status">Memeriksa Login...</span></p>
-               <p class="info-item">Kemenangan: <span id="totalKemenangan">0</span></p>
-                <p class="info-item">Saldo: <span id="balance">Memuat...</span></p>
+            <p class="info-item">Kemenangan: <span id="totalKemenanganSesi">0</span></p>
+            <p class="info-item">Kekalahan: <span id="totalKekalahanDisplay">0</span></p>
+            <p class="info-item">Saldo: <span id="balance">Memuat...</span></p>
         </div>
 
         <canvas id="gameCanvas"></canvas>
@@ -302,7 +306,8 @@
       
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        const totalKemenanganDisplay = document.getElementById('totalKemenangan');
+        const totalKemenanganSesiDisplay = document.getElementById('totalKemenanganSesi'); // Mengubah ID
+        const totalKekalahanDisplay = document.getElementById('totalKekalahanDisplay'); // Menambahkan elemen ini
         const balanceDisplay = document.getElementById('balance');
         const messageArea = document.getElementById('message-area');
         const playerNameDisplay = document.getElementById('playerName');
@@ -325,7 +330,8 @@
         canvas.height = BOARD_HEIGHT * TILE_SIZE; 
 
         // Variabel Game State
-        let totalKemenangan = 0;
+        let totalKemenanganSesi = 0; // Kemenangan selama satu sesi game
+        let totalKekalahan = 0; // Kekalahan selama satu sesi game
         let currentBalance = 0;
         let currentUser = null;
         let gameRunning = false;
@@ -333,7 +339,7 @@
         let currentPiece = null;
         let currentX = 0;
         let currentY = 0;
-        let highestKemenangan = 0;
+        let highestKemenangan = 0; // Ini adalah kemenangan tertinggi yang disimpan di DB
 
         // Dapatkan elemen audio
         const clickSound = document.getElementById('clickSound');
@@ -403,7 +409,8 @@
             }
             showMessage('Memuat data pemain...', 'info');
             balanceDisplay.textContent = 'Memuat...';
-            totalKemenanganDisplay.textContent = 'Memuat...';
+            totalKemenanganSesiDisplay.textContent = 'Memuat...'; // Update ini juga
+            totalKekalahanDisplay.textContent = 'Memuat...'; // Update ini juga
 
             try {
                 const { data, error } = await supabase
@@ -422,7 +429,8 @@
                     } else {
                         showMessage(`Gagal memuat data: ${error.message}. Periksa RLS/Koneksi.`, 'error');
                         balanceDisplay.textContent = 'Gagal';
-                        totalKemenanganDisplay.textContent = 'Gagal';
+                        totalKemenanganSesiDisplay.textContent = 'Gagal'; // Update ini
+                        totalKekalahanDisplay.textContent = 'Gagal'; // Update ini
                         backToProfileBtn.style.display = 'block';
                     }
                     return;
@@ -433,7 +441,8 @@
                     balanceDisplay.textContent = currentBalance.toLocaleString('id-ID');
                     playerNameDisplay.textContent = data.username || currentUser.user_metadata?.username || currentUser.email || 'Pemain';
                     highestKemenangan = data.highest_kemenangan || 0;
-                    totalKemenanganDisplay.textContent = highestKemenangan.toLocaleString('id-ID');
+                    totalKemenanganSesiDisplay.textContent = '0'; // Diinisialisasi 0 untuk sesi baru
+                    totalKekalahanDisplay.textContent = '0'; // Diinisialisasi 0 untuk sesi baru
                     
                     showMessage('Data pemain dimuat!', 'success');
                     console.log('Saldo fetched:', currentBalance, 'Highest Kemenangan:', highestKemenangan);
@@ -453,7 +462,8 @@
                 console.error('Unexpected error in fetchSaldoAndKemenangan:', err);
                 showMessage('Terjadi kesalahan tak terduga saat memuat data pemain.', 'error');
                 balanceDisplay.textContent = 'Error';
-                totalKemenanganDisplay.textContent = 'Error';
+                totalKemenanganSesiDisplay.textContent = 'Error'; // Update ini
+                totalKekalahanDisplay.textContent = 'Error'; // Update ini
                 backToProfileBtn.style.display = 'block';
             }
         }
@@ -477,7 +487,8 @@
                 currentBalance = DEFAULT_STARTING_SALDO;
                 highestKemenangan = DEFAULT_HIGHEST_KEMENANGAN;
                 balanceDisplay.textContent = currentBalance.toLocaleString('id-ID');
-                totalKemenanganDisplay.textContent = highestKemenangan.toLocaleString('id-ID');
+                totalKemenanganSesiDisplay.textContent = '0'; // New user starts with 0 session wins
+                totalKekalahanDisplay.textContent = '0'; // New user starts with 0 session losses
                 showMessage('User baru dibuat dengan saldo awal!', 'success');
                 return true;
             } catch (err) {
@@ -493,9 +504,12 @@
             balanceDisplay.textContent = currentBalance.toLocaleString('id-ID');
             addBalanceAnimation(amount > 0 ? 'gain' : 'loss');
 
-            if (amount > 0) { // Hanya tambahkan ke totalKemenangan jika ini adalah pendapatan
-                totalKemenangan += amount;
-                updateTotalKemenanganDisplay();
+            if (amount > 0) { // Jika saldo bertambah, itu kemenangan (dari clear baris)
+                totalKemenanganSesi += amount;
+                updateTotalKemenanganSesiDisplay();
+            } else { // Jika saldo berkurang, itu kekalahan (dari biaya balok atau start game)
+                totalKekalahan += Math.abs(amount); // Tambahkan nilai absolut ke total kekalahan
+                updateTotalKekalahanDisplay();
             }
 
             if (!currentUser || !updateDB) {
@@ -724,13 +738,17 @@
 
             if (linesCleared > 0) {
                 playSound(lineClearSound); // NEW: Mainkan suara line clear
-                updateSaldo(coinsEarned);
+                updateSaldo(coinsEarned); // Saldo bertambah -> totalKemenanganSesi bertambah
                 showMessage(`+${coinsEarned.toLocaleString('id-ID')} Saldo dari ${linesCleared} baris!`, 'success');
             }
         }
 
-        function updateTotalKemenanganDisplay() {
-            totalKemenanganDisplay.textContent = totalKemenangan.toLocaleString('id-ID');
+        function updateTotalKemenanganSesiDisplay() {
+            totalKemenanganSesiDisplay.textContent = totalKemenanganSesi.toLocaleString('id-ID');
+        }
+
+        function updateTotalKekalahanDisplay() { // Fungsi baru untuk kekalahan
+            totalKekalahanDisplay.textContent = totalKekalahan.toLocaleString('id-ID');
         }
 
         function updateBalanceDisplay() {
@@ -748,7 +766,7 @@
                 return;
             }
 
-            updateSaldo(-currentPiece.cost);
+            updateSaldo(-currentPiece.cost); // Saldo berkurang -> totalKekalahan bertambah
             showMessage(`-${currentPiece.cost.toLocaleString('id-ID')} Saldo. Sisa: Rp${currentBalance.toLocaleString('id-ID')}`, 'info');
             
             if (!isValidMove(currentPiece, currentX, currentY)) {
@@ -826,13 +844,15 @@
                 return;
             }
 
-            await updateSaldo(-GAME_START_COST, true);
+            await updateSaldo(-GAME_START_COST, true); // Saldo berkurang untuk memulai game
             showMessage(`Rp${GAME_START_COST.toLocaleString('id-ID')} dikurangi untuk memulai game.`, 'info');
             
             gameRunning = true;
             board = Array(BOARD_HEIGHT).fill(null).map(() => Array(BOARD_WIDTH).fill(0));
-            totalKemenangan = 0;
-            updateTotalKemenanganDisplay();
+            totalKemenanganSesi = 0; // Reset kemenangan sesi
+            totalKekalahan = 0; // Reset kekalahan sesi
+            updateTotalKemenanganSesiDisplay();
+            updateTotalKekalahanDisplay(); // Perbarui tampilan kekalahan
             updateBalanceDisplay();
             messageArea.textContent = '';
             backToProfileBtn.style.display = 'none';
@@ -850,10 +870,12 @@
 
             showMessage('GAME OVER! Saldo habis atau tidak ada tempat.', 'error');
             console.log('Game Over! Saldo Akhir: ' + currentBalance.toLocaleString('id-ID'));
-            console.log('Total Kemenangan Akhir: ' + totalKemenangan.toLocaleString('id-ID'));
+            console.log('Total Kemenangan Sesi Akhir: ' + totalKemenanganSesi.toLocaleString('id-ID'));
+            console.log('Total Kekalahan Sesi Akhir: ' + totalKekalahan.toLocaleString('id-ID'));
 
-            if (totalKemenangan > highestKemenangan) {
-                saveHighestKemenangan(totalKemenangan);
+
+            if (totalKemenanganSesi > highestKemenangan) { // Gunakan totalKemenanganSesi
+                saveHighestKemenangan(totalKemenanganSesi);
             }
                
             hideGameControls();
