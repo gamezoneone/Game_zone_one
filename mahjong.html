@@ -9,7 +9,7 @@
   <script>
    const supabase = window.supabase.createClient(
       'https://vqmfachxnjyxwuavpgds.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4njl5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZxbWZhY2h4bmp5eHd1YXZwZ2RzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDg0MDYxNDAsImV4cCI6MjA2Mzk4MjE0MH0.Bzr8mUiEl8MzRWpVQ3_59eFxKk0EWZ3ca-4IEcpGLkk'
     );
     const uid = localStorage.getItem('uid');
   </script>
@@ -106,7 +106,7 @@
     }
 
     .tile {
-      background: #222;
+      background: black;
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -532,7 +532,7 @@
 
     let currentSymbols = []; // Simbol yang terlihat di grid
     let hiddenWildStatus = []; // Boolean array: true jika ada wild tersembunyi
-    let balance = 0;
+    let balance = 99990;
     let bet = 100;
     const minBet = 100;
     const maxBet = 1000;
@@ -633,7 +633,7 @@ window.onload = () => {
                 div.classList.add('wild-symbol');
             } else if (sym === SCATTER_SYMBOL) {
                 const img = document.createElement('img');
-                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//naga-mahjong%20(1).png'; // URL Scatter Anda
+                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//mahjong-naga%20(1).jpg'; // URL Scatter Anda
                 img.alt = 'Scatter';
                 div.appendChild(img);
                 div.classList.add('scatter-symbol'); // Tambahkan kelas untuk styling Scatter
@@ -720,7 +720,7 @@ window.onload = () => {
                 currentTile.classList.add('wild-symbol');
               } else if (reelSymbols[r] === SCATTER_SYMBOL) {
                 const img = document.createElement('img');
-                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//naga-mahjong%20(1).png'; // URL Scatter Anda
+                img.src = 'https://vqmfachxnjyxwuavpgds.supabase.co/storage/v1/object/public/zaus//mahjong-naga%20(1).jpg'; // URL Scatter Anda
                 img.alt = 'Scatter';
                 currentTile.appendChild(img);
                 currentTile.classList.add('scatter-symbol'); // Tambahkan kelas untuk styling Scatter
