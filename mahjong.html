@@ -510,17 +510,17 @@
 
 
     const symbolPayouts = {
-      '🦧': 15,
-      '🐅': 13,
+      '🦧': 35,
+      '🐅': 33,
       '🦫': 12,
-      '🐥': 11,
-      '🦜': 10,
-      '🐓': 9,
-      '🕊️': 6,
-      '🐖': 4,
-      '🦕': 7,
-      '🐈': 6,
-      '🐬': 5,
+      '🐥': 51,
+      '🦜': 20,
+      '🐓': 40,
+      '🕊️': 30,
+      '🐖': 15,
+      '🦕': 20,
+      '🐈': 25,
+      '🐬': 30,
     };
 
     const width = 5;
@@ -532,7 +532,7 @@
 
     let currentSymbols = []; // Simbol yang terlihat di grid
     let hiddenWildStatus = []; // Boolean array: true jika ada wild tersembunyi
-    let balance = 99990;
+    let balance = 0;
     let bet = 100;
     const minBet = 100;
     const maxBet = 1000;
@@ -587,11 +587,11 @@ window.onload = () => {
         const rand = Math.random();
 
         // Probabilitas Scatter (misal 1% dari total simbol)
-        const SCATTER_PROB = 0.01;
+        const SCATTER_PROB = 0.02;
         // Probabilitas Wild tersembunyi (misal 10% di kolom tengah, 5% di kolom tepi)
         // Wild hanya bisa muncul di kolom 2,3,4 (indeks 1,2,3)
-        const HIDDEN_WILD_PROB_MIDDLE = 0.10; // Kolom 1,2,3 (indeks 1,2,3)
-        const HIDDEN_WILD_PROB_EDGE = 0.05; // Kolom 0,4 (indeks 0,4)
+        const HIDDEN_WILD_PROB_MIDDLE = 0.15; // Kolom 1,2,3 (indeks 1,2,3)
+        const HIDDEN_WILD_PROB_EDGE = 0.04; // Kolom 0,4 (indeks 0,4)
 
         // PRIORITAS: Scatter > Hidden Wild > Regular
         if (rand < SCATTER_PROB) {
