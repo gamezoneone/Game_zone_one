@@ -21,7 +21,7 @@
             --button-active: #00B3B3; /* Warna tombol saat ditekan */
             --block-border: #222222; /* Warna border antar blok */
             --block-shadow: rgba(0, 0, 0, 0.4); /* Bayangan blok */
-            --tile-size: 17px; /* Tambahkan ini agar bisa digunakan di CSS lain */
+            --tile-size: 8px; /* Tambahkan ini agar bisa digunakan di CSS lain */
         }
 
         body {
@@ -600,14 +600,14 @@
                     console.log('Saldo fetched:', currentBalance, 'Highest Kemenangan:', highestKemenangan);
 
                     // NEW: Update bet display saat inisialisasi
-                    currentBetDisplay.textContent = `Bet: Rp${currentBet.toLocaleString('id-ID')}`;
+                    currentBetDisplay.textContent = `Bet: Rp.${currentBet.toLocaleString('id-ID')}`;
 
 
                     if (currentBalance >= (GAME_START_COST > 0 ? GAME_START_COST : currentBet)) { // Cek saldo untuk start game atau minimal 1 bet
-                        showMessage(`Siap! Saldo Anda: Rp${currentBalance.toLocaleString('id-ID')}.`, 'info');
+                        showMessage(`Siap! Saldo Anda: Rp.${currentBalance.toLocaleString('id-ID')}.`, 'info');
                         startGamePrompt();
                     } else {
-                        showMessage(`Saldo Anda tidak cukup (Rp${currentBalance.toLocaleString('id-ID')}). Perlu minimal Rp${MIN_BET.toLocaleString('id-ID')} untuk bermain! Top up untuk bermain!`, 'error');
+                        showMessage(`Saldo Anda tidak cukup (Rp.${currentBalance.toLocaleString('id-ID')}). Perlu minimal Rp.${MIN_BET.toLocaleString('id-ID')} untuk bermain! Top up untuk bermain!`, 'error');
                         balanceDisplay.classList.add('animate-loss');
                         setTimeout(() => balanceDisplay.classList.remove('animate-loss'), 500);
                         backToProfileBtn.style.display = 'block';
@@ -624,7 +624,7 @@
             }
         }
         async function createNewUserEntryWithDefaultSaldo(userId, email, username) {
-            const DEFAULT_STARTING_SALDO = 5000;
+            const DEFAULT_STARTING_SALDO = 0;
             const DEFAULT_HIGHEST_KEMENANGAN = 0;
 
             try {
@@ -789,24 +789,33 @@
             const randomIndex = Math.floor(Math.random() * TETROMINOS.length);
             const piece = JSON.parse(JSON.stringify(TETROMINOS[randomIndex])); // Deep copy
 
-            // NEW: Tambahkan multiplier secara acak ke salah satu kotak
-            const numSquares = piece.shape.flat().filter(s => s === 1).length; // Hitung jumlah kotak asli
-            if (numSquares > 0) {
-                let placedMultiplier = false;
-                while (!placedMultiplier) {
-                    const randomRow = Math.floor(Math.random() * piece.shape.length);
-                    const randomCol = Math.floor(Math.random() * piece.shape[randomRow].length);
+            // NEW: Tambahkan multiplier secara acak dengan probabilitas 20%
+            // Anda bisa mengubah nilai 0.20 (20%) sesuai keinginan Anda.
+            // Contoh: 0.10 untuk 10%, 0.05 untuk 5%, dll.
+            const MULTIPLIER_CHANCE = 0.20; // 20% kemungkinan muncul multiplier
 
-                    if (piece.shape[randomRow][randomCol] === 1) { // Hanya tambahkan multiplier ke kotak yang valid
-                        piece.shape[randomRow][randomCol] = 'multiplier'; // Tandai kotak ini sebagai multiplier
-                        // Acak nilai multiplier antara 2x dan 20x
-                        piece.multiplierValue = Math.floor(Math.random() * (20 - 2 + 1)) + 2;
-                        placedMultiplier = true;
+            if (Math.random() < MULTIPLIER_CHANCE) {
+                const numSquares = piece.shape.flat().filter(s => s === 1).length;
+                if (numSquares > 0) {
+                    let placedMultiplier = false;
+                    let attempts = 0;
+                    const maxAttempts = 10; // Batasi percobaan untuk menghindari infinite loop pada bentuk aneh
+                    while (!placedMultiplier && attempts < maxAttempts) {
+                        const randomRow = Math.floor(Math.random() * piece.shape.length);
+                        const randomCol = Math.floor(Math.random() * piece.shape[randomRow].length);
+
+                        if (piece.shape[randomRow][randomCol] === 1) {
+                            piece.shape[randomRow][randomCol] = 'multiplier';
+                            piece.multiplierValue = Math.floor(Math.random() * (20 - 2 + 1)) + 2;
+                            placedMultiplier = true;
+                        }
+                        attempts++;
                     }
                 }
             }
             return piece;
         }
+
 
         function drawBoard() {
             for (let row = 0; row < BOARD_HEIGHT; row++) {
@@ -819,7 +828,7 @@
                         // NEW: Gambar teks multiplier jika ada
                         if (board[row][col].multiplier) {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.8 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.2 * TILE_SIZE}px 'Press Start 2P'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${board[row][col].multiplier}x`, (col + 0.5) * TILE_SIZE, (row + 0.5) * TILE_SIZE);
@@ -845,7 +854,7 @@
                         // NEW: Gambar teks multiplier jika ada pada bagian balok yang sedang jatuh
                         if (piece.shape[row][col] === 'multiplier') {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.8 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.2 * TILE_SIZE}px 'Press Start 2P'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${piece.multiplierValue}x`, (x + col + 0.5) * TILE_SIZE, (y + row + 0.5) * TILE_SIZE);
@@ -975,7 +984,7 @@
                 gameOver();
             }
         }
-        let dropInterval = 800;
+        let dropInterval = 200;
         let lastDropTime = 0;
         let animationFrameId = null;
 
@@ -1040,7 +1049,7 @@
             document.getElementById('startButton')?.remove();
 
             if (GAME_START_COST > 0 && currentBalance < GAME_START_COST) {
-                showMessage(`Saldo Anda tidak cukup (Rp${currentBalance.toLocaleString('id-ID')}). Perlu Rp${GAME_START_COST.toLocaleString('id-ID')} untuk mulai. Top up untuk bermain!`, 'error');
+                showMessage(`Saldo Anda tidak cukup (Rp.${currentBalance.toLocaleString('id-ID')}). Perlu Rp.${GAME_START_COST.toLocaleString('id-ID')} untuk mulai. Top up untuk bermain!`, 'error');
                 balanceDisplay.classList.add('animate-loss');
                 setTimeout(() => balanceDisplay.classList.remove('animate-loss'), 500);
                 backToProfileBtn.style.display = 'block';
@@ -1048,7 +1057,7 @@
             }
             if (GAME_START_COST > 0) {
                 await updateSaldo(-GAME_START_COST, true);
-                showMessage(`Rp${GAME_START_COST.toLocaleString('id-ID')} dikurangi untuk memulai game.`, 'info');
+                showMessage(`Rp.${GAME_START_COST.toLocaleString('id-ID')} dikurangi untuk memulai game.`, 'info');
             }
 
             gameRunning = true;
@@ -1058,7 +1067,7 @@
             updateTotalKemenanganSesiDisplay();
             updateTotalKekalahanDisplay();
             updateBalanceDisplay();
-            currentBetDisplay.textContent = `Bet: Rp${currentBet.toLocaleString('id-ID')}`;
+            currentBetDisplay.textContent = `Bet: Rp.${currentBet.toLocaleString('id-ID')}`;
             messageArea.textContent = '';
             backToProfileBtn.style.display = 'none';
 
@@ -1135,8 +1144,8 @@
             const newBet = currentBet + amount;
             if (newBet >= MIN_BET && newBet <= MAX_BET && newBet % BET_INCREMENT === 0) {
                 currentBet = newBet;
-                currentBetDisplay.textContent = `Bet: Rp${currentBet.toLocaleString('id-ID')}`;
-                showMessage(`Bet diatur ke Rp${currentBet.toLocaleString('id-ID')}`, 'info');
+                currentBetDisplay.textContent = `Bet: Rp.${currentBet.toLocaleString('id-ID')}`;
+                showMessage(`Bet diatur ke Rp.${currentBet.toLocaleString('id-ID')}`, 'info');
             } else {
                 showMessage(`Bet harus antara Rp${MIN_BET.toLocaleString('id-ID')} dan Rp${MAX_BET.toLocaleString('id-ID')} dan kelipatan Rp${BET_INCREMENT.toLocaleString('id-ID')}.`, 'error');
             }
