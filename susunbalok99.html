@@ -21,7 +21,7 @@
             --button-active: #00B3B3; /* Warna tombol saat ditekan */
             --block-border: #222222; /* Warna border antar blok */
             --block-shadow: rgba(0, 0, 0, 0.4); /* Bayangan blok */
-            --tile-size: 8px; /* Tambahkan ini agar bisa digunakan di CSS lain */
+            --tile-size: 15px; /* Tambahkan ini agar bisa digunakan di CSS lain */
         }
 
         body {
@@ -828,7 +828,7 @@
                         // NEW: Gambar teks multiplier jika ada
                         if (board[row][col].multiplier) {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.2 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.3 * TILE_SIZE}px 'Press Start 2P'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${board[row][col].multiplier}x`, (col + 0.5) * TILE_SIZE, (row + 0.5) * TILE_SIZE);
@@ -854,7 +854,7 @@
                         // NEW: Gambar teks multiplier jika ada pada bagian balok yang sedang jatuh
                         if (piece.shape[row][col] === 'multiplier') {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.2 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.3 * TILE_SIZE}px 'Press Start 2P'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${piece.multiplierValue}x`, (x + col + 0.5) * TILE_SIZE, (y + row + 0.5) * TILE_SIZE);
