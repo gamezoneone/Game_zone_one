@@ -21,7 +21,7 @@
             --button-active: #00B3B3; /* Warna tombol saat ditekan */
             --block-border: #222222; /* Warna border antar blok */
             --block-shadow: rgba(0, 0, 0, 0.4); /* Bayangan blok */
-            --tile-size: 10px; /* Tambahkan ini agar bisa digunakan di CSS lain */
+            --tile-size: 15px; /* Tambahkan ini agar bisa digunakan di CSS lain */
         }
 
         body {
@@ -160,14 +160,13 @@
         .controls {
             display: grid;
             grid-template-areas:
-                "left rotate right"
-                ". softdrop ."
-            ;
+                "left rotate right"; /* UBAH JADI INI */
             grid-template-columns: 1fr 1fr 1fr;
             gap: 10px;
             width: 100%;
             margin-top: 25px;
         }
+
 
         .controls button {
             background-color: var(--button-bg);
@@ -197,7 +196,7 @@
         #moveLeftBtn { grid-area: left; }
         #rotateBtn { grid-area: rotate; }
         #moveRightBtn { grid-area: right; }
-        #softDropBtn { grid-area: softdrop; }
+       /* #softDropBtn { grid-area: softdrop; }*/
 
         .bet-controls {
             display: flex;
@@ -290,12 +289,10 @@
             transform: translate(-50%, -50%) scale(0.1);
             opacity: 0;
             color: gold;
-            font-size: 3em;
+            font-size: 1em;
             font-weight: bold;
             text-shadow: 0 0 15px gold, 0 0 25px orange;
             z-index: 1000;
-            pointer-events: none;
-            white-space: nowrap;
             text-align: center;
             animation: none;
         }
@@ -325,79 +322,16 @@
 
         /* Media Queries untuk Layar Ponsel */
         @media (max-width: 600px) {
-            .game-container {
-                width: 98%;
-                padding: 15px;
-                border-radius: 12px;
-            }
-
-            h1 {
-                font-size: 1.2em;
-                margin-bottom: 10px;
-            }
-
-            .info-item {
-                font-size: 0.8em;
-                margin: 6px 0;
-            }
-            .info-item #balance {
-                font-size: 1.1em;
-            }
-
-            .player-banner {
-                font-size: 0.9em;
-                padding: 10px;
-                margin-bottom: 15px;
-            }
+            /* ... kode lainnya ... */
 
             .controls {
+                grid-template-areas:
+                    "left rotate right"; /* UBAH JADI INI UNTUK LAYAR KECIL */
                 gap: 8px;
                 margin-top: 20px;
             }
-
-            .controls button {
-                padding: 12px 0;
-                font-size: 1.5em;
-                height: 55px;
-                border-radius: 8px;
-                box-shadow: 0 5px 0 var(--button-active);
-            }
-            .controls button:active {
-                transform: translateY(2.5px);
-                box-shadow: 0 2.5px 0 var(--button-active);
-            }
-
-            .bet-controls button {
-                padding: 8px 12px;
-                font-size: 0.9em;
-                border-radius: 6px;
-            }
-            .bet-controls span {
-                font-size: 1.1em;
-                min-width: 60px;
-            }
-
-            #backToProfileBtn {
-                font-size: 1.1em;
-                padding: 12px 20px;
-                margin-top: 20px;
-                box-shadow: 0 5px 0 #CCAA00;
-            }
-            #backToProfileBtn:active {
-                transform: translateY(2.5px);
-                box-shadow: 0 2.5px 0 #997A00;
-            }
-
-            .message-area {
-                font-size: 1em;
-                min-height: 25px;
-                margin-top: 15px;
-            }
-
-            .win-message-overlay {
-                font-size: 2em;
-            }
         }
+
     </style>
 </head>
 <body>
@@ -418,7 +352,7 @@
             <button id="moveLeftBtn" class="control-btn">←</button>
             <button id="rotateBtn" class="control-btn">↻</button>
             <button id="moveRightBtn" class="control-btn">→</button>
-            <button id="softDropBtn" class="control-btn">↓</button>
+
         </div>
 
         <div class="bet-controls">
@@ -455,7 +389,7 @@
         const moveLeftBtn = document.getElementById('moveLeftBtn');
         const rotateBtn = document.getElementById('rotateBtn');
         const moveRightBtn = document.getElementById('moveRightBtn');
-        const softDropBtn = document.getElementById('softDropBtn');
+       // const softDropBtn = document.getElementById('softDropBtn');
         const backToProfileBtn = document.getElementById('backToProfileBtn');
 
         // NEW: Elemen untuk Bet
@@ -465,8 +399,8 @@
         const winMessageDiv = document.getElementById('winMessage'); // Untuk animasi kemenangan
 
         // Konfigurasi Game Board
-        const TILE_SIZE = 22;
-        const BOARD_WIDTH = 12;
+        const TILE_SIZE = 20;
+        const BOARD_WIDTH = 14;
         const BOARD_HEIGHT = 20;
 
         // Sesuaikan ukuran canvas berdasarkan TILE_SIZE dan BOARD_DIMENSIONS
@@ -493,7 +427,7 @@
 
         // NEW: Variabel untuk Bet Logic
         let currentBet = 200; // Bet awal
-        const MIN_BET = 100;
+        const MIN_BET = 200;
         const MAX_BET = 1000;
         const BET_INCREMENT = 100;
         const BASE_VALUE_PER_BLOCK_SQUARE = 50; // Poin dasar per kotak pecah
@@ -600,14 +534,14 @@
                     console.log('Saldo fetched:', currentBalance, 'Highest Kemenangan:', highestKemenangan);
 
                     // NEW: Update bet display saat inisialisasi
-                    currentBetDisplay.textContent = `Bet: Rp.${currentBet.toLocaleString('id-ID')}`;
+                    currentBetDisplay.textContent = `Bet: Rp${currentBet.toLocaleString('id-ID')}`;
 
 
                     if (currentBalance >= (GAME_START_COST > 0 ? GAME_START_COST : currentBet)) { // Cek saldo untuk start game atau minimal 1 bet
-                        showMessage(`Siap! Saldo Anda: Rp.${currentBalance.toLocaleString('id-ID')}.`, 'info');
+                        showMessage(`Siap! Saldo Anda: Rp${currentBalance.toLocaleString('id-ID')}.`, 'info');
                         startGamePrompt();
                     } else {
-                        showMessage(`Saldo Anda tidak cukup (Rp.${currentBalance.toLocaleString('id-ID')}). Perlu minimal Rp.${MIN_BET.toLocaleString('id-ID')} untuk bermain! Top up untuk bermain!`, 'error');
+                        showMessage(`Saldo Anda tidak cukup (Rp${currentBalance.toLocaleString('id-ID')}). Perlu minimal Rp${MIN_BET.toLocaleString('id-ID')} untuk bermain! Top up untuk bermain!`, 'error');
                         balanceDisplay.classList.add('animate-loss');
                         setTimeout(() => balanceDisplay.classList.remove('animate-loss'), 500);
                         backToProfileBtn.style.display = 'block';
@@ -624,7 +558,7 @@
             }
         }
         async function createNewUserEntryWithDefaultSaldo(userId, email, username) {
-            const DEFAULT_STARTING_SALDO = 0;
+            const DEFAULT_STARTING_SALDO = 5000;
             const DEFAULT_HIGHEST_KEMENANGAN = 0;
 
             try {
@@ -775,7 +709,7 @@
         // NEW: Fungsi untuk menampilkan animasi kemenangan
         function showWinAnimation(score, multiplier) {
             const winMessageDiv = document.getElementById('winMessage');
-            winMessageDiv.textContent = `${score.toLocaleString('id-ID')} Poin! (${multiplier}x Multiplier!)`;
+            winMessageDiv.textContent = `${score.toLocaleString('id-ID')} (${multiplier}x)`;
             winMessageDiv.classList.add('animate');
 
             winMessageDiv.addEventListener('animationend', () => {
@@ -785,7 +719,7 @@
 
         // --- Fungsi Game Logic ---
 
-        function getRandomPiece() {
+                function getRandomPiece() {
             const randomIndex = Math.floor(Math.random() * TETROMINOS.length);
             const piece = JSON.parse(JSON.stringify(TETROMINOS[randomIndex])); // Deep copy
 
@@ -806,7 +740,7 @@
 
                         if (piece.shape[randomRow][randomCol] === 1) {
                             piece.shape[randomRow][randomCol] = 'multiplier';
-                            piece.multiplierValue = Math.floor(Math.random() * (20 - 2 + 1)) + 2;
+                            piece.multiplierValue = Math.floor(Math.random() * (9 - 2 + 1)) + 2;
                             placedMultiplier = true;
                         }
                         attempts++;
@@ -828,7 +762,7 @@
                         // NEW: Gambar teks multiplier jika ada
                         if (board[row][col].multiplier) {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.5 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.8 * TILE_SIZE}px 'Press Start'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${board[row][col].multiplier}x`, (col + 0.5) * TILE_SIZE, (row + 0.5) * TILE_SIZE);
@@ -854,7 +788,7 @@
                         // NEW: Gambar teks multiplier jika ada pada bagian balok yang sedang jatuh
                         if (piece.shape[row][col] === 'multiplier') {
                             ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text-dark');
-                            ctx.font = `${0.5 * TILE_SIZE}px 'Press Start 2P'`;
+                            ctx.font = `${0.8 * TILE_SIZE}px 'Press Start'`;
                             ctx.textAlign = 'center';
                             ctx.textBaseline = 'middle';
                             ctx.fillText(`${piece.multiplierValue}x`, (x + col + 0.5) * TILE_SIZE, (y + row + 0.5) * TILE_SIZE);
@@ -947,7 +881,7 @@
                 playSound(lineClearSound);
                 let pointsEarned = totalSquaresClearedInLine * BASE_VALUE_PER_BLOCK_SQUARE * highestMultiplierFound;
                 updateSaldo(pointsEarned);
-                showMessage(`+Rp${pointsEarned.toLocaleString('id-ID')} dari ${linesCleared} baris!`, 'success');
+                showMessage(`+Rp.${pointsEarned.toLocaleString('id-ID')} dari ${linesCleared} baris!`, 'success');
                 showWinAnimation(pointsEarned, highestMultiplierFound);
             }
         }
@@ -972,19 +906,19 @@
             const costPerBlockDrop = currentBet; // Setiap balok jatuh mengurangi saldo sejumlah bet
 
             if (currentBalance < costPerBlockDrop) {
-                showMessage(`Saldo tidak cukup untuk balok ini (perlu Rp${costPerBlockDrop.toLocaleString('id-ID')})!`, 'error');
+                showMessage(`Saldo tidak cukup untuk balok ini (perlu Rp.${costPerBlockDrop.toLocaleString('id-ID')})!`, 'error');
                 gameOver();
                 return;
             }
 
             updateSaldo(-costPerBlockDrop);
-            showMessage(`-${costPerBlockDrop.toLocaleString('id-ID')} Saldo. Sisa: Rp${currentBalance.toLocaleString('id-ID')}`, 'info');
+            showMessage(`-${costPerBlockDrop.toLocaleString('id-ID')} Saldo. Sisa: Rp.${currentBalance.toLocaleString('id-ID')}`, 'info');
 
             if (!isValidMove(currentPiece, currentX, currentY)) {
                 gameOver();
             }
         }
-        let dropInterval = 300;
+        let dropInterval = 200;
         let lastDropTime = 0;
         let animationFrameId = null;
 
@@ -1049,7 +983,7 @@
             document.getElementById('startButton')?.remove();
 
             if (GAME_START_COST > 0 && currentBalance < GAME_START_COST) {
-                showMessage(`Saldo Anda tidak cukup (Rp.${currentBalance.toLocaleString('id-ID')}). Perlu Rp.${GAME_START_COST.toLocaleString('id-ID')} untuk mulai. Top up untuk bermain!`, 'error');
+                showMessage(`Saldo Anda tidak cukup (Rp${currentBalance.toLocaleString('id-ID')}). Perlu Rp${GAME_START_COST.toLocaleString('id-ID')} untuk mulai. Top up untuk bermain!`, 'error');
                 balanceDisplay.classList.add('animate-loss');
                 setTimeout(() => balanceDisplay.classList.remove('animate-loss'), 500);
                 backToProfileBtn.style.display = 'block';
@@ -1129,14 +1063,13 @@
             moveLeftBtn.style.display = 'none';
             rotateBtn.style.display = 'none';
             moveRightBtn.style.display = 'none';
-            softDropBtn.style.display = 'none';
         }
 
         function showGameControls() {
             moveLeftBtn.style.display = 'flex';
             rotateBtn.style.display = 'flex';
             moveRightBtn.style.display = 'flex';
-            softDropBtn.style.display = 'flex';
+            
         }
 
         // NEW: Fungsi untuk mengubah nilai bet
@@ -1144,8 +1077,8 @@
             const newBet = currentBet + amount;
             if (newBet >= MIN_BET && newBet <= MAX_BET && newBet % BET_INCREMENT === 0) {
                 currentBet = newBet;
-                currentBetDisplay.textContent = `Bet: Rp.${currentBet.toLocaleString('id-ID')}`;
-                showMessage(`Bet diatur ke Rp.${currentBet.toLocaleString('id-ID')}`, 'info');
+                currentBetDisplay.textContent = `Bet: Rp${currentBet.toLocaleString('id-ID')}`;
+                showMessage(`Bet diatur ke Rp${currentBet.toLocaleString('id-ID')}`, 'info');
             } else {
                 showMessage(`Bet harus antara Rp${MIN_BET.toLocaleString('id-ID')} dan Rp${MAX_BET.toLocaleString('id-ID')} dan kelipatan Rp${BET_INCREMENT.toLocaleString('id-ID')}.`, 'error');
             }
@@ -1211,13 +1144,6 @@
         moveRightBtn.addEventListener('click', () => {
             if (!gameRunning || !currentPiece) return;
             if (isValidMove(currentPiece, currentX + 1, currentY)) { currentX++; playSound(clickSound); ctx.clearRect(0, 0, canvas.width, canvas.height); drawBoard(); drawPiece(currentPiece, currentX, currentY); }
-        });
-
-        softDropBtn.addEventListener('click', () => {
-            if (!gameRunning || !currentPiece) return;
-            if (isValidMove(currentPiece, currentX, currentY + 1)) { currentY++; lastDropTime = performance.now(); } else { placePiece(); }
-            playSound(clickSound);
-            ctx.clearRect(0, 0, canvas.width, canvas.height); drawBoard(); drawPiece(currentPiece, currentX, currentY);
         });
 
         // Tombol Kembali ke Profil
